@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -70,6 +71,26 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      bottomNavigationBar: ConvexAppBar(
+        //Define Navbar Object
+        items: const [
+          // Create immutable array of items for the navbar
+
+          TabItem(
+            icon: Icons.home,
+          ), // Create Homepage Button Object
+          TabItem(
+              icon:
+                  Icons.roller_skating), // Create Fitness Tracker Button Object
+          TabItem(icon: Icons.add), // Create Create New Post Button Object
+          TabItem(icon: Icons.map), // Create friends tracker Button Object
+          TabItem(icon: Icons.person), // Create Profile Button Object
+        ],
+        onTap: (int i) => print(
+            'click index=$i'), // When a button is pressed... output to console
+        style: TabStyle
+            .fixedCircle, // Set the navbar style to have the circle stay at the centre
+      ),
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.

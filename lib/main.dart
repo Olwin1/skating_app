@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'social_media/homepage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -86,8 +87,18 @@ class _MyHomePageState extends State<MyHomePage> {
           TabItem(icon: Icons.map), // Create friends tracker Button Object
           TabItem(icon: Icons.person), // Create Profile Button Object
         ],
-        onTap: (int i) => print(
-            'click index=$i'), // When a button is pressed... output to console
+        onTap: (int i) => {
+          // When navbar button pressed
+          if (i == 0) // If social media page button pressed
+            {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                // Add new page to Navigation Stack
+                return const HomePage(
+                    title:
+                        "Homepage"); // Return HomePage.dart with title Homepage
+              }))
+            }
+        }, // When a button is pressed... output to console
         style: TabStyle
             .fixedCircle, // Set the navbar style to have the circle stay at the centre
       ),

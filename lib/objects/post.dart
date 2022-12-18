@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Post {
   String? postId;
+  String userId;
 
   // Read-only non-final property
   String title = "postTitle";
@@ -12,12 +13,12 @@ class Post {
       const Image(image: AssetImage("assets/placeholders/1080.png"));
 
   // Constructor.
-  Post(this.postId) {
+  Post(this.postId, this.userId) {
     // Initialization code goes here.
   }
 
   // Named constructor that forwards to the default one.
-  Post.create(String userId) : this(null);
+  Post.create(String userId) : this(null, userId);
 
   // Method.
   String? getId() {

@@ -10,8 +10,7 @@ class User {
   String displayName = "test3";
   Image profileImage =
       const Image(image: AssetImage("assets/placeholders/150.png"));
-  var posts = [Post("1"), Post("2"), Post("3")];
-
+  List<Post> posts = [];
   // Constructor.
   User(this.userId) {
     // Initialization code goes here.
@@ -30,5 +29,12 @@ class User {
       print('Invalid User');
       return null;
     }
+  }
+
+  List<Post> getPosts() {
+    if (posts.isEmpty) {
+      posts = [Post(userId, "1"), Post(userId, "2"), Post(userId, "3")];
+    }
+    return posts;
   }
 }

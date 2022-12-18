@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
             8), // Add padding to list so doesn't overflow to sides of screen
         itemBuilder: (context, position) {
           // Function that will be looped to generate a widget
-          return PostWidget(title: user.posts[position].title);
+          return PostWidget(user: user, index: position);
         },
         separatorBuilder: (context, position) {
           // Function that will be looped in between each item
@@ -30,7 +30,9 @@ class HomePage extends StatelessWidget {
             height: 20,
           );
         },
-        itemCount: 3, // Set count to the number of posts that there are
+        itemCount: user
+            .getPosts()
+            .length, // Set count to the number of posts that there are
       )),
     );
   }

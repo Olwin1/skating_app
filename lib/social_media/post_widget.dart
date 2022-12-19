@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skating_app/test.dart';
 import '../objects/user.dart';
 import '../objects/post.dart';
 
@@ -45,7 +46,10 @@ class _PostWidget extends State<PostWidget> {
                         icon: const Icon(Icons.comment)),
                     IconButton(
                         // Create Save Button
-                        onPressed: () => print("Saved"),
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Testing())),
                         icon: const Icon(Icons.save))
                   ],
                 ),

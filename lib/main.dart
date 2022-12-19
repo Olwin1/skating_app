@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'social_media/homepage.dart';
+import 'package:skating_app/test2.dart';
+import 'tab_navigator.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,17 +51,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int selectedpage = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  static tabItems() {
+    return ([
+      const TabItem(
+        icon: Icons.home,
+      ), // Create Homepage Button Object
+      const TabItem(
+          icon: Icons.roller_skating), // Create Fitness Tracker Button Object
+      const TabItem(icon: Icons.map), // Create friends tracker Button Object
+      const TabItem(icon: Icons.add), // Create Create New Post Button Object
+      const TabItem(icon: Icons.person), // Create Profile Button Object
+    ]);
+  }
+
+  TabItem _currentTab =
+      tabItems()[0]; // Declare _current tab and set default to main page
+  final Map<TabItem, GlobalKey<NavigatorState>> _navigatorKeys = {
+    tabItems()[0]: GlobalKey<
+        NavigatorState>(), //Create an individual navigation stack for each item
+    tabItems()[1]: GlobalKey<NavigatorState>(),
+    tabItems()[2]: GlobalKey<NavigatorState>(),
+    tabItems()[3]: GlobalKey<NavigatorState>(),
+    tabItems()[4]: GlobalKey<NavigatorState>(),
+  };
+  void _selectTab(TabItem tabItem) {
+    if (tabItem == _currentTab) {
+      // If current tab is main tab
+      // pop to first route
+      _navigatorKeys[tabItem]!.currentState!.popUntil((route) =>
+          route.isFirst); //Reduce navigation stack until back to that page
+    } else {
+      setState(() => _currentTab = tabItem); // Set current tab to main page
+    }
   }
 
   @override
@@ -71,77 +95,64 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      bottomNavigationBar: ConvexAppBar(
-        //Define Navbar Object
-        items: const [
-          // Create immutable array of items for the navbar
 
-          TabItem(
-            icon: Icons.home,
-          ), // Create Homepage Button Object
-          TabItem(
-              icon:
-                  Icons.roller_skating), // Create Fitness Tracker Button Object
-          TabItem(icon: Icons.add), // Create Create New Post Button Object
-          TabItem(icon: Icons.map), // Create friends tracker Button Object
-          TabItem(icon: Icons.person), // Create Profile Button Object
-        ],
-        onTap: (int i) => {
-          // When navbar button pressed
-          if (i == 0) // If social media page button pressed
-            {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                // Add new page to Navigation Stack
-                return const HomePage(
-                    title:
-                        "Homepage"); // Return HomePage.dart with title Homepage
-              }))
+    return WillPopScope(
+        // Handle user swiping back inside application
+        onWillPop: () async {
+          final isFirstRouteInCurrentTab =
+              !await _navigatorKeys[_currentTab]!.currentState!.maybePop();
+          if (isFirstRouteInCurrentTab) {
+            // if not on the 'main' tab
+            if (_currentTab != tabItems()[0]) {
+              // select 'main' tab
+              _selectTab(tabItems()[0]);
+              // back button handled by app
+              return false;
             }
-        }, // When a button is pressed... output to console
-        style: TabStyle
-            .fixedCircle, // Set the navbar style to have the circle stay at the centre
+          }
+          // let system handle back button if on the first route
+          return isFirstRouteInCurrentTab;
+        },
+        child: Scaffold(
+          bottomNavigationBar: ConvexAppBar(
+            //Define Navbar Object
+            items: tabItems(), //Set navbar items to the tabitems
+            initialActiveIndex: 0, // Set initial selection to main page
+            onTap: (int i) => {
+              //When a navbar button is pressed set the current tab to the tabitem that was pressed
+              setState(() {
+                _currentTab = tabItems()[i];
+              }),
+            }, // When a button is pressed... output to console
+            style: TabStyle
+                .fixedCircle, // Set the navbar style to have the circle stay at the centre
+          ),
+          appBar: AppBar(
+            // Here we take the value from the MyHomePage object that was created by
+            // the App.build method, and use it to set our appbar title.
+            title: Text(widget.title),
+          ),
+          body: Stack(
+            children: [
+              // Create a navigator stack for each item
+              _buildOffstageNavigator(tabItems()[0]),
+              _buildOffstageNavigator(tabItems()[1]),
+              _buildOffstageNavigator(tabItems()[2]),
+              _buildOffstageNavigator(tabItems()[3]),
+              _buildOffstageNavigator(tabItems()[4])
+            ],
+          ), // This trailing comma makes auto-formatting nicer for build methods.
+        ));
+  }
+
+  Widget _buildOffstageNavigator(TabItem tabItem) {
+    return Offstage(
+      offstage: _currentTab != tabItem,
+      child: TabNavigator(
+        navigatorKey: _navigatorKeys[tabItem],
+        tabItem: tabItem,
+        tabitems: tabItems(),
       ),
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

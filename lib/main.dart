@@ -60,8 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // Create Homepage Button Object
       const TabItem(
           icon: Icons.roller_skating), // Create Fitness Tracker Button Object
-      const TabItem(icon: Icons.map), // Create friends tracker Button Object
       const TabItem(icon: Icons.add), // Create Create New Post Button Object
+      const TabItem(icon: Icons.map), // Create friends tracker Button Object
       const TabItem(icon: Icons.person), // Create Profile Button Object
     ]);
   }

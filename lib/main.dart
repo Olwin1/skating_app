@@ -53,37 +53,52 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int selectedpage = 0;
 
-  static tabItems() {
+  static List<TabItem<Widget>> tabItems() {
     return ([
-      const TabItem(
-        icon: Icons.home,
+      TabItem<Widget>(
+        //icon: Icons.home,
+        icon: Image.asset(
+          "assets/icons/navbar/home.png",
+          height: 100,
+        ),
       ), // Create Homepage Button Object
-      const TabItem(
-          icon: Icons.roller_skating), // Create Fitness Tracker Button Object
-      const TabItem(icon: Icons.add), // Create Create New Post Button Object
-      const TabItem(icon: Icons.map), // Create friends tracker Button Object
-      const TabItem(icon: Icons.person), // Create Profile Button Object
+      TabItem<Widget>(
+        //icon: Icons.home,
+        icon: Image.asset("assets/icons/navbar/home_1.png"),
+      ), // Create Fitness Tracker Button Object
+      TabItem<Widget>(
+        //icon: Icons.home,
+        icon: Image.asset("assets/icons/navbar/home_2.png"),
+      ), // Create Create New Post Button Object
+      TabItem<Widget>(
+        //icon: Icons.home,
+        icon: Image.asset("assets/icons/navbar/home_3.png"),
+      ), // Create friends tracker Button Object
+      TabItem<Widget>(
+        //icon: Icons.home,
+        icon: Image.asset("assets/placeholders/150.png"),
+      ), // Create Profile Button Object
     ]);
   }
 
-  TabItem _currentTab =
-      tabItems()[0]; // Declare _current tab and set default to main page
-  final Map<TabItem, GlobalKey<NavigatorState>> _navigatorKeys = {
-    tabItems()[0]: GlobalKey<
+  int _currentTab = 0; // Declare _current tab and set default to main page
+  final Map<String, GlobalKey<NavigatorState>> _navigatorKeys = {
+    "0": GlobalKey<
         NavigatorState>(), //Create an individual navigation stack for each item
-    tabItems()[1]: GlobalKey<NavigatorState>(),
-    tabItems()[2]: GlobalKey<NavigatorState>(),
-    tabItems()[3]: GlobalKey<NavigatorState>(),
-    tabItems()[4]: GlobalKey<NavigatorState>(),
+    "1": GlobalKey<NavigatorState>(),
+    "2": GlobalKey<NavigatorState>(),
+    "3": GlobalKey<NavigatorState>(),
+    "4": GlobalKey<NavigatorState>(),
   };
-  void _selectTab(TabItem tabItem) {
-    if (tabItem == _currentTab) {
+  void _selectTab(TabItem<Widget> tabItem, String index) {
+    if (index == _currentTab.toString()) {
       // If current tab is main tab
       // pop to first route
-      _navigatorKeys[tabItem]!.currentState!.popUntil((route) =>
+      _navigatorKeys[index]!.currentState!.popUntil((route) =>
           route.isFirst); //Reduce navigation stack until back to that page
     } else {
-      setState(() => _currentTab = tabItem); // Set current tab to main page
+      setState(
+          () => _currentTab = int.parse(index)); // Set current tab to main page
     }
   }
 
@@ -100,12 +115,14 @@ class _MyHomePageState extends State<MyHomePage> {
         // Handle user swiping back inside application
         onWillPop: () async {
           final isFirstRouteInCurrentTab =
-              !await _navigatorKeys[_currentTab]!.currentState!.maybePop();
+              !await _navigatorKeys[_currentTab.toString()]!
+                  .currentState!
+                  .maybePop();
           if (isFirstRouteInCurrentTab) {
             // if not on the 'main' tab
-            if (_currentTab != tabItems()[0]) {
+            if (_currentTab != 0) {
               // select 'main' tab
-              _selectTab(tabItems()[0]);
+              _selectTab(tabItems()[0], "0");
               // back button handled by app
               return false;
             }
@@ -114,45 +131,61 @@ class _MyHomePageState extends State<MyHomePage> {
           return isFirstRouteInCurrentTab;
         },
         child: Scaffold(
-          bottomNavigationBar: ConvexAppBar(
-            //Define Navbar Object
-            items: tabItems(), //Set navbar items to the tabitems
-            initialActiveIndex: 0, // Set initial selection to main page
-            onTap: (int i) => {
-              //When a navbar button is pressed set the current tab to the tabitem that was pressed
-              setState(() {
-                _currentTab = tabItems()[i];
-              }),
-            }, // When a button is pressed... output to console
-            style: TabStyle
-                .fixedCircle, // Set the navbar style to have the circle stay at the centre
-          ),
-          appBar: AppBar(
-            // Here we take the value from the MyHomePage object that was created by
-            // the App.build method, and use it to set our appbar title.
-            title: Text(widget.title),
+          bottomNavigationBar: StyleProvider(
+            style: Style(),
+            child: ConvexAppBar(
+              //Define Navbar Object
+              items: tabItems(), //Set navbar items to the tabitems
+              initialActiveIndex: 0, // Set initial selection to main page
+              onTap: (int i) => {
+                //When a navbar button is pressed set the current tab to the tabitem that was pressed
+                setState(() {
+                  _currentTab = i;
+                }),
+              }, // When a button is pressed... output to console
+              style: TabStyle
+                  .fixedCircle, // Set the navbar style to have the circle stay at the centre
+              backgroundColor: const Color.fromARGB(255, 153, 135, 0),
+              height: 55,
+            ),
           ),
           body: Stack(
             children: [
               // Create a navigator stack for each item
-              _buildOffstageNavigator(tabItems()[0]),
-              _buildOffstageNavigator(tabItems()[1]),
-              _buildOffstageNavigator(tabItems()[2]),
-              _buildOffstageNavigator(tabItems()[3]),
-              _buildOffstageNavigator(tabItems()[4])
+              _buildOffstageNavigator(0),
+              _buildOffstageNavigator(1),
+              _buildOffstageNavigator(2),
+              _buildOffstageNavigator(3),
+              _buildOffstageNavigator(4)
             ],
-          ), // This trailing comma makes auto-formatting nicer for build methods.
+          ),
+          // This trailing comma makes auto-formatting nicer for build methods.
         ));
   }
 
-  Widget _buildOffstageNavigator(TabItem tabItem) {
+  Widget _buildOffstageNavigator(int tabItemIndex) {
     return Offstage(
-      offstage: _currentTab != tabItem,
+      offstage: _currentTab != tabItemIndex,
       child: TabNavigator(
-        navigatorKey: _navigatorKeys[tabItem],
-        tabItem: tabItem,
+        navigatorKey: _navigatorKeys[tabItemIndex],
+        tabItemIndex: tabItemIndex,
         tabitems: tabItems(),
       ),
     );
+  }
+}
+
+class Style extends StyleHook {
+  @override
+  double get iconSize => 50;
+
+  @override
+  double get activeIconMargin => 10;
+  @override
+  double get activeIconSize => 60;
+
+  @override
+  TextStyle textStyle(Color color, String? fontFamily) {
+    return TextStyle(fontSize: 20, color: color);
   }
 }

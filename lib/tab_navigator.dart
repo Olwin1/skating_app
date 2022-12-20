@@ -16,7 +16,7 @@ class TabNavigator extends StatelessWidget {
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context) {
     return {
       // When called will output a route according to the index button pressed
-      "0": (context) => const HomePage(
+      "0": (context) => HomePage(
             title: 'Home', // Assign Homepage to index 0 and so on
           ),
       "1": (context) => const Testingt(),

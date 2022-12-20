@@ -22,12 +22,10 @@ class Post {
 
   // Method.
   String? getId() {
-    print('Post Id: $postId');
     // Type promotion doesn't work on getters.
     if (postId != null) {
       return postId;
     } else {
-      print('Invalid Post');
       return null;
     }
   }

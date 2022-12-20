@@ -21,12 +21,10 @@ class User {
 
   // Method.
   String? getId() {
-    print('User Id: $userId');
     // Type promotion doesn't work on getters.
     if (userId != null) {
       return userId;
     } else {
-      print('Invalid User');
       return null;
     }
   }

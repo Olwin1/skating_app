@@ -28,6 +28,16 @@ class HomePage extends StatelessWidget {
           },
         ),
         title: Text(title),
+        actions: [
+          const Spacer(
+            // Move button to far right of screen
+            flex: 1,
+          ),
+          TextButton(
+              onPressed: () => print("Private Messages"),
+              child: Image.asset(
+                  "assets/icons/navbar/message.png")) // Set Button To Message icon
+        ],
       ),
       body: Center(
           child: ListView.separated(

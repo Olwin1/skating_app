@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // Create Homepage Button Object
       TabItem<Widget>(
         //icon: Icons.home,
-        icon: Image.asset("assets/icons/navbar/home_1.png"),
+        icon: Image.asset("assets/icons/navbar/fitness_tracker.png"),
       ), // Create Fitness Tracker Button Object
       TabItem<Widget>(
         //icon: Icons.home,
@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // Create Create New Post Button Object
       TabItem<Widget>(
         //icon: Icons.home,
-        icon: Image.asset("assets/icons/navbar/home_3.png"),
+        icon: Image.asset("assets/icons/navbar/friend_tracker.png"),
       ), // Create friends tracker Button Object
       TabItem<Widget>(
         //icon: Icons.home,

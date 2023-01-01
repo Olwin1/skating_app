@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skating_app/objects/user.dart';
+import 'package:skating_app/social_media/private_messages/private_message_list.dart';
 import 'post_widget.dart';
 
 class HomePage extends StatelessWidget {
@@ -34,7 +35,13 @@ class HomePage extends StatelessWidget {
             flex: 1,
           ),
           TextButton(
-              onPressed: () => print("Private Messages"),
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PrivateMessageList(
+                            user: user,
+                            index: 1,
+                          ))),
               child: Image.asset(
                   "assets/icons/navbar/message.png")) // Set Button To Message icon
         ],

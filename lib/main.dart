@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'convex_bottom_bar/convex_bottom_bar.dart';
 import 'tab_navigator.dart';
 
 void main() {
@@ -144,7 +144,8 @@ class _MyHomePageState extends State<MyHomePage> {
               }, // When a button is pressed... output to console
               style: TabStyle
                   .fixedCircle, // Set the navbar style to have the circle stay at the centre
-              backgroundColor: const Color.fromARGB(255, 153, 135, 0),
+              backgroundColor: const Color.fromARGB(0, 0, 0, 0),
+              //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
               height: 55,
             ),
           ),

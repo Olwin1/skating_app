@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:skating_app/test2.dart';
 import 'social_media/homepage.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'tab_navigator.dart';
 
 void main() {

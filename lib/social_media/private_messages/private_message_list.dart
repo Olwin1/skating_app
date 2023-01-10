@@ -16,14 +16,22 @@ class PrivateMessageList extends StatefulWidget {
 class _PrivateMessageList extends State<PrivateMessageList> {
   @override // Override existing build method
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(0), // Add padding so doesn't touch edges
-      color: const Color(0xFFFFE306), // For testing to highlight seperations
-      child: Row(
-        // Create a row
-        crossAxisAlignment: CrossAxisAlignment.center, // Align children center
-        children: const [ListWidget(index: 1)], // Set child to a list widget
-      ),
-    );
+    return Scaffold(
+        //Create a scaffold
+        appBar: AppBar(), // Add a basic app bar
+        body: Container(
+          padding:
+              const EdgeInsets.all(0), // Add padding so doesn't touch edges
+          color:
+              const Color(0xFFFFE306), // For testing to highlight seperations
+          child: Row(
+            // Create a row
+            crossAxisAlignment:
+                CrossAxisAlignment.center, // Align children center
+            children: const [
+              ListWidget(index: 1)
+            ], // Set child to a list widget
+          ),
+        ));
   }
 }

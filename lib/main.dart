@@ -168,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Offstage(
       offstage: _currentTab != tabItemIndex,
       child: TabNavigator(
-        navigatorKey: _navigatorKeys[tabItemIndex],
+        navigatorKey: _navigatorKeys[tabItemIndex.toString()],
         tabItemIndex: tabItemIndex,
         tabitems: tabItems(),
       ),

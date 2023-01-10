@@ -15,8 +15,11 @@ class HomePage extends StatelessWidget {
     User user = User("1"); // Create user object with id of 1
     return Scaffold(
       appBar: AppBar(
+        //systemOverlayStyle:
+        //    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
         leading: TextButton(
           // Create a basic button
+
           child: const Image(
             // Set button to an image
             image: AssetImage("assets/placeholders/320x114.png"),
@@ -30,6 +33,7 @@ class HomePage extends StatelessWidget {
           },
         ),
         title: Text(title),
+        backgroundColor: const Color.fromARGB(255, 185, 177, 102),
         actions: [
           const Spacer(
             // Move button to far right of screen
@@ -44,7 +48,7 @@ class HomePage extends StatelessWidget {
                             index: 1,
                           ))),
               child: Image.asset(
-                  "assets/icons/navbar/message.png")) // Set Button To Message icon
+                  "assets/icons/message.png")) // Set Button To Message icon
         ],
       ),
       body: Center(

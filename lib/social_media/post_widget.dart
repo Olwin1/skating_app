@@ -32,39 +32,55 @@ class _PostWidget extends State<PostWidget> {
           ),
           Expanded(
             flex: 1, // Make 2x Bigger than sibling
-            child: Column(
-              children: [
-                Column(
-                  children: [
-                    IconButton(
-                        // Create Like Button
-                        onPressed: () => print("Liked"),
-                        icon: const Icon(Icons.thumb_up)),
-                    IconButton(
-                        // Create Comment Button
-                        onPressed: () => print("Comment"),
-                        icon: const Icon(Icons.comment)),
-                    IconButton(
-                        // Create Save Button
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Testing())),
-                        icon: const Icon(Icons.save))
-                  ],
-                ),
-                const Spacer(
-                  flex: 1,
-                ),
-                Column(
-                  // Create more options button seperately to add spacing between
-                  children: [
-                    IconButton(
-                        onPressed: () => print("More Options"),
-                        icon: const Icon(Icons.three_g_mobiledata)),
-                  ],
-                )
-              ],
+            child: Container(
+              // Make container widget to use BoxDecoration
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                    // Set background image of container to image
+                    image: AssetImage("assets/backgrounds/post_background.png"),
+                    fit: BoxFit.cover), // Cover whole container
+              ),
+              child: Column(
+                // Buttons below
+                children: [
+                  Column(
+                    children: [
+                      IconButton(
+                          // Create Like Button
+                          onPressed: () => print("Liked"),
+                          icon: const Icon(Icons.thumb_up,
+                              color: Color(0xffcfcfcf))),
+                      IconButton(
+                          // Create Comment Button
+                          onPressed: () => print("Comment"),
+                          icon: const Icon(
+                            Icons.comment,
+                            color: Color(0xffcfcfcf),
+                          )),
+                      IconButton(
+                          // Create Save Button
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Testing())),
+                          icon:
+                              const Icon(Icons.save, color: Color(0xffcfcfcf)))
+                    ],
+                  ),
+                  const Spacer(
+                    flex: 1,
+                  ),
+                  Column(
+                    // Create more options button seperately to add spacing between
+                    children: [
+                      IconButton(
+                          onPressed: () => print("More Options"),
+                          icon: const Icon(Icons.three_g_mobiledata,
+                              color: Color(0xffcfcfcf))),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ],

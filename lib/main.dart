@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // Create Fitness Tracker Button Object
       TabItem<Widget>(
         //icon: Icons.home,
-        icon: Image.asset("assets/icons/navbar/home_2.png"),
+        icon: Image.asset("assets/icons/navbar/new_post.png"),
       ), // Create Create New Post Button Object
       TabItem<Widget>(
         //icon: Icons.home,
@@ -144,7 +144,8 @@ class _MyHomePageState extends State<MyHomePage> {
               }, // When a button is pressed... output to console
               style: TabStyle
                   .fixedCircle, // Set the navbar style to have the circle stay at the centre
-              backgroundColor: const Color.fromARGB(0, 0, 0, 0),
+              backgroundColor: const Color(0xffcfcfcf),
+              activeColor: const Color(0xffbebebe),
               //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
               height: 55,
             ),

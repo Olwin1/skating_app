@@ -30,22 +30,21 @@ class _ListWidget extends State<ListWidget> {
           const Padding(
               padding:
                   EdgeInsets.only(left: 16)), // Space between avatar and text
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
             // Create a column aligned to the left
-            const Padding(
+            Padding(
               //Add padding to the top to move the text down a bit
               padding: EdgeInsets.only(top: 10),
             ),
-            const Text(
+            Text(
               //Message target's Name
               "Friend 1",
             ),
-            Row(
-              children: const [
-                Text("Last message sent"), // Last message sent from user
-                Text("4h") // Time since user last sent a message
-              ],
-            )
+            Text("Last message sent · 4h",
+                style: TextStyle(
+                    color: Color.fromARGB(
+                        255, 77, 77, 77), // Set colour to light grey
+                    height: 1.5)), // Last message sent from user
           ]),
         ],
       ),

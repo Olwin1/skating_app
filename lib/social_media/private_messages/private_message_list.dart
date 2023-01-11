@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import '../../objects/user.dart';
 import 'list_widget.dart';
@@ -21,15 +23,33 @@ class _PrivateMessageList extends State<PrivateMessageList> {
         appBar: AppBar(), // Add a basic app bar
         body: Container(
           padding:
-              const EdgeInsets.all(0), // Add padding so doesn't touch edges
+              const EdgeInsets.all(8), // Add padding so doesn't touch edges
           color:
               const Color(0xFFFFE306), // For testing to highlight seperations
-          child: Row(
+          child: ListView(
             // Create a row
-            crossAxisAlignment:
-                CrossAxisAlignment.center, // Align children center
-            children: const [
-              ListWidget(index: 1)
+            children: [
+              const Padding(
+                // Make Search Bar Padded
+                padding: EdgeInsets.only(bottom: 16),
+                child: Flexible(
+                  child: TextField(
+                    // Create text inout field
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'search', //Placeholder text
+                    ),
+                  ),
+                ),
+              ),
+              Title(
+                  // Private Messages title
+                  color: const Color(0xffcfcfcf),
+                  child: const Text(
+                    "Private Messages",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  )),
+              const ListWidget(index: 1)
             ], // Set child to a list widget
           ),
         ));

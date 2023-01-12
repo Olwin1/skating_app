@@ -24,6 +24,11 @@ class _PrivateMessage extends State<PrivateMessage> {
         messages: _messages, // Set messages to message variable defined above
         onSendPressed: _handleSendPressed,
         user: _user, // Set user to user id
+        theme: const DarkChatTheme(
+            inputMargin: EdgeInsets.only(
+                left: 8, right: 8, bottom: 8), // Add margins to text input
+            inputBorderRadius: BorderRadius.all(
+                Radius.circular(24))), // Make input rounded corners
       ),
     );
   }

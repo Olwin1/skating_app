@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'private_message.dart';
 
 class ListWidget extends StatefulWidget {
   // Create HomePage Class
@@ -18,7 +19,12 @@ class _ListWidget extends State<ListWidget> {
       color: const Color(0xFFFFE306), // For testing to highlight seperations
       child: TextButton(
         // Make list widget clickable
-        onPressed: () => print("pressed"), //When list widget clicked
+        onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const PrivateMessage(
+                      index: 1,
+                    ))), //When list widget clicked
         child: Row(
           // Create a row
           crossAxisAlignment: CrossAxisAlignment.center,

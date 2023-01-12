@@ -16,37 +16,43 @@ class _ListWidget extends State<ListWidget> {
       height: 80,
       padding: const EdgeInsets.all(8), // Add padding so doesn't touch edges
       color: const Color(0xFFFFE306), // For testing to highlight seperations
-      child: Row(
-        // Create a row
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Add List image to one row and buttons to another
-          const CircleAvatar(
-            // Create a circular avatar icon
-            radius: 30, //Set radius to 30
-            backgroundImage: AssetImage(
-                "assets/placeholders/150.png"), // Set avatar to placeholder images
-          ),
-          const Padding(
-              padding:
-                  EdgeInsets.only(left: 16)), // Space between avatar and text
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-            // Create a column aligned to the left
-            Padding(
-              //Add padding to the top to move the text down a bit
-              padding: EdgeInsets.only(top: 10),
+      child: TextButton(
+        // Make list widget clickable
+        onPressed: () => print("pressed"), //When list widget clicked
+        child: Row(
+          // Create a row
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Add List image to one row and buttons to another
+            const CircleAvatar(
+              // Create a circular avatar icon
+              radius: 30, //Set radius to 30
+              backgroundImage: AssetImage(
+                  "assets/placeholders/150.png"), // Set avatar to placeholder images
             ),
-            Text(
-              //Message target's Name
-              "Friend 1",
-            ),
-            Text("Last message sent · 4h",
-                style: TextStyle(
-                    color: Color.fromARGB(
-                        255, 77, 77, 77), // Set colour to light grey
-                    height: 1.5)), // Last message sent from user
-          ]),
-        ],
+            const Padding(
+                padding:
+                    EdgeInsets.only(left: 16)), // Space between avatar and text
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  // Create a column aligned to the left
+                  Padding(
+                    //Add padding to the top to move the text down a bit
+                    padding: EdgeInsets.only(top: 10),
+                  ),
+                  Text(
+                    //Message target's Name
+                    "Friend 1",
+                  ),
+                  Text("Last message sent · 4h",
+                      style: TextStyle(
+                          color: Color.fromARGB(
+                              255, 77, 77, 77), // Set colour to light grey
+                          height: 1.5)), // Last message sent from user
+                ]),
+          ],
+        ),
       ),
     );
   }

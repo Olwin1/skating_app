@@ -20,9 +20,11 @@ class _ListWidget extends State<ListWidget> {
       child: TextButton(
         // Make list widget clickable
         onPressed: () => Navigator.push(
+            // When button pressed
             context,
             MaterialPageRoute(
                 builder: (context) => const PrivateMessage(
+                      // Add private message page to top of navigation stack
                       index: 1,
                     ))), //When list widget clicked
         child: Row(

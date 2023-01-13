@@ -19,6 +19,40 @@ class _PrivateMessage extends State<PrivateMessage> {
   @override // Override existing build method
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        // Create appBar
+        leadingWidth: 48, // Remove extra leading space
+        centerTitle: false, // Align title to left
+        title: Row(children: [
+          //Create title as row
+          const CircleAvatar(
+            // Create a circular avatar icon
+            radius: 15, //Set radius to 15
+            backgroundImage: AssetImage(
+                "assets/placeholders/150.png"), // Set avatar to placeholder images
+          ),
+          Padding(
+              // Create basic padding to space from avatar
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                // Create column of text
+                crossAxisAlignment: CrossAxisAlignment
+                    .start, // Align to the left instead of center
+                children: const [
+                  Text(
+                    //Username Text
+                    "Username",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    // Last active text
+                    "Online",
+                    style: TextStyle(fontSize: 12, color: Color(0xffbbbbbb)),
+                  )
+                ],
+              ))
+        ]),
+      ),
       body: Chat(
         // Create basic chat widget
         messages: _messages, // Set messages to message variable defined above

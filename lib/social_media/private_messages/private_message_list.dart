@@ -23,43 +23,35 @@ class _PrivateMessageList extends State<PrivateMessageList> {
         appBar: AppBar(), // Add a basic app bar
         body: Container(
           padding:
-              const EdgeInsets.all(8), // Add padding so doesn't touch edges
+              const EdgeInsets.all(0), // Add padding so doesn't touch edges
           color:
               const Color(0xFFFFE306), // For testing to highlight seperations
           child: Column(
             children: [
-              Padding(
-                // Make Search Bar Padded
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Flex(
-                  direction: Axis.horizontal,
-                  children: const [
-                    Flexible(
-                      child: TextField(
-                        // Create text inout field
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'search', //Placeholder text
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Title(
-                  // Private Messages title
-                  color: const Color(0xffcfcfcf),
-                  child: const Text(
-                    "Private Messages",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  )),
               Expanded(
                   // Make list view expandable
                   child: ListView(
+                padding: const EdgeInsets.all(8),
                 // Create list view widget
                 // Create a row
-                children: const [
-                  ListWidget(index: 1) // Create basic debug widget
+                children: [
+                  const TextField(
+                    // Create text inout field
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'search', //Placeholder text
+                    ),
+                  ),
+
+                  Title(
+                      // Private Messages title
+                      color: const Color(0xffcfcfcf),
+                      child: const Text(
+                        "Private Messages",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      )),
+                  const ListWidget(index: 1) // Create basic debug widget
                 ], // Set child to a list widget
               )),
             ],

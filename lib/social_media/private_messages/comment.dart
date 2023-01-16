@@ -20,7 +20,75 @@ class _Comment extends State<Comment> {
         onPressed: () => print("Pressed"),
         // Make list widget clickable
         onLongPress: () => print("longPress"), //When list widget clicked
-        child: const Text("eeeeeeeeeeeeeeeeeee"),
+        child: Row(
+          // Create Row
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: CircleAvatar(
+                //Put avatar on left
+                // Create a circular avatar icon
+                radius: 20, //Set radius to 20
+                backgroundImage: AssetImage(
+                    "assets/placeholders/150.png"), // Set avatar to placeholder images
+              ),
+            ),
+            Expanded(
+                // Expanded Widget Wrapper
+                flex: 2,
+                child: Column(
+                  // Put rest on right
+                  children: [
+                    Row(
+                      // Create top row
+                      children: const [
+                        Text("username", // User's Display Name
+                            style: TextStyle(
+                                color: Color(0xff666666))), // Set colour
+                        Text(
+                          " 5h", //Time since sent
+                          style:
+                              TextStyle(color: Color(0xffbfbfbf)), // Set colour
+                        )
+                      ],
+                    ),
+                    const Expanded(
+                        // Allow for text wrapping
+                        child: Text(
+                            "dataaaaaaaaaaaaaaaaaa")), // Create message content
+                    // Create footer
+
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment
+                            .end, // Align row on right of screen
+                        children: const [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: Text(
+                              // Reply Placeholder
+                              "Reply",
+                              textAlign: TextAlign.end,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: Text(
+                              "Like", // Like Placeholder
+                              textAlign: TextAlign.end,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: Text(
+                              "Dislike", // Dislike placeholder
+                              textAlign: TextAlign.end,
+                            ),
+                          ),
+                        ])
+                  ],
+                ))
+          ],
+        ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skating_app/test.dart';
 import '../objects/user.dart';
 import '../objects/post.dart';
+import 'comments.dart';
 
 class PostWidget extends StatefulWidget {
   // Create HomePage Class
@@ -52,7 +53,11 @@ class _PostWidget extends State<PostWidget> {
                               color: Color(0xffcfcfcf))),
                       IconButton(
                           // Create Comment Button
-                          onPressed: () => print("Comment"),
+                          onPressed: () => Navigator.push(
+                              // Send to comments page
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Comments())),
                           icon: const Icon(
                             Icons.comment,
                             color: Color(0xffcfcfcf),

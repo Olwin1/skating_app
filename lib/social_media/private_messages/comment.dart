@@ -15,7 +15,7 @@ class _Comment extends State<Comment> {
   Widget build(BuildContext context) {
     return Container(
       height: 80,
-      padding: const EdgeInsets.all(8), // Add padding so doesn't touch edges
+      padding: const EdgeInsets.all(4), // Add padding so doesn't touch edges
       child: TextButton(
         onPressed: () => print("Pressed"),
         // Make list widget clickable
@@ -24,11 +24,14 @@ class _Comment extends State<Comment> {
           // Create Row
           children: [
             const Padding(
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.only(
+                // Only give right of avatar padding
+                right: 8,
+              ),
               child: CircleAvatar(
                 //Put avatar on left
                 // Create a circular avatar icon
-                radius: 20, //Set radius to 20
+                radius: 25, //Set radius to 20
                 backgroundImage: AssetImage(
                     "assets/placeholders/150.png"), // Set avatar to placeholder images
               ),

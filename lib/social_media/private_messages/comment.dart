@@ -13,8 +13,7 @@ class Comment extends StatefulWidget {
 class _Comment extends State<Comment> {
   @override // Override existing build method
   Widget build(BuildContext context) {
-    return Container(
-      height: 80,
+    return Padding(
       padding: const EdgeInsets.all(4), // Add padding so doesn't touch edges
       child: TextButton(
         onPressed: () => print("Pressed"),
@@ -40,6 +39,7 @@ class _Comment extends State<Comment> {
                 // Expanded Widget Wrapper
                 flex: 2,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   // Put rest on right
                   children: [
                     Row(
@@ -55,10 +55,10 @@ class _Comment extends State<Comment> {
                         )
                       ],
                     ),
-                    const Expanded(
-                        // Allow for text wrapping
-                        child: Text(
-                            "dataaaaaaaaaaaaaaaaaa")), // Create message content
+                    const Text(
+                      "dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                      textAlign: TextAlign.start,
+                    ), // Create message content
                     // Create footer
 
                     Row(

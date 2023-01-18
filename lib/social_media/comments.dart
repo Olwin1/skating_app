@@ -1,3 +1,4 @@
+import 'package:comment_box/comment/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:skating_app/social_media/private_messages/comment.dart';
 
@@ -13,18 +14,48 @@ class _Comments extends State<Comments> {
   @override // Override existing build method
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          // Create appBar
-          leadingWidth: 48, // Remove extra leading space
-          centerTitle: false, // Align title to left
-          title: Title(
-            title: "Comments", //Set title to comments
-            color: const Color(0xFFDDDDDD),
-            child: const Text("Comments"),
-          ),
+      appBar: AppBar(
+        // Create appBar
+        leadingWidth: 48, // Remove extra leading space
+        centerTitle: false, // Align title to left
+        title: Title(
+          title: "Comments", //Set title to comments
+          color: const Color(0xFFDDDDDD),
+          child: const Text("Comments"),
         ),
-        body: ListView(children: const [
-          Comment(index: 1)
-        ])); // Create basic comments listView
+      ),
+      body: CommentBox(
+          userImage: CommentBox.commentImageParser(
+              imageURLorPath: "assets/placeholders/150.png"),
+          labelText: 'Write a comment...',
+          errorText: 'Comment cannot be blank',
+          withBorder: false,
+          sendButtonMethod: () {
+            /*if (formKey.currentState!.validate()) {
+              print(commentController.text);
+              setState(() {
+                var value = {
+                  'name': 'New User',
+                  'pic':
+                      'https://lh3.googleusercontent.com/a-/AOh14GjRHcaendrf6gU5fPIVd8GIl1OgblrMMvGUoCBj4g=s400',
+                  'message': commentController.text,
+                  'date': '2021-01-01 12:00:00'
+                };
+                filedata.insert(0, value);
+              });
+              commentController.clear();
+              FocusScope.of(context).unfocus();
+            } else {
+              print("Not validated");
+            }*/
+          },
+          //formKey: formKey,
+          //commentController: commentController,
+          backgroundColor: Colors.pink,
+          textColor: Colors.white,
+          sendWidget:
+              const Icon(Icons.send_sharp, size: 30, color: Colors.white),
+          child: ListView(children: const [Comment(index: 1)])),
+    ); // Create basic comments listView
   }
 }

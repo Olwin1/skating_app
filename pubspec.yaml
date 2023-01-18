@@ -39,6 +39,7 @@ dependencies:
   convex_bottom_bar: ^3.1.0+1
   flutter_chat_ui: ^1.6.6
   uuid: ^3.0.7
+  comment_box: ^0.0.18
 
 dev_dependencies:
   flutter_test:

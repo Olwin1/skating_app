@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'private_message.dart';
 
 class Comment extends StatefulWidget {
   // Create HomePage Class
@@ -56,7 +55,7 @@ class _Comment extends State<Comment> {
                       ],
                     ),
                     const Text(
-                      "dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                      "dataaaaaaaaaaaaaaaaaaaaaaa",
                       textAlign: TextAlign.start,
                     ), // Create message content
                     // Create footer

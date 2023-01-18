@@ -64,19 +64,24 @@ class _Comment extends State<Comment> {
                     Row(
                         mainAxisAlignment: MainAxisAlignment
                             .end, // Align row on right of screen
-                        children: const [
+                        children: [
                           Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal:
                                     8), // Apply padding only to left and right
-                            child: Text(
-                              // Reply Placeholder
-                              "Reply",
-                              textAlign:
-                                  TextAlign.end, // Align with right of screen
+                            child: TextButton(
+                              // Create text button
+                              onPressed: () => widget.focus
+                                  ?.requestFocus(), // When reply pressed focus on text input
+                              child: const Text(
+                                // Reply Placeholder
+                                "Reply",
+                                textAlign:
+                                    TextAlign.end, // Align with right of screen
+                              ),
                             ),
                           ),
-                          Padding(
+                          const Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal:
                                     8), // Apply padding only to left and right
@@ -86,7 +91,7 @@ class _Comment extends State<Comment> {
                                   TextAlign.end, // Align with right of screen
                             ),
                           ),
-                          Padding(
+                          const Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal:
                                     8), // Apply padding only to left and right

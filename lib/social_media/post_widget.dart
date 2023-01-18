@@ -53,11 +53,12 @@ class _PostWidget extends State<PostWidget> {
                               color: Color(0xffcfcfcf))),
                       IconButton(
                           // Create Comment Button
-                          onPressed: () => Navigator.push(
-                              // Send to comments page
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Comments())),
+                          onPressed: () =>
+                              // RootNavigator hides navbar
+                              Navigator.of(context, rootNavigator: true).push(
+                                  // Send to comments page
+                                  MaterialPageRoute(
+                                      builder: (context) => const Comments())),
                           icon: const Icon(
                             Icons.comment,
                             color: Color(0xffcfcfcf),

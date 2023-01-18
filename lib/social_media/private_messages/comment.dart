@@ -66,25 +66,34 @@ class _Comment extends State<Comment> {
                             .end, // Align row on right of screen
                         children: const [
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    8), // Apply padding only to left and right
                             child: Text(
                               // Reply Placeholder
                               "Reply",
-                              textAlign: TextAlign.end,
+                              textAlign:
+                                  TextAlign.end, // Align with right of screen
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    8), // Apply padding only to left and right
                             child: Text(
                               "Like", // Like Placeholder
-                              textAlign: TextAlign.end,
+                              textAlign:
+                                  TextAlign.end, // Align with right of screen
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    8), // Apply padding only to left and right
                             child: Text(
                               "Dislike", // Dislike placeholder
-                              textAlign: TextAlign.end,
+                              textAlign:
+                                  TextAlign.end, // Align with right of screen
                             ),
                           ),
                         ])

@@ -27,13 +27,16 @@ class _Comments extends State<Comments> {
         ),
       ),
       body: CommentBox(
+          // Create CommentBox widget
           focusNode: focus, // Pass focus node to input
           userImage: CommentBox.commentImageParser(
+              // Avatar image
               imageURLorPath: "assets/placeholders/150.png"),
           labelText: 'Write a comment...',
           errorText: 'Comment cannot be blank',
           withBorder: false,
           sendButtonMethod: () {
+            // When send button pressed
             /*if (formKey.currentState!.validate()) {
               print(commentController.text);
               setState(() {
@@ -54,9 +57,9 @@ class _Comments extends State<Comments> {
           },
           //formKey: formKey,
           //commentController: commentController,
-          backgroundColor: Colors.pink,
-          textColor: Colors.white,
-          sendWidget:
+          backgroundColor: Colors.pink, // Set background colour to pink
+          textColor: Colors.white, // Make text white
+          sendWidget: // Icon on left of input
               const Icon(Icons.send_sharp, size: 30, color: Colors.white),
           child: ListView(children: [Comment(index: 1, focus: focus)])),
     ); // Create basic comments listView

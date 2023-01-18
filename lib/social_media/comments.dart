@@ -11,8 +11,10 @@ class Comments extends StatefulWidget {
 }
 
 class _Comments extends State<Comments> {
+  late FocusNode focus; // Define focus node
   @override // Override existing build method
   Widget build(BuildContext context) {
+    focus = FocusNode(); // Assign focus node
     return Scaffold(
       appBar: AppBar(
         // Create appBar
@@ -25,6 +27,7 @@ class _Comments extends State<Comments> {
         ),
       ),
       body: CommentBox(
+          focusNode: focus, // Pass focus node to input
           userImage: CommentBox.commentImageParser(
               imageURLorPath: "assets/placeholders/150.png"),
           labelText: 'Write a comment...',
@@ -55,7 +58,14 @@ class _Comments extends State<Comments> {
           textColor: Colors.white,
           sendWidget:
               const Icon(Icons.send_sharp, size: 30, color: Colors.white),
-          child: ListView(children: const [Comment(index: 1)])),
+          child: ListView(children: [Comment(index: 1, focus: focus)])),
     ); // Create basic comments listView
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    focus.dispose();
+    super.dispose();
   }
 }

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 class Comment extends StatefulWidget {
   // Create HomePage Class
-  const Comment({Key? key, required this.index})
+  const Comment({Key? key, required this.index, this.focus})
       : super(key: key); // Take 2 arguments optional key and title of post
   final int index; // Define title argument
+  final FocusNode? focus; // Define focus argument
   @override
   State<Comment> createState() => _Comment(); //Create state for widget
 }

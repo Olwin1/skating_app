@@ -17,56 +17,97 @@ class FitnessTracker extends StatelessWidget {
             padding: const EdgeInsets.all(32),
             child: Column(
               children: [
-                // Spacer widget with a flex of 1, which is used to take up any remaining space in the Column.
                 const Spacer(
-                  flex: 1,
+                  flex: 50,
                 ),
+                Align(
+                  alignment: Alignment
+                      .centerLeft, // align widget to align button to left
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 32),
+                    child: IconButton(
+                        onPressed: () => print("pressedd"),
+                        icon: const Icon(
+                            Icons.signal_cellular_4_bar)), // placeholder icon
+                  ),
+                ),
+                // Spacer widget with a flex of 1, which is used to take up any remaining space in the Column.
+
                 Padding(
                   // Padding widget with smaller padding value, used to add padding around a nested Column widget
-                  padding: const EdgeInsets.all(32),
+                  padding: const EdgeInsets.symmetric(vertical: 32),
                   child: Column(children: const [
                     Text("Distance Traveled"),
                     Text("0.0 Km")
                   ]),
                 ),
                 Expanded(
+                  flex: 100,
                   // used to take up any remaining space in the Column
-                  child: GridView.count(
-                    // padding around the grid
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    // number of columns in the grid
-                    crossAxisCount: 2,
+                  child: Column(
                     children: [
-                      Column(children: const [
-                        Text("Session Duration"),
-                        Text("47s")
-                      ]),
-                      Column(children: const [
-                        Text("Average Session Duration"),
-                        Text("5:00")
-                      ]),
-                      Column(
-                          children: const [Text("Sunset Time"), Text("19:45")]),
-                      Column(children: const [
-                        Text("Average Speed"),
-                        Text("2kph")
-                      ]),
+                      Table(
+                        // table that puts elements in a grid
+                        children: [
+                          TableRow(
+                            // top row of table
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(children: const [
+                                  Text("Session Duration"),
+                                  Text("47s")
+                                ]),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(children: const [
+                                  Text("Avg. Session Duration"),
+                                  Text("5:00")
+                                ]),
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            // bottom row of table
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(children: const [
+                                  Text("Sunset Time"),
+                                  Text("19:45")
+                                ]),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(children: const [
+                                  Text("Average Speed"),
+                                  Text("2kph")
+                                ]),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      // TextButton widget with a callback function to print "pressed" when clicked
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: TextButton(
+                          onPressed: () => print("pressed"),
+                          child: const Text("Speedometer"),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                // TextButton widget with a callback function to print "pressed" when clicked
                 TextButton(
+                  // callback function to print "pressed" when clicked
                   onPressed: () => print("pressed"),
-                  child: const Text("Speedometer"),
+                  child: const Text("Start"),
                 ),
-                Padding(
-                  // Padding widget to add padding around the button
-                  padding: const EdgeInsets.symmetric(vertical: 32),
-                  child: TextButton(
-                    // callback function to print "pressed" when clicked
-                    onPressed: () => print("pressed"),
-                    child: const Text("Start"),
-                  ),
+
+                const Spacer(
+                  flex: 40,
                 )
               ],
             )));

@@ -28,10 +28,23 @@ class FitnessTracker extends StatelessWidget {
                     // Create Basic Gridview
                     crossAxisCount: 2, // Set width to 2 widgets
                     children: [
-                      Container(),
-                      Container(),
-                      Container(),
-                      Container()
+                      Column(children: const [
+                        Text("Session Duration"), // Session Duration Header
+                        Text("47s") // Session duration Data
+                      ]),
+                      Column(children: const [
+                        Text(
+                            "Average Session Duration"), // Average Session Duration Header
+                        Text("5:00") // Average Session duration Data
+                      ]),
+                      Column(children: const [
+                        Text("Sunset Time"), // Sunset Time Header
+                        Text("19:45") // Sunset Time Data
+                      ]),
+                      Column(children: const [
+                        Text("Average Speed"), // Average Speed Header
+                        Text("2kph") // Session duration Data
+                      ]),
                     ],
                   ),
                 ),

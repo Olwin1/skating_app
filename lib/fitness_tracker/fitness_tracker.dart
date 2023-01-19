@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skating_app/objects/user.dart';
+import 'signal_strength_info.dart';
 
 class FitnessTracker extends StatelessWidget {
   // Constructor that takes a key and a title as required arguments
@@ -26,7 +27,12 @@ class FitnessTracker extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 32),
                     child: IconButton(
-                        onPressed: () => print("pressedd"),
+                        onPressed: () =>
+                            Navigator.of(context, rootNavigator: true).push(
+                                // Send to signal info page
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SignalStrengthInfo())),
                         icon: const Icon(
                             Icons.signal_cellular_4_bar)), // placeholder icon
                   ),

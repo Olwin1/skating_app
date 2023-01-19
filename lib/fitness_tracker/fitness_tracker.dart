@@ -15,9 +15,11 @@ class FitnessTracker extends StatelessWidget {
             child: Column(
               // Create basic vertical layout
               children: [
-                const Spacer(),
+                const Spacer(
+                  flex: 1,
+                ),
                 Padding(
-                  padding: const EdgeInsets.all(8), // Add padding
+                  padding: const EdgeInsets.all(32), // Add padding
                   child: Column(children: const [
                     Text("Distance Traveled"), // Distance Traveled Header
                     Text("0.0 Km") // Distance Traveled Data
@@ -26,6 +28,7 @@ class FitnessTracker extends StatelessWidget {
                 Expanded(
                   child: GridView.count(
                     // Create Basic Gridview
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     crossAxisCount: 2, // Set width to 2 widgets
                     children: [
                       Column(children: const [
@@ -48,8 +51,19 @@ class FitnessTracker extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(), // Speedometer button
-                Container() // Start Button
+                TextButton(
+                  // Create speedometer button
+                  onPressed: () => print("pressed"), // When pressed
+                  child: const Text("Speedometer"), // Speedometer filler text
+                ), // Speedometer button
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 32), // Add padding to space away from rest
+                  child: TextButton(
+                    onPressed: () => print("pressed"),
+                    child: const Text("Start"), // Filler text
+                  ),
+                ) // Start Button
               ],
             )));
   }

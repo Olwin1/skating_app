@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:skating_app/test2.dart';
 import 'social_media/homepage.dart';
+import 'fitness_tracker/fitness_tracker.dart';
 
 class TabNavigator extends StatelessWidget {
   const TabNavigator(
@@ -19,7 +20,9 @@ class TabNavigator extends StatelessWidget {
       "0": (context) => HomePage(
             title: 'Home', // Assign Homepage to index 0 and so on
           ),
-      "1": (context) => const Testingt(),
+      "1": (context) => const FitnessTracker(
+            title: "Fitness Tracker", // Link to fitness tracker
+          ),
       "2": (context) => const Testingt(),
       "3": (context) => const Testingt(),
       "4": (context) => const Testingt(),

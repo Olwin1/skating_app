@@ -11,7 +11,6 @@ class SignalStrengthInfo extends StatefulWidget {
 }
 
 class _SignalStrengthInfo extends State<SignalStrengthInfo> {
-  late FocusNode focus; // Define focus node
   @override // Override existing build method
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,9 +29,35 @@ class _SignalStrengthInfo extends State<SignalStrengthInfo> {
             """Your GPS signal strength is visible throughout your sessions.
             The stronger the signal the more accurate the tracking can be.
             Use this info to understand how accurate your tracking is."""),
-        SignalStrengthObject(), // What each icon means
-        SignalStrengthObject(),
-        SignalStrengthObject(),
+        SignalStrengthObject(
+          // Create strong GPS signal strength widget
+          title: "Strong",
+          body: "Strong GPS signal tracking results are optimal.",
+        ), // What each icon means
+        SignalStrengthObject(
+          // Create good GPS signal strength widget
+          title: "Good",
+          body:
+              "Good GPS signal tracking results will have a standard level of accuracy.",
+        ),
+        SignalStrengthObject(
+          // Create acceptable GPS signal strength widget
+          title: "Acceptable",
+          body:
+              "Acceptable GPS signal tracking. Results will have an adequate level of accuracy.",
+        ),
+        SignalStrengthObject(
+          // Create low GPS signal strength widget
+          title: "Low",
+          body:
+              "Low GPS signal. Tracking results may not be accurate without a stronger signal.",
+        ),
+        SignalStrengthObject(
+          // Create poor GPS signal strength widget
+          title: "Poor",
+          body:
+              "Poor GPS signal move to a area with a stronger signal for better tracking results.",
+        ),
       ]),
     );
   }

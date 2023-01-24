@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skating_app/fitness_tracker/speedometer.dart';
 import 'package:skating_app/objects/user.dart';
 import 'signal_strength_info.dart';
 
@@ -99,8 +100,15 @@ class FitnessTracker extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 16),
                         child: TextButton(
-                          onPressed: () => print("pressed"),
-                          child: const Text("Speedometer"),
+                          onPressed: () =>
+                              Navigator.of(context, rootNavigator: true).push(
+                                  // Root navigator hides navbar
+                                  // Send to speedometer page
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const Speedometer())),
+                          child: const Text(
+                              "Speedometer"), // Set text to speedometer
                         ),
                       ),
                     ],

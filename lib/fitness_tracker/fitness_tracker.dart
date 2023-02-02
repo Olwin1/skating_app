@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skating_app/fitness_tracker/speedometer.dart';
+import 'package:skating_app/fitness_tracker/stop_button.dart';
 import 'package:skating_app/objects/user.dart';
 import 'signal_strength_info.dart';
 
@@ -116,7 +117,12 @@ class FitnessTracker extends StatelessWidget {
                 ),
                 TextButton(
                   // callback function to print "pressed" when clicked
-                  onPressed: () => print("pressed"),
+                  onPressed: () => Navigator.of(context, rootNavigator: true)
+                      .push(
+                          // Root navigator hides navbar
+                          // Send debug page
+                          MaterialPageRoute(
+                              builder: (context) => const StopButton())),
                   child: const Text("Start"),
                 ),
 

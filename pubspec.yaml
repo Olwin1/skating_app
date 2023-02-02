@@ -41,6 +41,8 @@ dependencies:
   uuid: ^3.0.7
   comment_box: ^0.0.18
   alxgration_speedometer: ^0.0.2
+  bezier_chart:
+    git: https://github.com/aeyrium/bezier-chart
 
 dev_dependencies:
   flutter_test:

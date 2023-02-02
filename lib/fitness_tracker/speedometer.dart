@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:alxgration_speedometer/speedometer.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:bezier_chart/bezier_chart.dart';
 
 class SpeedometerPage extends StatefulWidget {
   // Create HomePage Class
@@ -26,7 +26,7 @@ class _SpeedometerPage extends State<SpeedometerPage> {
           ),
         ),
         body: Column(children: [
-          Spacer(),
+          const Spacer(),
           Speedometer(
             // Create speedometer widget
             size: 300, // Set size to 200
@@ -44,9 +44,49 @@ class _SpeedometerPage extends State<SpeedometerPage> {
               print("ON COMPLETE");
             },
           ),
-          Spacer(
-            flex: 2,
-          )
+          Container(
+            // Create container widget'
+            color: Colors.red, // Set background colour to red to see boundaries
+            height: MediaQuery.of(context).size.height /
+                2, // Define size of container
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: BezierChart(
+              // Create bezier chart
+              bezierChartScale: BezierChartScale.CUSTOM,
+              xAxisCustomValues: const [
+                0,
+                5,
+                10,
+                15,
+                20,
+                25,
+                30,
+                35
+              ], // Set X axis values
+              series: const [
+                // Define testing datapoints
+                BezierLine(
+                  data: [
+                    DataPoint<double>(value: 10, xAxis: 0),
+                    DataPoint<double>(value: 130, xAxis: 5),
+                    DataPoint<double>(value: 50, xAxis: 10),
+                    DataPoint<double>(value: 150, xAxis: 15),
+                    DataPoint<double>(value: 75, xAxis: 20),
+                    DataPoint<double>(value: 0, xAxis: 25),
+                    DataPoint<double>(value: 5, xAxis: 30),
+                    DataPoint<double>(value: 45, xAxis: 35),
+                  ],
+                ),
+              ],
+              config: BezierChartConfig(
+                verticalIndicatorStrokeWidth: 3.0,
+                verticalIndicatorColor: Colors.black26,
+                showVerticalIndicator: true,
+                backgroundColor: Colors.red, // For debugging
+                snap: false, // Don't snap between each data point
+              ),
+            ),
+          ),
         ]));
   }
 }

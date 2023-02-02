@@ -106,7 +106,7 @@ class FitnessTracker extends StatelessWidget {
                                   // Send to speedometer page
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const Speedometer())),
+                                          const SpeedometerPage())),
                           child: const Text(
                               "Speedometer"), // Set text to speedometer
                         ),

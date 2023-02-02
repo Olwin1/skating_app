@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:alxgration_speedometer/speedometer.dart';
+import 'package:fl_chart/fl_chart.dart';
 
-class Speedometer extends StatefulWidget {
+class SpeedometerPage extends StatefulWidget {
   // Create HomePage Class
-  const Speedometer({Key? key})
+  const SpeedometerPage({Key? key})
       : super(key: key); // Take 2 arguments optional key and title of post
   @override
-  State<Speedometer> createState() => _Speedometer(); //Create state for widget
+  State<SpeedometerPage> createState() =>
+      _SpeedometerPage(); //Create state for widget
 }
 
-class _Speedometer extends State<Speedometer> {
+class _SpeedometerPage extends State<SpeedometerPage> {
   @override // Override existing build method
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,8 +25,28 @@ class _Speedometer extends State<Speedometer> {
             child: const Text("Speedometer"),
           ),
         ),
-        body: Column(
-          children: const [],
-        ));
+        body: Column(children: [
+          Spacer(),
+          Speedometer(
+            // Create speedometer widget
+            size: 300, // Set size to 200
+            minValue: 0, // Define min and max values
+            maxValue: 10,
+            currentValue: 5, // Set current speed
+            barColor: Colors.purple, // Set bar and pointer colours
+            pointerColor: Colors.black,
+            displayText: "km/h", // Define unit
+            displayTextStyle: const TextStyle(
+                fontSize: 14, color: Colors.deepOrange), // Text colour
+            displayNumericStyle:
+                const TextStyle(fontSize: 24, color: Colors.red),
+            onComplete: () {
+              print("ON COMPLETE");
+            },
+          ),
+          Spacer(
+            flex: 2,
+          )
+        ]));
   }
 }

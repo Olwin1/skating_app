@@ -9,7 +9,24 @@ class StopButton extends StatefulWidget {
       _SpeedometerPage(); //Create state for widget
 }
 
-class _SpeedometerPage extends State<StopButton> {
+class _SpeedometerPage extends State<StopButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+  @override
+  void initState() {
+    super.initState();
+
+    // Create a new AnimationController
+    controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+
+    // Attach a listener to the controller
+    controller.addListener(() {
+      // Call setState() whenever the animation changes
+      setState(() {});
+    });
+  }
+
   @override // Override existing build method
   Widget build(BuildContext context) {
     Stopwatch stopwatch = Stopwatch(); // Create stopwatch object
@@ -24,18 +41,54 @@ class _SpeedometerPage extends State<StopButton> {
             child: const Text("Speedometer"),
           ),
         ),
-        body: GestureDetector(
-          // Create basic gesture detector
-          onLongPressDown: (details) {
-            // When held down
-            stopwatch.start(); // Start stopwatch
-          },
-          onLongPressUp: () {
-            // When released
-            stopwatch.stop(); // Stop stopwatch
-            var timeElapsedInSeconds = stopwatch.elapsed.inSeconds;
-            print("Time elapsed: $timeElapsedInSeconds");
-          },
-        ));
+        body: Center(
+            // Center children
+            child: GestureDetector(
+                // Create basic gesture detector
+                onTapDown: (details) {
+                  // When held down
+                  stopwatch.start(); // Start stopwatch
+                  controller.forward(); // Play animation forward
+                },
+                onTapUp: (e) {
+                  // When released
+                  stopwatch.stop(); // Stop stopwatch
+                  stopwatch.reset(); // Reset timer
+                  var timeElapsedInSeconds = stopwatch.elapsed.inSeconds;
+                  print("Time elapsed: $timeElapsedInSeconds");
+                  if (controller.status == AnimationStatus.forward) {
+                    controller.reverse(); // Reverse animation
+                  }
+                },
+                child: Stack(
+                  alignment: Alignment.center, // Fix alignment
+                  // Create stack layout widget
+                  children: [
+                    const SizedBox(
+                      // Wrap all children in sized box to enlarge button
+                      height: 100,
+                      width: 100,
+                      child: CircularProgressIndicator(
+                        // Create circular background
+                        value: 1.0, // Set to full
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.grey), // Set colour to background colour
+                      ),
+                    ), // Add circular progress indicators
+                    SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: CircularProgressIndicator(
+                        value: controller.value, // Set value to animation value
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                            Colors.blue), // Set fillin colour to blue for now
+                      ),
+                    ),
+                    const SizedBox(
+                        height: 100,
+                        width: 100,
+                        child: Icon(Icons.abc_outlined)) // Add temporary icon
+                  ],
+                ))));
   }
 }

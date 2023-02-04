@@ -5,11 +5,10 @@ class StopButton extends StatefulWidget {
   const StopButton({Key? key})
       : super(key: key); // Take 2 arguments optional key and title of post
   @override
-  State<StopButton> createState() =>
-      _SpeedometerPage(); //Create state for widget
+  State<StopButton> createState() => _StopButton(); //Create state for widget
 }
 
-class _SpeedometerPage extends State<StopButton>
+class _StopButton extends State<StopButton>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
   @override
@@ -36,7 +35,7 @@ class _SpeedometerPage extends State<StopButton>
           leadingWidth: 48, // Remove extra leading space
           centerTitle: false, // Align title to left
           title: Title(
-            title: "Speedometer", //Set title to Speedometer
+            title: "Save Session", //Set title to Speedometer
             color: const Color(0xFFDDDDDD),
             child: const Text("Hold To Stop"),
           ),

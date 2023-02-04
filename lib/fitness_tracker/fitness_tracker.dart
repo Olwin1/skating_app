@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skating_app/fitness_tracker/save_session.dart';
 import 'package:skating_app/fitness_tracker/speedometer.dart';
 import 'package:skating_app/fitness_tracker/stop_button.dart';
 import 'package:skating_app/objects/user.dart';
@@ -122,7 +123,7 @@ class FitnessTracker extends StatelessWidget {
                           // Root navigator hides navbar
                           // Send debug page
                           MaterialPageRoute(
-                              builder: (context) => const StopButton())),
+                              builder: (context) => const SaveSession())),
                   child: const Text("Start"),
                 ),
 

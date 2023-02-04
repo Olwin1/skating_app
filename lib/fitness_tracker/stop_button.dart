@@ -38,57 +38,62 @@ class _SpeedometerPage extends State<StopButton>
           title: Title(
             title: "Speedometer", //Set title to Speedometer
             color: const Color(0xFFDDDDDD),
-            child: const Text("Speedometer"),
+            child: const Text("Hold To Stop"),
           ),
         ),
-        body: Center(
-            // Center children
-            child: GestureDetector(
-                // Create basic gesture detector
-                onTapDown: (details) {
-                  // When held down
-                  stopwatch.start(); // Start stopwatch
-                  controller.forward(); // Play animation forward
-                },
-                onTapUp: (e) {
-                  // When released
-                  stopwatch.stop(); // Stop stopwatch
-                  stopwatch.reset(); // Reset timer
-                  var timeElapsedInSeconds = stopwatch.elapsed.inSeconds;
-                  print("Time elapsed: $timeElapsedInSeconds");
-                  if (controller.status == AnimationStatus.forward) {
-                    controller.reverse(); // Reverse animation
-                  }
-                },
-                child: Stack(
-                  alignment: Alignment.center, // Fix alignment
-                  // Create stack layout widget
-                  children: [
-                    const SizedBox(
-                      // Wrap all children in sized box to enlarge button
-                      height: 100,
-                      width: 100,
-                      child: CircularProgressIndicator(
-                        // Create circular background
-                        value: 1.0, // Set to full
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.grey), // Set colour to background colour
-                      ),
-                    ), // Add circular progress indicators
-                    SizedBox(
-                      height: 100,
-                      width: 100,
-                      child: CircularProgressIndicator(
-                        value: controller.value, // Set value to animation value
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                            Colors.blue), // Set fillin colour to blue for now
-                      ),
-                    ),
-                    const SizedBox(
-                        height: 100,
-                        width: 100,
-                        child: Icon(Icons.abc_outlined)) // Add temporary icon
-                  ],
-                ))));
+        body: Padding(
+            padding: const EdgeInsets.only(
+                top: 28), // Move down slightly to make more reachable by hand
+            child: Center(
+                // Center children
+                child: GestureDetector(
+                    // Create basic gesture detector
+                    onTapDown: (details) {
+                      // When held down
+                      stopwatch.start(); // Start stopwatch
+                      controller.forward(); // Play animation forward
+                    },
+                    onTapUp: (e) {
+                      // When released
+                      stopwatch.stop(); // Stop stopwatch
+                      stopwatch.reset(); // Reset timer
+                      var timeElapsedInSeconds = stopwatch.elapsed.inSeconds;
+                      print("Time elapsed: $timeElapsedInSeconds");
+                      if (controller.status == AnimationStatus.forward) {
+                        controller.reverse(); // Reverse animation
+                      }
+                    },
+                    child: Stack(
+                      alignment: Alignment.center, // Fix alignment
+                      // Create stack layout widget
+                      children: [
+                        const SizedBox(
+                          // Wrap all children in sized box to enlarge button
+                          height: 128,
+                          width: 128,
+                          child: CircularProgressIndicator(
+                            // Create circular background
+                            value: 1.0, // Set to full
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.grey), // Set colour to background colour
+                          ),
+                        ), // Add circular progress indicators
+                        SizedBox(
+                          height: 128,
+                          width: 128,
+                          child: CircularProgressIndicator(
+                            value: controller
+                                .value, // Set value to animation value
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors
+                                    .blue), // Set fillin colour to blue for now
+                          ),
+                        ),
+                        const Icon(
+                          Icons.abc_outlined,
+                          size: 128, // Set size to 128 logical pixels
+                        ) // Add temporary icon
+                      ],
+                    )))));
   }
 }

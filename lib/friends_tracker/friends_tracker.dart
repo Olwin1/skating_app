@@ -17,9 +17,15 @@ class FriendsTracker extends StatelessWidget {
         body: FlutterMap(
       // Create flutter map
       options: MapOptions(
-        center: LatLng(51.509364, -0.128928), // Define Starting Position
-        zoom: 15, // Set zoom factor
-      ),
+          center: LatLng(51.509364, -0.128928), // Define Starting Position
+          maxBounds: LatLngBounds(
+            // Prevent viewing off map
+            LatLng(-90, -180.0),
+            LatLng(90.0, 180.0),
+          ),
+          zoom: 15, // Set zoom factor
+          minZoom: 3.0,
+          maxZoom: 19),
       nonRotatedChildren: [
         // Default Attribution
         AttributionWidget.defaultWidget(
@@ -30,6 +36,7 @@ class FriendsTracker extends StatelessWidget {
       children: [
         TileLayer(
           // Map source -- use OpenStreetMaps
+          maxZoom: 19,
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.skatingapp.map', // Package Name
         ),

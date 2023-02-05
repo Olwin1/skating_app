@@ -44,6 +44,8 @@ class _SaveSession extends State<SaveSession> {
         body: Padding(
             padding: const EdgeInsets.all(48),
             child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start, // Left align children
               // Split layout into individual rows
               children: [
                 Row(
@@ -114,10 +116,15 @@ class _SaveSession extends State<SaveSession> {
                     ],
                   ),
                 ), // Session Description Infobox
+                const Spacer(), // Add small gap
                 TextButton(
                     onPressed: () => print("Add photos"),
                     child: const Text("Add Photos")), // Add Photos Infobox
                 Container(
+                    margin: const EdgeInsets.symmetric(
+                      // Add margin
+                      vertical: 16,
+                    ),
                     color: const Color(0xffcecece),
                     child: Column(
                       children: const [
@@ -128,6 +135,10 @@ class _SaveSession extends State<SaveSession> {
                       ],
                     )), // Session Type Infobox
                 Container(
+                    margin: const EdgeInsets.symmetric(
+                      // Add margin
+                      vertical: 16,
+                    ),
                     color: const Color(0xffcecece),
                     child: Column(
                       children: const [
@@ -137,10 +148,16 @@ class _SaveSession extends State<SaveSession> {
                         )
                       ],
                     )), // Share to Infobox
+                const Spacer(
+                  flex: 2,
+                ), // Vertically centre Widget with remaining space
                 TextButton(
                   onPressed: () => print("Session Saved"),
                   child: const Text("Save Session"),
-                ) // Save Session Infobox
+                ), // Save Session Infobox
+                const Spacer(
+                  flex: 2,
+                )
               ],
             )));
   }

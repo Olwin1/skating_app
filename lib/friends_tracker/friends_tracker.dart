@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skating_app/objects/user.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class FriendsTracker extends StatelessWidget {
   // Constructor that takes a key and a title as required arguments
@@ -12,6 +14,26 @@ class FriendsTracker extends StatelessWidget {
     User user = User("1");
     return Scaffold(
         // Scaffold widget, which is the basic layout element in Flutter
-        body: Container());
+        body: FlutterMap(
+      // Create flutter map
+      options: MapOptions(
+        center: LatLng(51.509364, -0.128928), // Define Starting Position
+        zoom: 15, // Set zoom factor
+      ),
+      nonRotatedChildren: [
+        // Default Attribution
+        AttributionWidget.defaultWidget(
+          source: 'OpenStreetMap contributors',
+          onSourceTapped: null,
+        ),
+      ],
+      children: [
+        TileLayer(
+          // Map source -- use OpenStreetMaps
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.skatingapp.map', // Package Name
+        ),
+      ],
+    ));
   }
 }

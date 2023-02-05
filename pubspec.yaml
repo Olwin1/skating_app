@@ -43,6 +43,8 @@ dependencies:
   alxgration_speedometer: ^0.0.2
   bezier_chart:
     git: https://github.com/aeyrium/bezier-chart
+  flutter_map: ^3.1.0
+  latlong2: ^0.8.1
 
 dev_dependencies:
   flutter_test:

@@ -21,6 +21,7 @@ class FriendsTracker extends StatelessWidget {
       body: FlutterMap(
         // Create flutter map
         options: MapOptions(
+            interactiveFlags: InteractiveFlag.pinchZoom | InteractiveFlag.drag,
             center: LatLng(51.509364, -0.128928), // Define Starting Position
             maxBounds: LatLngBounds(
               // Prevent viewing off map

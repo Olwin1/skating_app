@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:skating_app/profile/profile_page.dart';
 import 'package:skating_app/test2.dart';
 import 'friends_tracker/friends_tracker.dart';
 import 'social_media/homepage.dart';
@@ -27,7 +28,9 @@ class TabNavigator extends StatelessWidget {
       "2": (context) => const Testingt(),
       "3": (context) => const FriendsTracker(
           title: "Friends Tracker"), // Link To friends tracker,
-      "4": (context) => const Testingt(),
+      "4": (context) => const ProfilePage(
+            title: 'Profile Page',
+          ), //  Link to Profile Page
     };
   }
 

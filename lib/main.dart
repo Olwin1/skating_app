@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'tab_navigator.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await FlutterMapTileCaching.initialise();
+  FMTC.instance; // Now available from anywhere
+  final store = FlutterMapTileCaching.instance('mapCache');
+  await store.manage.createAsync(); // Create the store if necessary
+
+  // Run your app and do all of that other stuff
   runApp(const MyApp());
 }
 

@@ -43,6 +43,17 @@ class _ProfilePage extends State<ProfilePage> {
     User user = User("1");
 
     return Scaffold(
+      appBar: AppBar(
+        // Create appBar widget
+        title: const Text("username"), // Set title
+        actions: [
+          // Define icon buttons
+          IconButton(
+            onPressed: () => print("pressed"),
+            icon: const Icon(Icons.menu),
+          )
+        ],
+      ),
       // Basic list layout element
       body: ListView(shrinkWrap: true, children: [
         // Row to display the number of friends, followers, and following

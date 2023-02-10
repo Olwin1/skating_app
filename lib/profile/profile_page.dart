@@ -46,60 +46,78 @@ class _ProfilePage extends State<ProfilePage> {
       // Basic list layout element
       body: ListView(shrinkWrap: true, children: [
         // Row to display the number of friends, followers, and following
-        Row(
-          children: [
-            // Circle avatar
-            const CircleAvatar(
+        Row(children: [
+          // Circle avatar
+          const Padding(
+            padding: EdgeInsets.all(8), // Add padding
+            child: CircleAvatar(
               // Create a circular avatar icon
               radius: 36, // Set radius to 36
               backgroundImage: AssetImage(
                   "assets/placeholders/150.png"), // Set avatar to placeholder images
             ),
-            // Column to display the number of friends
-            Column(
-              children: const [Text("25"), Text("Friends")],
-            ),
-            // Column to display the number of followers
-            Column(
-              children: const [Text("25"), Text("Followers")],
-            ),
-            // Column to display the number of following
-            Column(
-              children: const [Text("25"), Text("Following")],
-            )
-          ],
-        ),
+          ),
+          const Spacer(),
+          // Column to display the number of friends
+
+          Column(children: const [Text("25"), Text("Friends")]),
+          // Column to display the number of followers
+          const Spacer(),
+
+          Column(children: const [Text("25"), Text("Followers")]),
+          // Column to display the number of following
+          const Spacer(),
+
+          Column(children: const [Text("25"), Text("Following")]),
+          const Spacer(),
+        ]),
         // Display the user's name
-        const Text("John Doe"),
+        const Padding(
+          padding: EdgeInsets.all(8),
+          child: Text("John Doe"),
+        ),
         // Display the user's bio
-        const Text("""I'm baby actually taiyaki bruh, wolf lo-fi p
- migas pickled. Sartorial tbh kinfolk 
-             paleo gochujang, hammock ascot cold-pressed small batch 
-             meditation crucifix blue bottle helvetica tofu."""),
+        const Padding(
+          padding: EdgeInsets.all(8),
+          child: Text(
+              textAlign: TextAlign.justify,
+              """I'm baby actually taiyaki bruh, wolf lo-fi pmigas 
+pickled. Sartorial tbh kinfolk paleo gochujang, hammock 
+ascot cold-pressed small batch meditation crucifix blue bottle helvetica tofu."""),
+        ),
         // Row with two text buttons
         Row(children: [
           // First text button
-          TextButton(
-              onPressed: () =>
-                  print("pressed"), // Prints "pressed" when button is pressed
-              child: const Text("Share Profile")), // Button text
+          Expanded(
+            // Expand button to empty space
+            child: TextButton(
+                onPressed: () =>
+                    print("pressed"), // Prints "pressed" when button is pressed
+                child: const Text("Follow")),
+          ), // Button text
           // Second text button
+          Expanded(
+            child: TextButton(
+                // Expand button to empty space
+                onPressed: () =>
+                    print("pressed"), // Prints "pressed" when button is pressed
+                child: const Text("Share Profile")),
+          ), // Button text
           TextButton(
-              onPressed: () =>
-                  print("pressed"), // Prints "pressed" when button is pressed
-              child: const Text("Share Profile")), // Button text
+              onPressed: () => print("pressed"),
+              child: const Icon(Icons.precision_manufacturing_outlined))
         ]),
         // Expanded grid view with images
-        Expanded(
-          child: GridView.count(
-            shrinkWrap: true, // Shrink the grid view to fit its children
-            physics: const ScrollPhysics(), // Scroll physics
-            crossAxisCount: 3, // Number of columns
-            childAspectRatio: 1.0, // Aspect ratio of children
-            children: imageUrls
-                .map(_createGridTileWidget)
-                .toList(), // Map the list of image URLs to grid tiles
-          ),
+        GridView.count(
+          mainAxisSpacing: 2, // Space the children
+          crossAxisSpacing: 2,
+          shrinkWrap: true, // Shrink the grid view to fit its children
+          physics: const ScrollPhysics(), // Scroll physics
+          crossAxisCount: 3, // Number of columns
+          childAspectRatio: 1.0, // Aspect ratio of children
+          children: imageUrls
+              .map(_createGridTileWidget)
+              .toList(), // Map the list of image URLs to grid tiles
         ),
       ]),
     );

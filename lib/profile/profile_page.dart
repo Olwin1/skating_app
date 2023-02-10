@@ -22,6 +22,9 @@ List<String> imageUrls = [
   'https://placeimg.com/640/480/people',
 ];
 
+// Define item type for popup menu
+enum SampleItem { itemOne, itemTwo, itemThree }
+
 // Creates a ProfilePage widget
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key, required this.title})
@@ -46,12 +49,9 @@ class _ProfilePage extends State<ProfilePage> {
       appBar: AppBar(
         // Create appBar widget
         title: const Text("username"), // Set title
-        actions: [
+        actions: const [
           // Define icon buttons
-          IconButton(
-            onPressed: () => print("pressed"),
-            icon: const Icon(Icons.menu),
-          )
+          OptionsMenu()
         ],
       ),
       // Basic list layout element
@@ -147,4 +147,51 @@ ascot cold-pressed small batch meditation crucifix blue bottle helvetica tofu.""
               fit: BoxFit.cover), // Display the image from the URL
         ),
       );
+}
+
+class OptionsMenu extends StatefulWidget {
+  // StatefulWidget that defines an options menu
+  const OptionsMenu({super.key});
+
+  @override
+  State<OptionsMenu> createState() => _OptionsMenuState();
+}
+
+class _OptionsMenuState extends State<OptionsMenu> {
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<SampleItem>(
+      // Offset to set the position of the menu relative to the button
+      offset: const Offset(0, 64),
+      // Callback function that will be called when a menu item is selected
+      onSelected: (SampleItem item) {
+        // In this case, it just prints "selected" to the console
+        print("selected");
+      },
+      // Define the items in the menu using PopupMenuItem widgets
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
+        // First menu item
+        const PopupMenuItem<SampleItem>(
+          // Value of the menu item, an instance of the SampleItem enumeration
+          value: SampleItem.itemOne,
+          // Text widget that displays the text for the menu item
+          child: Text('Edit Profile'),
+        ),
+        // Second menu item
+        const PopupMenuItem<SampleItem>(
+          // Value of the menu item, an instance of the SampleItem enumeration
+          value: SampleItem.itemTwo,
+          // Text widget that displays the text for the menu item
+          child: Text('Settings'),
+        ),
+        // Third menu item
+        const PopupMenuItem<SampleItem>(
+          // Value of the menu item, an instance of the SampleItem enumeration
+          value: SampleItem.itemThree,
+          // Text widget that displays the text for the menu item
+          child: Text('Saved'),
+        ),
+      ],
+    );
+  }
 }

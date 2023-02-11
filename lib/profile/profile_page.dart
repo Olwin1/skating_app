@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skating_app/objects/user.dart';
+import 'package:skating_app/profile/edit_profile.dart';
 
 // List of image urls
 List<String> imageUrls = [
@@ -167,6 +168,15 @@ class _OptionsMenuState extends State<OptionsMenu> {
       onSelected: (SampleItem item) {
         // In this case, it just prints "selected" to the console
         print("selected");
+        if (item == SampleItem.itemOne) {
+          // If item pressed is Edit Profile
+          Navigator.push(
+              // Send to edit profile page
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      const EditProfile(title: "Edit Profile")));
+        }
       },
       // Define the items in the menu using PopupMenuItem widgets
       itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[

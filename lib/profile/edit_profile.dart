@@ -26,43 +26,85 @@ class _EditProfile extends State<EditProfile> {
         title: const Text("Edit Profile"),
       ),
       // Define the body of the Scaffold
-      body: Column(children: [
-        // First column with an avatar and an edit picture button
-        Column(
-          children: [
-            // Display the avatar
-            const CircleAvatar(
-              radius: 36,
-              backgroundImage: AssetImage("assets/placeholders/150.png"),
-            ),
-            // Display the edit picture button
-            TextButton(
-                onPressed: () => print("pressed"),
-                child: const Text("Edit Picture"))
-          ],
-        ),
-        // Second column with display name
-        Column(
-          children: const [
-            Text("Display Name"),
-            TextField(),
-          ],
-        ),
-        // Third column with username
-        Column(
-          children: const [
-            Text("Username"),
-            TextField(),
-          ],
-        ),
-        // Fourth column with about me
-        Column(
-          children: const [
-            Text("About Me"),
-            TextField(),
-          ],
-        )
-      ]),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(children: [
+          // First column with an avatar and an edit picture button
+          Column(
+            children: [
+              // Display the avatar
+              const CircleAvatar(
+                radius: 36,
+                backgroundImage: AssetImage("assets/placeholders/150.png"),
+              ),
+              // Display the edit picture button
+              TextButton(
+                  onPressed: () => print("pressed"),
+                  child: const Text("Edit Picture"))
+            ],
+          ),
+          // Second column with display name
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Padding(
+                padding: EdgeInsets.only(top: 8), // Add padding above text
+                child: Text("Display Name"),
+              ),
+              TextField(
+                // Remove default padding
+                decoration: InputDecoration(
+                    isDense: true, contentPadding: EdgeInsets.zero),
+              ),
+            ],
+          ),
+          // Third column with username
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Padding(
+                padding: EdgeInsets.only(top: 8), // Add padding above text
+                child: Text("Username"),
+              ),
+              TextField(
+                // Remove default padding
+                decoration: InputDecoration(
+                    isDense: true, contentPadding: EdgeInsets.zero),
+              ),
+            ],
+          ),
+          // Fourth column with country
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text("Country"),
+              ),
+              TextField(
+                // Remove default padding
+                decoration: InputDecoration(
+                    isDense: true, contentPadding: EdgeInsets.zero),
+              ),
+            ],
+          ),
+          // Fifth column with about me
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text("About Me"),
+              ),
+              TextField(
+                // Remove default padding
+                decoration: InputDecoration(
+                    isDense: true, contentPadding: EdgeInsets.zero),
+              ),
+            ],
+          )
+        ]),
+      ),
     );
   }
 }

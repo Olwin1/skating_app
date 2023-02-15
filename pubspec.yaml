@@ -47,6 +47,7 @@ dependencies:
   latlong2: ^0.8.1
   material_floating_search_bar: ^0.3.7
   flutter_map_tile_caching: ^7.0.0
+  flutter_snake_navigationbar: ^0.6.1
 
 dev_dependencies:
   flutter_test:

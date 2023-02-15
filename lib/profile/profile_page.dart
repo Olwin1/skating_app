@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/edit_profile.dart';
+import 'package:skating_app/profile/lists.dart';
 
 // List of image urls
 List<String> imageUrls = [
@@ -76,7 +77,14 @@ class _ProfilePage extends State<ProfilePage> {
           // Column to display the number of followers
           const Spacer(),
 
-          Column(children: const [Text("25"), Text("Followers")]),
+          GestureDetector(
+              onTap: () => Navigator.push(
+                  // Send to edit profile page
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const Lists(title: "Edit Profile"))),
+              child: Column(children: const [Text("25"), Text("Followers")])),
           // Column to display the number of following
           const Spacer(),
 

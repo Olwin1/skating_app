@@ -27,7 +27,7 @@ class _Lists extends State<Lists> {
     return Scaffold(
         appBar: AppBar(
             // Setting the title of the AppBar
-            title: const Text("t"),
+            title: const Text("username"),
             // Setting the bottom of the AppBar
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(48.0),

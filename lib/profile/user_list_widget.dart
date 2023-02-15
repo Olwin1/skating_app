@@ -23,18 +23,24 @@ class _UserListWidget extends State<UserListWidget> {
     User user = User("1");
 
     // Returns a row with a CircleAvatar, a text widget, and a TextButton
-    return Row(
-      children: [
-        // CircleAvatar with a radius of 26 and a background image from the assets folder
-        const CircleAvatar(
-          radius: 26,
-          backgroundImage: AssetImage("assets/placeholders/150.png"),
-        ),
-        // Text widget with the text "username"
-        const Text("username"),
-        // TextButton with an onPressed function that prints test value "ee" and a child text widget with the text "Follow"
-        TextButton(onPressed: () => print("ee"), child: const Text("Follow"))
-      ],
-    );
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            // CircleAvatar with a radius of 26 and a background image from the assets folder
+            const Padding(
+              padding: EdgeInsets.all(4),
+              child: CircleAvatar(
+                radius: 26,
+                backgroundImage: AssetImage("assets/placeholders/150.png"),
+              ),
+            ),
+            // Text widget with the text "username"
+            const Text("username"),
+            // TextButton with an onPressed function that prints test value "ee" and a child text widget with the text "Follow"
+            TextButton(
+                onPressed: () => print("ee"), child: const Text("Follow"))
+          ],
+        ));
   }
 }

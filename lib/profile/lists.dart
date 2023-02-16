@@ -11,16 +11,17 @@ const Color selectedColor = Color(0xff4343cd);
 
 // Lists widget
 class Lists extends StatefulWidget {
-  const Lists({Key? key, required this.title}) : super(key: key);
+  const Lists({Key? key, required this.index}) : super(key: key);
 
-  final String title;
+  final int index;
 
   @override
   State<Lists> createState() => _Lists();
 }
 
 class _Lists extends State<Lists> {
-  int _selectedItemPosition = 2;
+  // Define selectedItemPosition as a late object so it will only be initialised when used.
+  late int _selectedItemPosition = widget.index;
 
   @override
   Widget build(BuildContext context) {

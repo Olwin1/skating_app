@@ -81,14 +81,17 @@ class _ProfilePage extends State<ProfilePage> {
               onTap: () => Navigator.push(
                   // Send to edit profile page
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const Lists(title: "Edit Profile"))),
+                  MaterialPageRoute(builder: (context) => Lists(index: 0))),
               child: Column(children: const [Text("25"), Text("Followers")])),
           // Column to display the number of following
           const Spacer(),
 
-          Column(children: const [Text("25"), Text("Following")]),
+          GestureDetector(
+              onTap: () => Navigator.push(
+                  // Send to edit profile page
+                  context,
+                  MaterialPageRoute(builder: (context) => Lists(index: 1))),
+              child: Column(children: const [Text("25"), Text("Following")])),
           const Spacer(),
         ]),
         // Display the user's name

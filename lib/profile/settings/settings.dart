@@ -94,6 +94,13 @@ class _Settings extends State<Settings> {
                 leading: const Icon(Icons.language),
                 title: const Text('Language'),
                 value: const Text('English'),
+                onPressed: (e) => {
+                  Navigator.of(context, rootNavigator: true).push(
+                      // Root navigator hides navbar
+                      // Send debug page
+                      MaterialPageRoute(
+                          builder: (context) => const LanguagePopup()))
+                },
               ),
               // Switch tile for toggling push notifications
               SettingsTile.switchTile(
@@ -144,5 +151,82 @@ class _Settings extends State<Settings> {
         ],
       ),
     );
+  }
+}
+
+class LanguagePopup extends StatefulWidget {
+  const LanguagePopup({super.key});
+
+  @override
+  State<LanguagePopup> createState() => _LanguagePopupState();
+}
+
+class _LanguagePopupState extends State<LanguagePopup> {
+  @override
+  Widget build(BuildContext context) {
+    // The LanguagePopup widget displays a list of languages that the user can select from.
+    // When a language is selected, the widget prints "pressed" to the console.
+    return Scaffold(
+      appBar: AppBar(title: const Text("Langauge")),
+      body: ListView(padding: const EdgeInsets.all(8), children: const [
+        // Each language is represented by a LanguagePopupItem widget, which displays
+        // the language name and its alternative name.
+        LanguagePopupItem(
+          name: "English",
+          altName: "English",
+        ),
+        LanguagePopupItem(
+          name: "Polski",
+          altName: "Polish",
+        ),
+        LanguagePopupItem(
+          name: "Deutsch",
+          altName: "German",
+        ),
+        LanguagePopupItem(
+          name: "Italiano",
+          altName: "Italian",
+        ),
+        LanguagePopupItem(
+          name: "Français",
+          altName: "French",
+        )
+      ]),
+    );
+  }
+}
+
+class LanguagePopupItem extends StatefulWidget {
+  const LanguagePopupItem(
+      {super.key, required this.name, required this.altName});
+  final String name;
+  final String altName;
+
+  @override
+  State<LanguagePopupItem> createState() => _LanguagePopupItemState();
+}
+
+class _LanguagePopupItemState extends State<LanguagePopupItem> {
+  @override
+  Widget build(BuildContext context) {
+    // Each LanguagePopupItem displays the name of a language and its alternative name
+    // using two Text widgets. When the button is pressed, the widget prints "pressed" to the console.
+    return Expanded(
+        child: TextButton(
+            style: const ButtonStyle(alignment: Alignment.centerLeft),
+            onPressed: () => print("pressed"),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.name,
+                  style: const TextStyle(fontSize: 16),
+                ),
+                Text(
+                  widget.altName,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                )
+              ],
+            )));
   }
 }

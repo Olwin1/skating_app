@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/followers_list.dart';
 import 'package:skating_app/profile/following_list.dart';
-import 'package:skating_app/profile/user_list_widget.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 
 // Defining some constants for the SnakeNavigationBar

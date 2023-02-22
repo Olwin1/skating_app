@@ -194,7 +194,10 @@ class _OptionsMenuState extends State<OptionsMenu> {
           Navigator.push(
               // Send to settings page
               context,
-              MaterialPageRoute(builder: (context) => const Settings()));
+              MaterialPageRoute(
+                  builder: (context) => const Settings(
+                        item: 0,
+                      )));
         }
       },
       // Define the items in the menu using PopupMenuItem widgets

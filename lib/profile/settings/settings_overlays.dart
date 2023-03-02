@@ -60,7 +60,7 @@ class _OverlaySettings extends State<OverlaySettings> {
         return Container(
           height: 300,
           width: 250,
-          key: const Key("1"),
+          key: const Key("2"),
           color: const Color(0xffffffff),
           child: ListView(padding: const EdgeInsets.all(8), children: const [
             // Each language is represented by a LanguagePopupItem widget, which displays
@@ -93,7 +93,7 @@ class _OverlaySettings extends State<OverlaySettings> {
         return Container(
             height: 180,
             width: 250,
-            key: const Key("1"),
+            key: const Key("3"),
             color: const Color(0xffffffff),
             child: Column(children: [
               ListTile(

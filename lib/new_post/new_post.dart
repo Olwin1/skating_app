@@ -5,8 +5,12 @@ import 'package:photo_gallery/photo_gallery.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // Define the NewPost widget which extends StatefulWidget
+
+List<Album>? _albums; // A nullable list of Album objects.
+
 class NewPost extends StatefulWidget {
   const NewPost({Key? key, required this.title}) : super(key: key);
   // title is a required parameter
@@ -17,12 +21,12 @@ class NewPost extends StatefulWidget {
   State<NewPost> createState() => _NewPost();
 }
 
+String? _selectedImage;
+
 // Define the state for the NewPost widget
 // This class is the state of a widget named NewPost.
 class _NewPost extends State<NewPost> {
-  String _selectedImage =
-      "0"; // A string variable to hold the selected image ID.
-  List<Album>? _albums; // A nullable list of Album objects.
+  // A string variable to hold the selected image ID.
   List<MediaPage>? _images; // A nullable list of MediaPage objects.
   bool _loading =
       false; // A boolean variable to indicate whether the widget is currently loading.
@@ -37,6 +41,10 @@ class _NewPost extends State<NewPost> {
     initAsync(); // Call the initAsync function.
   }
 
+  void _update(String id) {
+    setState(() => _selectedImage = id);
+  }
+
   int skip =
       0; // An integer variable to hold the number of items to skip when loading images.
 
@@ -49,45 +57,21 @@ class _NewPost extends State<NewPost> {
       List<Album> albums = await PhotoGallery.listAlbums(
           mediumType: MediumType.image); // Load all albums that contain images.
       MediaPage imagePage = await albums[0].listMedia(
-        skip: skip,
-        take: 20,
+        skip: 0,
+        take: 1,
       ); // Load the first page of images from the first album.
       setState(() {
         print(3); // Print 3.
-        _images = [imagePage]; // Assign the imagePage to _images.
-        _selectedImage = _images![0]
-            .items
-            .first
+        _selectedImage = imagePage.items.first
             .id; // Set _selectedImage to the ID of the first image in the first page.
         _albums = albums; // Assign the albums list to _albums.
         _loading = false; // Set _loading to false.
-        _itemCount = _images![0]
-            .items
-            .length; // Set _itemCount to the number of items in the first page.
       });
     }
 
     setState(() {
       print(4); // Print 4.
       _loading = false; // Set _loading to false.
-    });
-  }
-
-  // This function loads the next page of images.
-  Future<void> nextPage() async {
-    List<Album> albums = await PhotoGallery.listAlbums(
-        mediumType: MediumType.image); // Load all albums that contain images.
-    MediaPage _data = await albums[0].listMedia(
-      skip: skip,
-      take: 20,
-    ); // Load the next page of images from the first album.
-    setState(() {
-      _images = [
-        ..._images!,
-        _data
-      ]; // Append the new page of images to the _images list.
-      _itemCount += _data.items
-          .length; // Update _itemCount to include the number of items in the new page.
     });
   }
 
@@ -116,21 +100,26 @@ class _NewPost extends State<NewPost> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("New Post"),
+        actions: [
+          IconButton(
+              onPressed: () => print("pressed"),
+              icon: const Icon(Icons.arrow_forward))
+        ],
       ),
       body: _loading
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : Column(children: [
+          : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // A container that displays the selected image
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: FadeInImage(
                   height: MediaQuery.of(context).size.width,
                   fit: BoxFit.cover,
                   placeholder: MemoryImage(kTransparentImage),
                   // Uses the PhotoProvider to display the selected image
-                  image: PhotoProvider(mediumId: _selectedImage),
+                  image: PhotoProvider(mediumId: _selectedImage!),
                 ),
               ),
               const Spacer(),
@@ -138,78 +127,106 @@ class _NewPost extends State<NewPost> {
               LayoutBuilder(
                 builder: (context, constraints) {
                   // Determines the width and height of each grid item based on the constraints
-                  double gridWidth = (constraints.maxWidth - 25) / 4;
-                  double gridHeight = gridWidth;
-                  double ratio = gridWidth / gridHeight;
                   return SizedBox(
-                    height: MediaQuery.of(context).size.height -
-                        MediaQuery.of(context).size.width -
-                        180,
-                    child: GridView.builder(
-                        reverse: false,
-                        itemCount: _itemCount,
-                        // Uses the SliverGridDelegateWithMaxCrossAxisExtent to layout the grid
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          childAspectRatio: ratio,
-                          mainAxisSpacing: 5,
-                          crossAxisSpacing: 5,
-                          maxCrossAxisExtent:
-                              MediaQuery.of(context).size.width / 4,
-                        ),
-                        // Builds each grid item
-                        itemBuilder: (BuildContext ctx, index) {
-                          if (index < _itemCount) {
-                            // Adds each loaded image to the loadedImages list
-                            for (var i = 0; i < _images!.length; i++) {
-                              print("not loading index: " +
-                                  index.toString() +
-                                  " skip: " +
-                                  skip.toString() +
-                                  " len: " +
-                                  _itemCount.toString());
-                              loadedImages.add(GestureDetector(
-                                onTap: () => setState(() {
-                                  // Updates the selected image when an image is tapped
-                                  _selectedImage =
-                                      _images![i].items[index].id.toString();
-                                }),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  child: Container(
-                                    color: Colors.grey[300],
-                                    height: gridWidth,
-                                    width: gridWidth,
-                                    child: FadeInImage(
-                                      fit: BoxFit.cover,
-                                      placeholder:
-                                          MemoryImage(kTransparentImage),
-                                      // Uses the ThumbnailProvider to display the grid image
-                                      image: ThumbnailProvider(
-                                        mediumId: _images![i].items[index].id,
-                                        mediumType:
-                                            _images?[i].items[index].mediumType,
-                                        highQuality: false,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ));
-                            }
-                            // Displays the loaded image at the current index
-                            return loadedImages[index];
-                          } else {
-                            // Displays a progress indicator while the next page of images is loading
-                            print("loading pls");
-
-                            nextPage();
-                            skip += 20;
-                            return const CircularProgressIndicator();
-                          }
-                        }),
-                  );
+                      height: MediaQuery.of(context).size.height -
+                          MediaQuery.of(context).size.width -
+                          180,
+                      child: PhotosGridView(
+                        update: _update,
+                      ));
                 },
               ),
             ]),
     );
+  }
+}
+
+class PhotosGridView extends StatefulWidget {
+  const PhotosGridView({super.key, required this.update});
+  final ValueChanged<String> update;
+
+  @override
+  State<PhotosGridView> createState() => _PhotosGridViewState();
+}
+
+class _PhotosGridViewState extends State<PhotosGridView> {
+  static const _pageSize = 20; // Number of items to load in a single page
+
+  // PagingController manages the loading of pages as the user scrolls
+  final PagingController<int, Medium> _pagingController =
+      PagingController(firstPageKey: 0);
+
+  @override
+  void initState() {
+    // addPageRequestListener is called whenever the user scrolls near the end of the list
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+    super.initState();
+  }
+
+  // Fetches the data for the given pageKey and appends it to the list of items
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
+      final page = await _albums![0].listMedia(
+        skip: pageKey,
+        take: _pageSize,
+      );
+      final newItems = page.items;
+      final isLastPage = newItems.length < _pageSize;
+      if (isLastPage) {
+        // appendLastPage is called if there are no more items to load
+        _pagingController.appendLastPage(newItems);
+      } else {
+        // appendPage is called to add the newly loaded items to the list of items
+        final nextPageKey = pageKey + newItems.length;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => PagedGridView<int, Medium>(
+        // Uses the SliverGridDelegateWithMaxCrossAxisExtent to layout the grid
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          childAspectRatio: 1, // Ratio of width to height of grid items
+          mainAxisSpacing: 5, // Space between rows of grid items
+          crossAxisSpacing: 5, // Space between columns of grid items
+          maxCrossAxisExtent: MediaQuery.of(context).size.width /
+              4, // Maximum width of a grid item
+        ),
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<Medium>(
+          itemBuilder: (context, item, index) => GestureDetector(
+              onTap: () => widget.update(
+                  // Updates the selected image when an image is tapped
+                  item.id),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5.0),
+                child: Container(
+                  color: Colors.grey[300],
+                  child: FadeInImage(
+                    fit: BoxFit.cover,
+                    placeholder: MemoryImage(kTransparentImage),
+                    // Uses the ThumbnailProvider to display the grid image
+                    image: ThumbnailProvider(
+                      mediumId: item.id,
+                      mediumType: item.mediumType,
+                      highQuality: false,
+                    ),
+                  ),
+                ),
+              )),
+        ),
+      );
+
+  @override
+  void dispose() {
+    // Disposes of the PagingController to free up resources
+    _pagingController.dispose();
+    super.dispose();
   }
 }

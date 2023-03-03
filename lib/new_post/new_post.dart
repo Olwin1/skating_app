@@ -27,10 +27,8 @@ String? _selectedImage;
 // This class is the state of a widget named NewPost.
 class _NewPost extends State<NewPost> {
   // A string variable to hold the selected image ID.
-  List<MediaPage>? _images; // A nullable list of MediaPage objects.
   bool _loading =
       false; // A boolean variable to indicate whether the widget is currently loading.
-  int _itemCount = 0; // An integer variable to hold the total number of images.
   List<GestureDetector> loadedImages = []; // A list of GestureDetector widgets.
 
   // This function is called when the widget is first created.
@@ -45,15 +43,11 @@ class _NewPost extends State<NewPost> {
     setState(() => _selectedImage = id);
   }
 
-  int skip =
-      0; // An integer variable to hold the number of items to skip when loading images.
-
   // This function loads the initial set of images.
   Future<void> initAsync() async {
     print(1); // Print 1.
     if (await _promptPermissionSetting()) {
       // Check if the user has granted permission to access the device's photo gallery.
-      print(2); // Print 2.
       List<Album> albums = await PhotoGallery.listAlbums(
           mediumType: MediumType.image); // Load all albums that contain images.
       MediaPage imagePage = await albums[0].listMedia(
@@ -61,7 +55,6 @@ class _NewPost extends State<NewPost> {
         take: 1,
       ); // Load the first page of images from the first album.
       setState(() {
-        print(3); // Print 3.
         _selectedImage = imagePage.items.first
             .id; // Set _selectedImage to the ID of the first image in the first page.
         _albums = albums; // Assign the albums list to _albums.
@@ -70,7 +63,6 @@ class _NewPost extends State<NewPost> {
     }
 
     setState(() {
-      print(4); // Print 4.
       _loading = false; // Set _loading to false.
     });
   }
@@ -84,10 +76,8 @@ class _NewPost extends State<NewPost> {
             await Permission.storage.request().isGranted &&
             await Permission.photos.request().isGranted ||
         Platform.isAndroid && await Permission.storage.request().isGranted) {
-      print(6); // Print 6.
       return true; // Return true if the permissions have been granted.
     }
-    print(7); // Print 7.
     return false; // Return false if the permissions have not been granted.
   }
 

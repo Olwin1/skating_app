@@ -7,9 +7,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await FlutterMapTileCaching.initialise();
-  FMTC.instance; // Now available from anywhere
-  final store = FlutterMapTileCaching.instance('mapCache');
-  await store.manage.createAsync(); // Create the store if necessary
+  FMTC.instance('mapCache').manage.create();
 
   // Run your app and do all of that other stuff
   runApp(const MyApp());

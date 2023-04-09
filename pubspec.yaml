@@ -53,6 +53,8 @@ dependencies:
   permission_handler: ^10.2.0
   transparent_image: ^2.0.1
   infinite_scroll_pagination: ^3.2.0
+  flutter_secure_storage: ^8.0.0
+  flutter_login_template: ^1.1.0
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:skating_app/new_post/new_post.dart';
 import 'package:skating_app/profile/profile_page.dart';
+import 'package:skating_app/social_media/login.dart';
 import 'package:skating_app/test2.dart';
 import 'friends_tracker/friends_tracker.dart';
 import 'social_media/homepage.dart';
@@ -20,7 +21,10 @@ class TabNavigator extends StatelessWidget {
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context) {
     return {
       // When called will output a route according to the index button pressed
-      "0": (context) => HomePage(
+//      "0": (context) => HomePage(
+//            title: 'Home', // Assign Homepage to index 0 and so on
+//          ),
+      "0": (context) => const Login(
             title: 'Home', // Assign Homepage to index 0 and so on
           ),
       "1": (context) => const FitnessTracker(

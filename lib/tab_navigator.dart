@@ -7,6 +7,9 @@ import 'package:skating_app/test2.dart';
 import 'friends_tracker/friends_tracker.dart';
 import 'social_media/homepage.dart';
 import 'fitness_tracker/fitness_tracker.dart';
+import 'package:skating_app/api/token.dart';
+
+SecureStorage storage = SecureStorage();
 
 class TabNavigator extends StatelessWidget {
   const TabNavigator(
@@ -21,12 +24,7 @@ class TabNavigator extends StatelessWidget {
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context) {
     return {
       // When called will output a route according to the index button pressed
-//      "0": (context) => HomePage(
-//            title: 'Home', // Assign Homepage to index 0 and so on
-//          ),
-      "0": (context) => const Login(
-            title: 'Home', // Assign Homepage to index 0 and so on
-          ),
+      "0": (context) => HomePage(), // Assign Homepage to index 0 and so on
       "1": (context) => const FitnessTracker(
             title: "Fitness Tracker", // Link to fitness tracker
           ),
@@ -43,20 +41,6 @@ class TabNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var routeBuilders = _routeBuilders(context);
-/*
-    int index = 0;
-    for (var i = 0; i < tabitems.length; i++) {
-      print("loop1 $i");
-      if (tabitems[i].icon. == tabItem.icon) {
-        print("loop2 $i");
-        index = i;
-        break;
-      }
-      //statements
-    }*/
-    //String i = tabitems
-    //    .indexOf(tabItem) //Get the index of the tab selected
-    //    .toString(); //Convert to string
 
     return Navigator(
         key: navigatorKey,

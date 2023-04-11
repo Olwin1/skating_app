@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/social_media/private_messages/private_message_list.dart';
 import 'post_widget.dart';
 
 class HomePage extends StatelessWidget {
   // Create HomePage Class
-  HomePage({Key? key, required this.title}) : super(key: key);
-  final String title; // Define title argument
+  HomePage({Key? key}) : super(key: key);
   final _scrollController = ScrollController();
 
   @override // Override the existing widget build method
@@ -32,7 +30,7 @@ class HomePage extends StatelessWidget {
                     .fastOutSlowIn); //Start scrolling fast then slow down when near top
           },
         ),
-        title: Text(title),
+        title: const Text("Home"),
         backgroundColor: const Color.fromARGB(255, 185, 177, 102),
         actions: [
           const Spacer(

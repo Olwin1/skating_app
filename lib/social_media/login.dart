@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login_template/flutter_login_template.dart';
+import 'package:skating_app/api/auth.dart' show login, signup;
+import 'package:skating_app/api/token.dart';
 
 // Define an enum to represent different states of the login screen
 enum _State {
@@ -10,11 +12,15 @@ enum _State {
   create,
 }
 
+SecureStorage storage = SecureStorage();
+
 // Create a StatefulWidget for the login screen
 class Login extends StatefulWidget {
   // Take two arguments: a key and the title of the page
-  const Login({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const Login({Key? key, required this.loggedIn, this.setLoggedIn})
+      : super(key: key);
+  final bool loggedIn;
+  final dynamic setLoggedIn;
 
   @override
   State<Login> createState() =>
@@ -74,24 +80,53 @@ class _Login extends State<Login> {
     textFieldPadding: const EdgeInsets.all(8),
     buttonTextStyle: const TextStyle(),
   );
-
-  // Keep track of the current state of the login screen
+// Keep track of the current state of the login screen
   _State state = _State.signIn;
+// Create controllers for the username and password input fields
+  var usernameController = TextEditingController();
+  var passwordController = TextEditingController();
+// Set a variable for error text that will be displayed if there is an error during sign-in
+  String errorText = "";
 
+// The build method is called to build the UI of the widget
   @override
   Widget build(BuildContext context) {
+    // Define a function to load the home screen when sign-in is successful
+    loadHome() {
+      widget.setLoggedIn(true);
+    }
+
     // Create an icon for the logo of the login screen
     const logo = Icon(
       Icons.android_rounded,
       size: 80,
     );
-
-    // Define the sign-in page of the login template
+    // Define the sign-in page of the login template with the input fields and sign-in button
     var signInPage = LoginTemplateSignInPage(
       logo: logo,
       style: style,
+      controllerUser: usernameController,
+      controllerPassword: passwordController,
       hintTextUser: "Username",
-      onPressedSignIn: () {},
+      errorTextPassword: errorText,
+      onPressedSignIn: () async {
+        // When the user taps the sign-in button, try to log them in
+        try {
+          // Call the login function with the username and password provided
+          var res =
+              await login(usernameController.text, passwordController.text);
+          // If login is successful, save the user's token to local storage
+          await storage.setToken(res);
+          // Load the home screen
+          loadHome();
+          print(res);
+        } catch (e) {
+          setState(() {
+            errorText = "Your username or password is incorrect";
+          });
+          print(e);
+        }
+      },
       onPressedSignUp: () {
         setState(() {
           state = _State.signUp;

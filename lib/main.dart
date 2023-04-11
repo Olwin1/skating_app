@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:skating_app/api/token.dart';
+import 'package:skating_app/social_media/login.dart';
 import 'tab_navigator.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 
@@ -13,12 +15,37 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({
+    super.key,
+  });
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
 
-  // This widget is the root of your application.
+SecureStorage storage = SecureStorage();
+
+class _MyAppState extends State<MyApp> {
+  int selectedpage = 0;
+  bool loggedIn = false;
   @override
   Widget build(BuildContext context) {
+    // Retrieve token from storage
+    storage.getToken().then((token) => {
+          // Check if token exists and user is not already logged in
+          if (token != null && !loggedIn)
+            {
+              // Update state to indicate user is now logged in
+              setState(() => loggedIn = true),
+            }
+        });
+
+// Function to set the logged in state of the user
+    setLoggedIn(value) {
+      // Update state to reflect whether the user is logged in or not
+      setState(() => {loggedIn = value});
+    }
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -33,13 +60,15 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: loggedIn
+          ? MyHomePage(setLoggedIn: setLoggedIn, loggedIn: loggedIn)
+          : Login(setLoggedIn: setLoggedIn, loggedIn: loggedIn),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.loggedIn, this.setLoggedIn});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -50,7 +79,8 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  final bool loggedIn;
+  final dynamic setLoggedIn;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();

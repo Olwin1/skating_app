@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:skating_app/test.dart';
-import '../objects/user.dart';
-import '../objects/post.dart';
 import 'comments.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../api/config.dart';
 
 class PostWidget extends StatefulWidget {
   // Create HomePage Class
-  const PostWidget({Key? key, required this.user, required this.index})
+  const PostWidget({Key? key, required this.post, required this.index})
       : super(key: key); // Take 2 arguments optional key and title of post
-  final User user; // Define title argument
+  final dynamic post; // Define title argument
   final int index; // Define title argument
   @override
   State<PostWidget> createState() => _PostWidget(); //Create state for widget
@@ -17,11 +17,16 @@ class PostWidget extends StatefulWidget {
 class _PostWidget extends State<PostWidget> {
   @override // Override existing build method
   Widget build(BuildContext context) {
-    Post post = widget.user.getPosts()[widget.index];
+    //Post post = widget.user.getPosts()[widget.index];
+    print("${Config.uri}/image/${widget.post['image']}");
+    String likes = widget.post['like_count'] ?? "0";
+    String comments = widget.post['comment_count'] ?? "0";
     return Container(
       height: 315,
       padding: const EdgeInsets.all(0), // Add padding so doesn't touch edges
-      color: const Color(0xFFFFE306), // For testing to highlight seperations
+      color: const Color(0xFFFFE306),
+      margin: const EdgeInsets.only(
+          bottom: 24), // For testing to highlight seperations
       child: Row(
         // Create a row
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,7 +34,11 @@ class _PostWidget extends State<PostWidget> {
           // Add Post image to one row and buttons to another
           Expanded(
             flex: 5,
-            child: post.postImage, // Set child to post image
+            child: CachedNetworkImage(
+              imageUrl: "${Config.uri}/image/${widget.post['image']}",
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+            ), // Set child to post image
           ),
           Expanded(
             flex: 1, // Make 2x Bigger than sibling
@@ -46,22 +55,43 @@ class _PostWidget extends State<PostWidget> {
                 children: [
                   Column(
                     children: [
-                      IconButton(
-                          // Create Like Button
-                          onPressed: () => print("Liked"),
-                          icon: const Icon(Icons.thumb_up,
-                              color: Color(0xffcfcfcf))),
-                      IconButton(
-                          // Create Comment Button
-                          onPressed: () =>
-                              // RootNavigator hides navbar
-                              Navigator.of(context, rootNavigator: true).push(
-                                  // Send to comments page
-                                  MaterialPageRoute(
-                                      builder: (context) => const Comments())),
-                          icon: const Icon(
-                            Icons.comment,
-                            color: Color(0xffcfcfcf),
+                      ListTile(
+                          title: IconButton(
+                            // Create Like Button
+                            onPressed: () => print(IconTheme.of(context).size),
+                            icon: const Icon(
+                              Icons.thumb_up,
+                              color: Color(0xffcfcfcf),
+                            ),
+                            padding: const EdgeInsets.only(top: 16),
+                            constraints: const BoxConstraints(),
+                          ),
+                          subtitle: Text(
+                            likes,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Color(0xffcfcfcf)),
+                          )),
+                      ListTile(
+                          title: IconButton(
+                            // Create Comment Button
+                            onPressed: () =>
+                                // RootNavigator hides navbar
+                                Navigator.of(context, rootNavigator: true).push(
+                                    // Send to comments page
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Comments())),
+                            icon: const Icon(
+                              Icons.comment,
+                              color: Color(0xffcfcfcf),
+                            ),
+                            padding: const EdgeInsets.only(top: 16),
+                            constraints: const BoxConstraints(),
+                          ),
+                          subtitle: Text(
+                            comments,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Color(0xffcfcfcf)),
                           )),
                       IconButton(
                           // Create Save Button

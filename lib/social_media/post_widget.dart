@@ -36,7 +36,14 @@ class _PostWidget extends State<PostWidget> {
             flex: 5,
             child: CachedNetworkImage(
               imageUrl: "${Config.uri}/image/${widget.post['image']}",
-              placeholder: (context, url) => const CircularProgressIndicator(),
+              placeholder: (context, url) => const Center(
+                child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: Color(0xffcecece),
+                    )),
+              ),
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ), // Set child to post image
           ),

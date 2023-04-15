@@ -1,8 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../objects/user.dart';
 import 'list_widget.dart';
+import '../../api/messages.dart';
 
 class PrivateMessageList extends StatefulWidget {
   // Create HomePage Class
@@ -27,10 +29,11 @@ class _PrivateMessageList extends State<PrivateMessageList> {
           color:
               const Color(0xFFFFE306), // For testing to highlight seperations
           child: Column(
-            children: [
+            children: const [
               Expanded(
                   // Make list view expandable
-                  child: ListView(
+                  child:
+                      ChannelsListView() /*ListView(
                 padding: const EdgeInsets.all(8),
                 // Create list view widget
                 // Create a row
@@ -53,9 +56,80 @@ class _PrivateMessageList extends State<PrivateMessageList> {
                       )),
                   const ListWidget(index: 1) // Create basic debug widget
                 ], // Set child to a list widget
-              )),
+              )*/
+                  ),
             ],
           ),
         ));
+  }
+}
+
+class ChannelsListView extends StatefulWidget {
+  const ChannelsListView({super.key});
+
+  @override
+  State<ChannelsListView> createState() => _ChannelsListViewState();
+}
+
+class _ChannelsListViewState extends State<ChannelsListView> {
+  static const _pageSize = 20; // Number of items to load in a single page
+  List<String> title = [];
+  List<String> channel = [];
+
+  // PagingController manages the loading of pages as the user scrolls
+  final PagingController<int, Object> _pagingController =
+      PagingController(firstPageKey: 0);
+
+  @override
+  void initState() {
+    // addPageRequestListener is called whenever the user scrolls near the end of the list
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+    super.initState();
+  }
+
+  // Fetches the data for the given pageKey and appends it to the list of items
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
+      final page = await getChannels(
+        pageKey,
+      );
+      for (int i = 0; i < page.length; i++) {
+        Map<String, dynamic> item = page[i] as Map<String, dynamic>;
+        title.add(item['participants'][0]);
+        channel.add(item['_id']);
+      }
+      final isLastPage = page.length < _pageSize;
+      if (isLastPage) {
+        // appendLastPage is called if there are no more items to load
+        _pagingController.appendLastPage(page);
+      } else {
+        // appendPage is called to add the newly loaded items to the list of items
+        final nextPageKey = pageKey += 1;
+        _pagingController.appendPage(page, nextPageKey);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => PagedListView<int, Object>(
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<Object>(
+          itemBuilder: (context, item, index) => ListWidget(
+              title: title[index],
+              index: index,
+              channel: channel[index]), //item id
+        ),
+      );
+
+  @override
+  void dispose() {
+    // Disposes of the PagingController to free up resources
+    _pagingController.dispose();
+    super.dispose();
   }
 }

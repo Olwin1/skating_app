@@ -3,9 +3,15 @@ import 'private_message.dart';
 
 class ListWidget extends StatefulWidget {
   // Create HomePage Class
-  const ListWidget({Key? key, required this.index})
+  const ListWidget(
+      {Key? key,
+      required this.title,
+      required this.index,
+      required this.channel})
       : super(key: key); // Take 2 arguments optional key and title of post
   final int index; // Define title argument
+  final String title; // Define title argument
+  final String channel; // Define title argument
   @override
   State<ListWidget> createState() => _ListWidget(); //Create state for widget
 }
@@ -23,9 +29,9 @@ class _ListWidget extends State<ListWidget> {
             // When button pressed
             context,
             MaterialPageRoute(
-                builder: (context) => const PrivateMessage(
+                builder: (context) => PrivateMessage(
                       // Add private message page to top of navigation stack
-                      index: 1,
+                      index: 1, channel: widget.channel,
                     ))), //When list widget clicked
         child: Row(
           // Create a row
@@ -41,24 +47,22 @@ class _ListWidget extends State<ListWidget> {
             const Padding(
                 padding:
                     EdgeInsets.only(left: 16)), // Space between avatar and text
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  // Create a column aligned to the left
-                  Padding(
-                    //Add padding to the top to move the text down a bit
-                    padding: EdgeInsets.only(top: 10),
-                  ),
-                  Text(
-                    //Message target's Name
-                    "Friend 1",
-                  ),
-                  Text("Last message sent · 4h",
-                      style: TextStyle(
-                          color: Color.fromARGB(
-                              255, 77, 77, 77), // Set colour to light grey
-                          height: 1.5)), // Last message sent from user
-                ]),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              // Create a column aligned to the left
+              const Padding(
+                //Add padding to the top to move the text down a bit
+                padding: EdgeInsets.only(top: 10),
+              ),
+              Text(
+                //Message target's Name
+                widget.title,
+              ),
+              const Text("Last message sent · 4h",
+                  style: TextStyle(
+                      color: Color.fromARGB(
+                          255, 77, 77, 77), // Set colour to light grey
+                      height: 1.5)), // Last message sent from user
+            ]),
           ],
         ),
       ),

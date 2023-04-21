@@ -57,6 +57,9 @@ dependencies:
   flutter_login_template: ^1.1.0
   http: ^0.13.5
   cached_network_image: ^3.2.3
+  socket_io_client: ^2.0.1
+  get_it: ^7.2.0
+  flutter_chat_types: ^3.6.0
 
 dev_dependencies:
   flutter_test:

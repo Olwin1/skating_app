@@ -1,24 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:get_it/get_it.dart';
+import 'package:skating_app/api/websocket.dart';
 import 'package:skating_app/api/token.dart';
 import 'package:skating_app/social_media/login.dart';
 import 'tab_navigator.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 
+// Define the main function
 Future<void> main() async {
+  // Ensure that the Flutter widgets are initialized
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize the FlutterMapTileCaching package for caching map tiles
   await FlutterMapTileCaching.initialise();
+
+  // Create an instance of the cache manager for map tiles and register it with GetIt dependency injection
   FMTC.instance('mapCache').manage.create();
 
-  // Run your app and do all of that other stuff
+  // Register a singleton instance of WebSocketConnection class with GetIt dependency injection
+  GetIt.I.registerSingleton<WebSocketConnection>(WebSocketConnection());
+
+  // Run the app with the MyApp widget
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({
-    super.key,
-  });
+  const MyApp({super.key});
+
   @override
   State<MyApp> createState() => _MyAppState();
 }

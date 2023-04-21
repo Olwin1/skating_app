@@ -1,31 +1,85 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:skating_app/objects/user.dart';
+import 'package:get_it/get_it.dart';
+import 'package:skating_app/api/websocket.dart';
 import 'package:uuid/uuid.dart';
 import '../../api/messages.dart';
 
+// Initialize GetIt for dependency injection
+GetIt getIt = GetIt.instance;
+
+// Define a StatefulWidget for displaying private messages
 class PrivateMessage extends StatefulWidget {
-  // Create HomePage Class
+  // Constructor takes an index and a channel as arguments
   const PrivateMessage({Key? key, required this.index, required this.channel})
-      : super(key: key); // Take 2 arguments optional key and title of post
-  final int index; // Define title argument
+      : super(key: key);
+  final int index;
   final String channel;
+
+  // Create and return a state for the widget
   @override
-  State<PrivateMessage> createState() =>
-      _PrivateMessage(); //Create state for widget
+  State<PrivateMessage> createState() => _PrivateMessage();
 }
 
+// Define the state for PrivateMessage widget
 class _PrivateMessage extends State<PrivateMessage> {
+  // Initialize a list to store messages
   final List<types.Message> _messages = [];
-  final _user = const types.User(id: '82091008-a484-4a89-ae75-a22bf8d6f3ac');
+  // Initialize a page number for pagination
   int _page = 0;
+  // Set a loading flag to show/hide loading indicator
   bool loading = false;
+  // Initialize a stream subscription
+  late StreamSubscription subscription;
+  final _user = const types.User(id: "82091008-a484-4a89-ae75-a22bf8d6f3ac");
 
   @override
   void initState() {
     super.initState();
+    // Load initial messages
     loadMessages();
+    // Join the channel using websockets
+    getIt<WebSocketConnection>()
+        .socket
+        .emit("joinChannel", '{"channel": "${widget.channel}"}');
+    // Subscribe to the websocket stream
+    subscription = getIt<WebSocketConnection>()
+        .stream
+        .listen((data) => {updateMessages(data)});
+  }
+
+  List<types.User> users = [types.User(id: const Uuid().v1())];
+  types.User getUser(String user) {
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].id == user) {
+        return users[i];
+      }
+    }
+    var newUser = types.User(id: user);
+    users.add(newUser);
+    return newUser;
+  }
+
+  // Function to update messages when new messages arrive
+  void updateMessages(Map<String, dynamic> data) {
+    // If the message is for the current channel
+    if (data["channel"] == widget.channel) {
+      print("ITS A MATCH!");
+      // Add the new message to the beginning of the list
+      setState(() {
+        _messages.insert(
+            0,
+            types.TextMessage(
+              author: getUser(data["sender"]),
+              createdAt: DateTime.now().millisecondsSinceEpoch,
+              id: const Uuid().v1(),
+              text: data["content"],
+            ));
+      });
+    }
   }
 
   Future<void> loadMessages() async {
@@ -41,7 +95,7 @@ class _PrivateMessage extends State<PrivateMessage> {
       dynamic message = messagesRaw[i];
       messages.add(types.TextMessage(
         // Create new message
-        author: _user, // Set author of message
+        author: getUser(message["sender"]), // Set author of message
         createdAt: DateTime.parse(message["date_sent"])
             .millisecondsSinceEpoch, // Get time
         id: const Uuid().v1(), // Generate random debug user id
@@ -64,7 +118,7 @@ class _PrivateMessage extends State<PrivateMessage> {
       dynamic message = messagesRaw[i];
       messages.add(types.TextMessage(
         // Create new message
-        author: _user, // Set author of message
+        author: getUser(message["sender"]), // Set author of message
         createdAt: DateTime.now().millisecondsSinceEpoch, // Get time
         id: const Uuid().v1(), // Generate random debug user id
         text: message["content"], // Set message content
@@ -157,5 +211,15 @@ class _PrivateMessage extends State<PrivateMessage> {
       _addMessage(errorMessage);
       print("An error Occurred $e");
     }
+  }
+
+  @override
+  void dispose() {
+    try {
+      subscription.cancel(); // Stop listening to new messages
+    } catch (e) {
+      print(e);
+    }
+    super.dispose();
   }
 }

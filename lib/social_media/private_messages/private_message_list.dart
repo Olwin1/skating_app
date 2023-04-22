@@ -93,6 +93,11 @@ class _ChannelsListViewState extends State<ChannelsListView> {
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
+    if (getIt<WebSocketConnection>().socket.disconnected) {
+      getIt<WebSocketConnection>()
+          .socket
+          .connect(); // Connect to socket when user enters messaging pages
+    }
 
     // Subscribe to the websocket stream
     subscription = getIt<WebSocketConnection>().stream.listen((data) => {
@@ -175,6 +180,11 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       // Disposes of the PagingController to free up resources
       _pagingController.dispose();
       subscription.cancel(); // Stop listening to new messages
+      if (getIt<WebSocketConnection>().socket.connected) {
+        getIt<WebSocketConnection>()
+            .socket
+            .disconnect(); // Disconnect from websocket when user leaves messaging pages
+      }
     } catch (e) {
       print(e);
     }

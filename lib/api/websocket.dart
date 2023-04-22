@@ -33,6 +33,7 @@ class WebSocketConnection {
           Config.uri,
           io.OptionBuilder()
               .setTransports(['websocket']) // sets the transport method
+              .disableAutoConnect() // Don't connect until told to
               .setExtraHeaders(
                   {'token': await storage.getToken()}) // sets extra headers
               .build());

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Comment extends StatefulWidget {
+  final Map<String, dynamic> comment;
+
   // Create HomePage Class
-  const Comment({Key? key, required this.index, this.focus})
+  const Comment(
+      {Key? key, required this.index, this.focus, required this.comment})
       : super(key: key); // Take 2 arguments optional key and title of post
   final int index; // Define title argument
   final FocusNode? focus; // Define focus argument
@@ -44,19 +47,21 @@ class _Comment extends State<Comment> {
                   children: [
                     Row(
                       // Create top row
-                      children: const [
-                        Text("username", // User's Display Name
-                            style: TextStyle(
+                      children: [
+                        Text(widget.comment["sender"], // User's Display Name
+                            style: const TextStyle(
                                 color: Color(0xff666666))), // Set colour
                         Text(
-                          " 5h", //Time since sent
-                          style:
-                              TextStyle(color: Color(0xffbfbfbf)), // Set colour
+                          DateTime.parse(widget.comment["date"])
+                              .millisecondsSinceEpoch
+                              .toString(), //Time since sent
+                          style: const TextStyle(
+                              color: Color(0xffbfbfbf)), // Set colour
                         )
                       ],
                     ),
-                    const Text(
-                      "dataaaaaaaaaaaaaaaaaaaaaaa",
+                    Text(
+                      widget.comment["content"],
                       textAlign: TextAlign.start,
                     ), // Create message content
                     // Create footer

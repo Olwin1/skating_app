@@ -1,74 +1,198 @@
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skating_app/social_media/private_messages/comment.dart';
 
+import '../api/social.dart';
+
 class Comments extends StatefulWidget {
+  final String post;
+
   // Create HomePage Class
-  const Comments({Key? key})
+  const Comments({Key? key, required this.post})
       : super(key: key); // Take 2 arguments optional key and title of post
   @override
   State<Comments> createState() => _Comments(); //Create state for widget
 }
 
 class _Comments extends State<Comments> {
-  late FocusNode focus; // Define focus node
-  @override // Override existing build method
+  // Create a focus node to handle focus events
+  late FocusNode focus;
+
+  // Initialize a text editing controller to handle text input
+  late TextEditingController commentController = TextEditingController();
+
+  // Initialize an empty list to store new comments
+  List<Map<String, dynamic>> newComments = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    focus = FocusNode(); // Assign focus node
+    // Create a new focus node every time the widget is built
+    focus = FocusNode();
+
     return Scaffold(
       appBar: AppBar(
-        // Create appBar
-        leadingWidth: 48, // Remove extra leading space
-        centerTitle: false, // Align title to left
+        leadingWidth: 48,
+        centerTitle: false,
         title: Title(
-          title: "Comments", //Set title to comments
+          title: "Comments",
           color: const Color(0xFFDDDDDD),
           child: const Text("Comments"),
         ),
       ),
       body: CommentBox(
-          // Create CommentBox widget
-          focusNode: focus, // Pass focus node to input
-          userImage: CommentBox.commentImageParser(
-              // Avatar image
-              imageURLorPath: "assets/placeholders/150.png"),
-          labelText: 'Write a comment...',
-          errorText: 'Comment cannot be blank',
-          withBorder: false,
-          sendButtonMethod: () {
-            // When send button pressed
-            /*if (formKey.currentState!.validate()) {
-              print(commentController.text);
-              setState(() {
-                var value = {
-                  'name': 'New User',
-                  'pic':
-                      'https://lh3.googleusercontent.com/a-/AOh14GjRHcaendrf6gU5fPIVd8GIl1OgblrMMvGUoCBj4g=s400',
-                  'message': commentController.text,
-                  'date': '2021-01-01 12:00:00'
-                };
-                filedata.insert(0, value);
-              });
-              commentController.clear();
-              FocusScope.of(context).unfocus();
-            } else {
-              print("Not validated");
-            }*/
-          },
-          //formKey: formKey,
-          //commentController: commentController,
-          backgroundColor: Colors.pink, // Set background colour to pink
-          textColor: Colors.white, // Make text white
-          sendWidget: // Icon on left of input
-              const Icon(Icons.send_sharp, size: 30, color: Colors.white),
-          child: ListView(children: [Comment(index: 1, focus: focus)])),
-    ); // Create basic comments listView
+        focusNode: focus,
+        userImage: CommentBox.commentImageParser(
+          imageURLorPath: "assets/placeholders/150.png",
+        ),
+        labelText: 'Write a comment...',
+        errorText: 'Comment cannot be blank',
+        withBorder: false,
+
+        // Pass the comment controller to the CommentBox widget
+        commentController: commentController,
+
+        // Define the function to execute when the send button is pressed
+        sendButtonMethod: () {
+          if (commentController.text.isNotEmpty) {
+            // Call the postComment function with the current post and the comment text
+            postComment(widget.post, commentController.text);
+
+            // Clear the comment controller and update the UI with the new comment
+            setState(() {
+              newComments = [
+                ...newComments,
+                (<String, dynamic>{
+                  "_id": "newPost",
+                  "post": widget.post,
+                  "sender": "userid",
+                  "content": commentController.text,
+                  "like_users": [],
+                  "dislike_users": [],
+                  "date": DateTime.now().toString()
+                })
+              ];
+            });
+            commentController.clear();
+          }
+        },
+        backgroundColor: Colors.pink,
+        textColor: Colors.white,
+        sendWidget: const Icon(Icons.send_sharp, size: 30, color: Colors.white),
+        child: CommentsListView(
+          // Pass the current post, focus node, and new comments to the CommentsListView widget
+          post: widget.post,
+          focus: focus,
+          newComments: newComments,
+        ),
+      ),
+    );
   }
 
   @override
   void dispose() {
-    // Clean up the focus node when the Form is disposed.
+    // Dispose of the focus node and comment controller to prevent memory leaks
     focus.dispose();
+    commentController.dispose();
+    super.dispose();
+  }
+}
+
+class CommentsListView extends StatefulWidget {
+  final FocusNode focus;
+  final String post;
+
+  final List<Map<String, dynamic>> newComments;
+
+  const CommentsListView(
+      {super.key,
+      required this.focus,
+      required this.post,
+      required this.newComments});
+
+  @override
+  State<CommentsListView> createState() => _CommentsListViewState();
+}
+
+class _CommentsListViewState extends State<CommentsListView> {
+  // Number of items per page
+  static const _pageSize = 20;
+
+  // The controller that manages pagination
+  final PagingController<int, Map<String, dynamic>> _pagingController =
+      PagingController(firstPageKey: 0);
+
+  @override
+  void initState() {
+    // Add a listener for page requests, and call _fetchPage() when a page is requested
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+    super.initState();
+  }
+
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      // Fetch the page of comments using the getComments() function
+      final page = [
+        ...await getComments(
+          widget.post,
+          pageKey,
+        ),
+        ...widget.newComments
+      ];
+
+      // Determine if this is the last page
+      final isLastPage = page.length < _pageSize;
+
+      if (isLastPage) {
+        // If this is the last page, append it to the list of pages
+        _pagingController.appendLastPage(page);
+      } else {
+        // If this is not the last page, append it to the list of pages and request the next page
+        final nextPageKey = pageKey += 1;
+        _pagingController.appendPage(page, nextPageKey);
+      }
+    } catch (error) {
+      // If there's an error fetching the page, set the error on the controller
+      _pagingController.error = error;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.newComments.isNotEmpty) {
+      // If there are new comments, refresh the list view
+      _pagingController.refresh();
+    }
+
+    // Build a paginated list view of comments using the PagedListView widget
+    return PagedListView<int, Map<String, dynamic>>(
+      pagingController: _pagingController,
+      builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+        // Use the Comment widget to build each item in the list view
+        itemBuilder: (context, item, index) => Comment(
+          index: index,
+          focus: widget.focus,
+          comment: item,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    try {
+      // Dispose the controller when the widget is disposed
+      _pagingController.dispose();
+    } catch (e) {
+      print(e);
+    }
     super.dispose();
   }
 }

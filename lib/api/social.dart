@@ -163,7 +163,7 @@ Future<Object> delPost(String post) async {
 
 // This function retrieves comments for a given post and page number
 // It returns a Future<Object> which resolves to a Map<String, dynamic> representing the comments
-Future<Object> getComments(String post, int page) async {
+Future<List<Map<String, dynamic>>> getComments(String post, int page) async {
   var url = Uri.parse('${Config.uri}/post/comments');
 
   try {
@@ -172,7 +172,7 @@ Future<Object> getComments(String post, int page) async {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization':
-            'Bearer ${storage.getToken()}', // Include authentication token in the header
+            'Bearer ${await storage.getToken()}', // Include authentication token in the header
         'post': post, // Specify the post ID to retrieve comments for
         'page':
             page.toString(), // Specify the page number of comments to retrieve
@@ -181,9 +181,12 @@ Future<Object> getComments(String post, int page) async {
 
     if (response.statusCode == 200) {
       // Check if the response status code is successful
-      Map<String, dynamic> y = json.decode(response
-          .body); // Decode the response body and return it as a Map<String, dynamic>
-      return y;
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(
+        json
+            .decode(response.body)
+            .map((model) => Map<String, dynamic>.from(model)),
+      );
+      return data;
     } else {
       throw Exception(
           "Post Unsuccessful: ${response.reasonPhrase}"); // Throw an exception if the response status code is not successful
@@ -364,7 +367,7 @@ Future<Object> postComment(String post, String content) async {
     // The code tries to make an HTTP POST request to the given URL with the given headers and body parameters.
     var response = await http.post(url, headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${storage.getToken()}',
+      'Authorization': 'Bearer ${await storage.getToken()}',
     }, body: {
       'post': post,
       'content': content

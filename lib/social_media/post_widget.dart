@@ -86,8 +86,8 @@ class _PostWidget extends State<PostWidget> {
                                 Navigator.of(context, rootNavigator: true).push(
                                     // Send to comments page
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            const Comments())),
+                                        builder: (context) => Comments(
+                                            post: widget.post["_id"]))),
                             icon: const Icon(
                               Icons.comment,
                               color: Color(0xffcfcfcf),

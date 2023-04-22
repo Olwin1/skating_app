@@ -51,7 +51,7 @@ Future<Object> postPost(String description, String image) async {
       url,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${storage.getToken()}'
+        'Authorization': 'Bearer ${await storage.getToken()}'
       },
       body: {'description': description, 'image': image},
     );
@@ -81,7 +81,7 @@ Future<Object> getPost(String post) async {
       url,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${storage.getToken()}',
+        'Authorization': 'Bearer ${await storage.getToken()}',
         'post': post
       },
     );
@@ -142,7 +142,7 @@ Future<Object> delPost(String post) async {
       url,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${storage.getToken()}'
+        'Authorization': 'Bearer ${await storage.getToken()}'
       },
       body: {'post': post},
     );
@@ -208,7 +208,7 @@ Future<Object> getComment(String comment) async {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization':
-            'Bearer ${storage.getToken()}', // Include authentication token in the header
+            'Bearer ${await storage.getToken()}', // Include authentication token in the header
         'comment': comment // Specify the comment ID to retrieve
       },
     );
@@ -237,7 +237,7 @@ Future<Object> likeComment(String comment) async {
     // Send the HTTP POST request with the comment data and authentication headers
     var response = await http.post(url, headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${storage.getToken()}',
+      'Authorization': 'Bearer ${await storage.getToken()}',
     }, body: {
       'comment': comment
     });
@@ -265,7 +265,7 @@ Future<Object> dislikeComment(String comment) async {
     // Send the HTTP POST request with the comment data and authentication headers
     var response = await http.post(url, headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${storage.getToken()}',
+      'Authorization': 'Bearer ${await storage.getToken()}',
     }, body: {
       'comment': comment
     });
@@ -291,7 +291,7 @@ Future<Object> unlikeComment(String comment) async {
   try {
     var response = await http.post(url, headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${storage.getToken()}',
+      'Authorization': 'Bearer ${await storage.getToken()}',
     }, body: {
       'comment': comment
     });
@@ -316,7 +316,7 @@ Future<Object> undislikeComment(String comment) async {
   try {
     var response = await http.post(url, headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${storage.getToken()}',
+      'Authorization': 'Bearer ${await storage.getToken()}',
     }, body: {
       'comment': comment
     });
@@ -341,7 +341,7 @@ Future<Object> delComment(String comment) async {
   try {
     var response = await http.delete(url, headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${storage.getToken()}',
+      'Authorization': 'Bearer ${await storage.getToken()}',
     }, body: {
       'comment': comment
     });
@@ -395,7 +395,7 @@ Future<Object> savePost(String post) async {
     // The code tries to make an HTTP POST request to the given URL with the given headers and body parameters.
     var response = await http.post(url, headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${storage.getToken()}',
+      'Authorization': 'Bearer ${await storage.getToken()}',
     }, body: {
       'post': post,
     });
@@ -423,7 +423,7 @@ Future<Object> unsavePost(String post) async {
       // make a HTTP POST request with headers
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization':
-          'Bearer ${storage.getToken()}', // include authorization token in headers
+          'Bearer ${await storage.getToken()}', // include authorization token in headers
     }, body: {
       'post': post, // include the post ID in the request body
     });
@@ -453,7 +453,7 @@ Future<Object> likePost(String post) async {
       // make a HTTP POST request with headers
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization':
-          'Bearer ${storage.getToken()}', // include authorization token in headers
+          'Bearer ${await storage.getToken()}', // include authorization token in headers
     }, body: {
       'post': post, // include the post ID in the request body
     });
@@ -483,7 +483,7 @@ Future<Object> unlikePost(String post) async {
       // make a HTTP POST request with headers
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization':
-          'Bearer ${storage.getToken()}', // include authorization token in headers
+          'Bearer ${await storage.getToken()}', // include authorization token in headers
     }, body: {
       'post': post, // include the post ID in the request body
     });

@@ -7,11 +7,13 @@ class ListWidget extends StatefulWidget {
       {Key? key,
       required this.title,
       required this.index,
-      required this.channel})
+      required this.channel,
+      required this.desc})
       : super(key: key); // Take 2 arguments optional key and title of post
   final int index; // Define title argument
   final String title; // Define title argument
   final String channel; // Define title argument
+  final String desc; // Define title argument
   @override
   State<ListWidget> createState() => _ListWidget(); //Create state for widget
 }
@@ -57,8 +59,8 @@ class _ListWidget extends State<ListWidget> {
                 //Message target's Name
                 widget.title,
               ),
-              const Text("Last message sent · 4h",
-                  style: TextStyle(
+              Text(widget.desc,
+                  style: const TextStyle(
                       color: Color.fromARGB(
                           255, 77, 77, 77), // Set colour to light grey
                       height: 1.5)), // Last message sent from user

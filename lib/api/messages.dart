@@ -148,7 +148,7 @@ Future<List<Object>> getMessages(int page, String channel) async {
 
 // This function doth take a single argument, a string called 'page'
 // It returns a Future object, the value of which shall be determined in due course
-Future<List<Object>> getChannels(int page) async {
+Future<List<Map<String, dynamic>>> getChannels(int page) async {
   // Declare a new variable called 'url' and assign it a new Uri object which contains the base URL of the API endpoint
   var url = Uri.parse('${Config.uri}/message/channels');
 
@@ -162,8 +162,12 @@ Future<List<Object>> getChannels(int page) async {
 
     // If the response status code is 200, then decode the response body into a new map object called 'y' and return it
     if (response.statusCode == 200) {
-      List<Object> y = json.decode(response.body).cast<Object>();
-      return y;
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(
+        json
+            .decode(response.body)
+            .map((model) => Map<String, dynamic>.from(model)),
+      );
+      return data;
     } else {
       // If the response status code is anything other than 200, then throw an Exception containing the reason phrase of the response
       throw Exception("Get Unsuccessful: ${response.reasonPhrase}");

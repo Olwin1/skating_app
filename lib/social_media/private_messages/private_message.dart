@@ -42,9 +42,7 @@ class _PrivateMessage extends State<PrivateMessage> {
     // Load initial messages
     loadMessages();
     // Join the channel using websockets
-    getIt<WebSocketConnection>()
-        .socket
-        .emit("joinChannel", '{"channel": "${widget.channel}"}');
+    getIt<WebSocketConnection>().socket.emit("joinChannel", [widget.channel]);
     // Subscribe to the websocket stream
     subscription = getIt<WebSocketConnection>()
         .stream

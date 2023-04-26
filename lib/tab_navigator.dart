@@ -25,9 +25,7 @@ class TabNavigator extends StatelessWidget {
     return {
       // When called will output a route according to the index button pressed
       "0": (context) => HomePage(), // Assign Homepage to index 0 and so on
-      "1": (context) => const FitnessTracker(
-            title: "Fitness Tracker", // Link to fitness tracker
-          ),
+      "1": (context) => const FitnessTracker(),
       "2": (context) =>
           const NewPost(title: "New Post"), // Link to new post page
       "3": (context) => const FriendsTracker(

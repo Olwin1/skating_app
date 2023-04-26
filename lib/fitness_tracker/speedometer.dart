@@ -1,92 +1,76 @@
+// Import necessary packages and files
 import 'package:flutter/material.dart';
-import 'package:alxgration_speedometer/speedometer.dart';
-import 'package:bezier_chart/bezier_chart.dart';
+import 'package:kdgaugeview/kdgaugeview.dart';
+import 'package:geolocator/geolocator.dart';
+import 'check_permission.dart';
 
+import 'dart:ui' as ui;
+
+// Define a StatefulWidget for the Speedometer page
 class SpeedometerPage extends StatefulWidget {
-  // Create HomePage Class
-  const SpeedometerPage({Key? key})
-      : super(key: key); // Take 2 arguments optional key and title of post
+  const SpeedometerPage({Key? key}) : super(key: key);
   @override
-  State<SpeedometerPage> createState() =>
-      _SpeedometerPage(); //Create state for widget
+  State<SpeedometerPage> createState() => _SpeedometerPage();
 }
 
+// Initialize current speed and start time variables
+double currentSpeed = 0;
+DateTime startTime = DateTime.now();
+
+// Define the State for the Speedometer page
 class _SpeedometerPage extends State<SpeedometerPage> {
-  @override // Override existing build method
+  // Define a global key for the KdGaugeView widget
+  GlobalKey<KdGaugeViewState> key = GlobalKey<KdGaugeViewState>();
+
+  @override
   Widget build(BuildContext context) {
+    // Define a gradient for the active gauge color
+    ui.Gradient activeGradient = ui.Gradient.linear(
+      const Offset(0, 0),
+      const Offset(550, 7),
+      [
+        const Color.fromARGB(255, 181, 214, 174),
+        const Color.fromARGB(255, 0, 150, 107),
+        const Color.fromARGB(255, 255, 0, 0)
+      ],
+      [0, 0.2, 0.6],
+    );
+
+    // Check if location permission is granted and listen to position updates
+    hasLocationPermission().then((value) => {
+          Geolocator.getPositionStream().listen((position) {
+            key.currentState!.updateSpeed(position.speed,
+                animate: true, duration: const Duration(milliseconds: 800));
+          })
+        });
+
+    // Return a Scaffold with an AppBar and a KdGaugeView widget
     return Scaffold(
-        appBar: AppBar(
-          // Create appBar
-          leadingWidth: 48, // Remove extra leading space
-          centerTitle: false, // Align title to left
-          title: Title(
-            title: "Speedometer", //Set title to Speedometer
-            color: const Color(0xFFDDDDDD),
-            child: const Text("Speedometer"),
-          ),
+      appBar: AppBar(
+        leadingWidth: 48,
+        centerTitle: false,
+        title: Title(
+          title: "Speedometer",
+          color: const Color(0xFFDDDDDD),
+          child: const Text("Speedometer"),
         ),
-        body: Column(children: [
-          const Spacer(),
-          Speedometer(
-            // Create speedometer widget
-            size: 300, // Set size to 200
-            minValue: 0, // Define min and max values
-            maxValue: 10,
-            currentValue: 5, // Set current speed
-            barColor: Colors.purple, // Set bar and pointer colours
-            pointerColor: Colors.black,
-            displayText: "km/h", // Define unit
-            displayTextStyle: const TextStyle(
-                fontSize: 14, color: Colors.deepOrange), // Text colour
-            displayNumericStyle:
-                const TextStyle(fontSize: 24, color: Colors.red),
-            onComplete: () {
-              print("ON COMPLETE");
-            },
-          ),
-          Container(
-            // Create container widget'
-            color: Colors.red, // Set background colour to red to see boundaries
-            height: MediaQuery.of(context).size.height /
-                2, // Define size of container
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: BezierChart(
-              // Create bezier chart
-              bezierChartScale: BezierChartScale.CUSTOM,
-              xAxisCustomValues: const [
-                0,
-                5,
-                10,
-                15,
-                20,
-                25,
-                30,
-                35
-              ], // Set X axis values
-              series: const [
-                // Define testing datapoints
-                BezierLine(
-                  data: [
-                    DataPoint<double>(value: 10, xAxis: 0),
-                    DataPoint<double>(value: 130, xAxis: 5),
-                    DataPoint<double>(value: 50, xAxis: 10),
-                    DataPoint<double>(value: 150, xAxis: 15),
-                    DataPoint<double>(value: 75, xAxis: 20),
-                    DataPoint<double>(value: 0, xAxis: 25),
-                    DataPoint<double>(value: 5, xAxis: 30),
-                    DataPoint<double>(value: 45, xAxis: 35),
-                  ],
-                ),
-              ],
-              config: BezierChartConfig(
-                verticalIndicatorStrokeWidth: 3.0,
-                verticalIndicatorColor: Colors.black26,
-                showVerticalIndicator: true,
-                backgroundColor: Colors.red, // For debugging
-                snap: false, // Don't snap between each data point
-              ),
-            ),
-          ),
-        ]));
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
+        child: KdGaugeView(
+          key: key,
+          minSpeed: 0,
+          maxSpeed: 30,
+          speed: 0,
+          animate: true,
+          unitOfMeasurement: "Km/h",
+          fractionDigits: 2,
+          activeGaugeColor: const Color.fromARGB(255, 197, 213, 26),
+          subDivisionCircleColors: const Color.fromARGB(255, 13, 141, 13),
+          divisionCircleColors: const Color.fromARGB(255, 13, 141, 13),
+          activeGaugeGradientColor: activeGradient,
+        ),
+      ),
+    );
   }
 }

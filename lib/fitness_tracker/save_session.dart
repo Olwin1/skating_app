@@ -1,34 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:skating_app/api/session.dart';
 
-const List<String> sessionType = <String>['One', 'Two', 'Three', 'Four'];
-const List<String> sessionOptions = <String>['A', 'B', 'C', 'D'];
+const List<String> sessionType = <String>[
+  'Recreational/Fitness Skating',
+  'Agressive Inline Skating',
+  'Agressive Quad Skating',
+  'Artistic/Figure Skating',
+  'Urban/Freestyle Skating',
+  'Off-Road Skating',
+  'Roller Hockey',
+  'Ice Hockey',
+  'Roller Disco',
+  'Roller Derby',
+];
+const List<String> sessionOptions = <String>['Friends'];
 
 class SaveSession extends StatefulWidget {
   // Create SaveSession Class
-  const SaveSession({Key? key}) : super(key: key);
+  const SaveSession(
+      {Key? key,
+      required this.distance,
+      required this.startTime,
+      required this.endTime,
+      required this.callback})
+      : super(key: key);
+  final double distance;
+  final DateTime startTime;
+  final DateTime endTime;
+  final Function callback;
   @override
   State<SaveSession> createState() => _SaveSession(); //Create state for widget
 }
 
 class _SaveSession extends State<SaveSession> {
-  String _content = "";
-  final myController = TextEditingController();
+  final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // Start listening to changes.
-    myController.addListener(_handleChange);
   }
 
-  void _handleChange() {
-    setState(() {
-      _content = myController.text;
-    });
+  String sessionType = "Fitness";
+  String sessionOptions = "Friends";
+  void setType(String type) {
+    sessionType = type;
+  }
+
+  void setOptions(String options) {
+    sessionOptions = options;
   }
 
   @override // Override existing build method
   Widget build(BuildContext context) {
+// This function is used to create a session and send information to the server
+    sendInfo() {
+      try {
+        // Call createSession function with necessary parameters
+        createSession(
+            nameController.text, // Name of the session
+            descriptionController.text, // Description of the session
+            [], // Empty array of images
+            sessionType, // Type of the session
+            sessionOptions, // Session sharing options
+            widget.startTime, // Start time of the session
+            widget.endTime, // End time of the session
+            (widget.distance * 100).round() // Distance of the session in meters
+            );
+        // Clear the text fields
+        nameController.clear();
+        descriptionController.clear();
+        // Call the callback function with a value of 0.0 to reset distance
+        widget.callback(0.0);
+        // Close the current screen and go back to the previous screen
+        Navigator.of(context).pop();
+      } catch (e) {
+        // If there is an error, print the error message to the console
+        print("An Error Occurred: $e");
+      }
+    }
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -58,9 +109,10 @@ class _SaveSession extends State<SaveSession> {
                       // Distance Traveled Box
                       margin: const EdgeInsets.all(8),
                       child: Column(
-                        children: const [
-                          Text("Distance Traveled"), // Title
-                          Text("13km") // Value
+                        children: [
+                          const Text("Distance Traveled"), // Title
+                          Text(
+                              "${(widget.distance / 1000).toStringAsFixed(2)}km") // Value
                         ],
                       ),
                     ),
@@ -70,9 +122,11 @@ class _SaveSession extends State<SaveSession> {
                       // Session Duration Box
                       margin: const EdgeInsets.all(8),
                       child: Column(
-                        children: const [
-                          Text("Session Duration"), // Title
-                          Text("1:03") // Value
+                        children: [
+                          const Text("Session Duration"), // Title
+                          Text(widget.endTime
+                              .difference(widget.startTime)
+                              .toString()) // Value
                         ],
                       ),
                     )
@@ -84,12 +138,7 @@ class _SaveSession extends State<SaveSession> {
                     children: [
                       const Text("Session Name"),
                       TextField(
-                        controller: myController,
-                        onChanged: (String value) {
-                          setState(() {
-                            _content = value;
-                          });
-                        },
+                        controller: nameController,
                         autofocus: true,
                       ),
                     ],
@@ -104,13 +153,7 @@ class _SaveSession extends State<SaveSession> {
                         maxLines: 4,
                         minLines: 4,
                         maxLength: 250,
-
-                        //controller: myController,
-                        onChanged: (String value) {
-                          setState(() {
-                            _content = value;
-                          });
-                        },
+                        controller: descriptionController,
                         autofocus: true,
                       ),
                     ],
@@ -127,10 +170,10 @@ class _SaveSession extends State<SaveSession> {
                     ),
                     color: const Color(0xffcecece),
                     child: Column(
-                      children: const [
-                        Text("Session Type"),
-                        ShareOptions(
-                          id: 1,
+                      children: [
+                        const Text("Session Type"),
+                        SessionType(
+                          callback: setType,
                         )
                       ],
                     )), // Session Type Infobox
@@ -141,10 +184,10 @@ class _SaveSession extends State<SaveSession> {
                     ),
                     color: const Color(0xffcecece),
                     child: Column(
-                      children: const [
-                        Text("Share Options"),
+                      children: [
+                        const Text("Share Options"),
                         ShareOptions(
-                          id: 0,
+                          callback: setOptions,
                         )
                       ],
                     )), // Share to Infobox
@@ -152,7 +195,7 @@ class _SaveSession extends State<SaveSession> {
                   flex: 2,
                 ), // Vertically centre Widget with remaining space
                 TextButton(
-                  onPressed: () => print("Session Saved"),
+                  onPressed: () => sendInfo(),
                   child: const Text("Save Session"),
                 ), // Save Session Infobox
                 const Spacer(
@@ -163,14 +206,69 @@ class _SaveSession extends State<SaveSession> {
   }
 }
 
-// ! move to 2 seperate classes for performance
-class ShareOptions extends StatefulWidget {
+class SessionType extends StatefulWidget {
+  final Function callback;
+
   // Constructor for the ShareOptions widget
   // Takes in a required `id` property to distinguish between two ShareOptions widgets
-  const ShareOptions({super.key, required this.id});
+  const SessionType({super.key, required this.callback});
 
-  // `id` property to distinguish between two `ShareOptions` widgets
-  final int id;
+  // Returns the state object associated with this widget
+  @override
+  State<SessionType> createState() => _SessionTypeState();
+}
+
+class _SessionTypeState extends State<SessionType> {
+  // `dropdownValueA` holds the selected value for the first dropdown
+  String dropdownValue = sessionType.first;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+        value: dropdownValue,
+        // Icon to display at the right of the dropdown button
+        icon: const Icon(Icons.arrow_downward),
+
+        // Elevation of the dropdown when it's open
+        elevation: 16,
+
+        // Style for the text inside the dropdown button
+        style: const TextStyle(color: Colors.deepPurple),
+
+        // Style for the line under the dropdown button
+        underline: Container(
+          height: 2,
+          color: Colors.deepPurpleAccent,
+        ),
+
+        // Callback function called when an item is selected
+        onChanged: (String? value) {
+          setState(() {
+            // Update the selected value in the corresponding `dropdownValue`
+            // depending on the value of `widget.id`
+            dropdownValue = value!;
+          });
+          widget.callback(value);
+        },
+
+        // Items to show in the dropdown
+        items: sessionType.map<DropdownMenuItem<String>>((String value) {
+          // Create a dropdown item for each value in `sessionType`
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList()
+        // Create a dropdown item for each value in `sessionOptions`
+        );
+  }
+}
+
+class ShareOptions extends StatefulWidget {
+  final Function callback;
+  // Constructor for the ShareOptions widget
+  // Takes in a required `id` property to distinguish between two ShareOptions widgets
+  const ShareOptions({super.key, required this.callback});
 
   // Returns the state object associated with this widget
   @override
@@ -178,18 +276,15 @@ class ShareOptions extends StatefulWidget {
 }
 
 class _ShareOptionsState extends State<ShareOptions> {
-  // `dropdownValueA` holds the selected value for the first dropdown
-  String dropdownValueA = sessionType.first;
-
   // `dropdownValueB` holds the selected value for the second dropdown
-  String dropdownValueB = sessionOptions.first;
+  String dropdownValue = sessionOptions.first;
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
       // Set the value of the dropdown to `dropdownValueA` if `widget.id` is 1,
       // otherwise set it to `dropdownValueB`
-      value: widget.id == 1 ? dropdownValueA : dropdownValueB,
+      value: dropdownValue,
 
       // Icon to display at the right of the dropdown button
       icon: const Icon(Icons.arrow_downward),
@@ -211,26 +306,18 @@ class _ShareOptionsState extends State<ShareOptions> {
         setState(() {
           // Update the selected value in the corresponding `dropdownValue`
           // depending on the value of `widget.id`
-          widget.id == 1 ? dropdownValueA = value! : dropdownValueB = value!;
+          dropdownValue = value!;
         });
+        widget.callback(value);
       },
 
       // Items to show in the dropdown
-      items: widget.id == 1
-          ? sessionType.map<DropdownMenuItem<String>>((String value) {
-              // Create a dropdown item for each value in `sessionType`
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList()
-          // Create a dropdown item for each value in `sessionOptions`
-          : sessionOptions.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+      items: sessionOptions.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 }

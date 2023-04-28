@@ -1,4 +1,5 @@
 // Importing necessary packages
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -20,6 +21,7 @@ class DistanceTravelled extends StatefulWidget {
 class _DistanceTravelled extends State<DistanceTravelled> {
   double totalDistance = 0; // Initial distance is set to 0
   Position? previousPosition; // Initializing previous position as null
+  StreamSubscription? stream;
 
 // Method to round off the value to specified number of decimal places
   double dp(double val, int places) {
@@ -33,7 +35,7 @@ class _DistanceTravelled extends State<DistanceTravelled> {
 // Checking if the location permission is granted or not
       hasLocationPermission().then((value) => {
 // Getting the position stream and listening for any changes in the location
-            Geolocator.getPositionStream().listen((position) {
+            stream = Geolocator.getPositionStream().listen((position) {
               if (previousPosition != null) {
 // Calculating the distance travelled from the previous location
                 double difference = Geolocator.distanceBetween(
@@ -55,6 +57,7 @@ class _DistanceTravelled extends State<DistanceTravelled> {
       // Displaying the total distance in kilometers with 2 decimal places
       return Text("${dp(totalDistance / 1000, 2)} Km");
     } else {
+      stream?.cancel();
       // Displaying 0.0 km if the widget is not active
       return const Text("0.0 km");
     }

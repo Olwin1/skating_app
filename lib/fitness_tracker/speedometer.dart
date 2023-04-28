@@ -1,4 +1,6 @@
 // Import necessary packages and files
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
 import 'package:geolocator/geolocator.dart';
@@ -15,12 +17,12 @@ class SpeedometerPage extends StatefulWidget {
 
 // Initialize current speed and start time variables
 double currentSpeed = 0;
-DateTime startTime = DateTime.now();
 
 // Define the State for the Speedometer page
 class _SpeedometerPage extends State<SpeedometerPage> {
   // Define a global key for the KdGaugeView widget
   GlobalKey<KdGaugeViewState> key = GlobalKey<KdGaugeViewState>();
+  StreamSubscription? stream;
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +39,16 @@ class _SpeedometerPage extends State<SpeedometerPage> {
     );
 
     // Check if location permission is granted and listen to position updates
-    hasLocationPermission().then((value) => {
-          Geolocator.getPositionStream().listen((position) {
-            key.currentState!.updateSpeed(position.speed,
-                animate: true, duration: const Duration(milliseconds: 800));
-          })
-        });
-
+    try {
+      hasLocationPermission().then((value) => {
+            stream = Geolocator.getPositionStream().listen((position) {
+              key.currentState!.updateSpeed(position.speed,
+                  animate: true, duration: const Duration(milliseconds: 800));
+            })
+          });
+    } catch (e) {
+      print("Speedometer Error: $e");
+    }
     // Return a Scaffold with an AppBar and a KdGaugeView widget
     return Scaffold(
       appBar: AppBar(
@@ -72,5 +77,12 @@ class _SpeedometerPage extends State<SpeedometerPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    print("SPEEDOMETER DISPOSE");
+    stream?.cancel();
+    super.dispose();
   }
 }

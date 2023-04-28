@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:skating_app/fitness_tracker/save_session.dart';
 import 'package:skating_app/fitness_tracker/speedometer.dart';
-import 'package:skating_app/fitness_tracker/stop_button.dart';
 import 'package:solar_calculator/solar_calculator.dart';
 import 'distance_travelled.dart';
 import 'signal_strength_info.dart';
@@ -20,12 +17,17 @@ class FitnessTracker extends StatefulWidget {
 }
 
 class _FitnessTracker extends State<FitnessTracker> {
+  bool stoppedTracking = true;
   bool active = false;
   double totalDistance = 0;
   Position? previousPosition;
+  late DateTime startTime;
 
   callback(double distance) {
-    totalDistance = distance;
+    if (!stoppedTracking) {
+      totalDistance = distance;
+    }
+    print(totalDistance);
   }
 
 // This function calculates and retrieves the sunset time at a given position
@@ -64,6 +66,9 @@ class _FitnessTracker extends State<FitnessTracker> {
 
   @override
   Widget build(BuildContext context) {
+    if (active) {
+      startTime = DateTime.now().toUtc();
+    }
     // create an instance of the User class and passing it an id of '1'
     return Scaffold(
         // Scaffold widget, which is the basic layout element in Flutter
@@ -176,10 +181,26 @@ class _FitnessTracker extends State<FitnessTracker> {
                 ),
                 TextButton(
                   // callback function to print "pressed" when clicked
-                  onPressed: () => setState(() {
-                    active = !active;
-                    buttonMessage = active ? "Stop" : "Start";
-                  }),
+                  onPressed: () => {
+                    setState(() {
+                      active = !active;
+                      buttonMessage = active ? "Stop" : "Start";
+                      stoppedTracking = !stoppedTracking;
+                    }),
+                    if (!active)
+                      {
+                        Navigator.of(context, rootNavigator: true).push(
+                            // Root navigator hides navbar
+                            // Send to Save Session page
+                            MaterialPageRoute(
+                                builder: (context) => SaveSession(
+                                      distance: totalDistance,
+                                      startTime: startTime,
+                                      endTime: DateTime.now(),
+                                      callback: callback,
+                                    ))),
+                      }
+                  },
                   child: Text(buttonMessage),
                 ),
 

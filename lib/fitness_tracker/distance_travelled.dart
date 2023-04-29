@@ -45,7 +45,6 @@ class _DistanceTravelled extends State<DistanceTravelled> {
     hasLocationPermission().then((value) => {
 // Getting the position stream and listening for any changes in the location
           stream = Geolocator.getPositionStream().listen((position) {
-            print("got position");
             if (previousPosition != null) {
 // Calculating the distance travelled from the previous location
               double difference = Geolocator.distanceBetween(
@@ -60,24 +59,18 @@ class _DistanceTravelled extends State<DistanceTravelled> {
             // Updating the previous location
             previousPosition = position;
           }),
-          print(stream)
         });
   }
 
   @override
   void initState() {
-    print("inti");
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("przepraczam");
     if (widget.active) {
-      print("yes widget aktiv");
-      print(stream);
       if (stream == null) {
-        print("creating stream");
         createStream();
       }
 // Checking if the location permission is granted or not
@@ -88,17 +81,15 @@ class _DistanceTravelled extends State<DistanceTravelled> {
         totalDistance: totalDistance,
       );
     }
-    print("widget not active");
     stream?.cancel().then(
           (value) => {stream = null, print("asaaaaaa")},
         );
     previousPosition = null;
-    return Text("0 Km");
+    return const Text("0 Km");
   }
 
   @override
   void dispose() {
-    print("travels DISPOSE");
     stream?.cancel();
     previousPosition = null;
     super.dispose();

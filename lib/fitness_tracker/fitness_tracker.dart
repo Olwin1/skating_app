@@ -183,6 +183,7 @@ class _FitnessTracker extends State<FitnessTracker> {
                   // callback function to print "pressed" when clicked
                   onPressed: () => {
                     setState(() {
+                      print("czapla");
                       active = !active;
                       buttonMessage = active ? "Stop" : "Start";
                       stoppedTracking = !stoppedTracking;

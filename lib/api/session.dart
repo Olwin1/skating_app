@@ -13,15 +13,18 @@ SecureStorage storage =
     SecureStorage(); // Creating an instance of 'SecureStorage' class
 
 Future<Map<String, dynamic>> createSession(
-    // Creating a function 'createSession' with the specified parameters
-    String name,
-    String description,
-    List<String> images,
-    String type,
-    String share,
-    DateTime startTime,
-    DateTime endTime,
-    int distance) async {
+  // Creating a function 'createSession' with the specified parameters
+  String name,
+  String description,
+  List<String> images,
+  String type,
+  String share,
+  DateTime startTime,
+  DateTime endTime,
+  int distance,
+  double latitude,
+  double longitude,
+) async {
   // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
 
   var url = Uri.parse(
@@ -48,6 +51,8 @@ Future<Map<String, dynamic>> createSession(
         'start_time': startTime.toIso8601String(),
         'end_time': endTime.toIso8601String(),
         'distance': distance.toString(),
+        'latitude': latitude.toString(),
+        'longitude': longitude.toString()
       },
     );
 

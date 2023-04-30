@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:skating_app/friends_tracker/friend_activity.dart';
+import 'package:skating_app/friends_tracker/marker.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
+import 'package:skating_app/api/session.dart';
 
 bool searchOpened = true;
 
@@ -22,6 +25,36 @@ class FriendsTracker extends StatefulWidget {
 }
 
 class _FriendsTracker extends State<FriendsTracker> {
+  MapController controller = MapController();
+  List<Marker> friends = [];
+  @override
+  void initState() {
+    List<Marker> newFriends = [];
+    Map<String, dynamic> userCache;
+    getSessions().then((values) async => {
+          for (var session in values)
+            {
+              print("ases $session"),
+              userCache = await getUserCache(session["author"]),
+              newFriends.add(
+                Marker(
+                    point: LatLng(session["latitude"], session["longitude"]),
+                    width: 80,
+                    height: 80,
+                    builder: (context) => CustomMarker(
+                        sessionData: session, userData: userCache)),
+              ),
+            },
+          if (newFriends.isNotEmpty)
+            {
+              setState(
+                () => friends = newFriends,
+              )
+            }
+        });
+    super.initState();
+  }
+
   void updateSearchOpened(e) {
     setState(() => searchOpened = !e); // Update searchOpened state
   }
@@ -29,12 +62,13 @@ class _FriendsTracker extends State<FriendsTracker> {
   @override
   Widget build(BuildContext context) {
     // create an instance of the User class and passing it an id of '1'
-    User user = User("1");
+    print("build refind");
 
     bool isPortrait = true;
     return Scaffold(
       // Scaffold widget, which is the basic layout element in Flutter
       body: FlutterMap(
+        mapController: controller,
         // Create flutter map
         options: MapOptions(
             interactiveFlags: InteractiveFlag.pinchZoom | InteractiveFlag.drag,
@@ -146,6 +180,9 @@ class _FriendsTracker extends State<FriendsTracker> {
             maxZoom: 19,
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'com.skatingapp.map', // Package Name
+          ),
+          MarkerLayer(
+            markers: friends,
           ),
         ],
       ),

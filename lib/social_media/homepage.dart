@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/social_media/private_messages/private_message_list.dart';
 import 'post_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -12,7 +11,6 @@ class HomePage extends StatelessWidget {
 
   @override // Override the existing widget build method
   Widget build(BuildContext context) {
-    User user = User("1"); // Create user object with id of 1
     return Scaffold(
         appBar: AppBar(
           //systemOverlayStyle:
@@ -44,7 +42,7 @@ class HomePage extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => PrivateMessageList(
-                              user: user,
+                              user: "user",
                               index: 1,
                             ))),
                 child: Image.asset(

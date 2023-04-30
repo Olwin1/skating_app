@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:skating_app/objects/user.dart';
 
 // Define the EditProfile widget which extends StatefulWidget
 class EditProfile extends StatefulWidget {
@@ -17,9 +16,6 @@ class _EditProfile extends State<EditProfile> {
   @override
   // Build the UI for the EditProfile widget
   Widget build(BuildContext context) {
-    // Create an instance of the User object
-    User user = User("1");
-
     return Scaffold(
       // Define an app bar with a title "Edit Profile"
       appBar: AppBar(

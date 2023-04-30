@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/followers_list.dart';
 import 'package:skating_app/profile/following_list.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
@@ -24,9 +23,6 @@ class _Lists extends State<Lists> {
 
   @override
   Widget build(BuildContext context) {
-    // Creating a user object
-    User user = User("1");
-
     return Scaffold(
       appBar: AppBar(
           // Setting the title of the AppBar

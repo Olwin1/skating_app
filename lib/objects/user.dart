@@ -1,38 +1,20 @@
-import 'package:flutter/material.dart';
-import './/objects/post.dart';
+import 'package:stash/stash_api.dart';
+import 'package:stash_memory/stash_memory.dart';
+import 'package:skating_app/api/social.dart';
 
-class User {
-  String? userId;
+Future<Map<String, dynamic>> getUserCache(String userId) async {
+  final store = await newMemoryCacheStore();
 
-  // Read-only non-final property
-  String email = "testing@example.com";
-  String username = "test343";
-  String displayName = "test3";
-  Image profileImage =
-      const Image(image: AssetImage("assets/placeholders/150.png"));
-  List<Post> posts = [];
-  // Constructor.
-  User(this.userId) {
-    // Initialization code goes here.
-  }
-
-  // Named constructor that forwards to the default one.
-  User.create(String userId) : this(null);
-
-  // Method.
-  String? getId() {
-    // Type promotion doesn't work on getters.
-    if (userId != null) {
-      return userId;
-    } else {
-      return null;
-    }
-  }
-
-  List<Post> getPosts() {
-    if (posts.isEmpty) {
-      posts = [Post(userId, "1"), Post(userId, "2"), Post(userId, "3")];
-    }
-    return posts;
-  }
+  // Creates a cache with a capacity of 10 from the previously created store
+  final cache = await store.cache<Map<String, dynamic>>(
+      name: 'users',
+      maxEntries: 30,
+      eventListenerMode: EventListenerMode.synchronous)
+    ..on<CacheEntryCreatedEvent<Map<String, dynamic>>>().listen(
+        (event) => print('Key "${event.entry.key}" added to the cache'));
+  Map<String, dynamic>? user = await cache.get(userId);
+  user ??= await getUser(userId);
+  return user;
+  //       await cache.put(
+  // 'task1', Task(id: 1, title: 'Run cache store example', completed: true));
 }

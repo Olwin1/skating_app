@@ -1,6 +1,5 @@
 // Importing necessary packages and files
 import 'package:flutter/material.dart';
-import 'package:skating_app/objects/user.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:skating_app/profile/settings/settings_overlays.dart';
 
@@ -22,9 +21,6 @@ class _Settings extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    // Creating a user object with the ID of 1
-    User user = User("1");
-
     // Building the UI of the Settings widget
     return Scaffold(
         // AppBar widget for the title of the screen

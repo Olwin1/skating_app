@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/user_list_widget.dart';
 
 // FollowingList widget
@@ -13,9 +12,6 @@ class FollowingList extends StatefulWidget {
 class _FollowingList extends State<FollowingList> {
   @override
   Widget build(BuildContext context) {
-    // Creating a user object
-    User user = User("1");
-
     return ListView(
       // Returns a ListView widget
       padding: const EdgeInsets.all(8),

@@ -1,6 +1,5 @@
 // Importing necessary packages and files
 import 'package:flutter/material.dart';
-import 'package:skating_app/objects/user.dart';
 
 // OverlaySettings widget
 
@@ -25,9 +24,6 @@ class _OverlaySettings extends State<OverlaySettings> {
   // Override the build method to build the UI of the widget
   @override
   Widget build(BuildContext context) {
-    // Create a user object with the ID of 1
-    User user = User("1");
-
     // Use a switch statement to return a different container for each item
     switch (widget.item) {
       // If item is 0, return an empty container with key "0"

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/edit_profile.dart';
 import 'package:skating_app/profile/lists.dart';
 import 'package:skating_app/profile/settings/settings.dart';
@@ -45,9 +44,6 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePage extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    // Create an instance of the User class with an id of '1'
-    User user = User("1");
-
     return Scaffold(
       appBar: AppBar(
         // Create appBar widget

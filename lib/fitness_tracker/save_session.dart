@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:skating_app/api/session.dart';
 
 const List<String> sessionType = <String>[
@@ -22,12 +23,14 @@ class SaveSession extends StatefulWidget {
       required this.distance,
       required this.startTime,
       required this.endTime,
-      required this.callback})
+      required this.callback,
+      required this.initialPosition})
       : super(key: key);
   final double distance;
   final DateTime startTime;
   final DateTime endTime;
   final Function callback;
+  final Position initialPosition;
   @override
   State<SaveSession> createState() => _SaveSession(); //Create state for widget
 }
@@ -65,8 +68,10 @@ class _SaveSession extends State<SaveSession> {
             sessionOptions, // Session sharing options
             widget.startTime, // Start time of the session
             widget.endTime, // End time of the session
-            (widget.distance * 100).round() // Distance of the session in meters
-            );
+            (widget.distance * 100)
+                .round(), // Distance of the session in meters
+            widget.initialPosition.latitude,
+            widget.initialPosition.longitude);
         // Clear the text fields
         nameController.clear();
         descriptionController.clear();

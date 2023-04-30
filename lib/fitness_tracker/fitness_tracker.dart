@@ -20,6 +20,7 @@ class _FitnessTracker extends State<FitnessTracker> {
   bool stoppedTracking = true;
   bool active = false;
   double totalDistance = 0;
+  Position? initialPosition;
   Position? previousPosition;
   late DateTime startTime;
 
@@ -199,7 +200,14 @@ class _FitnessTracker extends State<FitnessTracker> {
                                       startTime: startTime,
                                       endTime: DateTime.now(),
                                       callback: callback,
+                                      initialPosition: initialPosition!,
                                     ))),
+                      }
+                    else
+                      {
+                        print("else!"),
+                        Geolocator.getCurrentPosition()
+                            .then((value) => initialPosition = value)
                       }
                   },
                   child: Text(buttonMessage),

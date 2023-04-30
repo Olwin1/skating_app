@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:skating_app/objects/user.dart';
 
 // UserListWidget class creates a stateful widget that displays a list of users
 class UserListWidget extends StatefulWidget {
@@ -19,9 +18,6 @@ class _UserListWidget extends State<UserListWidget> {
   // Builds the widget
   @override
   Widget build(BuildContext context) {
-    // Creates a new User object with id "1"
-    User user = User("1");
-
     // Returns a row with a CircleAvatar, a text widget, and a TextButton
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),

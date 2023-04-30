@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:photo_gallery/photo_gallery.dart';
-import 'package:skating_app/objects/user.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -84,9 +83,6 @@ class _NewPost extends State<NewPost> {
   @override
   // Build the UI for the NewPost widget
   Widget build(BuildContext context) {
-    // Create an instance of the User object
-    User user = User("1");
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("New Post"),

@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:skating_app/friends_tracker/friend_activity.dart';
 import 'package:skating_app/friends_tracker/marker.dart';
 import 'package:skating_app/objects/user.dart';
@@ -10,6 +13,7 @@ import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:skating_app/api/session.dart';
 
 bool searchOpened = true;
+bool active = false;
 
 /// Declare searchOpened variable
 
@@ -25,18 +29,29 @@ class FriendsTracker extends StatefulWidget {
 }
 
 class _FriendsTracker extends State<FriendsTracker> {
-  MapController controller = MapController();
-  List<Marker> friends = [];
+  MapController controller = MapController(); // Controller for the map
+  List<Marker> friends = []; // List of markers representing friends' locations
+  late FollowOnLocationUpdate
+      _followOnLocationUpdate; // Used to update the location of the user being followed
+  late StreamController<double?>
+      _followCurrentLocationStreamController; // Stream for updating the location of the user being followed
   @override
   void initState() {
-    List<Marker> newFriends = [];
-    Map<String, dynamic> userCache;
+    _followOnLocationUpdate = FollowOnLocationUpdate
+        .never; // Set the initial value for the follow update
+    _followCurrentLocationStreamController = StreamController<
+        double?>(); // Create the stream for updating the follow location
+    List<Marker> newFriends =
+        []; // Temporary list for storing the markers of the friends' locations
+    Map<String, dynamic> userCache; // Cache for storing user information
     getSessions().then((values) async => {
-          for (var session in values)
+          // Get the list of sessions for each friend
+          for (var session in values) // Loop through the sessions
             {
-              print("ases $session"),
-              userCache = await getUserCache(session["author"]),
+              userCache = await getUserCache(
+                  session["author"]), // Get the user information
               newFriends.add(
+                // Add the marker for the friend's location to the temporary list
                 Marker(
                     point: LatLng(session["latitude"], session["longitude"]),
                     width: 80,
@@ -45,18 +60,21 @@ class _FriendsTracker extends State<FriendsTracker> {
                         sessionData: session, userData: userCache)),
               ),
             },
-          if (newFriends.isNotEmpty)
-            {
-              setState(
-                () => friends = newFriends,
-              )
-            }
+          if (newFriends
+              .isNotEmpty) // If there are any new friends, update the state with the new list of markers
+            {setState(() => friends = newFriends)}
         });
-    super.initState();
+    super.initState(); // Call the superclass's initState method
   }
 
   void updateSearchOpened(e) {
     setState(() => searchOpened = !e); // Update searchOpened state
+  }
+
+  @override
+  void dispose() {
+    _followCurrentLocationStreamController.close();
+    super.dispose();
   }
 
   @override
@@ -66,22 +84,24 @@ class _FriendsTracker extends State<FriendsTracker> {
 
     bool isPortrait = true;
     return Scaffold(
-      // Scaffold widget, which is the basic layout element in Flutter
-      body: FlutterMap(
-        mapController: controller,
-        // Create flutter map
-        options: MapOptions(
-            interactiveFlags: InteractiveFlag.pinchZoom | InteractiveFlag.drag,
-            center: LatLng(51.509364, -0.128928), // Define Starting Position
-            maxBounds: LatLngBounds(
-              // Prevent viewing off map
-              LatLng(-90, -180.0),
-              LatLng(90.0, 180.0),
-            ),
-            zoom: 15, // Set zoom factor
-            minZoom: 3.0,
-            maxZoom: 19),
-        nonRotatedChildren: [
+        // Scaffold widget, which is the basic layout element in Flutter
+        body: FlutterMap(
+            mapController: controller,
+            // Create flutter map
+            options: MapOptions(
+                interactiveFlags:
+                    InteractiveFlag.pinchZoom | InteractiveFlag.drag,
+                center:
+                    LatLng(51.509364, -0.128928), // Define Starting Position
+                maxBounds: LatLngBounds(
+                  // Prevent viewing off map
+                  LatLng(-90, -180.0),
+                  LatLng(90.0, 180.0),
+                ),
+                zoom: 15, // Set zoom factor
+                minZoom: 3.0,
+                maxZoom: 19),
+            nonRotatedChildren: [
 // Creates a FloatingSearchBar widget with specified properties
           FloatingSearchBar(
               // The text displayed as a placeholder in the search bar
@@ -167,11 +187,39 @@ class _FriendsTracker extends State<FriendsTracker> {
 
           // Default Attribution
           AttributionWidget.defaultWidget(
-            source: 'OpenStreetMap contributors',
+            source: 'OpenStreetMap',
             onSourceTapped: null,
           ),
+          Positioned(
+            // Position the widget to the bottom-right corner with a margin of 20 pixels.
+            right: 20,
+            bottom: 20,
+            child: FloatingActionButton(
+              // Triggered when the button is pressed.
+              onPressed: () {
+                // Update the widget state.
+                setState(() => {
+                      // Toggle the boolean value of the `active` variable.
+                      active = !active,
+                      // Set the `_followOnLocationUpdate` variable to either always or once based on the `active` variable.
+                      _followOnLocationUpdate = active
+                          ? FollowOnLocationUpdate.always
+                          : FollowOnLocationUpdate.once,
+                    });
+                // If the `active` variable is true, add the zoom level (18) to the `_followCurrentLocationStreamController`.
+                // If the `active` variable is false, do nothing.
+                active ? _followCurrentLocationStreamController.add(18) : null;
+              },
+              child: const Icon(
+                // Show the 'my location' icon on the button.
+                Icons.my_location,
+                // Set the color of the icon to white.
+                color: Colors.white,
+              ),
+            ),
+          ),
         ],
-        children: [
+            children: [
           TileLayer(
             // Map source -- use OpenStreetMaps
             tileProvider: FMTC
@@ -181,11 +229,45 @@ class _FriendsTracker extends State<FriendsTracker> {
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'com.skatingapp.map', // Package Name
           ),
-          MarkerLayer(
-            markers: friends,
+          MarkerClusterLayerWidget(
+            // Define the options for the MarkerClusterLayer.
+            options: MarkerClusterLayerOptions(
+              // The maximum radius of a cluster.
+              maxClusterRadius: 45,
+              // The size of the marker icon for each cluster.
+              size: const Size(40, 40),
+              // The position of the anchor point for each marker icon.
+              anchor: AnchorPos.align(AnchorAlign.center),
+              // Options for fitting the map to the bounds of the markers.
+              fitBoundsOptions: const FitBoundsOptions(
+                // The padding to apply around the bounds of the markers.
+                padding: EdgeInsets.all(50),
+                // The maximum zoom level to use when fitting the map bounds.
+                maxZoom: 15,
+              ),
+              // The list of markers to cluster.
+              markers: friends,
+              // The builder function for creating the marker icon for each cluster.
+              builder: (context, markers) {
+                return Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.blue),
+                  child: Center(
+                    child: Text(
+                      markers.length.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
-        ],
-      ),
-    );
+          CurrentLocationLayer(
+            followCurrentLocationStream:
+                _followCurrentLocationStreamController.stream,
+            followOnLocationUpdate: _followOnLocationUpdate,
+          ),
+        ]));
   }
 }

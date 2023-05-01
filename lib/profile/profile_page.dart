@@ -1,7 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:skating_app/api/social.dart';
 import 'package:skating_app/profile/edit_profile.dart';
 import 'package:skating_app/profile/lists.dart';
 import 'package:skating_app/profile/settings/settings.dart';
+
+import '../api/config.dart';
 
 // List of image urls
 List<String> imageUrls = [
@@ -128,34 +133,10 @@ ascot cold-pressed small batch meditation crucifix blue bottle helvetica tofu.""
               child: const Icon(Icons.precision_manufacturing_outlined))
         ]),
         // Expanded grid view with images
-        GridView.count(
-          mainAxisSpacing: 2, // Space the children
-          crossAxisSpacing: 2,
-          shrinkWrap: true, // Shrink the grid view to fit its children
-          physics: const ScrollPhysics(), // Scroll physics
-          crossAxisCount: 3, // Number of columns
-          childAspectRatio: 1.0, // Aspect ratio of children
-          children: imageUrls
-              .map(_createGridTileWidget)
-              .toList(), // Map the list of image URLs to grid tiles
-        ),
+        const UserPostsList()
       ]),
     );
   }
-
-  // Creates a grid tile widget from an image URL
-  Widget _createGridTileWidget(String url) => Builder(
-        builder: (context) => GestureDetector(
-          onLongPress: () {
-            // Code for long press event
-            // _popupDialog = _createPopupDialog(url);
-            //Overlay.of(context).insert(_popupDialog);
-          },
-          //onLongPressEnd: (details) => _popupDialog?.remove(),
-          child: Image.network(url,
-              fit: BoxFit.cover), // Display the image from the URL
-        ),
-      );
 }
 
 class OptionsMenu extends StatefulWidget {
@@ -221,5 +202,99 @@ class _OptionsMenuState extends State<OptionsMenu> {
         ),
       ],
     );
+  }
+}
+
+// Creates a grid tile widget from an image URL
+Widget _createGridTileWidget(Map<String, dynamic> post) => Builder(
+      builder: (context) => GestureDetector(
+        onLongPress: () {
+          // Code for long press event
+          // _popupDialog = _createPopupDialog(url);
+          //Overlay.of(context).insert(_popupDialog);
+        },
+        //onLongPressEnd: (details) => _popupDialog?.remove(),
+        child: CachedNetworkImage(
+            imageUrl: '${Config.uri}/image/${post["image"]}',
+            fit: BoxFit.cover), // Display the image from the URL
+      ),
+    );
+
+class UserPostsList extends StatefulWidget {
+  const UserPostsList({super.key});
+
+  @override
+  State<UserPostsList> createState() => _UserPostsListState();
+}
+
+class _UserPostsListState extends State<UserPostsList> {
+  // Define the page size used for pagination
+  static const _pageSize = 20;
+
+  // Create a PagingController to manage pagination
+  final PagingController<int, Map<String, dynamic>> _pagingController =
+      PagingController(firstPageKey: 0);
+
+  @override
+  void initState() {
+    // Add a listener to the PagingController that fetches the next page when requested
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+    super.initState();
+  }
+
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      // Fetch the next page of posts from the user's account
+      final page = await getUserPosts(pageKey);
+
+      // Determine if this is the last page of posts
+      final isLastPage = page.length < _pageSize;
+
+      if (isLastPage) {
+        // If this is the last page of posts, append it to the PagingController as the final page
+        _pagingController.appendLastPage(page);
+      } else {
+        // If there are more pages of posts, append the current page to the PagingController
+        // and specify the key for the next page
+        final nextPageKey = pageKey += 1;
+        _pagingController.appendPage(page, nextPageKey);
+      }
+    } catch (error) {
+      // If an error occurs while fetching a page, set the PagingController's error state
+      _pagingController.error = error;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PagedGridView<int, Map<String, dynamic>>(
+      shrinkWrap: true,
+      physics: const ScrollPhysics(),
+      pagingController: _pagingController,
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        // Specify the properties for the grid tiles
+        childAspectRatio: 1,
+        mainAxisSpacing: 2,
+        crossAxisSpacing: 2,
+        maxCrossAxisExtent: MediaQuery.of(context).size.width / 3,
+      ),
+      builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+        // Specify how to build each grid tile
+        itemBuilder: (context, item, index) => _createGridTileWidget(item),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    try {
+      // Dispose of the PagingController when the state object is disposed
+      _pagingController.dispose();
+    } catch (e) {
+      print(e);
+    }
+    super.dispose();
   }
 }

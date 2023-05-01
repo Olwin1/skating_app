@@ -540,3 +540,43 @@ Future<Map<String, dynamic>> getUser(String id) async {
         "Error during post: $e"); // Throwing an exception with an error message
   }
 }
+
+Future<List<Map<String, dynamic>>> getUserPosts(int page) async {
+  // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
+
+  var url = Uri.parse(
+      '${Config.uri}/post/user_posts'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
+
+  try {
+    // Using a try-catch block to handle errors
+    var response = await http.get(
+      // Creating a variable 'response' and making a post request to the specified URL
+      url,
+      headers: {
+        'Content-Type':
+            'application/x-www-form-urlencoded', // Specifying the headers for the request
+        'Authorization':
+            'Bearer ${await storage.getToken()}', // Including the authorization token
+        'page': page.toString(),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Checking if the response status code is 200
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(
+        json
+            .decode(response.body)
+            .map((model) => Map<String, dynamic>.from(model)),
+      ); // Decoding the response body and converting it into a List of Map objects
+      return data; // Returning the Map object
+    } else {
+      // If the response status code is not 200
+      throw Exception(
+          "Get Unsuccessful: ${response.reasonPhrase}"); // Throwing an exception with an error message
+    }
+  } catch (e) {
+    // Handling the error
+    throw Exception(
+        "Error during post: $e"); // Throwing an exception with an error message
+  }
+}

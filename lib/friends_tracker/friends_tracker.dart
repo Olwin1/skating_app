@@ -29,6 +29,7 @@ class FriendsTracker extends StatefulWidget {
 }
 
 class _FriendsTracker extends State<FriendsTracker> {
+  List<Map<String, dynamic>> newSessions = [];
   MapController controller = MapController(); // Controller for the map
   List<Marker> friends = []; // List of markers representing friends' locations
   late FollowOnLocationUpdate
@@ -60,6 +61,7 @@ class _FriendsTracker extends State<FriendsTracker> {
                         sessionData: session, userData: userCache)),
               ),
             },
+          newSessions.addAll(values),
           if (newFriends
               .isNotEmpty) // If there are any new friends, update the state with the new list of markers
             {setState(() => friends = newFriends)}
@@ -180,8 +182,7 @@ class _FriendsTracker extends State<FriendsTracker> {
                   ? Padding(
                       padding: const EdgeInsets.symmetric(vertical: 72),
                       child: FriendActivity(
-                        searchOpened: searchOpened,
-                      ),
+                          searchOpened: searchOpened, sessions: newSessions),
                     )
                   : Container()),
 

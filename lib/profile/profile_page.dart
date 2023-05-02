@@ -39,7 +39,7 @@ class _ProfilePage extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         // Create appBar widget
-        title: const Text("username"), // Set title
+        title: Text(user?["username"] ?? "username"), // Set title
         actions: const [
           // Define icon buttons
           OptionsMenu()
@@ -50,14 +50,28 @@ class _ProfilePage extends State<ProfilePage> {
         // Row to display the number of friends, followers, and following
         Row(children: [
           // Circle avatar
-          const Padding(
-            padding: EdgeInsets.all(8), // Add padding
-            child: CircleAvatar(
-              // Create a circular avatar icon
-              radius: 36, // Set radius to 36
-              backgroundImage: AssetImage(
-                  "assets/placeholders/150.png"), // Set avatar to placeholder images
-            ),
+          Padding(
+            padding: const EdgeInsets.all(8), // Add padding
+            child: user?["avatar"] == null
+                ? const CircleAvatar(
+                    // Create a circular avatar icon
+                    radius: 36, // Set radius to 36
+                    backgroundImage: AssetImage(
+                        "assets/placeholders/default.png"), // Set avatar to placeholder images
+                  )
+                : CachedNetworkImage(
+                    imageUrl: '${Config.uri}/image/${user!["avatar"]}',
+                    imageBuilder: (context, imageProvider) => Container(
+                      height: 72,
+                      width: 72,
+                      decoration: BoxDecoration(
+                        shape: BoxShape
+                            .circle, // Set the shape of the container to a circle
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover),
+                      ),
+                    ),
+                  ),
           ),
           const Spacer(),
           // Column to display the number of friends
@@ -95,18 +109,16 @@ class _ProfilePage extends State<ProfilePage> {
           const Spacer(),
         ]),
         // Display the user's name
-        const Padding(
-          padding: EdgeInsets.all(8),
-          child: Text("John Doe"),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Text(user?["username"] ?? "username"),
         ),
         // Display the user's bio
-        const Padding(
-          padding: EdgeInsets.all(8),
+        Padding(
+          padding: const EdgeInsets.all(8),
           child: Text(
               textAlign: TextAlign.justify,
-              """I'm baby actually taiyaki bruh, wolf lo-fi pmigas 
-pickled. Sartorial tbh kinfolk paleo gochujang, hammock 
-ascot cold-pressed small batch meditation crucifix blue bottle helvetica tofu."""),
+              (user?["description"] ?? "").toString()),
         ),
         // Row with two text buttons
         Row(children: [

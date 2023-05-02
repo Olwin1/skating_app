@@ -2,43 +2,23 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skating_app/api/social.dart';
+import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/edit_profile.dart';
 import 'package:skating_app/profile/lists.dart';
 import 'package:skating_app/profile/settings/settings.dart';
 
 import '../api/config.dart';
 
-// List of image urls
-List<String> imageUrls = [
-  'https://placeimg.com/640/480/animals',
-  'https://placeimg.com/640/480/arch',
-  'https://placeimg.com/640/480/nature',
-  'https://placeimg.com/640/480/people',
-  'https://placeimg.com/640/480/tech',
-  'https://placeimg.com/640/480/animals',
-  'https://placeimg.com/640/480/arch',
-  'https://placeimg.com/640/480/nature',
-  'https://placeimg.com/640/480/people',
-  'https://placeimg.com/640/480/tech',
-  'https://placeimg.com/640/480/nature',
-  'https://placeimg.com/640/480/people',
-  'https://placeimg.com/640/480/tech',
-  'https://placeimg.com/640/480/animals',
-  'https://placeimg.com/640/480/arch',
-  'https://placeimg.com/640/480/nature',
-  'https://placeimg.com/640/480/people',
-];
-
 // Define item type for popup menu
 enum SampleItem { itemOne, itemTwo, itemThree }
 
 // Creates a ProfilePage widget
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key, required this.title})
+  const ProfilePage({Key? key, required this.userId})
       : super(
             key:
                 key); // Take 2 arguments: optional key and required title of the post
-  final String title;
+  final String userId;
 
   @override
   // Create state for the widget
@@ -47,6 +27,13 @@ class ProfilePage extends StatefulWidget {
 
 // The state class for the ProfilePage widget
 class _ProfilePage extends State<ProfilePage> {
+  Map<String, dynamic>? user;
+  @override
+  void initState() {
+    getUserCache(widget.userId).then((value) => {setState(() => user = value)});
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +62,10 @@ class _ProfilePage extends State<ProfilePage> {
           const Spacer(),
           // Column to display the number of friends
 
-          Column(children: const [Text("25"), Text("Friends")]),
+          Column(children: [
+            Text((user?["friends_count"] ?? 0).toString()),
+            const Text("Friends")
+          ]),
           // Column to display the number of followers
           const Spacer(),
 
@@ -83,8 +73,12 @@ class _ProfilePage extends State<ProfilePage> {
               onTap: () => Navigator.push(
                   // Send to edit profile page
                   context,
-                  MaterialPageRoute(builder: (context) => Lists(index: 0))),
-              child: Column(children: const [Text("25"), Text("Followers")])),
+                  MaterialPageRoute(
+                      builder: (context) => const Lists(index: 0))),
+              child: Column(children: [
+                Text((user?["followers_count"] ?? 0).toString()),
+                const Text("Followers")
+              ])),
           // Column to display the number of following
           const Spacer(),
 
@@ -92,8 +86,12 @@ class _ProfilePage extends State<ProfilePage> {
               onTap: () => Navigator.push(
                   // Send to edit profile page
                   context,
-                  MaterialPageRoute(builder: (context) => Lists(index: 1))),
-              child: Column(children: const [Text("25"), Text("Following")])),
+                  MaterialPageRoute(
+                      builder: (context) => const Lists(index: 1))),
+              child: Column(children: [
+                Text((user?["following_count"] ?? 0).toString()),
+                const Text("Following")
+              ])),
           const Spacer(),
         ]),
         // Display the user's name

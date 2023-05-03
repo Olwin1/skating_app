@@ -1,8 +1,11 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:photo_gallery/photo_gallery.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:skating_app/new_post/edit_post.dart';
+import 'package:skating_app/new_post/send_post.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -25,6 +28,8 @@ String? _selectedImage;
 // Define the state for the NewPost widget
 // This class is the state of a widget named NewPost.
 class _NewPost extends State<NewPost> {
+  bool selected = false;
+  Uint8List? selectedImage;
   // A string variable to hold the selected image ID.
   bool _loading =
       false; // A boolean variable to indicate whether the widget is currently loading.
@@ -80,6 +85,21 @@ class _NewPost extends State<NewPost> {
     return false; // Return false if the permissions have not been granted.
   }
 
+  callback(image) {
+    print("i gets an imaen");
+    selectedImage = image;
+    Navigator.of(context, rootNavigator: true).push(
+        // Root navigator hides navbar
+        // Send to Save Session page
+        MaterialPageRoute(
+            builder: (context) => SendPost(
+                  image: selectedImage!,
+                )));
+    setState(() {
+      selected = false;
+    });
+  }
+
   @override
   // Build the UI for the NewPost widget
   Widget build(BuildContext context) {
@@ -88,7 +108,15 @@ class _NewPost extends State<NewPost> {
         title: const Text("New Post"),
         actions: [
           IconButton(
-              onPressed: () => print("pressed"),
+              onPressed: () => _selectedImage != null
+                  ? {
+                      setState(
+                        () => selected = true,
+                      ),
+                      if (selectedImage != null)
+                        {print("image has been selcected")}
+                    }
+                  : print("No image selected"),
               icon: const Icon(Icons.arrow_forward))
         ],
       ),
@@ -99,15 +127,12 @@ class _NewPost extends State<NewPost> {
           : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // A container that displays the selected image
               SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: FadeInImage(
-                  height: MediaQuery.of(context).size.width,
-                  fit: BoxFit.cover,
-                  placeholder: MemoryImage(kTransparentImage),
-                  // Uses the PhotoProvider to display the selected image
-                  image: PhotoProvider(mediumId: _selectedImage!),
-                ),
-              ),
+                  width: MediaQuery.of(context).size.width,
+                  child: EditPost(
+                    selected: selected,
+                    selectedImage: _selectedImage!,
+                    callback: callback,
+                  )),
               const Spacer(),
               // A layout builder that displays a grid of images from the photo gallery
               LayoutBuilder(

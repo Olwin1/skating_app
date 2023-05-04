@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:skating_app/api/image.dart';
+import 'package:skating_app/api/social.dart';
 
 // Define a widget for sending a post with an image
 class SendPost extends StatefulWidget {
@@ -14,7 +16,6 @@ class SendPost extends StatefulWidget {
 
 // Define the state for sending a post with an image
 class _SendPost extends State<SendPost> {
-  final nameController = TextEditingController();
   final descriptionController = TextEditingController();
 
   @override
@@ -26,15 +27,38 @@ class _SendPost extends State<SendPost> {
   @override
   Widget build(BuildContext context) {
     // Define a function to send the post information
-    sendInfo() {
+    Future<String?> sendImage() async {
       try {
         // Upload the image file
-        uploadFile(widget.image);
+        StreamedResponse? response = await uploadFile(widget.image);
+        String? id = await response?.stream.bytesToString();
+        if (id != null) {
+          return id.substring(1, id.length - 1);
+          //Navigator.of(context).pop();
+        }
         // Close the current screen and go back to the previous screen
-        Navigator.of(context).pop();
       } catch (e) {
         // If there is an error, print the error message to the console
         print("An Error Occurred: $e");
+      }
+      return null;
+    }
+
+// Define a function named "sendInfo"
+    void sendInfo() {
+      try {
+        // Call the "sendImage" function and wait for it to complete
+        sendImage().then((value) => {
+              // When "sendImage" completes successfully, call "postPost"
+              // with the text from "descriptionController" and the returned value
+              postPost(descriptionController.text, value!)
+                  // Wait for "postPost" to complete successfully
+                  .then((value) =>
+                      // When "postPost" completes successfully, close the current screen
+                      Navigator.of(context).pop())
+            });
+      } catch (e) {
+        print("Error creating post");
       }
     }
 
@@ -75,7 +99,7 @@ class _SendPost extends State<SendPost> {
                       "Post Description"), // The label for the text field.
                   TextField(
                     controller:
-                        nameController, // The controller for the text field.
+                        descriptionController, // The controller for the text field.
                     autofocus:
                         false, // The text field doesn't automatically get focus when the page is opened.
                   ),

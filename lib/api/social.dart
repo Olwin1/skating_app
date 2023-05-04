@@ -41,7 +41,7 @@ SecureStorage storage = SecureStorage();
 */
 
 // Define a function to authenticate user credentials and return a token
-Future<Object> postPost(String description, String image) async {
+Future<Map<String, dynamic>> postPost(String description, String image) async {
   // Define the URL endpoint for login
   var url = Uri.parse('${Config.uri}/post/post');
 

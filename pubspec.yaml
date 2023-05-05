@@ -102,6 +102,12 @@ flutter:
     - assets/icons/navbar/
     - assets/icons/
 
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSans-VariableFont.ttf
+        - asset: assets/fonts/OpenSans-Italic-VariableFont.ttf
+          style: italic
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

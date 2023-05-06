@@ -6,6 +6,8 @@ import 'package:skating_app/api/token.dart';
 import 'package:skating_app/social_media/login.dart';
 import 'tab_navigator.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
+import 'current_tab.dart';
+import 'package:provider/provider.dart';
 
 // Define the main function
 Future<void> main() async {
@@ -71,8 +73,36 @@ class _MyAppState extends State<MyApp> {
         fontFamily: "OpenSans",
       ),
       home: loggedIn
-          ? MyHomePage(setLoggedIn: setLoggedIn, loggedIn: loggedIn)
+          ? StateManagement(setLoggedIn: setLoggedIn, loggedIn: loggedIn)
           : Login(setLoggedIn: setLoggedIn, loggedIn: loggedIn),
+    );
+  }
+}
+
+// This is a stateless widget called StateManagement
+class StateManagement extends StatelessWidget {
+  // This widget requires two parameters, a boolean named `loggedIn`
+  // and a dynamic named `setLoggedIn`
+  final bool loggedIn;
+  final dynamic setLoggedIn;
+
+  // Constructor for this widget that initializes its properties
+  const StateManagement({
+    Key? key,
+    required this.loggedIn,
+    required this.setLoggedIn,
+  }) : super(key: key);
+
+  // Build method of this widget that returns a ChangeNotifierProvider widget
+  // with a CurrentPage object as the notifier and a child MyHomePage widget.
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<CurrentPage>(
+      create: (_) => CurrentPage(),
+      child: MyHomePage(
+        loggedIn: loggedIn,
+        setLoggedIn: setLoggedIn,
+      ),
     );
   }
 }
@@ -127,7 +157,6 @@ class _MyHomePageState extends State<MyHomePage> {
     ]);
   }
 
-  int _currentTab = 0; // Declare _current tab and set default to main page
   final Map<String, GlobalKey<NavigatorState>> _navigatorKeys = {
     "0": GlobalKey<
         NavigatorState>(), //Create an individual navigation stack for each item
@@ -136,15 +165,16 @@ class _MyHomePageState extends State<MyHomePage> {
     "3": GlobalKey<NavigatorState>(),
     "4": GlobalKey<NavigatorState>(),
   };
-  void _selectTab(TabItem<Widget> tabItem, String index) {
-    if (index == _currentTab.toString()) {
+  void _selectTab(
+      CurrentPage currentPage, TabItem<Widget> tabItem, String index) {
+    if (index == currentPage.tab.toString()) {
       // If current tab is main tab
       // pop to first route
       _navigatorKeys[index]!.currentState!.popUntil((route) =>
           route.isFirst); //Reduce navigation stack until back to that page
     } else {
-      setState(
-          () => _currentTab = int.parse(index)); // Set current tab to main page
+      //setState(
+      currentPage.set(int.parse(index)); //); // Set current tab to main page
     }
   }
 
@@ -156,19 +186,21 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-
+// This code returns a Consumer widget that rebuilds its child widget
+// whenever the CurrentPage object changes.
+    return Consumer<CurrentPage>(builder: (context, currentPage, child) {
     return WillPopScope(
         // Handle user swiping back inside application
         onWillPop: () async {
           final isFirstRouteInCurrentTab =
-              !await _navigatorKeys[_currentTab.toString()]!
+                !await _navigatorKeys[currentPage.tab.toString()]!
                   .currentState!
                   .maybePop();
           if (isFirstRouteInCurrentTab) {
             // if not on the 'main' tab
-            if (_currentTab != 0) {
+              if (currentPage.tab != 0) {
               // select 'main' tab
-              _selectTab(tabItems()[0], "0");
+                _selectTab(currentPage, tabItems()[0], "0");
               // back button handled by app
               return false;
             }
@@ -182,12 +214,15 @@ class _MyHomePageState extends State<MyHomePage> {
             child: ConvexAppBar(
               //Define Navbar Object
               items: tabItems(), //Set navbar items to the tabitems
-              initialActiveIndex: 0, // Set initial selection to main page
+                initialActiveIndex:
+                    currentPage.tab, // Set initial selection to main page
               onTap: (int i) => {
                 //When a navbar button is pressed set the current tab to the tabitem that was pressed
                 setState(() {
-                  _currentTab = i;
+                    //  _currentTab = i;
+                    currentPage.set(i);
                 }),
+                  print("setting curret page")
               }, // When a button is pressed... output to console
               style: TabStyle
                   .fixedCircle, // Set the navbar style to have the circle stay at the centre
@@ -200,20 +235,22 @@ class _MyHomePageState extends State<MyHomePage> {
           body: Stack(
             children: [
               // Create a navigator stack for each item
-              _buildOffstageNavigator(0),
-              _buildOffstageNavigator(1),
-              _buildOffstageNavigator(2),
-              _buildOffstageNavigator(3),
-              _buildOffstageNavigator(4)
+                _buildOffstageNavigator(currentPage, 0),
+                _buildOffstageNavigator(currentPage, 1),
+                _buildOffstageNavigator(currentPage, 2),
+                _buildOffstageNavigator(currentPage, 3),
+                _buildOffstageNavigator(currentPage, 4)
             ],
           ),
           // This trailing comma makes auto-formatting nicer for build methods.
         ));
+    }); //);
   }
 
-  Widget _buildOffstageNavigator(int tabItemIndex) {
+  Widget _buildOffstageNavigator(CurrentPage currentPage, int tabItemIndex) {
+    if (currentPage.tab == tabItemIndex) {}
     return Offstage(
-      offstage: _currentTab != tabItemIndex,
+      offstage: currentPage.tab != tabItemIndex,
       child: TabNavigator(
         navigatorKey: _navigatorKeys[tabItemIndex.toString()],
         tabItemIndex: tabItemIndex,

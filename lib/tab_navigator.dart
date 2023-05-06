@@ -28,8 +28,7 @@ class TabNavigator extends StatelessWidget {
       "1": (context) => const FitnessTracker(),
       "2": (context) =>
           const NewPost(title: "New Post"), // Link to new post page
-      "3": (context) => const FriendsTracker(
-          title: "Friends Tracker"), // Link To friends tracker,
+      "3": (context) => FriendsTracker(), // Link To friends tracker,
       "4": (context) => const ProfilePage(userId: "0"), //  Link to Profile Page
     };
   }

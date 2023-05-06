@@ -11,24 +11,46 @@ import 'package:latlong2/latlong.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:skating_app/api/session.dart';
+import 'package:provider/provider.dart';
+import '../current_tab.dart';
 
 bool searchOpened = true;
 bool active = false;
 
 /// Declare searchOpened variable
 
-class FriendsTracker extends StatefulWidget {
-  // Create FriendActivity widget
-  const FriendsTracker({Key? key, required this.title})
-      : super(key: key); // Take 2 arguments optional key and title of post
-  final String title;
+// Define a new StatelessWidget called FriendsTracker
+class FriendsTracker extends StatelessWidget {
+  // Constructor for FriendsTracker, which calls the constructor for its superclass (StatelessWidget)
+  const FriendsTracker({super.key});
 
+  // Override the build method of StatelessWidget to return a Consumer widget
   @override
-  State<FriendsTracker> createState() =>
-      _FriendsTracker(); //Create state for widget
+  Widget build(BuildContext context) {
+    // Use the Consumer widget to listen for changes to the CurrentPage object
+    return Consumer<CurrentPage>(
+      builder: (context, currentPage, widget) =>
+          // If the CurrentPage's tab value is 3 (The friends tracker), return a FriendsTrackerPage widget
+          currentPage.tab == 3
+              ? const FriendsTrackerPage()
+              :
+              // Otherwise, return an empty SizedBox widget
+              const SizedBox.shrink(),
+    );
+  }
 }
 
-class _FriendsTracker extends State<FriendsTracker> {
+class FriendsTrackerPage extends StatefulWidget {
+  // Create FriendActivity widget
+  const FriendsTrackerPage({Key? key})
+      : super(key: key); // Take 2 arguments optional key and title of post
+
+  @override
+  State<FriendsTrackerPage> createState() =>
+      _FriendsTrackerPage(); //Create state for widget
+}
+
+class _FriendsTrackerPage extends State<FriendsTrackerPage> {
   List<Map<String, dynamic>> newSessions = [];
   MapController controller = MapController(); // Controller for the map
   List<Marker> friends = []; // List of markers representing friends' locations

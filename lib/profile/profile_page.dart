@@ -8,6 +8,7 @@ import 'package:skating_app/profile/lists.dart';
 import 'package:skating_app/profile/settings/settings.dart';
 
 import '../api/config.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Define item type for popup menu
 enum SampleItem { itemOne, itemTwo, itemThree }
@@ -39,7 +40,8 @@ class _ProfilePage extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         // Create appBar widget
-        title: Text(user?["username"] ?? "username"), // Set title
+        title: Text(user?["username"] ??
+            AppLocalizations.of(context)!.username), // Set title
         actions: const [
           // Define icon buttons
           OptionsMenu()
@@ -78,7 +80,7 @@ class _ProfilePage extends State<ProfilePage> {
 
           Column(children: [
             Text((user?["friends_count"] ?? 0).toString()),
-            const Text("Friends")
+            Text(AppLocalizations.of(context)!.friends)
           ]),
           // Column to display the number of followers
           const Spacer(),
@@ -91,7 +93,7 @@ class _ProfilePage extends State<ProfilePage> {
                       builder: (context) => const Lists(index: 0))),
               child: Column(children: [
                 Text((user?["followers_count"] ?? 0).toString()),
-                const Text("Followers")
+                Text(AppLocalizations.of(context)!.followers)
               ])),
           // Column to display the number of following
           const Spacer(),
@@ -104,14 +106,15 @@ class _ProfilePage extends State<ProfilePage> {
                       builder: (context) => const Lists(index: 1))),
               child: Column(children: [
                 Text((user?["following_count"] ?? 0).toString()),
-                const Text("Following")
+                Text(AppLocalizations.of(context)!.following)
               ])),
           const Spacer(),
         ]),
         // Display the user's name
         Padding(
           padding: const EdgeInsets.all(8),
-          child: Text(user?["username"] ?? "username"),
+          child:
+              Text(user?["username"] ?? AppLocalizations.of(context)!.username),
         ),
         // Display the user's bio
         Padding(
@@ -128,7 +131,7 @@ class _ProfilePage extends State<ProfilePage> {
             child: TextButton(
                 onPressed: () =>
                     print("pressed"), // Prints "pressed" when button is pressed
-                child: const Text("Follow")),
+                child: Text(AppLocalizations.of(context)!.follow)),
           ), // Button text
           // Second text button
           Expanded(
@@ -136,7 +139,7 @@ class _ProfilePage extends State<ProfilePage> {
                 // Expand button to empty space
                 onPressed: () =>
                     print("pressed"), // Prints "pressed" when button is pressed
-                child: const Text("Share Profile")),
+                child: Text(AppLocalizations.of(context)!.shareProfile)),
           ), // Button text
           TextButton(
               onPressed: () => print("pressed"),
@@ -172,9 +175,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
           Navigator.push(
               // Send to edit profile page
               context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      const EditProfile(title: "Edit Profile")));
+              MaterialPageRoute(builder: (context) => const EditProfile()));
         }
         if (item == SampleItem.itemTwo) {
           // If item pressed is Settings
@@ -190,25 +191,25 @@ class _OptionsMenuState extends State<OptionsMenu> {
       // Define the items in the menu using PopupMenuItem widgets
       itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
         // First menu item
-        const PopupMenuItem<SampleItem>(
+        PopupMenuItem<SampleItem>(
           // Value of the menu item, an instance of the SampleItem enumeration
           value: SampleItem.itemOne,
           // Text widget that displays the text for the menu item
-          child: Text('Edit Profile'),
+          child: Text(AppLocalizations.of(context)!.editProfile),
         ),
         // Second menu item
-        const PopupMenuItem<SampleItem>(
+        PopupMenuItem<SampleItem>(
           // Value of the menu item, an instance of the SampleItem enumeration
           value: SampleItem.itemTwo,
           // Text widget that displays the text for the menu item
-          child: Text('Settings'),
+          child: Text(AppLocalizations.of(context)!.settings),
         ),
         // Third menu item
-        const PopupMenuItem<SampleItem>(
+        PopupMenuItem<SampleItem>(
           // Value of the menu item, an instance of the SampleItem enumeration
           value: SampleItem.itemThree,
           // Text widget that displays the text for the menu item
-          child: Text('Saved'),
+          child: Text(AppLocalizations.of(context)!.saved),
         ),
       ],
     );

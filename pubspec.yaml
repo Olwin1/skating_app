@@ -60,7 +60,6 @@ dependencies:
   timer_builder: ^2.0.0
   solar_calculator: ^1.0.3
   geolocator: ^9.0.2
-  intl: ^0.17.0
   kdgaugeview: ^1.0.4
   stash: ^4.5.2
   stash_memory: ^4.5.2
@@ -71,6 +70,10 @@ dependencies:
   cropperx: ^1.1.1
   mime: ^1.0.4
   http_parser: ^4.0.2
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:
@@ -88,6 +91,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  # determines whether Flutter should generate code when running "flutter packages get".
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

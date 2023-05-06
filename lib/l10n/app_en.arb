@@ -1,0 +1,346 @@
+{
+  "@@locale": "en",
+  "commentsTitle": "Comments",
+  "@commentsTitle": {
+    "description": "The title text for the comments page"
+  },
+  "reply": "Reply",
+  "@reply": {
+    "description": "Used in buttons to denote a reply action to a user"
+  },
+  "like": "Like",
+  "@like": {
+    "description": "Used in buttons to denote a like action to a user"
+  },
+  "dislike": "Dislike",
+  "@dislike": {
+    "description": "Used in buttons to denote a dislike action to a user"
+  },
+  "writeComment": "Write a comment...",
+  "@writeComment": {
+    "description": "Used as placeholder text in the comment entry box"
+  },
+  "messages": "Messages",
+  "@messages": {
+    "description": "May be used as a heading for a list of user's message channels"
+  },
+  "activityOnline": "Online",
+  "@activityOnline": {
+    "description": "Used to show weather a user is currently using the application"
+  },
+  "activityOffline": "Offline",
+  "@activityOffline": {
+    "description": "Used to show weather a user is currently using the application"
+  },
+  "activityLastSeen": "Last seen {time} ago",
+  "@activityLastSeen": {
+    "description": "Used to show when a user was last online",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "4h"
+      }
+    }
+  },
+  "message": "Message",
+  "@message": {
+    "description": "Used as placeholder text in the message channel"
+  },
+  "send": "Send",
+  "@send": {
+    "description": "May be used in place of the send icon in messages or send password recovery emails"
+  },
+  "distanceTraveled": "Distance Traveled",
+  "@distanceTraveled": {
+    "description": "Used as a heading for an infobox containing the total distance a user has traveled"
+  },
+  "sessionDuration": "Session Duration",
+  "@sessionDuration": {
+    "description": "Used as a heading for an infobox containing the total session duration"
+  },
+  "averageSessionDuration": "Avg. Session Duration",
+  "@averageSessionDuration": {
+    "description": "Used as a heading for an infobox containing the average session duration"
+  },
+  "sunsetTime": "Sunset Time",
+  "@sunsetTime": {
+    "description": "Used as a heading for an infobox containing the sunset time"
+  },
+  "averageSpeed": "Avg. Speed",
+  "@averageSpeed": {
+    "description": "Used as a heading for an infobox containing the average speed"
+  },
+  "speedometer": "Speedometer",
+  "@speedometer": {
+    "description": "Used as text for a button that will take the user to a speedometer page"
+  },
+  "start": "Start",
+  "@start": {
+    "description": "Used as a button to start the fitness tracker"
+  },
+  "stop": "Stop",
+  "@stop": {
+    "description": "Used as a button to stop the fitness tracker"
+  },
+  "sessionName": "Session Name",
+  "@sessionName": {
+    "description": "Used as a heading for a textbox where the user can input a name for their session"
+  },
+  "sessionDescription": "Session Description",
+  "@sessionDescription": {
+    "description": "Used as a heading for a textbox where the user can input a description for their session this could range from what they did // who they met // where they went etc..."
+  },
+  "addPhotos": "Add Photos",
+  "@addPhotos": {
+    "description": "Used as text for a button that will let the user add their own images from their camera roll"
+  },
+  "sessionType": "Session Type",
+  "@sessionType": {
+    "description": "Used as a heading for a dropdown containing different types of sessions (e.g. Fitness Skating)"
+  },
+  "fitnessSkating": "Recreational/Fitness Skating",
+  "@fitnessSkating": {
+    "description": "Used as an entry for a dropdown containing different types of skating -- "
+  },
+  "aggressiveInlineSkating": "Aggressive Inline Skating",
+  "@aggressiveInlineSkating": {
+    "description": "Used as an entry for a dropdown containing different types of skating -- "
+  },
+  "aggressiveQuadSkating": "Aggressive Quad Skating",
+  "@aggressiveQuadSkating": {
+    "description": "Used as an entry for a dropdown containing different types of skating -- "
+  },
+  "figureSkating": "Artistic/Figure Skating",
+  "@figureSkating": {
+    "description": "Used as an entry for a dropdown containing different types of skating -- "
+  },
+  "urbanSkating": "Urban/Freestyle Skating",
+  "@urbanSkating": {
+    "description": "Used as an entry for a dropdown containing different types of skating -- "
+  },
+  "offRoadSkating": "Off-Road Skating",
+  "@offRoadSkating": {
+    "description": "Used as an entry for a dropdown containing different types of skating -- "
+  },
+  "rollerHockeySkating": "Roller Hockey",
+  "@rollerHockeySkating": {
+    "description": "Used as an entry for a dropdown containing different types of skating -- "
+  },
+  "iceHockeySkating": "Ice Hockey",
+  "@iceHockeySkating": {
+    "description": "Used as an entry for a dropdown containing different types of skating -- "
+  },
+  "rollerDiscoSkating": "Roller Disco",
+  "@rollerDiscoSkating": {
+    "description": "Used as an entry for a dropdown containing different types of skating -- "
+  },
+  "rollerDerbySkating": "Roller Derby",
+  "@rollerDerbySkating": {
+    "description": "Used as an entry for a dropdown containing different types of skating -- "
+  },
+  "shareOptions": "Sharing Options",
+  "@shareOptions": {
+    "description": "Used as a heading for a dropdown outlining who can see the user's session"
+  },
+  "saveSession": "Save Session",
+  "@saveSession": {
+    "description": "Used as text for a button that will save & share the session"
+  },
+  "newPost": "New Post",
+  "@newPost": {
+    "description": "Used as a heading for the New Post Page"
+  },
+  "createPost": "Create Post",
+  "@createPost": {
+    "description": "Used as a heading for the final post creation page"
+  },
+  "postDescription": "Post Description",
+  "@postDescription": {
+    "description": "Used as a heading for a textbox that will contain the post's description"
+  },
+  "post": "Post",
+  "@post": {
+    "description": "Used as text for a post button that will finalise the post and share it"
+  },
+  "search": "Search...",
+  "@search": {
+    "description": "Used as placeholder text within a search bar"
+  },
+  "friends": "Friends",
+  "@friends": {
+    "description": "Used as a heading for a friends count"
+  },
+  "followers": "Followers",
+  "@followers": {
+    "description": "Used as a heading for a followers count"
+  },
+  "following": "Following",
+  "@following": {
+    "description": "Used as a heading for a following count"
+  },
+  "follow": "Follow",
+  "@follow": {
+    "description": "Used as text for a follow user button"
+  },
+  "unfollow": "Unfollow",
+  "@unfollow": {
+    "description": "Used as text for a unfollow user button"
+  },
+  "shareProfile": "Share Profile",
+  "@shareProfile": {
+    "description": "Used as text for a Share Profile user button"
+  },
+  "editProfile": "Edit Profile",
+  "@editProfile": {
+    "description": "Used as text for a edit profile button"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Used as text for a settings button"
+  },
+  "saved": "Saved",
+  "@saved": {
+    "description": "Used as text for a saved posts button"
+  },
+  "displayName": "Display Name",
+  "@displayName": {
+    "description": "Used as a heading for a text input where the user can change their display name"
+  },
+  "username": "Username",
+  "@username": {
+    "description": "Used as a heading for a text input where the user can change their username"
+  },
+  "country": "Country",
+  "@country": {
+    "description": "Used as a heading for a text input where the user can change their country"
+  },
+  "aboutMe": "About Me",
+  "@aboutMe": {
+    "description": "Used as a heading for a text input where the user can input some information that will be displayed on their profile"
+  },
+  "editPicture": "Edit Picture",
+  "@editPicture": {
+    "description": "Used as text for a button where the user can change their avatar"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "May be used as text for a button where a user can save info"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Used as a heading for a option where the user can change their email"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Used as a header for the login / password change page"
+  },
+  "biometrics": "Biometric Verification",
+  "@biometrics": {
+    "description": "Used as text for a toggle button that will enable the user to unlock the app with their fingerprint"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Used as text for a button that willl log the user out of the application"
+  },
+  "pushNotifications": "Push Notifications",
+  "@pushNotifications": {
+    "description": "Used as text for a toggle button that will enable app notifications"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Used as text for a language selector button"
+  },
+  "largeText": "Large Text",
+  "@largeText": {
+    "description": "Used as text for a button that will toggle a larger font size to make text more readable"
+  },
+  "dyslexiaFont": "Dyslexia Font",
+  "@dyslexiaFont": {
+    "description": "Used as text for a button that toggles a more dyslexia friendly font"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Used as text for a button that allows the user to select between light and dark theme"
+  },
+  "faq": "FAQ",
+  "@faq": {
+    "description": "Used as text for a button that will show Frequently Asked Questions"
+  },
+  "contactSupport": "Contact Support",
+  "@contactSupport": {
+    "description": "Used as text for a button that will allow the user to contact developer"
+  },
+  "aboutApp": "About App",
+  "@aboutApp": {
+    "description": "Used as text for a button that will show basic info about app such as version number"
+  },
+  "security": "Security",
+  "@security": {
+    "description": "Used as a heading for security based options such as password config & email changing"
+  },
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Used as a heading for notification based options such as push & email notifications"
+  },
+  "accessibility": "Accessibility",
+  "@accessibility": {
+    "description": "Used as heading for accessibility based settings such as language selection and large font"
+  },
+  "helpSupport": "Help & Support",
+  "@helpSupport": {
+    "description": "Used as heading for help & support based options such as FAQ and contact support"
+  },
+  "signIn": "Sign In",
+  "@signIn": {
+    "description": "Used as text for a sign in button"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Used as text for a password recovery function"
+  },
+  "forgotPasswordDesc": "Enter the email or phone number associated with your account and we will send an introductions to reset your password.'",
+  "@forgotPasswordDesc": {
+    "description": "Used as description telling user what to do to recover their password"
+  },
+  "loginConfirmCode": "Enter the 6 digit code sent to you at ******.'",
+  "@loginConfirmCode": {
+    "description": "Used as desc for user auth confirmation"
+  },
+  "code": "Code",
+  "@code": {
+    "description": "Used as heading for entering a confirmation code"
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Used to confirm confirmation code entry"
+  },
+  "resend": "Resend",
+  "@resend": {
+    "description": "Used to resend confirmation code"
+  },
+  "resendMessage": "Not recieved, even in spam folder?",
+  "@resendMessage": {
+    "description": "Used as text to be displayed when user resends a code"
+  },
+  "createAccount": "Create Account",
+  "@createAccount": {
+    "description": "Used as text for a create account button"
+  },
+  "alreadyHaveAccount": "Already have an account?",
+  "@alreadyHaveAccount": {
+    "description": "Used as text for switching to sign in page"
+  },
+  "agreeTo": "By registering, you agree to our",
+  "@agreeTo": {
+    "description": "Used as text for linking TOS and Privacy Policy"
+  },
+  "tos": "Terms of service",
+  "@tos": {
+    "description": "Terms of service"
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy Policy"
+  }
+
+}

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:skating_app/api/image.dart';
 import 'package:skating_app/api/social.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Define a widget for sending a post with an image
 class SendPost extends StatefulWidget {
@@ -71,16 +72,18 @@ class _SendPost extends State<SendPost> {
         leadingWidth: 48, // Adjusts the width of the leading widget.
         centerTitle: false, // Aligns the title to the left.
         title: Title(
-          title: "Create Post", // Sets the title of the app bar.
+          title: AppLocalizations.of(context)!
+              .createPost, // Sets the title of the app bar.
           color: const Color(0xFFDDDDDD), // Sets the color of the title.
-          child: const Text("Create Post"), // The actual text of the title.
+          child: Text(AppLocalizations.of(context)!
+              .createPost), // The actual text of the title.
         ),
         actions: [
           TextButton(
               onPressed: () => sendInfo(),
-              child: const Text(
-                "Send",
-                style: TextStyle(color: Color(0xFFDDDDDD)),
+              child: Text(
+                AppLocalizations.of(context)!.send,
+                style: const TextStyle(color: Color(0xFFDDDDDD)),
               )) // A button to send the post.
         ],
       ),
@@ -95,8 +98,8 @@ class _SendPost extends State<SendPost> {
                   0xffcecece), // Sets the background color of the container.
               child: Column(
                 children: [
-                  const Text(
-                      "Post Description"), // The label for the text field.
+                  Text(AppLocalizations.of(context)!
+                      .postDescription), // The label for the text field.
                   TextField(
                     controller:
                         descriptionController, // The controller for the text field.

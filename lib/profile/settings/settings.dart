@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:skating_app/profile/settings/settings_overlays.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Settings widget
 
@@ -26,7 +27,7 @@ class _Settings extends State<Settings> {
         // AppBar widget for the title of the screen
         appBar: AppBar(
           // Setting the title of the AppBar
-          title: const Text("Settings"),
+          title: Text(AppLocalizations.of(context)!.settings),
         ),
         // Using the SettingsList widget from the settings_ui package
         body: Stack(children: [
@@ -34,19 +35,19 @@ class _Settings extends State<Settings> {
             sections: [
               // Adding a SettingsSection to group related tiles together
               SettingsSection(
-                title: const Text("Security"),
+                title: Text(AppLocalizations.of(context)!.security),
                 // Adding the tiles to the section
                 tiles: <SettingsTile>[
                   // Navigation tile with an email icon, title, and value
                   SettingsTile.navigation(
                     leading: const Icon(Icons.mail),
-                    title: const Text("Email"),
+                    title: Text(AppLocalizations.of(context)!.email),
                     value: const Text("default@example.com"),
                   ),
                   // Navigation tile with a language icon, title, and value
                   SettingsTile.navigation(
                     leading: const Icon(Icons.password),
-                    title: const Text('Password'),
+                    title: Text(AppLocalizations.of(context)!.password),
                     value: const Text('••••••••'),
                     onPressed: (e) => {
                       print("text"),
@@ -61,16 +62,16 @@ class _Settings extends State<Settings> {
                     initialValue: true,
                     // Icon, title, and switch for the tile
                     leading: const Icon(Icons.fingerprint),
-                    title: const Text('Biometric Verification'),
+                    title: Text(AppLocalizations.of(context)!.biometrics),
                   ),
                   SettingsTile.navigation(
                     leading: const Icon(Icons.logout),
-                    title: const Text('Logout'),
+                    title: Text(AppLocalizations.of(context)!.logout),
                   ),
                 ],
               ),
               SettingsSection(
-                title: const Text("Notifications"),
+                title: Text(AppLocalizations.of(context)!.notifications),
                 // Adding the tiles to the section
                 tiles: <SettingsTile>[
                   // Switch tile for toggling push notifications
@@ -81,7 +82,8 @@ class _Settings extends State<Settings> {
                     initialValue: true,
                     // Icon, title, and switch for the tile
                     leading: const Icon(Icons.notifications),
-                    title: const Text('Push Notifications'),
+                    title:
+                        Text(AppLocalizations.of(context)!.pushNotifications),
                   ),
                   SettingsTile.switchTile(
                     // Callback function for when the toggle is switched
@@ -95,12 +97,12 @@ class _Settings extends State<Settings> {
                 ],
               ),
               SettingsSection(
-                title: const Text("Accessibility"),
+                title: Text(AppLocalizations.of(context)!.accessibility),
                 // Adding the tiles to the section
                 tiles: <SettingsTile>[
                   SettingsTile.navigation(
                     leading: const Icon(Icons.language),
-                    title: const Text('Language'),
+                    title: Text(AppLocalizations.of(context)!.language),
                     value: const Text('English'),
                     onPressed: (e) => {
                       setState(() => {item = 2})
@@ -114,7 +116,7 @@ class _Settings extends State<Settings> {
                     initialValue: true,
                     // Icon, title, and switch for the tile
                     leading: const Icon(Icons.text_decrease),
-                    title: const Text('Large Text'),
+                    title: Text(AppLocalizations.of(context)!.largeText),
                   ),
                   SettingsTile.switchTile(
                     // Callback function for when the toggle is switched
@@ -123,11 +125,11 @@ class _Settings extends State<Settings> {
                     initialValue: true,
                     // Icon, title, and switch for the tile
                     leading: const Icon(Icons.font_download),
-                    title: const Text('Dyslexia Font'),
+                    title: Text(AppLocalizations.of(context)!.dyslexiaFont),
                   ),
                   SettingsTile.navigation(
                     leading: const Icon(Icons.theater_comedy),
-                    title: const Text('Theme'),
+                    title: Text(AppLocalizations.of(context)!.theme),
                     value: const Text('Default'),
                     onPressed: (e) => {
                       setState(() => {item = 3})
@@ -136,22 +138,22 @@ class _Settings extends State<Settings> {
                 ],
               ),
               SettingsSection(
-                title: const Text("Help & Support"),
+                title: Text(AppLocalizations.of(context)!.helpSupport),
                 // Adding the tiles to the section
                 tiles: <SettingsTile>[
                   SettingsTile.navigation(
                     leading: const Icon(Icons.format_quote),
-                    title: const Text('FAQ'),
+                    title: Text(AppLocalizations.of(context)!.faq),
                   ),
                   // Switch tile for toggling push notifications
                   SettingsTile.navigation(
                     // Icon, title, and switch for the tile
                     leading: const Icon(Icons.support),
-                    title: const Text('Contact Support'),
+                    title: Text(AppLocalizations.of(context)!.contactSupport),
                   ),
                   SettingsTile.navigation(
                     leading: const Icon(Icons.info),
-                    title: const Text('About App'),
+                    title: Text(AppLocalizations.of(context)!.aboutApp),
                   ),
                 ],
               ),

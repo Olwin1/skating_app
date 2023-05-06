@@ -1,0 +1,8 @@
+# This is the directory containing localization files
+arb-dir: lib/l10n
+
+# This is the template localization file
+template-arb-file: app_en.arb
+
+# This is the output file that will be generated
+output-localization-file: app_localizations.dart

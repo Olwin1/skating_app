@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login_template/flutter_login_template.dart';
 import 'package:skating_app/api/auth.dart' show login, signup;
 import 'package:skating_app/api/token.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Define an enum to represent different states of the login screen
 enum _State {
@@ -107,7 +108,10 @@ class _Login extends State<Login> {
       style: style,
       controllerUser: usernameController,
       controllerPassword: passwordController,
-      hintTextUser: "Username",
+      hintTextUser: AppLocalizations.of(context)!.username,
+      hintTextPassword: AppLocalizations.of(context)!.password,
+      buttonTextForgotPassword: AppLocalizations.of(context)!.forgotPassword,
+      buttonTextSignIn: AppLocalizations.of(context)!.signIn,
       errorTextPassword: errorText,
       onPressedSignIn: () async {
         // When the user taps the sign-in button, try to log them in
@@ -249,7 +253,7 @@ class _Login extends State<Login> {
         break;
       case _State.signIn:
       default:
-        text = "Sign In";
+        text = AppLocalizations.of(context)!.signIn;
         break;
     }
 

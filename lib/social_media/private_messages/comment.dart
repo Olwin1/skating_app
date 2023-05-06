@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Comment extends StatefulWidget {
   final Map<String, dynamic> comment;
@@ -78,30 +79,32 @@ class _Comment extends State<Comment> {
                               // Create text button
                               onPressed: () => widget.focus
                                   ?.requestFocus(), // When reply pressed focus on text input
-                              child: const Text(
+                              child: Text(
                                 // Reply Placeholder
-                                "Reply",
+                                AppLocalizations.of(context)!.reply,
                                 textAlign:
                                     TextAlign.end, // Align with right of screen
                               ),
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal:
                                     8), // Apply padding only to left and right
                             child: Text(
-                              "Like", // Like Placeholder
+                              AppLocalizations.of(context)!
+                                  .like, // Like Placeholder
                               textAlign:
                                   TextAlign.end, // Align with right of screen
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal:
                                     8), // Apply padding only to left and right
                             child: Text(
-                              "Dislike", // Dislike placeholder
+                              AppLocalizations.of(context)!
+                                  .dislike, // Dislike placeholder
                               textAlign:
                                   TextAlign.end, // Align with right of screen
                             ),

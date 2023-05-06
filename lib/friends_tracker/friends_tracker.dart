@@ -11,6 +11,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:skating_app/api/session.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../current_tab.dart';
 
@@ -129,7 +130,7 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
 // Creates a FloatingSearchBar widget with specified properties
           FloatingSearchBar(
               // The text displayed as a placeholder in the search bar
-              hint: 'Search...',
+              hint: AppLocalizations.of(context)!.search,
 
               // The padding around the search bar while scrolling
               scrollPadding: const EdgeInsets.only(top: 16, bottom: 40),

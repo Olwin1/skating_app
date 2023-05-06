@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PrivateMessageList(
+                        builder: (context) => const PrivateMessageList(
                               user: "user",
                               index: 1,
                             ))),
@@ -49,28 +49,7 @@ class HomePage extends StatelessWidget {
                     "assets/icons/message.png")) // Set Button To Message icon
           ],
         ),
-        body: const Center(
-            child:
-                PostsListView()) /*update: )ListView.separated(
-        controller: _scrollController,
-        // Create a list of post widgets
-
-        itemBuilder: (context, position) {
-          // Function that will be looped to generate a widget
-          return PostWidget(user: user, index: position);
-        },
-        separatorBuilder: (context, position) {
-          // Function that will be looped in between each item
-          return const SizedBox(
-            // Create a seperator
-            height: 20,
-          );
-        },
-        itemCount: user
-            .getPosts()
-            .length, // Set count to the number of posts that there are
-      )),*/
-        );
+        body: const Center(child: PostsListView()));
   }
 }
 

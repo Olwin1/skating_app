@@ -8,6 +8,7 @@ import 'distance_travelled.dart';
 import 'signal_strength_info.dart';
 import 'package:skating_app/fitness_tracker/timer.dart';
 import 'check_permission.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FitnessTracker extends StatefulWidget {
   const FitnessTracker({Key? key}) : super(key: key);
@@ -68,6 +69,7 @@ class _FitnessTracker extends State<FitnessTracker> {
   @override
   Widget build(BuildContext context) {
     if (active) {
+      buttonMessage = AppLocalizations.of(context)!.start;
       startTime = DateTime.now().toUtc();
     }
     // create an instance of the User class and passing it an id of '1'
@@ -103,7 +105,7 @@ class _FitnessTracker extends State<FitnessTracker> {
                   // Padding widget with smaller padding value, used to add padding around a nested Column widget
                   padding: const EdgeInsets.symmetric(vertical: 32),
                   child: Column(children: [
-                    const Text("Distance Traveled"),
+                    Text(AppLocalizations.of(context)!.distanceTraveled),
                     DistanceTravelled(active: active, callback: callback)
                   ]),
                 ),
@@ -121,7 +123,8 @@ class _FitnessTracker extends State<FitnessTracker> {
                               Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Column(children: [
-                                  const Text("Session Duration"),
+                                  Text(AppLocalizations.of(context)!
+                                      .sessionDuration),
                                   active
                                       ? ClockWidget(
                                           startTime: DateTime
@@ -134,9 +137,10 @@ class _FitnessTracker extends State<FitnessTracker> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8),
-                                child: Column(children: const [
-                                  Text("Avg. Session Duration"),
-                                  Text("5:00")
+                                child: Column(children: [
+                                  Text(AppLocalizations.of(context)!
+                                      .averageSessionDuration),
+                                  const Text("5:00")
                                 ]),
                               ),
                             ],
@@ -147,15 +151,17 @@ class _FitnessTracker extends State<FitnessTracker> {
                               Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Column(children: [
-                                  const Text("Sunset Time"),
+                                  Text(
+                                      AppLocalizations.of(context)!.sunsetTime),
                                   Text(sunsetTime)
                                 ]),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8),
-                                child: Column(children: const [
-                                  Text("Average Speed"),
-                                  Text("2kph")
+                                child: Column(children: [
+                                  Text(AppLocalizations.of(context)!
+                                      .averageSpeed),
+                                  const Text("2kph")
                                 ]),
                               ),
                             ],
@@ -173,8 +179,8 @@ class _FitnessTracker extends State<FitnessTracker> {
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           const SpeedometerPage())),
-                          child: const Text(
-                              "Speedometer"), // Set text to speedometer
+                          child: Text(AppLocalizations.of(context)!
+                              .speedometer), // Set text to speedometer
                         ),
                       ),
                     ],
@@ -184,9 +190,10 @@ class _FitnessTracker extends State<FitnessTracker> {
                   // callback function to print "pressed" when clicked
                   onPressed: () => {
                     setState(() {
-                      print("czapla");
                       active = !active;
-                      buttonMessage = active ? "Stop" : "Start";
+                      buttonMessage = active
+                          ? AppLocalizations.of(context)!.stop
+                          : AppLocalizations.of(context)!.start;
                       stoppedTracking = !stoppedTracking;
                     }),
                     if (!active)
@@ -205,7 +212,6 @@ class _FitnessTracker extends State<FitnessTracker> {
                       }
                     else
                       {
-                        print("else!"),
                         Geolocator.getCurrentPosition()
                             .then((value) => initialPosition = value)
                       }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // UserListWidget class creates a stateful widget that displays a list of users
 class UserListWidget extends StatefulWidget {
@@ -32,10 +33,11 @@ class _UserListWidget extends State<UserListWidget> {
               ),
             ),
             // Text widget with the text "username"
-            const Text("username"),
+            Text(AppLocalizations.of(context)!.username),
             // TextButton with an onPressed function that prints test value "ee" and a child text widget with the text "Follow"
             TextButton(
-                onPressed: () => print("ee"), child: const Text("Follow"))
+                onPressed: () => print("ee"),
+                child: Text(AppLocalizations.of(context)!.follow))
           ],
         ));
   }

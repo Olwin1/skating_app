@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../api/websocket.dart';
-import '../../objects/user.dart';
 import 'list_widget.dart';
 import '../../api/messages.dart';
 import 'package:get_it/get_it.dart';
@@ -37,32 +36,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
             children: const [
               Expanded(
                   // Make list view expandable
-                  child:
-                      ChannelsListView() /*ListView(
-                padding: const EdgeInsets.all(8),
-                // Create list view widget
-                // Create a row
-                children: [
-                  const TextField(
-                    // Create text inout field
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'search', //Placeholder text
-                    ),
-                  ),
-
-                  Title(
-                      // Private Messages title
-                      color: const Color(0xffcfcfcf),
-                      child: const Text(
-                        "Private Messages",
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      )),
-                  const ListWidget(index: 1) // Create basic debug widget
-                ], // Set child to a list widget
-              )*/
-                  ),
+                  child: ChannelsListView()),
             ],
           ),
         ));

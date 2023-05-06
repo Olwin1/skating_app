@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skating_app/profile/followers_list.dart';
 import 'package:skating_app/profile/following_list.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Defining some constants for the SnakeNavigationBar
 const SnakeShape snakeShape = SnakeShape.circle;
@@ -58,9 +59,11 @@ class _Lists extends State<Lists> {
                 setState(() => {_selectedItemPosition = index})
               },
               // Setting the items of the SnakeBar
-              items: const [
-                BottomNavigationBarItem(icon: Text("Followers")),
-                BottomNavigationBarItem(icon: Text("Following")),
+              items: [
+                BottomNavigationBarItem(
+                    icon: Text(AppLocalizations.of(context)!.followers)),
+                BottomNavigationBarItem(
+                    icon: Text(AppLocalizations.of(context)!.following)),
               ],
             ),
           )),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:skating_app/api/session.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const List<String> sessionType = <String>[
   'Recreational/Fitness Skating',
@@ -92,9 +93,10 @@ class _SaveSession extends State<SaveSession> {
           leadingWidth: 48, // Remove extra leading space
           centerTitle: false, // Align title to left
           title: Title(
-            title: "Save Session", //Set title to Save Session
+            title: AppLocalizations.of(context)!
+                .saveSession, //Set title to Save Session
             color: const Color(0xFFDDDDDD),
-            child: const Text("Save Session"),
+            child: Text(AppLocalizations.of(context)!.saveSession),
           ),
         ),
         body: Padding(
@@ -115,7 +117,8 @@ class _SaveSession extends State<SaveSession> {
                       margin: const EdgeInsets.all(8),
                       child: Column(
                         children: [
-                          const Text("Distance Traveled"), // Title
+                          Text(AppLocalizations.of(context)!
+                              .distanceTraveled), // Title
                           Text(
                               "${(widget.distance / 1000).toStringAsFixed(2)}km") // Value
                         ],
@@ -128,7 +131,8 @@ class _SaveSession extends State<SaveSession> {
                       margin: const EdgeInsets.all(8),
                       child: Column(
                         children: [
-                          const Text("Session Duration"), // Title
+                          Text(AppLocalizations.of(context)!
+                              .sessionDuration), // Title
                           Text(widget.endTime
                               .difference(widget.startTime)
                               .toString()) // Value
@@ -141,7 +145,7 @@ class _SaveSession extends State<SaveSession> {
                   color: const Color(0xffcecece),
                   child: Column(
                     children: [
-                      const Text("Session Name"),
+                      Text(AppLocalizations.of(context)!.sessionName),
                       TextField(
                         controller: nameController,
                         autofocus: true,
@@ -153,7 +157,7 @@ class _SaveSession extends State<SaveSession> {
                   color: const Color(0xffcecece),
                   child: Column(
                     children: [
-                      const Text("Session Description"),
+                      Text(AppLocalizations.of(context)!.sessionDescription),
                       TextField(
                         maxLines: 4,
                         minLines: 4,
@@ -167,7 +171,8 @@ class _SaveSession extends State<SaveSession> {
                 const Spacer(), // Add small gap
                 TextButton(
                     onPressed: () => print("Add photos"),
-                    child: const Text("Add Photos")), // Add Photos Infobox
+                    child: Text(AppLocalizations.of(context)!
+                        .addPhotos)), // Add Photos Infobox
                 Container(
                     margin: const EdgeInsets.symmetric(
                       // Add margin
@@ -176,7 +181,7 @@ class _SaveSession extends State<SaveSession> {
                     color: const Color(0xffcecece),
                     child: Column(
                       children: [
-                        const Text("Session Type"),
+                        Text(AppLocalizations.of(context)!.sessionType),
                         SessionType(
                           callback: setType,
                         )
@@ -190,7 +195,7 @@ class _SaveSession extends State<SaveSession> {
                     color: const Color(0xffcecece),
                     child: Column(
                       children: [
-                        const Text("Share Options"),
+                        Text(AppLocalizations.of(context)!.shareOptions),
                         ShareOptions(
                           callback: setOptions,
                         )
@@ -201,7 +206,7 @@ class _SaveSession extends State<SaveSession> {
                 ), // Vertically centre Widget with remaining space
                 TextButton(
                   onPressed: () => sendInfo(),
-                  child: const Text("Save Session"),
+                  child: Text(AppLocalizations.of(context)!.saveSession),
                 ), // Save Session Infobox
                 const Spacer(
                   flex: 2,

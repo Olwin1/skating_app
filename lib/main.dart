@@ -6,6 +6,7 @@ import 'package:skating_app/api/token.dart';
 import 'package:skating_app/social_media/login.dart';
 import 'tab_navigator.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'current_tab.dart';
 import 'package:provider/provider.dart';
 
@@ -58,7 +59,9 @@ class _MyAppState extends State<MyApp> {
     }
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Skating App',
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -189,61 +192,61 @@ class _MyHomePageState extends State<MyHomePage> {
 // This code returns a Consumer widget that rebuilds its child widget
 // whenever the CurrentPage object changes.
     return Consumer<CurrentPage>(builder: (context, currentPage, child) {
-    return WillPopScope(
-        // Handle user swiping back inside application
-        onWillPop: () async {
-          final isFirstRouteInCurrentTab =
+      return WillPopScope(
+          // Handle user swiping back inside application
+          onWillPop: () async {
+            final isFirstRouteInCurrentTab =
                 !await _navigatorKeys[currentPage.tab.toString()]!
-                  .currentState!
-                  .maybePop();
-          if (isFirstRouteInCurrentTab) {
-            // if not on the 'main' tab
+                    .currentState!
+                    .maybePop();
+            if (isFirstRouteInCurrentTab) {
+              // if not on the 'main' tab
               if (currentPage.tab != 0) {
-              // select 'main' tab
+                // select 'main' tab
                 _selectTab(currentPage, tabItems()[0], "0");
-              // back button handled by app
-              return false;
+                // back button handled by app
+                return false;
+              }
             }
-          }
-          // let system handle back button if on the first route
-          return isFirstRouteInCurrentTab;
-        },
-        child: Scaffold(
-          bottomNavigationBar: StyleProvider(
-            style: Style(),
-            child: ConvexAppBar(
-              //Define Navbar Object
-              items: tabItems(), //Set navbar items to the tabitems
+            // let system handle back button if on the first route
+            return isFirstRouteInCurrentTab;
+          },
+          child: Scaffold(
+            bottomNavigationBar: StyleProvider(
+              style: Style(),
+              child: ConvexAppBar(
+                //Define Navbar Object
+                items: tabItems(), //Set navbar items to the tabitems
                 initialActiveIndex:
                     currentPage.tab, // Set initial selection to main page
-              onTap: (int i) => {
-                //When a navbar button is pressed set the current tab to the tabitem that was pressed
-                setState(() {
+                onTap: (int i) => {
+                  //When a navbar button is pressed set the current tab to the tabitem that was pressed
+                  setState(() {
                     //  _currentTab = i;
                     currentPage.set(i);
-                }),
+                  }),
                   print("setting curret page")
-              }, // When a button is pressed... output to console
-              style: TabStyle
-                  .fixedCircle, // Set the navbar style to have the circle stay at the centre
-              backgroundColor: const Color(0xffcfcfcf),
-              activeColor: const Color(0xffbebebe),
-              //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
-              height: 55,
+                }, // When a button is pressed... output to console
+                style: TabStyle
+                    .fixedCircle, // Set the navbar style to have the circle stay at the centre
+                backgroundColor: const Color(0xffcfcfcf),
+                activeColor: const Color(0xffbebebe),
+                //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
+                height: 55,
+              ),
             ),
-          ),
-          body: Stack(
-            children: [
-              // Create a navigator stack for each item
+            body: Stack(
+              children: [
+                // Create a navigator stack for each item
                 _buildOffstageNavigator(currentPage, 0),
                 _buildOffstageNavigator(currentPage, 1),
                 _buildOffstageNavigator(currentPage, 2),
                 _buildOffstageNavigator(currentPage, 3),
                 _buildOffstageNavigator(currentPage, 4)
-            ],
-          ),
-          // This trailing comma makes auto-formatting nicer for build methods.
-        ));
+              ],
+            ),
+            // This trailing comma makes auto-formatting nicer for build methods.
+          ));
     }); //);
   }
 

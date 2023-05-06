@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:skating_app/api/websocket.dart';
 import 'package:uuid/uuid.dart';
 import '../../api/messages.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Initialize GetIt for dependency injection
 GetIt getIt = GetIt.instance;
@@ -150,16 +151,17 @@ class _PrivateMessage extends State<PrivateMessage> {
                 // Create column of text
                 crossAxisAlignment: CrossAxisAlignment
                     .start, // Align to the left instead of center
-                children: const [
+                children: [
                   Text(
                     //Username Text
-                    "Username",
-                    style: TextStyle(fontSize: 16),
+                    AppLocalizations.of(context)!.username,
+                    style: const TextStyle(fontSize: 16),
                   ),
                   Text(
                     // Last active text
-                    "Online",
-                    style: TextStyle(fontSize: 12, color: Color(0xffbbbbbb)),
+                    AppLocalizations.of(context)!.activityOnline,
+                    style:
+                        const TextStyle(fontSize: 12, color: Color(0xffbbbbbb)),
                   )
                 ],
               ))

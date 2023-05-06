@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'check_permission.dart';
 
 import 'dart:ui' as ui;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Define a StatefulWidget for the Speedometer page
 class SpeedometerPage extends StatefulWidget {
@@ -55,9 +56,9 @@ class _SpeedometerPage extends State<SpeedometerPage> {
         leadingWidth: 48,
         centerTitle: false,
         title: Title(
-          title: "Speedometer",
+          title: AppLocalizations.of(context)!.speedometer,
           color: const Color(0xFFDDDDDD),
-          child: const Text("Speedometer"),
+          child: Text(AppLocalizations.of(context)!.speedometer),
         ),
       ),
       body: Padding(

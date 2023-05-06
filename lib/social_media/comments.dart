@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skating_app/social_media/private_messages/comment.dart';
 
 import '../api/social.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Comments extends StatefulWidget {
   final String post;
@@ -50,7 +51,7 @@ class _Comments extends State<Comments> {
         userImage: CommentBox.commentImageParser(
           imageURLorPath: "assets/placeholders/150.png",
         ),
-        labelText: 'Write a comment...',
+        labelText: AppLocalizations.of(context)!.writeComment,
         errorText: 'Comment cannot be blank',
         withBorder: false,
 

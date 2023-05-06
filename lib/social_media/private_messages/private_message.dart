@@ -8,6 +8,7 @@ import 'package:skating_app/api/websocket.dart';
 import 'package:uuid/uuid.dart';
 import '../../api/messages.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Initialize GetIt for dependency injection
 GetIt getIt = GetIt.instance;
@@ -131,6 +132,14 @@ class _PrivateMessage extends State<PrivateMessage> {
 
   @override // Override existing build method
   Widget build(BuildContext context) {
+    ChatL10n locale;
+    switch (AppLocalizations.of(context)!.localeName) {
+      case "pl":
+        locale = const ChatL10nPl();
+        break;
+      default:
+        locale = const ChatL10nEn();
+    }
     return Scaffold(
       appBar: AppBar(
         // Create appBar
@@ -168,6 +177,7 @@ class _PrivateMessage extends State<PrivateMessage> {
         ]),
       ),
       body: Chat(
+        l10n: locale, // Set locale
         // Create basic chat widget
         messages: _messages, // Set messages to message variable defined above
         onSendPressed: _handleSendPressed,

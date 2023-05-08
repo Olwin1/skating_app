@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:skating_app/objects/user.dart';
+import 'package:skating_app/profile/profile_page.dart';
 import 'package:skating_app/test.dart';
 import 'comments.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -58,76 +60,132 @@ class _PostWidget extends State<PostWidget> {
                     fit: BoxFit.cover), // Cover whole container
               ),
               child: Column(
-                // Buttons below
-                children: [
-                  Column(
-                    children: [
-                      ListTile(
-                          title: IconButton(
-                            // Create Like Button
-                            onPressed: () => print(IconTheme.of(context).size),
-                            icon: const Icon(
-                              Icons.thumb_up,
-                              color: Color(0xffcfcfcf),
+                  // Buttons below
+                  children: [
+                    Column(
+                      children: [
+                        ListTile(
+                            title: IconButton(
+                              // Create Like Button
+                              onPressed: () =>
+                                  print(IconTheme.of(context).size),
+                              icon: const Icon(
+                                Icons.thumb_up,
+                                color: Color(0xffcfcfcf),
+                              ),
+                              padding: const EdgeInsets.only(top: 16),
+                              constraints: const BoxConstraints(),
                             ),
-                            padding: const EdgeInsets.only(top: 16),
-                            constraints: const BoxConstraints(),
-                          ),
-                          subtitle: Text(
-                            likes,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(color: Color(0xffcfcfcf)),
-                          )),
-                      ListTile(
-                          title: IconButton(
-                            // Create Comment Button
-                            onPressed: () =>
-                                // RootNavigator hides navbar
-                                Navigator.of(context, rootNavigator: true).push(
-                                    // Send to comments page
-                                    MaterialPageRoute(
-                                        builder: (context) => Comments(
-                                            post: widget.post["_id"]))),
-                            icon: const Icon(
-                              Icons.comment,
-                              color: Color(0xffcfcfcf),
+                            subtitle: Text(
+                              likes,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: Color(0xffcfcfcf)),
+                            )),
+                        ListTile(
+                            title: IconButton(
+                              // Create Comment Button
+                              onPressed: () =>
+                                  // RootNavigator hides navbar
+                                  Navigator.of(context, rootNavigator: true)
+                                      .push(
+                                          // Send to comments page
+                                          MaterialPageRoute(
+                                              builder: (context) => Comments(
+                                                  post: widget.post["_id"]))),
+                              icon: const Icon(
+                                Icons.comment,
+                                color: Color(0xffcfcfcf),
+                              ),
+                              padding: const EdgeInsets.only(top: 16),
+                              constraints: const BoxConstraints(),
                             ),
-                            padding: const EdgeInsets.only(top: 16),
-                            constraints: const BoxConstraints(),
-                          ),
-                          subtitle: Text(
-                            comments,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(color: Color(0xffcfcfcf)),
-                          )),
-                      IconButton(
-                          // Create Save Button
-                          onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Testing())),
-                          icon:
-                              const Icon(Icons.save, color: Color(0xffcfcfcf)))
-                    ],
-                  ),
-                  const Spacer(
-                    flex: 1,
-                  ),
-                  Column(
-                    // Create more options button seperately to add spacing between
-                    children: [
-                      IconButton(
-                          onPressed: () => print("More Options"),
-                          icon: const Icon(Icons.three_g_mobiledata,
-                              color: Color(0xffcfcfcf))),
-                    ],
-                  )
-                ],
-              ),
+                            subtitle: Text(
+                              comments,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: Color(0xffcfcfcf)),
+                            )),
+                        IconButton(
+                            // Create Save Button
+                            onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Testing())),
+                            icon: const Icon(Icons.save,
+                                color: Color(0xffcfcfcf)))
+                      ],
+                    ),
+                    const Spacer(
+                      flex: 1,
+                    ),
+                    Flexible(child: Avatar(user: widget.post["author"])),
+                  ]),
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class Avatar extends StatefulWidget {
+  // Create HomePage Class
+  const Avatar({Key? key, required this.user})
+      : super(key: key); // Take 2 arguments optional key and title of post
+  final String user; // Define title argument
+  @override
+  State<Avatar> createState() => _Avatar(); //Create state for widget
+}
+
+class _Avatar extends State<Avatar> {
+  @override
+  void initState() {
+    getUserCache(widget.user).then((userCache) => setState(
+        () => {image = userCache["avatar"], profile = userCache["_id"]}));
+    super.initState();
+  }
+
+  String? image;
+  String? profile;
+
+  @override // Override existing build method
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: () => profile != null // If the profile is not null
+            ? Navigator.push(
+                // Navigate to the ProfilePage with the user ID
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfilePage(
+                          userId: profile!,
+                          navbar: false,
+                        )))
+            : print("user not found"), // Otherwise, print "user not found"
+
+        child: image == null
+            // If there is no cached user information or avatar image, use a default image
+            ? CircleAvatar(
+                radius: 36, // Set the radius of the circular avatar image
+                child: ClipOval(
+                  child: Image.asset("assets/placeholders/default.png"),
+                ),
+              )
+            // If there is cached user information and an avatar image, use the cached image
+            : CachedNetworkImage(
+                imageUrl: '${Config.uri}/image/$image',
+                httpHeaders: const {"thumbnail": "a"},
+                placeholder: (context, url) => CircleAvatar(
+                      radius: 36, // Set the radius of the circular avatar image
+                      child: ClipOval(
+                        child: Image.asset("assets/placeholders/default.png"),
+                      ),
+                    ),
+                imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape
+                            .circle, // Set the shape of the container to a circle
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover),
+                      ),
+                    )));
   }
 }

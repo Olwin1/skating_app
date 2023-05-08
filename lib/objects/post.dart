@@ -1,32 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Post {
-  String? postId;
-  String userId;
-
-  // Read-only non-final property
-  String title = "postTitle";
-  String description = "postDesc";
-  int likes = 32;
-
-  Image postImage =
-      const Image(image: AssetImage("assets/placeholders/1080.png"));
-
-  // Constructor.
-  Post(this.postId, this.userId) {
-    // Initialization code goes here.
+class PostsCache {
+  static Future<void> addToCache(List<String> value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList("posts", value);
   }
 
-  // Named constructor that forwards to the default one.
-  Post.create(String userId) : this(null, userId);
-
-  // Method.
-  String? getId() {
-    // Type promotion doesn't work on getters.
-    if (postId != null) {
-      return postId;
-    } else {
-      return null;
-    }
+  static Future<List<String>?> getFromCache() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList("posts");
   }
 }

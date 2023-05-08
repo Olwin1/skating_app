@@ -3,6 +3,7 @@ import 'package:skating_app/social_media/private_messages/private_message_list.d
 import 'post_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../api/social.dart';
+import '../objects/post.dart';
 
 class HomePage extends StatelessWidget {
   // Create HomePage Class
@@ -81,12 +82,14 @@ class _PostsListViewState extends State<PostsListView> {
 // Fetches the data for the given pageKey and appends it to the list of items
   Future<void> _fetchPage(int pageKey) async {
     try {
+      print("heeeeey");
       // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
       final page = await getPosts(seenPosts);
+      // _pagingController.refresh();
 
       // Loops through each item in the page and adds its ID to the `seenPosts` list
       for (int i = 0; i < page.length; i++) {
-        Map<String, dynamic> item = page[i] as Map<String, dynamic>;
+        Map<String, dynamic> item = page[i];
         seenPosts.add(item['_id']);
         print(seenPosts);
       }
@@ -108,7 +111,9 @@ class _PostsListViewState extends State<PostsListView> {
   }
 
   @override
-  Widget build(BuildContext context) => PagedListView<int, Object>(
+  Widget build(BuildContext context) => RefreshIndicator(
+      onRefresh: () => _fetchPage(0),
+      child: PagedListView<int, Object>(
         pagingController: _pagingController,
         // builderDelegate is responsible for creating the actual widgets to be displayed
         builderDelegate: PagedChildBuilderDelegate<Object>(
@@ -117,7 +122,7 @@ class _PostsListViewState extends State<PostsListView> {
                 PostWidget(post: item, index: index)),
         padding: const EdgeInsets.all(
             8), // Add padding to list so doesn't overflow to sides of screen
-      );
+      ));
 
   @override
   void dispose() {

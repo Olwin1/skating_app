@@ -102,7 +102,7 @@ Future<Map<String, dynamic>> getPost(String post) async {
 
 // Get a list of posts, excluding those with IDs in the "seen" list
 Future<List<Map<String, dynamic>>> getPosts(List<String> seen) async {
-  String seenPosts = seen.toString();
+  String seenPosts = jsonEncode(seen);
   // Define the URL for the HTTP request
   var url = Uri.parse('${Config.uri}/post/posts');
 
@@ -543,7 +543,7 @@ Future<Map<String, dynamic>> getUser(String id) async {
   }
 }
 
-Future<List<Map<String, dynamic>>> getUserPosts(int page) async {
+Future<List<Map<String, dynamic>>> getUserPosts(String userId, int page) async {
   // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
 
   var url = Uri.parse(
@@ -560,6 +560,7 @@ Future<List<Map<String, dynamic>>> getUserPosts(int page) async {
         'Authorization':
             'Bearer ${await storage.getToken()}', // Including the authorization token
         'page': page.toString(),
+        'user': userId
       },
     );
 

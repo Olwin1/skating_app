@@ -19,23 +19,26 @@ enum SampleItem { itemOne, itemTwo, itemThree }
 // Define a new StatelessWidget called ProfilePage
 class ProfilePage extends StatelessWidget {
   final String userId;
+  final bool navbar;
 
   // Constructor for ProfilePage, which calls the constructor for its superclass (StatelessWidget)
-  const ProfilePage({super.key, required this.userId});
+  const ProfilePage({super.key, required this.userId, required this.navbar});
 
   // Override the build method of StatelessWidget to return a Consumer widget
   @override
   Widget build(BuildContext context) {
     // Use the Consumer widget to listen for changes to the CurrentPage object
-    return Consumer<CurrentPage>(
-      builder: (context, currentPage, widget) =>
-          // If the CurrentPage's tab value is 4 (The profile page), return a Profile widget
-          currentPage.tab == 4
-              ? Profile(userId: userId)
-              :
-              // Otherwise, return an empty SizedBox widget
-              const SizedBox.shrink(),
-    );
+    return navbar
+        ? Consumer<CurrentPage>(
+            builder: (context, currentPage, widget) =>
+                // If the CurrentPage's tab value is 4 (The profile page), return a Profile widget
+                currentPage.tab == 4
+                    ? Profile(userId: userId)
+                    :
+                    // Otherwise, return an empty SizedBox widget
+                    const SizedBox.shrink(),
+          )
+        : Profile(userId: userId);
   }
 }
 
@@ -173,7 +176,7 @@ class _Profile extends State<Profile> {
               child: const Icon(Icons.precision_manufacturing_outlined))
         ]),
         // Expanded grid view with images
-        const UserPostsList()
+        UserPostsList(user: user)
       ]),
     );
   }
@@ -260,7 +263,8 @@ Widget _createGridTileWidget(Map<String, dynamic> post) => Builder(
     );
 
 class UserPostsList extends StatefulWidget {
-  const UserPostsList({super.key});
+  final Map<String, dynamic>? user;
+  const UserPostsList({super.key, required this.user});
 
   @override
   State<UserPostsList> createState() => _UserPostsListState();
@@ -286,7 +290,7 @@ class _UserPostsListState extends State<UserPostsList> {
   Future<void> _fetchPage(int pageKey) async {
     try {
       // Fetch the next page of posts from the user's account
-      final page = await getUserPosts(pageKey);
+      final page = await getUserPosts(widget.user?["_id"], pageKey);
 
       // Determine if this is the last page of posts
       final isLastPage = page.length < _pageSize;
@@ -308,22 +312,25 @@ class _UserPostsListState extends State<UserPostsList> {
 
   @override
   Widget build(BuildContext context) {
-    return PagedGridView<int, Map<String, dynamic>>(
-      shrinkWrap: true,
-      physics: const ScrollPhysics(),
-      pagingController: _pagingController,
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        // Specify the properties for the grid tiles
-        childAspectRatio: 1,
-        mainAxisSpacing: 2,
-        crossAxisSpacing: 2,
-        maxCrossAxisExtent: MediaQuery.of(context).size.width / 3,
-      ),
-      builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-        // Specify how to build each grid tile
-        itemBuilder: (context, item, index) => _createGridTileWidget(item),
-      ),
-    );
+    return widget.user != null
+        ? PagedGridView<int, Map<String, dynamic>>(
+            shrinkWrap: true,
+            physics: const ScrollPhysics(),
+            pagingController: _pagingController,
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              // Specify the properties for the grid tiles
+              childAspectRatio: 1,
+              mainAxisSpacing: 2,
+              crossAxisSpacing: 2,
+              maxCrossAxisExtent: MediaQuery.of(context).size.width / 3,
+            ),
+            builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+              // Specify how to build each grid tile
+              itemBuilder: (context, item, index) =>
+                  _createGridTileWidget(item),
+            ),
+          )
+        : const SizedBox.shrink();
   }
 
   @override

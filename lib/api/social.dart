@@ -71,7 +71,7 @@ Future<Map<String, dynamic>> postPost(String description, String image) async {
 }
 
 // Get a single post by its ID
-Future<Object> getPost(String post) async {
+Future<Map<String, dynamic>> getPost(String post) async {
   // Define the URL for the HTTP request
   var url = Uri.parse('${Config.uri}/post/post');
 
@@ -101,7 +101,7 @@ Future<Object> getPost(String post) async {
 }
 
 // Get a list of posts, excluding those with IDs in the "seen" list
-Future<List<Object>> getPosts(List<String> seen) async {
+Future<List<Map<String, dynamic>>> getPosts(List<String> seen) async {
   String seenPosts = seen.toString();
   // Define the URL for the HTTP request
   var url = Uri.parse('${Config.uri}/post/posts');
@@ -119,8 +119,10 @@ Future<List<Object>> getPosts(List<String> seen) async {
 
     // If the response status code is 200 OK, parse and return the response body as a Map
     if (response.statusCode == 200) {
-      List<Object> y = json.decode(response.body).cast<Object>();
-      return y;
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(json
+          .decode(response.body)
+          .map((model) => Map<String, dynamic>.from(model)));
+      return data;
     } else {
       // Otherwise, throw an exception with the reason phrase of the response
       throw Exception("Post Unsuccessful: ${response.reasonPhrase}");
@@ -132,7 +134,7 @@ Future<List<Object>> getPosts(List<String> seen) async {
 }
 
 // Delete a single post by its ID
-Future<Object> delPost(String post) async {
+Future<Map<String, dynamic>> delPost(String post) async {
   // Define the URL for the HTTP request
   var url = Uri.parse('${Config.uri}/post/post');
 
@@ -162,7 +164,7 @@ Future<Object> delPost(String post) async {
 }
 
 // This function retrieves comments for a given post and page number
-// It returns a Future<Object> which resolves to a Map<String, dynamic> representing the comments
+// It returns a Future<Map<String, dynamic>> which resolves to a Map<String, dynamic> representing the comments
 Future<List<Map<String, dynamic>>> getComments(String post, int page) async {
   var url = Uri.parse('${Config.uri}/post/comments');
 
@@ -198,8 +200,8 @@ Future<List<Map<String, dynamic>>> getComments(String post, int page) async {
 }
 
 // This function retrieves a single comment for a given comment ID
-// It returns a Future<Object> which resolves to a Map<String, dynamic> representing the comment
-Future<Object> getComment(String comment) async {
+// It returns a Future<Map<String, dynamic>> which resolves to a Map<String, dynamic> representing the comment
+Future<Map<String, dynamic>> getComment(String comment) async {
   var url = Uri.parse('${Config.uri}/post/comment');
 
   try {
@@ -229,7 +231,7 @@ Future<Object> getComment(String comment) async {
 }
 
 // Function to like a comment using HTTP POST request
-Future<Object> likeComment(String comment) async {
+Future<Map<String, dynamic>> likeComment(String comment) async {
   // Define the URL for the API endpoint
   var url = Uri.parse('${Config.uri}/post/like_comment');
 
@@ -257,7 +259,7 @@ Future<Object> likeComment(String comment) async {
 }
 
 // Function to dislike a comment using HTTP POST request
-Future<Object> dislikeComment(String comment) async {
+Future<Map<String, dynamic>> dislikeComment(String comment) async {
   // Define the URL for the API endpoint
   var url = Uri.parse('${Config.uri}/post/dislike_comment');
 
@@ -285,7 +287,7 @@ Future<Object> dislikeComment(String comment) async {
 }
 
 // This function is used to unlike a comment on a post.
-Future<Object> unlikeComment(String comment) async {
+Future<Map<String, dynamic>> unlikeComment(String comment) async {
   var url = Uri.parse('${Config.uri}/post/unlike_comment');
 
   try {
@@ -310,7 +312,7 @@ Future<Object> unlikeComment(String comment) async {
 }
 
 // This function is used to undislike a comment on a post.
-Future<Object> undislikeComment(String comment) async {
+Future<Map<String, dynamic>> undislikeComment(String comment) async {
   var url = Uri.parse('${Config.uri}/post/undislike_comment');
 
   try {
@@ -335,7 +337,7 @@ Future<Object> undislikeComment(String comment) async {
 }
 
 // This function is used to delete a comment on a post.
-Future<Object> delComment(String comment) async {
+Future<Map<String, dynamic>> delComment(String comment) async {
   var url = Uri.parse('${Config.uri}/post/comment');
 
   try {
@@ -359,7 +361,7 @@ Future<Object> delComment(String comment) async {
   }
 }
 
-Future<Object> postComment(String post, String content) async {
+Future<Map<String, dynamic>> postComment(String post, String content) async {
   // The method takes two parameters: the post ID and the content of the comment to be posted.
   var url = Uri.parse('${Config.uri}/post/comment');
 
@@ -387,7 +389,7 @@ Future<Object> postComment(String post, String content) async {
   }
 }
 
-Future<Object> savePost(String post) async {
+Future<Map<String, dynamic>> savePost(String post) async {
   // The method takes one parameter: the post ID to be saved.
   var url = Uri.parse('${Config.uri}/post/save');
 
@@ -414,7 +416,7 @@ Future<Object> savePost(String post) async {
   }
 }
 
-Future<Object> unsavePost(String post) async {
+Future<Map<String, dynamic>> unsavePost(String post) async {
   // function to unsave a post
   var url = Uri.parse('${Config.uri}/post/unsave'); // endpoint URL
 
@@ -444,7 +446,7 @@ Future<Object> unsavePost(String post) async {
   }
 }
 
-Future<Object> likePost(String post) async {
+Future<Map<String, dynamic>> likePost(String post) async {
   // function to like a post
   var url = Uri.parse('${Config.uri}/post/like'); // endpoint URL
 
@@ -474,7 +476,7 @@ Future<Object> likePost(String post) async {
   }
 }
 
-Future<Object> unlikePost(String post) async {
+Future<Map<String, dynamic>> unlikePost(String post) async {
   // function to unlike a post
   var url = Uri.parse('${Config.uri}/post/unlike'); // endpoint URL
 
@@ -546,6 +548,126 @@ Future<List<Map<String, dynamic>>> getUserPosts(int page) async {
 
   var url = Uri.parse(
       '${Config.uri}/post/user_posts'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
+
+  try {
+    // Using a try-catch block to handle errors
+    var response = await http.get(
+      // Creating a variable 'response' and making a post request to the specified URL
+      url,
+      headers: {
+        'Content-Type':
+            'application/x-www-form-urlencoded', // Specifying the headers for the request
+        'Authorization':
+            'Bearer ${await storage.getToken()}', // Including the authorization token
+        'page': page.toString(),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Checking if the response status code is 200
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(
+        json
+            .decode(response.body)
+            .map((model) => Map<String, dynamic>.from(model)),
+      ); // Decoding the response body and converting it into a List of Map objects
+      return data; // Returning the Map object
+    } else {
+      // If the response status code is not 200
+      throw Exception(
+          "Get Unsuccessful: ${response.reasonPhrase}"); // Throwing an exception with an error message
+    }
+  } catch (e) {
+    // Handling the error
+    throw Exception(
+        "Error during post: $e"); // Throwing an exception with an error message
+  }
+}
+
+Future<List<Map<String, dynamic>>> getUserFollowing(int page) async {
+  // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
+
+  var url = Uri.parse(
+      '${Config.uri}/connections/following'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
+
+  try {
+    // Using a try-catch block to handle errors
+    var response = await http.get(
+      // Creating a variable 'response' and making a post request to the specified URL
+      url,
+      headers: {
+        'Content-Type':
+            'application/x-www-form-urlencoded', // Specifying the headers for the request
+        'Authorization':
+            'Bearer ${await storage.getToken()}', // Including the authorization token
+        'page': page.toString(),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Checking if the response status code is 200
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(
+        json
+            .decode(response.body)
+            .map((model) => Map<String, dynamic>.from(model)),
+      ); // Decoding the response body and converting it into a List of Map objects
+      return data; // Returning the Map object
+    } else {
+      // If the response status code is not 200
+      throw Exception(
+          "Get Unsuccessful: ${response.reasonPhrase}"); // Throwing an exception with an error message
+    }
+  } catch (e) {
+    // Handling the error
+    throw Exception(
+        "Error during post: $e"); // Throwing an exception with an error message
+  }
+}
+
+Future<List<Map<String, dynamic>>> getUserFollowers(int page) async {
+  // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
+
+  var url = Uri.parse(
+      '${Config.uri}/connections/followers'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
+
+  try {
+    // Using a try-catch block to handle errors
+    var response = await http.get(
+      // Creating a variable 'response' and making a post request to the specified URL
+      url,
+      headers: {
+        'Content-Type':
+            'application/x-www-form-urlencoded', // Specifying the headers for the request
+        'Authorization':
+            'Bearer ${await storage.getToken()}', // Including the authorization token
+        'page': page.toString(),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Checking if the response status code is 200
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(
+        json
+            .decode(response.body)
+            .map((model) => Map<String, dynamic>.from(model)),
+      ); // Decoding the response body and converting it into a List of Map objects
+      return data; // Returning the Map object
+    } else {
+      // If the response status code is not 200
+      throw Exception(
+          "Get Unsuccessful: ${response.reasonPhrase}"); // Throwing an exception with an error message
+    }
+  } catch (e) {
+    // Handling the error
+    throw Exception(
+        "Error during post: $e"); // Throwing an exception with an error message
+  }
+}
+
+Future<List<Map<String, dynamic>>> getUserFriends(int page) async {
+  // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
+
+  var url = Uri.parse(
+      '${Config.uri}/connections/friends'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
 
   try {
     // Using a try-catch block to handle errors

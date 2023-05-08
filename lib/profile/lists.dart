@@ -24,6 +24,7 @@ class _Lists extends State<Lists> {
 
   @override
   Widget build(BuildContext context) {
+    print(_selectedItemPosition);
     return Scaffold(
       appBar: AppBar(
           // Setting the title of the AppBar
@@ -86,7 +87,7 @@ class _Lists extends State<Lists> {
               ),
             );
           },
-          child: _selectedItemPosition == 1 // The child widget to animate
+          child: _selectedItemPosition == 0 // The child widget to animate
               ? const FollowersList() // If _selectedItemPosition is 1, show the FollowersList
               : const FollowingList() // Otherwise, show the FollowingList
           ),

@@ -1,32 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:skating_app/profile/user_list_widget.dart';
+
+import 'connections_list.dart';
 
 // FollowingList widget
-class FollowingList extends StatefulWidget {
-  const FollowingList({Key? key}) : super(key: key);
 
-  @override
-  State<FollowingList> createState() => _FollowingList();
-}
+class FollowingList extends StatelessWidget {
+  const FollowingList({super.key});
 
-class _FollowingList extends State<FollowingList> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      // Returns a ListView widget
-      padding: const EdgeInsets.all(8),
-      children: const [
-        // A list of UserListWidget widgets
-        UserListWidget(title: "title"),
-        UserListWidget(title: "title"),
-        UserListWidget(title: "title"),
-        UserListWidget(title: "title"),
-        UserListWidget(title: "title"),
-        UserListWidget(title: "title"),
-        UserListWidget(title: "title"),
-        UserListWidget(title: "title"),
-        UserListWidget(title: "title"),
-      ],
-    );
+    return const ConnectionsListView(type: "following");
   }
 }

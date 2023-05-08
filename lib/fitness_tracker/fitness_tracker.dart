@@ -9,6 +9,67 @@ import 'signal_strength_info.dart';
 import 'package:skating_app/fitness_tracker/timer.dart';
 import 'check_permission.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import '../current_tab.dart';
+
+class SunsetTime extends StatelessWidget {
+  const SunsetTime({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<CurrentPage>(
+      builder: (context, currentPage, widget) =>
+          // If the CurrentPage's tab value is 4 (The fitness tracker page), return a Sunset time widget
+          currentPage.tab == 1 ? const SunsetTimeWidget() : const Text("0:00"),
+    );
+  }
+}
+
+class SunsetTimeWidget extends StatefulWidget {
+  const SunsetTimeWidget({Key? key}) : super(key: key);
+  @override
+  State<SunsetTimeWidget> createState() =>
+      _SunsetTimeWidget(); //Create state for widget
+}
+
+class _SunsetTimeWidget extends State<SunsetTimeWidget> {
+  @override
+  void initState() {
+    hasLocationPermission().then((value) => {
+          Geolocator.getCurrentPosition()
+              .then((position) => {getSunsetTime(position)})
+        });
+
+    super.initState();
+  }
+
+  String sunsetTime = "00:00";
+
+  // This function calculates and retrieves the sunset time at a given position
+  getSunsetTime(Position value) {
+    // Get the current instant
+    final instant = Instant.fromDateTime(DateTime.now());
+
+    // Declare a variable to hold the SolarCalculator instance
+    late SolarCalculator calc;
+
+    // Create a new SolarCalculator instance with the given instant, latitude, and longitude
+    calc = SolarCalculator(instant, value.latitude, value.longitude);
+
+    // Retrieve the sunset time from the SolarCalculator instance and convert it to a DateTime object in the local timezone
+    DateTime time = calc.sunsetTime.toUtcDateTime().toLocal();
+
+    // Format the sunset time as a string with the format 'HH:mm' (hours:minutes)
+    String formattedTime = DateFormat('HH:mm').format(time);
+
+    // Set the state of the widget to display the formatted sunset time
+    setState(() => {sunsetTime = formattedTime});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(sunsetTime);
+  }
+}
 
 class FitnessTracker extends StatefulWidget {
   const FitnessTracker({Key? key}) : super(key: key);
@@ -32,39 +93,7 @@ class _FitnessTracker extends State<FitnessTracker> {
     print(totalDistance);
   }
 
-// This function calculates and retrieves the sunset time at a given position
-  getSunsetTime(Position value) {
-    // Get the current instant
-    final instant = Instant.fromDateTime(DateTime.now());
-
-    // Declare a variable to hold the SolarCalculator instance
-    late SolarCalculator calc;
-
-    // Create a new SolarCalculator instance with the given instant, latitude, and longitude
-    calc = SolarCalculator(instant, value.latitude, value.longitude);
-
-    // Retrieve the sunset time from the SolarCalculator instance and convert it to a DateTime object in the local timezone
-    DateTime time = calc.sunsetTime.toUtcDateTime().toLocal();
-
-    // Format the sunset time as a string with the format 'HH:mm' (hours:minutes)
-    String formattedTime = DateFormat('HH:mm').format(time);
-
-    // Set the state of the widget to display the formatted sunset time
-    setState(() => {sunsetTime = formattedTime});
-  }
-
-  String sunsetTime = "00:00";
   String buttonMessage = "Start";
-
-  @override
-  void initState() {
-    hasLocationPermission().then((value) => {
-          Geolocator.getCurrentPosition()
-              .then((position) => {getSunsetTime(position)})
-        });
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +182,7 @@ class _FitnessTracker extends State<FitnessTracker> {
                                 child: Column(children: [
                                   Text(
                                       AppLocalizations.of(context)!.sunsetTime),
-                                  Text(sunsetTime)
+                                  const SunsetTime()
                                 ]),
                               ),
                               Padding(

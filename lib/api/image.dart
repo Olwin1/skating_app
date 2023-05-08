@@ -1,6 +1,7 @@
 // Importing the required dependencies
 import 'dart:typed_data';
 
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart';
 import 'package:mime/mime.dart';
 
@@ -14,12 +15,25 @@ export 'package:skating_app/api/image.dart' show uploadFile;
 
 // Creating an instance of SecureStorage class
 SecureStorage storage = SecureStorage();
+Future<Uint8List> compressImage(Uint8List image) async {
+  var result = await FlutterImageCompress.compressWithList(
+    image,
+    minHeight: 1920,
+    minWidth: 1080,
+    quality: 96,
+  );
+  print(image.length);
+  print(result.length);
+  return result;
+}
 
 // This function takes in a byte array 'image', and uploads it to a server using HTTP POST request.
 // It also adds an authorization header with a bearer token obtained from a storage object.
 // The server endpoint for the upload is obtained from a Config object.
 Future<StreamedResponse?> uploadFile(Uint8List image) async {
   try {
+    Uint8List uploadImage = await compressImage(image);
+
     // Parse the server endpoint URL from Config object
     var postUri = Uri.parse("${Config.uri}/upload");
 
@@ -27,7 +41,7 @@ Future<StreamedResponse?> uploadFile(Uint8List image) async {
     var request = http.MultipartRequest("POST", postUri);
 
     // Determine the MIME type of the image using the lookupMimeType() function from the mime_type package
-    var mime = lookupMimeType('', headerBytes: image);
+    var mime = lookupMimeType('', headerBytes: uploadImage);
 
     // Split the MIME type string into two parts using the '/' delimiter
     var extension = mime!.split("/");
@@ -39,7 +53,7 @@ Future<StreamedResponse?> uploadFile(Uint8List image) async {
     request.headers['Authorization'] = 'Bearer ${await storage.getToken()}';
 
     // Add the image data as a multipart/form-data file attachment to the HTTP request
-    request.files.add(http.MultipartFile.fromBytes('file', image,
+    request.files.add(http.MultipartFile.fromBytes('file', uploadImage,
         contentType: MediaType(extension[0], extension[1]), filename: "file"));
 
     // Send the HTTP request asynchronously and handle the response in a callback function

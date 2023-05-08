@@ -4,30 +4,52 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:photo_gallery/photo_gallery.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:skating_app/new_post/edit_post.dart';
 import 'package:skating_app/new_post/send_post.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import '../current_tab.dart';
+
 // Define the NewPost widget which extends StatefulWidget
 
 List<Album>? _albums; // A nullable list of Album objects.
 
-class NewPost extends StatefulWidget {
-  const NewPost({Key? key, required this.title}) : super(key: key);
-  // title is a required parameter
-  final String title;
+// Define a new StatelessWidget called FriendsTracker
+class NewPost extends StatelessWidget {
+  // Constructor for NewPost, which calls the constructor for its superclass (StatelessWidget)
+  const NewPost({super.key});
+
+  // Override the build method of StatelessWidget to return a Consumer widget
+  @override
+  Widget build(BuildContext context) {
+    // Use the Consumer widget to listen for changes to the CurrentPage object
+    return Consumer<CurrentPage>(
+      builder: (context, currentPage, widget) =>
+          // If the CurrentPage's tab value is 2 (New Post Page), return a NewPostPage widget
+          currentPage.tab == 2
+              ? const NewPostPage()
+              :
+              // Otherwise, return an empty SizedBox widget
+              const SizedBox.shrink(),
+    );
+  }
+}
+
+class NewPostPage extends StatefulWidget {
+  const NewPostPage({Key? key}) : super(key: key);
 
   @override
   // Create the state for the NewPost widget
-  State<NewPost> createState() => _NewPost();
+  State<NewPostPage> createState() => _NewPostPage();
 }
 
 String? _selectedImage;
 
 // Define the state for the NewPost widget
 // This class is the state of a widget named NewPost.
-class _NewPost extends State<NewPost> {
+class _NewPostPage extends State<NewPostPage> {
   bool selected = false;
   Uint8List? selectedImage;
   // A string variable to hold the selected image ID.

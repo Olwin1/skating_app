@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:provider/provider.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/edit_profile.dart';
@@ -10,12 +11,37 @@ import 'package:skating_app/profile/settings/settings.dart';
 import '../api/config.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../current_tab.dart';
+
 // Define item type for popup menu
 enum SampleItem { itemOne, itemTwo, itemThree }
 
+// Define a new StatelessWidget called ProfilePage
+class ProfilePage extends StatelessWidget {
+  final String userId;
+
+  // Constructor for ProfilePage, which calls the constructor for its superclass (StatelessWidget)
+  const ProfilePage({super.key, required this.userId});
+
+  // Override the build method of StatelessWidget to return a Consumer widget
+  @override
+  Widget build(BuildContext context) {
+    // Use the Consumer widget to listen for changes to the CurrentPage object
+    return Consumer<CurrentPage>(
+      builder: (context, currentPage, widget) =>
+          // If the CurrentPage's tab value is 4 (The profile page), return a Profile widget
+          currentPage.tab == 4
+              ? Profile(userId: userId)
+              :
+              // Otherwise, return an empty SizedBox widget
+              const SizedBox.shrink(),
+    );
+  }
+}
+
 // Creates a ProfilePage widget
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key, required this.userId})
+class Profile extends StatefulWidget {
+  const Profile({Key? key, required this.userId})
       : super(
             key:
                 key); // Take 2 arguments: optional key and required title of the post
@@ -23,11 +49,11 @@ class ProfilePage extends StatefulWidget {
 
   @override
   // Create state for the widget
-  State<ProfilePage> createState() => _ProfilePage();
+  State<Profile> createState() => _Profile();
 }
 
 // The state class for the ProfilePage widget
-class _ProfilePage extends State<ProfilePage> {
+class _Profile extends State<Profile> {
   Map<String, dynamic>? user;
   @override
   void initState() {
@@ -73,6 +99,7 @@ class _ProfilePage extends State<ProfilePage> {
                             image: imageProvider, fit: BoxFit.cover),
                       ),
                     ),
+                    httpHeaders: const {"thumbnail": "true"},
                   ),
           ),
           const Spacer(),
@@ -227,6 +254,7 @@ Widget _createGridTileWidget(Map<String, dynamic> post) => Builder(
         //onLongPressEnd: (details) => _popupDialog?.remove(),
         child: CachedNetworkImage(
             imageUrl: '${Config.uri}/image/${post["image"]}',
+            httpHeaders: const {"thumbnail": "true"},
             fit: BoxFit.cover), // Display the image from the URL
       ),
     );

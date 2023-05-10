@@ -341,6 +341,18 @@
   "privacyPolicy": "Privacy Policy",
   "@privacyPolicy": {
     "description": "Privacy Policy"
+  },
+  "noPostsFound": "No Posts Yet",
+  "@noPostsFound": {
+    "description": "Will be displayed when there are either no posts on a user profile / feed"
+  },
+  "noMessagesFound": "No Messages Yet",
+  "@noMessagesFound": {
+    "description": "Will be displayed when there are no channels in message channels"
+  },
+  "makeFriends": "Try making some friends.",
+  "@makeFriends": {
+    "description": "Will be displayed below the no posts found on a user's feed or the no channels in message channels"
   }
 
 }

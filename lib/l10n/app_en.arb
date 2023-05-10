@@ -350,6 +350,10 @@
   "@noMessagesFound": {
     "description": "Will be displayed when there are no channels in message channels"
   },
+  "noCommentsFound": "No Comments Yet",
+  "@noCommentsFound": {
+    "description": "Will be displayed when there are no comments on a post"
+  },
   "makeFriends": "Try making some friends.",
   "@makeFriends": {
     "description": "Will be displayed below the no posts found on a user's feed or the no channels in message channels"

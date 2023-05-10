@@ -28,7 +28,7 @@ Future<void> main() async {
   GetIt.I.registerSingleton<WebSocketConnection>(WebSocketConnection());
 
   // Run the app with the MyApp widget
-  runApp(const MyApp());
+  runApp(Phoenix(child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {

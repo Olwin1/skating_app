@@ -32,7 +32,6 @@ class HomePage extends StatelessWidget {
             },
           ),
           title: const Text("Home"),
-          backgroundColor: const Color.fromARGB(255, 185, 177, 102),
           actions: [
             const Spacer(
               // Move button to far right of screen

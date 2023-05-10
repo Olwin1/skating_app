@@ -75,6 +75,7 @@ dependencies:
   intl: any
   provider: ^6.0.5
   flutter_image_compress: ^2.0.1
+  flutter_phoenix: ^1.1.1
 
 dev_dependencies:
   flutter_test:

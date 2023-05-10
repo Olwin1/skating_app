@@ -33,4 +33,9 @@ class SecureStorage {
     // Use the FlutterSecureStorage instance to read the value stored with the _keyToken key and return it
     return await storage.read(key: _keyId);
   }
+
+  Future logout() async {
+    // Use the FlutterSecureStorage instance to write the token to storage with the _keyToken key
+    await storage.deleteAll();
+  }
 }

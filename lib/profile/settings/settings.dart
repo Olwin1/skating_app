@@ -1,8 +1,13 @@
 // Importing necessary packages and files
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:skating_app/profile/settings/settings_overlays.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../api/token.dart';
+
+SecureStorage storage = SecureStorage();
 
 // Settings widget
 
@@ -67,6 +72,10 @@ class _Settings extends State<Settings> {
                   SettingsTile.navigation(
                     leading: const Icon(Icons.logout),
                     title: Text(AppLocalizations.of(context)!.logout),
+                    onPressed: (e) => {
+                      // Remove stored tokens and restart app
+                      storage.logout().then((value) => Phoenix.rebirth(context))
+                    },
                   ),
                 ],
               ),

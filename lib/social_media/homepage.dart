@@ -3,7 +3,7 @@ import 'package:skating_app/social_media/private_messages/private_message_list.d
 import 'post_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../api/social.dart';
-import '../objects/post.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatelessWidget {
   // Create HomePage Class
@@ -117,6 +117,18 @@ class _PostsListViewState extends State<PostsListView> {
         pagingController: _pagingController,
         // builderDelegate is responsible for creating the actual widgets to be displayed
         builderDelegate: PagedChildBuilderDelegate<Object>(
+            noItemsFoundIndicatorBuilder: (context) => Center(
+                    child: Column(children: [
+                  Text(
+                    AppLocalizations.of(context)!.noPostsFound,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    AppLocalizations.of(context)!.makeFriends,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ])),
             // itemBuilder is called for each item in the list to create a widget for that item
             itemBuilder: (context, item, index) =>
                 PostWidget(post: item, index: index)),

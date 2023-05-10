@@ -6,6 +6,7 @@ import '../../api/websocket.dart';
 import 'list_widget.dart';
 import '../../api/messages.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Initialize GetIt for dependency injection
 GetIt getIt = GetIt.instance;
@@ -140,6 +141,17 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       PagedListView<int, Map<String, dynamic>>(
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+          noItemsFoundIndicatorBuilder: (context) => Center(
+              child: Column(children: [
+            Text(
+              AppLocalizations.of(context)!.noMessagesFound,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              AppLocalizations.of(context)!.makeFriends,
+              style: const TextStyle(fontSize: 20),
+            ),
+          ])),
           itemBuilder: (context, item, index) => ListWidget(
               userId: title[index],
               index: index,

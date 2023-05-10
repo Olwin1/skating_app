@@ -325,6 +325,14 @@ class _UserPostsListState extends State<UserPostsList> {
               maxCrossAxisExtent: MediaQuery.of(context).size.width / 3,
             ),
             builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+              noItemsFoundIndicatorBuilder: (context) => Center(
+                // Localized text string that will be displayed when no items are found
+                child: Text(
+                  AppLocalizations.of(context)!.noPostsFound,
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
               // Specify how to build each grid tile
               itemBuilder: (context, item, index) =>
                   _createGridTileWidget(item),

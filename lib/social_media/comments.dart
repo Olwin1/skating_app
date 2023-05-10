@@ -176,6 +176,13 @@ class _CommentsListViewState extends State<CommentsListView> {
     return PagedListView<int, Map<String, dynamic>>(
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+        noItemsFoundIndicatorBuilder: (context) => Center(
+          // This is a localized text string that will be displayed when no items are found
+          child: Text(
+            AppLocalizations.of(context)!.noCommentsFound,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
         // Use the Comment widget to build each item in the list view
         itemBuilder: (context, item, index) => Comment(
           index: index,

@@ -24,7 +24,7 @@ class _PostWidget extends State<PostWidget> {
     String likes = widget.post['like_count'] ?? "0";
     String comments = widget.post['comment_count'] ?? "0";
     return Container(
-      height: 315,
+      height: 314,
       padding: const EdgeInsets.all(0), // Add padding so doesn't touch edges
       color: const Color(0xFFFFE306),
       margin: const EdgeInsets.only(
@@ -47,6 +47,7 @@ class _PostWidget extends State<PostWidget> {
                     )),
               ),
               errorWidget: (context, url, error) => const Icon(Icons.error),
+              fit: BoxFit.contain,
             ), // Set child to post image
           ),
           Expanded(

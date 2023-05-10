@@ -141,7 +141,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
           itemBuilder: (context, item, index) => ListWidget(
-              title: title[index],
+              userId: title[index],
               index: index,
               channel: channel[index],
               desc: channelsData[item["_id"]]), //item id

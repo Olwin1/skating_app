@@ -1,13 +1,14 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get_it/get_it.dart';
 import 'package:skating_app/api/websocket.dart';
 import 'package:uuid/uuid.dart';
+import '../../api/config.dart';
 import '../../api/messages.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Initialize GetIt for dependency injection
@@ -16,10 +17,12 @@ GetIt getIt = GetIt.instance;
 // Define a StatefulWidget for displaying private messages
 class PrivateMessage extends StatefulWidget {
   // Constructor takes an index and a channel as arguments
-  const PrivateMessage({Key? key, required this.index, required this.channel})
+  const PrivateMessage(
+      {Key? key, required this.index, required this.channel, this.user})
       : super(key: key);
   final int index;
   final String channel;
+  final Map<String, dynamic>? user;
 
   // Create and return a state for the widget
   @override
@@ -147,12 +150,38 @@ class _PrivateMessage extends State<PrivateMessage> {
         centerTitle: false, // Align title to left
         title: Row(children: [
           //Create title as row
-          const CircleAvatar(
-            // Create a circular avatar icon
-            radius: 15, //Set radius to 15
-            backgroundImage: AssetImage(
-                "assets/placeholders/150.png"), // Set avatar to placeholder images
-          ),
+          widget.user == null || widget.user?["avatar"] == null
+              // If there is no cached user information or avatar image, use a default image
+              ? CircleAvatar(
+                  radius: 15, // Set the radius of the circular avatar image
+                  child: ClipOval(
+                    child: Image.asset("assets/placeholders/default.png"),
+                  ),
+                )
+              // If there is cached user information and an avatar image, use the cached image
+              : //Flexible(
+              CachedNetworkImage(
+                  height: 40,
+                  width: 40,
+                  imageUrl: '${Config.uri}/image/${widget.user!["avatar"]}',
+                  httpHeaders: const {"thumbnail": "true"},
+                  placeholder: (context, url) => CircleAvatar(
+                        // Set the radius of the circular avatar image
+                        child: ClipOval(
+                          child: Image.asset("assets/placeholders/default.png"),
+                        ),
+                      ),
+                  imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape
+                              .circle, // Set the shape of the container to a circle
+                          image: DecorationImage(
+                              image: imageProvider, fit: BoxFit.fill),
+                        ),
+                      )),
+          //),
+          //Flexible(
+          //flex: 6,
           Padding(
               // Create basic padding to space from avatar
               padding: const EdgeInsets.all(8),
@@ -163,7 +192,8 @@ class _PrivateMessage extends State<PrivateMessage> {
                 children: [
                   Text(
                     //Username Text
-                    AppLocalizations.of(context)!.username,
+                    widget.user?["username"] ??
+                        AppLocalizations.of(context)!.username,
                     style: const TextStyle(fontSize: 16),
                   ),
                   Text(
@@ -173,7 +203,7 @@ class _PrivateMessage extends State<PrivateMessage> {
                         const TextStyle(fontSize: 12, color: Color(0xffbbbbbb)),
                   )
                 ],
-              ))
+              )) //),
         ]),
       ),
       body: Chat(

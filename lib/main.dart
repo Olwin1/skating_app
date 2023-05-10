@@ -1,22 +1,29 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:skating_app/api/websocket.dart';
 import 'package:skating_app/api/token.dart';
 import 'package:skating_app/social_media/login.dart';
 import 'api/config.dart';
 import 'objects/user.dart';
+import 'swatch.dart';
 import 'tab_navigator.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'current_tab.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 // Define the main function
 Future<void> main() async {
   // Ensure that the Flutter widgets are initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: swatch[200], // transparent status bar
+  ));
 
   // Initialize the FlutterMapTileCaching package for caching map tiles
   await FlutterMapTileCaching.initialise();
@@ -75,7 +82,7 @@ class _MyAppState extends State<MyApp> {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: const MaterialColor(0xffb9b166, swatch),
         fontFamily: "OpenSans",
       ),
       home: loggedIn

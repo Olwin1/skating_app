@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:skating_app/objects/user.dart';
 import '../../api/config.dart';
+import '../../swatch.dart';
 import 'private_message.dart';
 
 class ListWidget extends StatefulWidget {
@@ -38,7 +39,6 @@ class _ListWidget extends State<ListWidget> {
     return Container(
       height: 82,
       padding: const EdgeInsets.all(8), // Add padding so doesn't touch edges
-      color: const Color(0xFFFFE306), // For testing to highlight seperations
       child: TextButton(
         // Make list widget clickable
         onPressed: () => Navigator.push(
@@ -98,9 +98,11 @@ class _ListWidget extends State<ListWidget> {
                       padding: EdgeInsets.only(top: 10),
                     ),
                     Text(
-                      //Message target's Name
-                      user?["username"] ?? "Channel",
-                    ),
+                        //Message target's Name
+                        user?["username"] ?? "Channel",
+                        style: TextStyle(
+                          color: swatch[300],
+                        )),
                     Text(widget.desc,
                         style: const TextStyle(
                             color: Color.fromARGB(

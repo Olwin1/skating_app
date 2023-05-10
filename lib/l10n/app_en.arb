@@ -357,6 +357,10 @@
   "makeFriends": "Try making some friends.",
   "@makeFriends": {
     "description": "Will be displayed below the no posts found on a user's feed or the no channels in message channels"
+  },
+  "channels": "Channels",
+  "@channels": {
+    "description": "Will be displayed as title of message channels"
   }
 
 }

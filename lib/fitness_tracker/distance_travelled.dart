@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import '../swatch.dart';
 import 'check_permission.dart';
 
 // Creating a stateful widget called DistanceTravelled
@@ -85,7 +86,7 @@ class _DistanceTravelled extends State<DistanceTravelled> {
           (value) => {stream = null, print("asaaaaaa")},
         );
     previousPosition = null;
-    return const Text("0 Km");
+    return Text("0 Km", style: TextStyle(color: swatch[700]));
   }
 
   @override

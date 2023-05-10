@@ -11,6 +11,8 @@ import '../../api/config.dart';
 import '../../api/messages.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../swatch.dart';
+
 // Initialize GetIt for dependency injection
 GetIt getIt = GetIt.instance;
 
@@ -194,13 +196,12 @@ class _PrivateMessage extends State<PrivateMessage> {
                     //Username Text
                     widget.user?["username"] ??
                         AppLocalizations.of(context)!.username,
-                    style: const TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 16, color: swatch[700]),
                   ),
                   Text(
                     // Last active text
                     AppLocalizations.of(context)!.activityOnline,
-                    style:
-                        const TextStyle(fontSize: 12, color: Color(0xffbbbbbb)),
+                    style: TextStyle(fontSize: 12, color: swatch[600]),
                   )
                 ],
               )) //),
@@ -212,10 +213,19 @@ class _PrivateMessage extends State<PrivateMessage> {
         messages: _messages, // Set messages to message variable defined above
         onSendPressed: _handleSendPressed,
         user: _user, // Set user to user id
-        theme: const DarkChatTheme(
-            inputMargin: EdgeInsets.only(
+        theme: DefaultChatTheme(
+            backgroundColor: swatch[501]!,
+            secondaryColor: swatch[51]!,
+            inputBackgroundColor: swatch[51]!,
+            inputTextColor: swatch[800]!,
+            dateDividerTextStyle: TextStyle(
+                color: swatch[600],
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                height: 1.333),
+            inputMargin: const EdgeInsets.only(
                 left: 8, right: 8, bottom: 8), // Add margins to text input
-            inputBorderRadius: BorderRadius.all(
+            inputBorderRadius: const BorderRadius.all(
                 Radius.circular(24))), // Make input rounded corners
         onEndReached: () => _loadMoreMessages(),
       ),

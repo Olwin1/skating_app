@@ -12,6 +12,7 @@ import '../api/config.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../current_tab.dart';
+import '../swatch.dart';
 
 // Define item type for popup menu
 enum SampleItem { itemOne, itemTwo, itemThree }
@@ -109,8 +110,10 @@ class _Profile extends State<Profile> {
           // Column to display the number of friends
 
           Column(children: [
-            Text((user?["friends_count"] ?? 0).toString()),
-            Text(AppLocalizations.of(context)!.friends)
+            Text((user?["friends_count"] ?? 0).toString(),
+                style: TextStyle(color: swatch[600])),
+            Text(AppLocalizations.of(context)!.friends,
+                style: TextStyle(color: swatch[700]))
           ]),
           // Column to display the number of followers
           const Spacer(),
@@ -122,8 +125,10 @@ class _Profile extends State<Profile> {
                   MaterialPageRoute(
                       builder: (context) => const Lists(index: 0))),
               child: Column(children: [
-                Text((user?["followers_count"] ?? 0).toString()),
-                Text(AppLocalizations.of(context)!.followers)
+                Text((user?["followers_count"] ?? 0).toString(),
+                    style: TextStyle(color: swatch[600])),
+                Text(AppLocalizations.of(context)!.followers,
+                    style: TextStyle(color: swatch[700]))
               ])),
           // Column to display the number of following
           const Spacer(),
@@ -135,23 +140,27 @@ class _Profile extends State<Profile> {
                   MaterialPageRoute(
                       builder: (context) => const Lists(index: 1))),
               child: Column(children: [
-                Text((user?["following_count"] ?? 0).toString()),
-                Text(AppLocalizations.of(context)!.following)
+                Text((user?["following_count"] ?? 0).toString(),
+                    style: TextStyle(color: swatch[600])),
+                Text(AppLocalizations.of(context)!.following,
+                    style: TextStyle(color: swatch[700]))
               ])),
           const Spacer(),
         ]),
         // Display the user's name
         Padding(
           padding: const EdgeInsets.all(8),
-          child:
-              Text(user?["username"] ?? AppLocalizations.of(context)!.username),
+          child: Text(
+              user?["username"] ?? AppLocalizations.of(context)!.username,
+              style: TextStyle(color: swatch[800])),
         ),
         // Display the user's bio
         Padding(
           padding: const EdgeInsets.all(8),
           child: Text(
               textAlign: TextAlign.justify,
-              (user?["description"] ?? "").toString()),
+              (user?["description"] ?? "").toString(),
+              style: TextStyle(color: swatch[600])),
         ),
         // Row with two text buttons
         Row(children: [
@@ -161,7 +170,8 @@ class _Profile extends State<Profile> {
             child: TextButton(
                 onPressed: () =>
                     print("pressed"), // Prints "pressed" when button is pressed
-                child: Text(AppLocalizations.of(context)!.follow)),
+                child: Text(AppLocalizations.of(context)!.follow,
+                    style: TextStyle(color: swatch[400]))),
           ), // Button text
           // Second text button
           Expanded(
@@ -169,7 +179,8 @@ class _Profile extends State<Profile> {
                 // Expand button to empty space
                 onPressed: () =>
                     print("pressed"), // Prints "pressed" when button is pressed
-                child: Text(AppLocalizations.of(context)!.shareProfile)),
+                child: Text(AppLocalizations.of(context)!.shareProfile,
+                    style: TextStyle(color: swatch[400]))),
           ), // Button text
           TextButton(
               onPressed: () => print("pressed"),
@@ -225,21 +236,24 @@ class _OptionsMenuState extends State<OptionsMenu> {
           // Value of the menu item, an instance of the SampleItem enumeration
           value: SampleItem.itemOne,
           // Text widget that displays the text for the menu item
-          child: Text(AppLocalizations.of(context)!.editProfile),
+          child: Text(AppLocalizations.of(context)!.editProfile,
+              style: TextStyle(color: swatch[800])),
         ),
         // Second menu item
         PopupMenuItem<SampleItem>(
           // Value of the menu item, an instance of the SampleItem enumeration
           value: SampleItem.itemTwo,
           // Text widget that displays the text for the menu item
-          child: Text(AppLocalizations.of(context)!.settings),
+          child: Text(AppLocalizations.of(context)!.settings,
+              style: TextStyle(color: swatch[800])),
         ),
         // Third menu item
         PopupMenuItem<SampleItem>(
           // Value of the menu item, an instance of the SampleItem enumeration
           value: SampleItem.itemThree,
           // Text widget that displays the text for the menu item
-          child: Text(AppLocalizations.of(context)!.saved),
+          child: Text(AppLocalizations.of(context)!.saved,
+              style: TextStyle(color: swatch[800])),
         ),
       ],
     );
@@ -329,8 +343,10 @@ class _UserPostsListState extends State<UserPostsList> {
                 // Localized text string that will be displayed when no items are found
                 child: Text(
                   AppLocalizations.of(context)!.noPostsFound,
-                  style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: swatch[900]),
                 ),
               ),
               // Specify how to build each grid tile

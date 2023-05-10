@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../api/websocket.dart';
+import '../../swatch.dart';
 import 'list_widget.dart';
 import '../../api/messages.dart';
 import 'package:get_it/get_it.dart';
@@ -27,12 +28,15 @@ class _PrivateMessageList extends State<PrivateMessageList> {
   Widget build(BuildContext context) {
     return Scaffold(
         //Create a scaffold
-        appBar: AppBar(), // Add a basic app bar
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.channels,
+              style: TextStyle(
+                color: swatch[700],
+              )),
+        ), // Add a basic app bar
         body: Container(
           padding:
               const EdgeInsets.all(0), // Add padding so doesn't touch edges
-          color:
-              const Color(0xFFFFE306), // For testing to highlight seperations
           child: Column(
             children: const [
               Expanded(

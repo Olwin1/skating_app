@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:timer_builder/timer_builder.dart';
 
+import '../swatch.dart';
+
 // This is a stateless widget that displays a clock timer based on a starting time.
 class ClockWidget extends StatelessWidget {
   // The constructor takes a key and a required starting time parameter.
@@ -25,7 +27,7 @@ class ClockWidget extends StatelessWidget {
             '${diff.inHours}:${(diff.inMinutes % 60).toString().padLeft(2, "0")}:${(diff.inSeconds % 60).toString().padLeft(2, '0')}';
       }
       // Return a Text widget displaying the calculated time.
-      return Text(time);
+      return Text(time, style: TextStyle(color: swatch[700]));
     });
   }
 }

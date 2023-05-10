@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:skating_app/fitness_tracker/save_session.dart';
 import 'package:skating_app/fitness_tracker/speedometer.dart';
 import 'package:solar_calculator/solar_calculator.dart';
+import '../swatch.dart';
 import 'distance_travelled.dart';
 import 'signal_strength_info.dart';
 import 'package:skating_app/fitness_tracker/timer.dart';
@@ -46,6 +47,10 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
 
   // This function calculates and retrieves the sunset time at a given position
   getSunsetTime(Position value) {
+    if (!mounted) {
+      return;
+    }
+
     // Get the current instant
     final instant = Instant.fromDateTime(DateTime.now());
 
@@ -134,7 +139,8 @@ class _FitnessTracker extends State<FitnessTracker> {
                   // Padding widget with smaller padding value, used to add padding around a nested Column widget
                   padding: const EdgeInsets.symmetric(vertical: 32),
                   child: Column(children: [
-                    Text(AppLocalizations.of(context)!.distanceTraveled),
+                    Text(AppLocalizations.of(context)!.distanceTraveled,
+                        style: TextStyle(color: swatch[900])),
                     DistanceTravelled(active: active, callback: callback)
                   ]),
                 ),
@@ -152,8 +158,10 @@ class _FitnessTracker extends State<FitnessTracker> {
                               Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Column(children: [
-                                  Text(AppLocalizations.of(context)!
-                                      .sessionDuration),
+                                  Text(
+                                      AppLocalizations.of(context)!
+                                          .sessionDuration,
+                                      style: TextStyle(color: swatch[900])),
                                   active
                                       ? ClockWidget(
                                           startTime: DateTime
@@ -161,15 +169,19 @@ class _FitnessTracker extends State<FitnessTracker> {
                                         Duration(minutes: 59, seconds: 50))*/
                                           ,
                                         )
-                                      : const Text("0")
+                                      : Text("0",
+                                          style: TextStyle(color: swatch[700]))
                                 ]),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Column(children: [
-                                  Text(AppLocalizations.of(context)!
-                                      .averageSessionDuration),
-                                  const Text("5:00")
+                                  Text(
+                                      AppLocalizations.of(context)!
+                                          .averageSessionDuration,
+                                      style: TextStyle(color: swatch[900])),
+                                  Text("5:00",
+                                      style: TextStyle(color: swatch[700]))
                                 ]),
                               ),
                             ],
@@ -180,17 +192,20 @@ class _FitnessTracker extends State<FitnessTracker> {
                               Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Column(children: [
-                                  Text(
-                                      AppLocalizations.of(context)!.sunsetTime),
+                                  Text(AppLocalizations.of(context)!.sunsetTime,
+                                      style: TextStyle(color: swatch[900])),
                                   const SunsetTime()
                                 ]),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Column(children: [
-                                  Text(AppLocalizations.of(context)!
-                                      .averageSpeed),
-                                  const Text("2kph")
+                                  Text(
+                                      AppLocalizations.of(context)!
+                                          .averageSpeed,
+                                      style: TextStyle(color: swatch[900])),
+                                  Text("2kph",
+                                      style: TextStyle(color: swatch[700]))
                                 ]),
                               ),
                             ],
@@ -208,8 +223,10 @@ class _FitnessTracker extends State<FitnessTracker> {
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           const SpeedometerPage())),
-                          child: Text(AppLocalizations.of(context)!
-                              .speedometer), // Set text to speedometer
+                          child: Text(
+                            AppLocalizations.of(context)!.speedometer,
+                            style: TextStyle(color: swatch[500]),
+                          ), // Set text to speedometer
                         ),
                       ),
                     ],
@@ -245,7 +262,8 @@ class _FitnessTracker extends State<FitnessTracker> {
                             .then((value) => initialPosition = value)
                       }
                   },
-                  child: Text(buttonMessage),
+                  child:
+                      Text(buttonMessage, style: TextStyle(color: swatch[500])),
                 ),
 
                 const Spacer(

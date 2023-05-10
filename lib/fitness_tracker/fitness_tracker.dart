@@ -12,6 +12,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../current_tab.dart';
 
+String sunsetTime = "00:00";
+
 class SunsetTime extends StatelessWidget {
   const SunsetTime({super.key});
   @override
@@ -41,8 +43,6 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
 
     super.initState();
   }
-
-  String sunsetTime = "00:00";
 
   // This function calculates and retrieves the sunset time at a given position
   getSunsetTime(Position value) {

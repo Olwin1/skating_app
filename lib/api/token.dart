@@ -8,6 +8,7 @@ class SecureStorage {
 
   // Define a private constant variable _keyToken with value "token"
   static const _keyToken = "token";
+  static const _keyId = "id";
 
   // Define a method named setToken that accepts a String parameter named token and returns a Future
   Future setToken(String token) async {
@@ -19,5 +20,17 @@ class SecureStorage {
   Future<String?> getToken() async {
     // Use the FlutterSecureStorage instance to read the value stored with the _keyToken key and return it
     return await storage.read(key: _keyToken);
+  }
+
+  // Define a method named setToken that accepts a String parameter named token and returns a Future
+  Future setId(String id) async {
+    // Use the FlutterSecureStorage instance to write the token to storage with the _keyToken key
+    await storage.write(key: _keyId, value: id);
+  }
+
+  // Define a method named getToken that returns a Future<String>
+  Future<String?> getId() async {
+    // Use the FlutterSecureStorage instance to read the value stored with the _keyToken key and return it
+    return await storage.read(key: _keyId);
   }
 }

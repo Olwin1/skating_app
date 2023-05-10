@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:get_it/get_it.dart';
 import 'package:skating_app/api/websocket.dart';
 import 'package:skating_app/api/token.dart';
 import 'package:skating_app/social_media/login.dart';
+import 'api/config.dart';
+import 'objects/user.dart';
 import 'tab_navigator.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -131,8 +134,22 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int selectedpage = 0;
+  String? avatar;
+  @override
+  void initState() {
+    storage.getId().then((value) => {
+          value != null
+              ? getUserCache(value).then((user) => {
+                    setState(() {
+                      avatar = user["avatar"];
+                    })
+                  })
+              : null
+        });
+    super.initState();
+  }
 
-  static List<TabItem<Widget>> tabItems() {
+  List<TabItem<Widget>> tabItems() {
     return ([
       TabItem<Widget>(
         //icon: Icons.home,
@@ -155,7 +172,33 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // Create friends tracker Button Object
       TabItem<Widget>(
         //icon: Icons.home,
-        icon: Image.asset("assets/placeholders/150.png"),
+        icon: avatar == null
+            // If there is no cached user information or avatar image, use a default image
+            ? CircleAvatar(
+                // Set the radius of the circular avatar image
+                child: ClipOval(
+                  child: Image.asset("assets/placeholders/default.png"),
+                ),
+              )
+            // If there is cached user information and an avatar image, use the cached image
+            : CachedNetworkImage(
+                imageUrl: '${Config.uri}/image/$avatar',
+                httpHeaders: const {"thumbnail": "true"},
+                placeholder: (context, url) => CircleAvatar(
+                  // Set the radius of the circular avatar image
+                  child: ClipOval(
+                    child: Image.asset("assets/placeholders/default.png"),
+                  ),
+                ),
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape
+                        .circle, // Set the shape of the container to a circle
+                    image:
+                        DecorationImage(image: imageProvider, fit: BoxFit.fill),
+                  ),
+                ),
+              ),
       ), // Create Profile Button Object
     ]);
   }

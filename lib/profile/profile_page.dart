@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/edit_profile.dart';
+import 'package:skating_app/profile/follow_button.dart';
 import 'package:skating_app/profile/lists.dart';
 import 'package:skating_app/profile/settings/settings.dart';
 
@@ -72,10 +73,12 @@ class _Profile extends State<Profile> {
         // Create appBar widget
         title: Text(user?["username"] ??
             AppLocalizations.of(context)!.username), // Set title
-        actions: const [
-          // Define icon buttons
-          OptionsMenu()
-        ],
+        actions: widget.userId == "0"
+            ? const [
+                // Define icon buttons
+                OptionsMenu()
+              ]
+            : null,
       ),
       // Basic list layout element
       body: ListView(shrinkWrap: true, children: [
@@ -166,13 +169,8 @@ class _Profile extends State<Profile> {
         Row(children: [
           // First text button
           Expanded(
-            // Expand button to empty space
-            child: TextButton(
-                onPressed: () =>
-                    print("pressed"), // Prints "pressed" when button is pressed
-                child: Text(AppLocalizations.of(context)!.follow,
-                    style: TextStyle(color: swatch[400]))),
-          ), // Button text
+              // Expand button to empty space
+              child: FollowButton(user: widget.userId)), // Button text
           // Second text button
           Expanded(
             child: TextButton(

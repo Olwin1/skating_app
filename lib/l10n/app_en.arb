@@ -361,6 +361,10 @@
   "channels": "Channels",
   "@channels": {
     "description": "Will be displayed as title of message channels"
+  },
+  "requested": "Requested",
+  "@requested": {
+    "description": "Will be displayed on the follow button if the user has requested to follow"
   }
 
 }

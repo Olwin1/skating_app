@@ -18,8 +18,8 @@ SecureStorage storage = SecureStorage();
 Future<Uint8List> compressImage(Uint8List image) async {
   var result = await FlutterImageCompress.compressWithList(
     image,
-    minHeight: 360,
-    minWidth: 360,
+    minHeight: 1080,
+    minWidth: 1080,
     quality: 96,
   );
   print(image.length);

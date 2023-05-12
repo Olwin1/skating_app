@@ -103,8 +103,10 @@ class _FitnessTracker extends State<FitnessTracker> {
   @override
   Widget build(BuildContext context) {
     if (active) {
-      buttonMessage = AppLocalizations.of(context)!.start;
+      buttonMessage = AppLocalizations.of(context)!.stop;
       startTime = DateTime.now().toUtc();
+    } else {
+      buttonMessage = AppLocalizations.of(context)!.start;
     }
     // create an instance of the User class and passing it an id of '1'
     return Scaffold(

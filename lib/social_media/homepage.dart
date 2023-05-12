@@ -109,9 +109,18 @@ class _PostsListViewState extends State<PostsListView> {
     }
   }
 
+  Future<void> refreshPage() async {
+    seenPosts = [];
+    _pagingController.refresh();
+    // _pagingController.addPageRequestListener((pageKey) {
+    //   _fetchPage(pageKey);
+    // });
+    //_fetchPage(0);
+  }
+
   @override
   Widget build(BuildContext context) => RefreshIndicator(
-      onRefresh: () => _fetchPage(0),
+      onRefresh: () => refreshPage(),
       child: PagedListView<int, Object>(
         pagingController: _pagingController,
         // builderDelegate is responsible for creating the actual widgets to be displayed

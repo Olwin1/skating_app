@@ -215,11 +215,11 @@ class _PrivateMessage extends State<PrivateMessage> {
         user: _user, // Set user to user id
         theme: DefaultChatTheme(
             backgroundColor: swatch[501]!,
-            secondaryColor: swatch[51]!,
+            secondaryColor: swatch[301]!,
             inputBackgroundColor: swatch[51]!,
             inputTextColor: swatch[800]!,
             dateDividerTextStyle: TextStyle(
-                color: swatch[600],
+                color: swatch[500],
                 fontSize: 12,
                 fontWeight: FontWeight.w800,
                 height: 1.333),

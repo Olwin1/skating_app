@@ -53,7 +53,7 @@ class FriendsTrackerPage extends StatefulWidget {
 
 class _FriendsTrackerPage extends State<FriendsTrackerPage> {
   List<Map<String, dynamic>> newSessions = [];
-  MapController controller = MapController(); // Controller for the map
+  late MapController controller; // Controller for the map
   List<Marker> friends = []; // List of markers representing friends' locations
   late FollowOnLocationUpdate
       _followOnLocationUpdate; // Used to update the location of the user being followed
@@ -61,6 +61,7 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
       _followCurrentLocationStreamController; // Stream for updating the location of the user being followed
   @override
   void initState() {
+    controller = MapController();
     _followOnLocationUpdate = FollowOnLocationUpdate
         .never; // Set the initial value for the follow update
     _followCurrentLocationStreamController = StreamController<
@@ -98,6 +99,8 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
 
   @override
   void dispose() {
+    _followOnLocationUpdate = FollowOnLocationUpdate.never;
+    controller.dispose();
     _followCurrentLocationStreamController.close();
     super.dispose();
   }

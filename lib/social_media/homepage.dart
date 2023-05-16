@@ -121,28 +121,40 @@ class _PostsListViewState extends State<PostsListView> {
   @override
   Widget build(BuildContext context) => RefreshIndicator(
       onRefresh: () => refreshPage(),
-      child: PagedListView<int, Object>(
-        pagingController: _pagingController,
-        // builderDelegate is responsible for creating the actual widgets to be displayed
-        builderDelegate: PagedChildBuilderDelegate<Object>(
-            noItemsFoundIndicatorBuilder: (context) => Center(
-                    child: Column(children: [
-                  Text(
-                    AppLocalizations.of(context)!.noPostsFound,
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    AppLocalizations.of(context)!.makeFriends,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                ])),
-            // itemBuilder is called for each item in the list to create a widget for that item
-            itemBuilder: (context, item, index) =>
-                PostWidget(post: item, index: index)),
-        padding: const EdgeInsets.all(
-            8), // Add padding to list so doesn't overflow to sides of screen
-      ));
+      child: Stack(children: [
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: const AssetImage("assets/backgrounds/graffiti.png"),
+                fit: BoxFit.cover,
+                alignment: Alignment.bottomLeft,
+                colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+          ),
+        ),
+        PagedListView<int, Object>(
+          pagingController: _pagingController,
+          // builderDelegate is responsible for creating the actual widgets to be displayed
+          builderDelegate: PagedChildBuilderDelegate<Object>(
+              noItemsFoundIndicatorBuilder: (context) => Center(
+                      child: Column(children: [
+                    Text(
+                      AppLocalizations.of(context)!.noPostsFound,
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      AppLocalizations.of(context)!.makeFriends,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ])),
+              // itemBuilder is called for each item in the list to create a widget for that item
+              itemBuilder: (context, item, index) =>
+                  PostWidget(post: item, index: index)),
+          padding: const EdgeInsets.all(
+              8), // Add padding to list so doesn't overflow to sides of screen
+        )
+      ]));
 
   @override
   void dispose() {

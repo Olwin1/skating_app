@@ -14,6 +14,7 @@ import 'package:skating_app/api/session.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../current_tab.dart';
+import '../swatch.dart';
 
 bool searchOpened = true;
 bool active = false;
@@ -132,6 +133,11 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
             nonRotatedChildren: [
 // Creates a FloatingSearchBar widget with specified properties
           FloatingSearchBar(
+              accentColor: swatch[400],
+              backdropColor: swatch[401],
+              backgroundColor: swatch[301],
+              hintStyle: TextStyle(color: swatch[400]),
+              queryStyle: TextStyle(color: swatch[600]),
               // The text displayed as a placeholder in the search bar
               hint: AppLocalizations.of(context)!.search,
 

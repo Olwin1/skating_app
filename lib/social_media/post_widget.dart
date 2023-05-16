@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skating_app/api/social.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/profile_page.dart';
 import 'package:skating_app/test.dart';
@@ -17,12 +18,47 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidget extends State<PostWidget> {
+  bool liked = false;
+  handleLikePressed() {
+    if (liked) {
+      unlikePost(widget.post["_id"]).then((value) => {
+            if (mounted && liked)
+              {
+                setState(
+                  () => liked = false,
+                )
+              }
+          });
+    } else {
+      likePost(widget.post["_id"]).then((value) => {
+            if (mounted && !liked)
+              {
+                setState(
+                  () => liked = true,
+                )
+              }
+          });
+    }
+  }
+
+  @override
+  void initState() {
+    liked = widget.post["liked"];
+    print("liked post is $liked");
+
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override // Override existing build method
   Widget build(BuildContext context) {
     //Post post = widget.user.getPosts()[widget.index];
     print("${Config.uri}/image/${widget.post['image']}");
-    String likes = widget.post['like_count'] ?? "0";
-    String comments = widget.post['comment_count'] ?? "0";
+    String likes = (liked
+            ? (widget.post['like_count'] + 1 ?? 1)
+            : (widget.post['like_count'] ?? 0))
+        .toString();
+    String comments = (widget.post['comment_count'] ?? 0).toString();
     return Container(
       height: 314,
       padding: const EdgeInsets.all(0), // Add padding so doesn't touch edges
@@ -68,8 +104,7 @@ class _PostWidget extends State<PostWidget> {
                         ListTile(
                             title: IconButton(
                               // Create Like Button
-                              onPressed: () =>
-                                  print(IconTheme.of(context).size),
+                              onPressed: () => handleLikePressed(),
                               icon: const Icon(
                                 Icons.thumb_up,
                                 color: Color(0xffcfcfcf),
@@ -140,8 +175,13 @@ class Avatar extends StatefulWidget {
 class _Avatar extends State<Avatar> {
   @override
   void initState() {
-    getUserCache(widget.user).then((userCache) => setState(
-        () => {image = userCache["avatar"], profile = userCache["_id"]}));
+    getUserCache(widget.user).then((userCache) => {
+          if (mounted)
+            {
+              setState(() =>
+                  {image = userCache["avatar"], profile = userCache["_id"]})
+            }
+        });
     super.initState();
   }
 

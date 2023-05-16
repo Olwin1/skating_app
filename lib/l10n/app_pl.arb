@@ -89,5 +89,17 @@
     "noCommentsFound": ".",
     "makeFriends": ".",
     "channels": ".",
-    "requested": "."
+    "requested": ".",
+    "oldPassword": ".",
+    "newPassword": ".",
+    "retypePassword": ".",
+    "changePassword": ".",
+    "english": ".",
+    "polish": ".",
+    "german": ".",
+    "italian": ".",
+    "french": ".",
+    "light": ".",
+    "dark": ".",
+    "systemDefault": "."
 }

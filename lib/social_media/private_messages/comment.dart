@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../swatch.dart';
+
 class Comment extends StatefulWidget {
   final Map<String, dynamic> comment;
 
@@ -17,7 +19,11 @@ class Comment extends StatefulWidget {
 class _Comment extends State<Comment> {
   @override // Override existing build method
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: const Color.fromARGB(125, 0, 0, 0),
+      ),
       padding: const EdgeInsets.all(4), // Add padding so doesn't touch edges
       child: TextButton(
         onPressed: () => print("Pressed"),
@@ -50,20 +56,19 @@ class _Comment extends State<Comment> {
                       // Create top row
                       children: [
                         Text(widget.comment["sender"], // User's Display Name
-                            style: const TextStyle(
-                                color: Color(0xff666666))), // Set colour
+                            style: TextStyle(color: swatch[101])), // Set colour
                         Text(
                           DateTime.parse(widget.comment["date"])
                               .millisecondsSinceEpoch
                               .toString(), //Time since sent
-                          style: const TextStyle(
-                              color: Color(0xffbfbfbf)), // Set colour
+                          style: TextStyle(color: swatch[501]), // Set colour
                         )
                       ],
                     ),
                     Text(
                       widget.comment["content"],
                       textAlign: TextAlign.start,
+                      style: TextStyle(color: swatch[801]),
                     ), // Create message content
                     // Create footer
 
@@ -84,6 +89,10 @@ class _Comment extends State<Comment> {
                                 AppLocalizations.of(context)!.reply,
                                 textAlign:
                                     TextAlign.end, // Align with right of screen
+                                style: TextStyle(
+                                    color: swatch[50],
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.2),
                               ),
                             ),
                           ),
@@ -96,6 +105,10 @@ class _Comment extends State<Comment> {
                                   .like, // Like Placeholder
                               textAlign:
                                   TextAlign.end, // Align with right of screen
+                              style: TextStyle(
+                                  color: swatch[50],
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.2),
                             ),
                           ),
                           Padding(
@@ -107,6 +120,10 @@ class _Comment extends State<Comment> {
                                   .dislike, // Dislike placeholder
                               textAlign:
                                   TextAlign.end, // Align with right of screen
+                              style: TextStyle(
+                                  color: swatch[50],
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.2),
                             ),
                           ),
                         ])

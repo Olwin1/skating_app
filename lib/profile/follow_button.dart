@@ -75,19 +75,25 @@ class _FollowButtonState extends State<FollowButton> {
   @override
   Widget build(BuildContext context) {
     // Returns a `TextButton` widget with `onPressed` and `child` properties
-    return TextButton(
-        // Calls the `handlePressed` function when the button is pressed
-        onPressed: () => handlePressed(),
-        // Conditionally displays different text based on the value of `type`
-        child: widget.user != "0"
-            ? Text(
-                type == "follow"
-                    ? AppLocalizations.of(context)!.follow
-                    : type == "requested"
-                        ? AppLocalizations.of(context)!.requested
-                        : AppLocalizations.of(context)!.following,
-                style: TextStyle(color: swatch[400]))
-            : Text(AppLocalizations.of(context)!.editProfile,
-                style: TextStyle(color: swatch[400])));
+    return Container(
+        margin: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(2),
+        decoration: const BoxDecoration(
+            color: Color.fromARGB(125, 0, 0, 0),
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        child: TextButton(
+            // Calls the `handlePressed` function when the button is pressed
+            onPressed: () => handlePressed(),
+            // Conditionally displays different text based on the value of `type`
+            child: widget.user != "0"
+                ? Text(
+                    type == "follow"
+                        ? AppLocalizations.of(context)!.follow
+                        : type == "requested"
+                            ? AppLocalizations.of(context)!.requested
+                            : AppLocalizations.of(context)!.following,
+                    style: TextStyle(color: swatch[401]))
+                : Text(AppLocalizations.of(context)!.editProfile,
+                    style: TextStyle(color: swatch[401]))));
   }
 }

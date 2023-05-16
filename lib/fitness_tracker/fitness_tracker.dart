@@ -72,7 +72,7 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Text(sunsetTime);
+    return Text(sunsetTime, style: TextStyle(color: swatch[401]));
   }
 }
 
@@ -111,13 +111,21 @@ class _FitnessTracker extends State<FitnessTracker> {
     // create an instance of the User class and passing it an id of '1'
     return Scaffold(
         // Scaffold widget, which is the basic layout element in Flutter
-        body: Padding(
+        body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: const AssetImage("assets/backgrounds/graffiti.png"),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center,
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+            ),
             // Padding widget to add padding around the edges of the screen
             padding: const EdgeInsets.all(32),
             child: Column(
               children: [
                 const Spacer(
-                  flex: 50,
+                  flex: 45,
                 ),
                 Align(
                   alignment: Alignment
@@ -140,11 +148,16 @@ class _FitnessTracker extends State<FitnessTracker> {
                 Padding(
                   // Padding widget with smaller padding value, used to add padding around a nested Column widget
                   padding: const EdgeInsets.symmetric(vertical: 32),
-                  child: Column(children: [
-                    Text(AppLocalizations.of(context)!.distanceTraveled,
-                        style: TextStyle(color: swatch[900])),
-                    DistanceTravelled(active: active, callback: callback)
-                  ]),
+                  child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                          color: Color.fromARGB(125, 0, 0, 0),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Column(children: [
+                        Text(AppLocalizations.of(context)!.distanceTraveled,
+                            style: TextStyle(color: swatch[601])),
+                        DistanceTravelled(active: active, callback: callback)
+                      ])),
                 ),
                 Expanded(
                   flex: 100,
@@ -157,13 +170,18 @@ class _FitnessTracker extends State<FitnessTracker> {
                           TableRow(
                             // top row of table
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8),
+                              Container(
+                                margin: const EdgeInsets.all(4),
+                                padding: const EdgeInsets.all(4),
+                                decoration: const BoxDecoration(
+                                    color: Color.fromARGB(125, 0, 0, 0),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
                                 child: Column(children: [
                                   Text(
                                       AppLocalizations.of(context)!
                                           .sessionDuration,
-                                      style: TextStyle(color: swatch[900])),
+                                      style: TextStyle(color: swatch[601])),
                                   active
                                       ? ClockWidget(
                                           startTime: DateTime
@@ -172,18 +190,23 @@ class _FitnessTracker extends State<FitnessTracker> {
                                           ,
                                         )
                                       : Text("0",
-                                          style: TextStyle(color: swatch[700]))
+                                          style: TextStyle(color: swatch[401]))
                                 ]),
                               ),
-                              Padding(
+                              Container(
+                                margin: const EdgeInsets.all(4),
                                 padding: const EdgeInsets.all(8),
+                                decoration: const BoxDecoration(
+                                    color: Color.fromARGB(125, 0, 0, 0),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
                                 child: Column(children: [
                                   Text(
                                       AppLocalizations.of(context)!
                                           .averageSessionDuration,
-                                      style: TextStyle(color: swatch[900])),
+                                      style: TextStyle(color: swatch[601])),
                                   Text("5:00",
-                                      style: TextStyle(color: swatch[700]))
+                                      style: TextStyle(color: swatch[401]))
                                 ]),
                               ),
                             ],
@@ -191,23 +214,33 @@ class _FitnessTracker extends State<FitnessTracker> {
                           TableRow(
                             // bottom row of table
                             children: [
-                              Padding(
+                              Container(
+                                margin: const EdgeInsets.all(4),
                                 padding: const EdgeInsets.all(8),
+                                decoration: const BoxDecoration(
+                                    color: Color.fromARGB(125, 0, 0, 0),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
                                 child: Column(children: [
                                   Text(AppLocalizations.of(context)!.sunsetTime,
-                                      style: TextStyle(color: swatch[900])),
+                                      style: TextStyle(color: swatch[601])),
                                   const SunsetTime()
                                 ]),
                               ),
-                              Padding(
+                              Container(
+                                margin: const EdgeInsets.all(4),
                                 padding: const EdgeInsets.all(8),
+                                decoration: const BoxDecoration(
+                                    color: Color.fromARGB(125, 0, 0, 0),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
                                 child: Column(children: [
                                   Text(
                                       AppLocalizations.of(context)!
                                           .averageSpeed,
-                                      style: TextStyle(color: swatch[900])),
+                                      style: TextStyle(color: swatch[601])),
                                   Text("2kph",
-                                      style: TextStyle(color: swatch[700]))
+                                      style: TextStyle(color: swatch[401]))
                                 ]),
                               ),
                             ],
@@ -227,7 +260,7 @@ class _FitnessTracker extends State<FitnessTracker> {
                                           const SpeedometerPage())),
                           child: Text(
                             AppLocalizations.of(context)!.speedometer,
-                            style: TextStyle(color: swatch[500]),
+                            style: TextStyle(color: swatch[201], fontSize: 15),
                           ), // Set text to speedometer
                         ),
                       ),
@@ -264,8 +297,11 @@ class _FitnessTracker extends State<FitnessTracker> {
                             .then((value) => initialPosition = value)
                       }
                   },
-                  child:
-                      Text(buttonMessage, style: TextStyle(color: swatch[500])),
+                  child: Text(buttonMessage,
+                      style: TextStyle(
+                          color: swatch[701],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20)),
                 ),
 
                 const Spacer(

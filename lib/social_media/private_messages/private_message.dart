@@ -146,90 +146,103 @@ class _PrivateMessage extends State<PrivateMessage> {
         locale = const ChatL10nEn();
     }
     return Scaffold(
-      appBar: AppBar(
-        // Create appBar
-        leadingWidth: 48, // Remove extra leading space
-        centerTitle: false, // Align title to left
-        title: Row(children: [
-          //Create title as row
-          widget.user == null || widget.user?["avatar"] == null
-              // If there is no cached user information or avatar image, use a default image
-              ? CircleAvatar(
-                  radius: 15, // Set the radius of the circular avatar image
-                  child: ClipOval(
-                    child: Image.asset("assets/placeholders/default.png"),
-                  ),
-                )
-              // If there is cached user information and an avatar image, use the cached image
-              : //Flexible(
-              CachedNetworkImage(
-                  height: 40,
-                  width: 40,
-                  imageUrl: '${Config.uri}/image/${widget.user!["avatar"]}',
-                  httpHeaders: const {"thumbnail": "true"},
-                  placeholder: (context, url) => CircleAvatar(
-                        // Set the radius of the circular avatar image
-                        child: ClipOval(
-                          child: Image.asset("assets/placeholders/default.png"),
-                        ),
-                      ),
-                  imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape
-                              .circle, // Set the shape of the container to a circle
-                          image: DecorationImage(
-                              image: imageProvider, fit: BoxFit.fill),
-                        ),
-                      )),
-          //),
-          //Flexible(
-          //flex: 6,
-          Padding(
-              // Create basic padding to space from avatar
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                // Create column of text
-                crossAxisAlignment: CrossAxisAlignment
-                    .start, // Align to the left instead of center
-                children: [
-                  Text(
-                    //Username Text
-                    widget.user?["username"] ??
-                        AppLocalizations.of(context)!.username,
-                    style: TextStyle(fontSize: 16, color: swatch[700]),
-                  ),
-                  Text(
-                    // Last active text
-                    AppLocalizations.of(context)!.activityOnline,
-                    style: TextStyle(fontSize: 12, color: swatch[600]),
+        appBar: AppBar(
+          // Create appBar
+          leadingWidth: 48, // Remove extra leading space
+          centerTitle: false, // Align title to left
+          title: Row(children: [
+            //Create title as row
+            widget.user == null || widget.user?["avatar"] == null
+                // If there is no cached user information or avatar image, use a default image
+                ? CircleAvatar(
+                    radius: 15, // Set the radius of the circular avatar image
+                    child: ClipOval(
+                      child: Image.asset("assets/placeholders/default.png"),
+                    ),
                   )
-                ],
-              )) //),
-        ]),
-      ),
-      body: Chat(
-        l10n: locale, // Set locale
-        // Create basic chat widget
-        messages: _messages, // Set messages to message variable defined above
-        onSendPressed: _handleSendPressed,
-        user: _user, // Set user to user id
-        theme: DefaultChatTheme(
-            backgroundColor: swatch[501]!,
-            secondaryColor: swatch[301]!,
-            inputBackgroundColor: swatch[51]!,
-            inputTextColor: swatch[800]!,
-            dateDividerTextStyle: TextStyle(
-                color: swatch[500],
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                height: 1.333),
-            inputMargin: const EdgeInsets.only(
-                left: 8, right: 8, bottom: 8), // Add margins to text input
-            inputBorderRadius: const BorderRadius.all(
-                Radius.circular(24))), // Make input rounded corners
-        onEndReached: () => _loadMoreMessages(),
-      ),
-    );
+                // If there is cached user information and an avatar image, use the cached image
+                : //Flexible(
+                CachedNetworkImage(
+                    height: 40,
+                    width: 40,
+                    imageUrl: '${Config.uri}/image/${widget.user!["avatar"]}',
+                    httpHeaders: const {"thumbnail": "true"},
+                    placeholder: (context, url) => CircleAvatar(
+                          // Set the radius of the circular avatar image
+                          child: ClipOval(
+                            child:
+                                Image.asset("assets/placeholders/default.png"),
+                          ),
+                        ),
+                    imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape
+                                .circle, // Set the shape of the container to a circle
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.fill),
+                          ),
+                        )),
+            //),
+            //Flexible(
+            //flex: 6,
+            Padding(
+                // Create basic padding to space from avatar
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  // Create column of text
+                  crossAxisAlignment: CrossAxisAlignment
+                      .start, // Align to the left instead of center
+                  children: [
+                    Text(
+                      //Username Text
+                      widget.user?["username"] ??
+                          AppLocalizations.of(context)!.username,
+                      style: TextStyle(fontSize: 16, color: swatch[700]),
+                    ),
+                    Text(
+                      // Last active text
+                      AppLocalizations.of(context)!.activityOnline,
+                      style: TextStyle(fontSize: 12, color: swatch[600]),
+                    )
+                  ],
+                )) //),
+          ]),
+        ),
+        body: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: const AssetImage("assets/backgrounds/graffiti.png"),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.bottomLeft,
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+            ),
+          ),
+          Chat(
+            l10n: locale, // Set locale
+            // Create basic chat widget
+            messages:
+                _messages, // Set messages to message variable defined above
+            onSendPressed: _handleSendPressed,
+            user: _user, // Set user to user id
+            theme: DefaultChatTheme(
+                backgroundColor: Colors.transparent, //swatch[501]!,
+                secondaryColor: swatch[301]!,
+                inputBackgroundColor: swatch[51]!,
+                inputTextColor: swatch[800]!,
+                dateDividerTextStyle: TextStyle(
+                    color: swatch[701],
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    height: 1.333),
+                inputMargin: const EdgeInsets.only(
+                    left: 8, right: 8, bottom: 8), // Add margins to text input
+                inputBorderRadius: const BorderRadius.all(
+                    Radius.circular(24))), // Make input rounded corners
+            onEndReached: () => _loadMoreMessages(),
+          ),
+        ]));
   }
 
   void _addMessage(types.Message message) {

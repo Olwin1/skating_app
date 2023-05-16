@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:skating_app/api/image.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skating_app/swatch.dart';
 
 // Define a widget for sending a post with an image
 class SendPost extends StatefulWidget {
@@ -83,11 +84,23 @@ class _SendPost extends State<SendPost> {
               onPressed: () => sendInfo(),
               child: Text(
                 AppLocalizations.of(context)!.send,
-                style: const TextStyle(color: Color(0xFFDDDDDD)),
+                style: TextStyle(
+                    color: swatch[901],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    letterSpacing: 0.3),
               )) // A button to send the post.
         ],
       ),
-      body: Padding(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: const AssetImage("assets/backgrounds/graffiti.png"),
+              fit: BoxFit.cover,
+              alignment: Alignment.bottomLeft,
+              colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+        ),
         padding: const EdgeInsets.all(48), // Adds padding to the entire body.
         child: Column(
           crossAxisAlignment:

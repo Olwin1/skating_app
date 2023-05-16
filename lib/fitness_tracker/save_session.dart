@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:skating_app/api/session.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skating_app/swatch.dart';
 
 const List<String> sessionType = <String>[
   'Recreational/Fitness Skating',
@@ -99,7 +100,15 @@ class _SaveSession extends State<SaveSession> {
             child: Text(AppLocalizations.of(context)!.saveSession),
           ),
         ),
-        body: Padding(
+        body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: const AssetImage("assets/backgrounds/graffiti.png"),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topRight,
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+            ),
             padding: const EdgeInsets.all(48),
             child: Column(
               crossAxisAlignment:
@@ -112,41 +121,66 @@ class _SaveSession extends State<SaveSession> {
                   // Top 2 elements
                   children: [
                     Container(
-                      color: const Color(0xffcecece),
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                          color: Color.fromARGB(125, 0, 0, 0),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
                       // Distance Traveled Box
                       margin: const EdgeInsets.all(8),
                       child: Column(
                         children: [
-                          Text(AppLocalizations.of(context)!
-                              .distanceTraveled), // Title
                           Text(
-                              "${(widget.distance / 1000).toStringAsFixed(2)}km") // Value
+                            AppLocalizations.of(context)!.distanceTraveled,
+                            style: TextStyle(color: swatch[401]),
+                          ), // Title
+                          Text(
+                              "${(widget.distance / 1000).toStringAsFixed(2)}km",
+                              style: TextStyle(color: swatch[601])) // Value
                         ],
                       ),
                     ),
                     const Spacer(),
                     Container(
-                      color: const Color(0xffcecece),
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                          color: Color.fromARGB(125, 0, 0, 0),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
                       // Session Duration Box
                       margin: const EdgeInsets.all(8),
                       child: Column(
                         children: [
-                          Text(AppLocalizations.of(context)!
-                              .sessionDuration), // Title
-                          Text(widget.endTime
-                              .difference(widget.startTime)
-                              .toString()) // Value
+                          Text(AppLocalizations.of(context)!.sessionDuration,
+                              style: TextStyle(color: swatch[401])), // Title
+                          Text(
+                              widget.endTime
+                                  .difference(widget.startTime)
+                                  .toString(),
+                              style: TextStyle(color: swatch[601])) // Value
                         ],
                       ),
                     )
                   ],
                 ),
                 Container(
-                  color: const Color(0xffcecece),
+                  padding: const EdgeInsets.all(8),
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(125, 0, 0, 0),
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: Column(
                     children: [
-                      Text(AppLocalizations.of(context)!.sessionName),
+                      Text(AppLocalizations.of(context)!.sessionName,
+                          style: TextStyle(color: swatch[401])),
                       TextField(
+                        decoration: InputDecoration(
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: swatch[200]!),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: swatch[401]!),
+                          ),
+                        ),
+                        cursorColor: swatch[601],
+                        style: TextStyle(color: swatch[601]),
                         controller: nameController,
                         autofocus: true,
                       ),
@@ -154,11 +188,25 @@ class _SaveSession extends State<SaveSession> {
                   ),
                 ), // Session Name Infobox
                 Container(
-                  color: const Color(0xffcecece),
+                  padding: const EdgeInsets.all(8),
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(125, 0, 0, 0),
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: Column(
                     children: [
-                      Text(AppLocalizations.of(context)!.sessionDescription),
+                      Text(AppLocalizations.of(context)!.sessionDescription,
+                          style: TextStyle(color: swatch[401])),
                       TextField(
+                        decoration: InputDecoration(
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: swatch[200]!),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: swatch[401]!),
+                          ),
+                        ),
+                        cursorColor: swatch[601],
+                        style: TextStyle(color: swatch[601]),
                         maxLines: 4,
                         minLines: 4,
                         maxLength: 250,
@@ -169,19 +217,27 @@ class _SaveSession extends State<SaveSession> {
                   ),
                 ), // Session Description Infobox
                 const Spacer(), // Add small gap
-                TextButton(
-                    onPressed: () => print("Add photos"),
-                    child: Text(AppLocalizations.of(context)!
-                        .addPhotos)), // Add Photos Infobox
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(125, 0, 0, 0),
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: TextButton(
+                      onPressed: () => print("Add photos"),
+                      child: Text(AppLocalizations.of(context)!.addPhotos)),
+                ), // Add Photos Infobox
                 Container(
                     margin: const EdgeInsets.symmetric(
                       // Add margin
                       vertical: 16,
                     ),
-                    color: const Color(0xffcecece),
+                    decoration: const BoxDecoration(
+                        color: Color.fromARGB(125, 0, 0, 0),
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Column(
                       children: [
-                        Text(AppLocalizations.of(context)!.sessionType),
+                        Text(AppLocalizations.of(context)!.sessionType,
+                            style: TextStyle(color: swatch[401])),
                         SessionType(
                           callback: setType,
                         )
@@ -192,10 +248,13 @@ class _SaveSession extends State<SaveSession> {
                       // Add margin
                       vertical: 16,
                     ),
-                    color: const Color(0xffcecece),
+                    decoration: const BoxDecoration(
+                        color: Color.fromARGB(125, 0, 0, 0),
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Column(
                       children: [
-                        Text(AppLocalizations.of(context)!.shareOptions),
+                        Text(AppLocalizations.of(context)!.shareOptions,
+                            style: TextStyle(color: swatch[401])),
                         ShareOptions(
                           callback: setOptions,
                         )
@@ -206,7 +265,8 @@ class _SaveSession extends State<SaveSession> {
                 ), // Vertically centre Widget with remaining space
                 TextButton(
                   onPressed: () => sendInfo(),
-                  child: Text(AppLocalizations.of(context)!.saveSession),
+                  child: Text(AppLocalizations.of(context)!.saveSession,
+                      style: TextStyle(color: swatch[701])),
                 ), // Save Session Infobox
                 const Spacer(
                   flex: 2,
@@ -243,13 +303,14 @@ class _SessionTypeState extends State<SessionType> {
         elevation: 16,
 
         // Style for the text inside the dropdown button
-        style: const TextStyle(color: Colors.deepPurple),
+        style: TextStyle(color: swatch[701]),
 
         // Style for the line under the dropdown button
         underline: Container(
           height: 2,
-          color: Colors.deepPurpleAccent,
+          color: swatch[200],
         ),
+        dropdownColor: swatch[900],
 
         // Callback function called when an item is selected
         onChanged: (String? value) {
@@ -303,14 +364,14 @@ class _ShareOptionsState extends State<ShareOptions> {
       elevation: 16,
 
       // Style for the text inside the dropdown button
-      style: const TextStyle(color: Colors.deepPurple),
+      style: TextStyle(color: swatch[701]),
 
       // Style for the line under the dropdown button
       underline: Container(
         height: 2,
-        color: Colors.deepPurpleAccent,
+        color: swatch[200],
       ),
-
+      dropdownColor: swatch[900],
       // Callback function called when an item is selected
       onChanged: (String? value) {
         setState(() {

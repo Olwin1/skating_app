@@ -82,7 +82,7 @@ class _MyAppState extends State<MyApp> {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: const MaterialColor(0xffb9b166, swatch),
+        primarySwatch: const MaterialColor(0xff1eb723, swatch),
         fontFamily: "OpenSans",
       ),
       home: loggedIn
@@ -279,8 +279,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 }, // When a button is pressed... output to console
                 style: TabStyle
                     .fixedCircle, // Set the navbar style to have the circle stay at the centre
-                backgroundColor: const Color(0xffcfcfcf),
-                activeColor: const Color(0xffbebebe),
+                backgroundColor: swatch[51],
+                activeColor: swatch[401],
                 //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
                 height: 55,
               ),

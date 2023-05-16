@@ -2,6 +2,7 @@ import 'package:comment_box/comment/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skating_app/social_media/private_messages/comment.dart';
+import 'package:skating_app/swatch.dart';
 
 import '../api/social.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -82,9 +83,9 @@ class _Comments extends State<Comments> {
             commentController.clear();
           }
         },
-        backgroundColor: Colors.pink,
-        textColor: Colors.white,
-        sendWidget: const Icon(Icons.send_sharp, size: 30, color: Colors.white),
+        backgroundColor: swatch[50],
+        textColor: swatch[801],
+        sendWidget: Icon(Icons.send_sharp, size: 30, color: swatch[801]),
         child: CommentsListView(
           // Pass the current post, focus node, and new comments to the CommentsListView widget
           post: widget.post,
@@ -173,24 +174,39 @@ class _CommentsListViewState extends State<CommentsListView> {
     }
 
     // Build a paginated list view of comments using the PagedListView widget
-    return PagedListView<int, Map<String, dynamic>>(
-      pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-        noItemsFoundIndicatorBuilder: (context) => Center(
-          // This is a localized text string that will be displayed when no items are found
-          child: Text(
-            AppLocalizations.of(context)!.noCommentsFound,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-        ),
-        // Use the Comment widget to build each item in the list view
-        itemBuilder: (context, item, index) => Comment(
-          index: index,
-          focus: widget.focus,
-          comment: item,
+    return Stack(children: [
+      Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: const AssetImage("assets/backgrounds/graffiti.png"),
+              fit: BoxFit.cover,
+              alignment: Alignment.bottomRight,
+              colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.5), BlendMode.srcOver)),
         ),
       ),
-    );
+      PagedListView<int, Map<String, dynamic>>(
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+          noItemsFoundIndicatorBuilder: (context) => Center(
+            // This is a localized text string that will be displayed when no items are found
+            child: Text(
+              AppLocalizations.of(context)!.noCommentsFound,
+              style: TextStyle(
+                  color: swatch[201],
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          // Use the Comment widget to build each item in the list view
+          itemBuilder: (context, item, index) => Comment(
+            index: index,
+            focus: widget.focus,
+            comment: item,
+          ),
+        ),
+      )
+    ]);
   }
 
   @override

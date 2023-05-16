@@ -58,7 +58,7 @@
   "@sessionDuration": {
     "description": "Used as a heading for an infobox containing the total session duration"
   },
-  "averageSessionDuration": "Avg. Session Duration",
+  "averageSessionDuration": "Avg. Duration",
   "@averageSessionDuration": {
     "description": "Used as a heading for an infobox containing the average session duration"
   },
@@ -365,6 +365,53 @@
   "requested": "Requested",
   "@requested": {
     "description": "Will be displayed on the follow button if the user has requested to follow"
+  },
+  "oldPassword": "Old Password",
+  "@oldPassword": {
+    "description": "Will be displayed on change password page for old password"
+  },
+  "newPassword": "New Password",
+  "@newPassword": {
+    "description": "Will be displayed on change password page for new password"
+  },
+  "retypePassword": "Retype Password",
+  "@retypePassword": {
+    "description": "Will be displayed on change password page for confirming password"
+  },
+  "changePassword": "Change Password",
+  "@changePassword": {
+    "description": "Will be displayed on change password page for saving change"
+  },
+  "english": "English",
+  "@english": {
+    "description": "Will be displayed as language in language selector"
+  },
+  "polish": "Polish",
+  "@polish": {
+    "description": "Will be displayed as language in language selector"
+  },
+  "german": "German",
+  "@german": {
+    "description": "Will be displayed as language in language selector"
+  },
+  "italian": "Italian",
+  "@italian": {
+    "description": "Will be displayed as language in language selector"
+  },
+  "french": "French",
+  "@french": {
+    "description": "Will be displayed as language in language selector"
+  },
+  "dark": "Dark",
+  "@dark": {
+    "description": "Will be displayed as a theme in theme selector"
+  },
+  "light": "Light",
+  "@light": {
+    "description": "Will be displayed as a theme in theme selector"
+  },
+  "systemDefault": "System Default",
+  "@systemDefault": {
+    "description": "Will be displayed as a theme in theme selector"
   }
-
 }

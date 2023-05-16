@@ -35,6 +35,14 @@ class _PrivateMessageList extends State<PrivateMessageList> {
               )),
         ), // Add a basic app bar
         body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: const AssetImage("assets/backgrounds/graffiti.png"),
+                fit: BoxFit.cover,
+                alignment: Alignment.bottomRight,
+                colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+          ),
           padding:
               const EdgeInsets.all(0), // Add padding so doesn't touch edges
           child: Column(

@@ -1,6 +1,9 @@
 // Importing necessary packages and files
 import 'package:flutter/material.dart';
 
+import '../../swatch.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 // OverlaySettings widget
 
 // Define an enumeration of themes: light, dark, and system default
@@ -33,53 +36,76 @@ class _OverlaySettings extends State<OverlaySettings> {
       // If item is 1, return a container with a form to change the password
       case 1:
         return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: const Color.fromARGB(200, 0, 0, 0),
+            ),
             height: 300,
             width: 250,
             key: const Key("1"),
             padding: const EdgeInsets.all(16),
-            color: const Color(0xffffffff),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text("Old Password"),
-              const TextField(),
-              const Text("New Password"),
-              const TextField(),
-              const Text("Retype Password"),
-              const TextField(),
+              Text(
+                AppLocalizations.of(context)!.oldPassword,
+                style: TextStyle(color: swatch[701]),
+              ),
+              TextField(
+                style: TextStyle(color: swatch[901]),
+                decoration: const InputDecoration(
+                    fillColor: Color.fromARGB(255, 0, 0, 0), filled: true),
+              ),
+              Text(AppLocalizations.of(context)!.newPassword,
+                  style: TextStyle(color: swatch[701])),
+              TextField(
+                style: TextStyle(color: swatch[901]),
+                decoration: const InputDecoration(
+                    fillColor: Color.fromARGB(255, 0, 0, 0), filled: true),
+              ),
+              Text(AppLocalizations.of(context)!.retypePassword,
+                  style: TextStyle(color: swatch[701])),
+              TextField(
+                style: TextStyle(color: swatch[901]),
+                decoration: const InputDecoration(
+                    fillColor: Color.fromARGB(255, 0, 0, 0), filled: true),
+              ),
               TextButton(
                   onPressed: () => print("pressed"),
-                  child: const Text("Change Password")),
+                  child: Text(AppLocalizations.of(context)!.changePassword)),
             ]));
 
       // If item is 2, return a container with a list of languages to choose from
       case 2:
         return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: const Color.fromARGB(200, 0, 0, 0),
+          ),
           height: 300,
           width: 250,
           key: const Key("2"),
-          color: const Color(0xffffffff),
-          child: ListView(padding: const EdgeInsets.all(8), children: const [
+          child: ListView(padding: const EdgeInsets.all(8), children: [
             // Each language is represented by a LanguagePopupItem widget, which displays
             // the language name and its alternative name.
             LanguagePopupItem(
               name: "English",
-              altName: "English",
+              altName: AppLocalizations.of(context)!.english,
             ),
             LanguagePopupItem(
               name: "Polski",
-              altName: "Polish",
+              altName: AppLocalizations.of(context)!.polish,
             ),
             LanguagePopupItem(
               name: "Deutsch",
-              altName: "German",
+              altName: AppLocalizations.of(context)!.german,
             ),
             LanguagePopupItem(
               name: "Italiano",
-              altName: "Italian",
+              altName: AppLocalizations.of(context)!.italian,
             ),
             LanguagePopupItem(
               name: "Français",
-              altName: "French",
+              altName: AppLocalizations.of(context)!.french,
             )
           ]),
         );
@@ -87,14 +113,23 @@ class _OverlaySettings extends State<OverlaySettings> {
       // If item is 3, return a container with a list of radio buttons to select a theme
       case 3:
         return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: const Color.fromARGB(200, 0, 0, 0),
+            ),
             height: 180,
             width: 250,
             key: const Key("3"),
-            color: const Color(0xffffffff),
             child: Column(children: [
               ListTile(
-                title: const Text('Dark'),
+                iconColor: swatch[200],
+                selectedColor: swatch[400],
+                title: Text(
+                  AppLocalizations.of(context)!.dark,
+                  style: TextStyle(color: swatch[501]),
+                ),
                 leading: Radio<Theme?>(
+                  fillColor: const MainColour(),
                   value: Theme.dark,
                   groupValue: _theme,
                   onChanged: (Theme? value) {
@@ -105,8 +140,12 @@ class _OverlaySettings extends State<OverlaySettings> {
                 ),
               ),
               ListTile(
-                title: const Text('Light'),
+                iconColor: swatch[200],
+                selectedColor: swatch[400],
+                title: Text(AppLocalizations.of(context)!.light,
+                    style: TextStyle(color: swatch[501])),
                 leading: Radio<Theme?>(
+                  fillColor: const MainColour(),
                   value: Theme.light,
                   groupValue: _theme,
                   onChanged: (Theme? value) {
@@ -117,8 +156,12 @@ class _OverlaySettings extends State<OverlaySettings> {
                 ),
               ),
               ListTile(
-                title: const Text('System Default'),
+                iconColor: swatch[900],
+                selectedColor: swatch[401],
+                title: Text(AppLocalizations.of(context)!.systemDefault,
+                    style: TextStyle(color: swatch[501])),
                 leading: Radio<Theme?>(
+                  fillColor: const MainColour(),
                   value: Theme.sysDefault,
                   groupValue: _theme,
                   onChanged: (Theme? value) {
@@ -161,13 +204,23 @@ class _LanguagePopupItemState extends State<LanguagePopupItem> {
               children: [
                 Text(
                   widget.name,
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: swatch[50]),
                 ),
                 Text(
                   widget.altName,
-                  style: const TextStyle(fontWeight: FontWeight.w700),
+                  style:
+                      TextStyle(fontWeight: FontWeight.w700, color: swatch[0]),
                 )
               ],
             )));
+  }
+}
+
+class MainColour extends MaterialStateColor {
+  const MainColour() : super(0xffffffff);
+
+  @override
+  Color resolve(Set<MaterialState> states) {
+    return swatch[301]!;
   }
 }

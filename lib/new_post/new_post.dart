@@ -146,30 +146,41 @@ class _NewPostPage extends State<NewPostPage> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // A container that displays the selected image
-              SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: EditPost(
-                    selected: selected,
-                    selectedImage: _selectedImage!,
-                    callback: callback,
-                  )),
-              const Spacer(),
-              // A layout builder that displays a grid of images from the photo gallery
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  // Determines the width and height of each grid item based on the constraints
-                  return SizedBox(
-                      height: MediaQuery.of(context).size.height -
-                          MediaQuery.of(context).size.width -
-                          180,
-                      child: PhotosGridView(
-                        update: _update,
-                      ));
-                },
+          : Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: const AssetImage("assets/backgrounds/graffiti.png"),
+                    fit: BoxFit.cover,
+                    alignment: Alignment.bottomLeft,
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.5), BlendMode.srcOver)),
               ),
-            ]),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // A container that displays the selected image
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: EditPost(
+                          selected: selected,
+                          selectedImage: _selectedImage!,
+                          callback: callback,
+                        )),
+                    const Spacer(),
+                    // A layout builder that displays a grid of images from the photo gallery
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        // Determines the width and height of each grid item based on the constraints
+                        return SizedBox(
+                            height: MediaQuery.of(context).size.height -
+                                MediaQuery.of(context).size.width -
+                                180,
+                            child: PhotosGridView(
+                              update: _update,
+                            ));
+                      },
+                    ),
+                  ])),
     );
   }
 }

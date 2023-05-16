@@ -86,7 +86,7 @@ class _DistanceTravelled extends State<DistanceTravelled> {
           (value) => {stream = null, print("asaaaaaa")},
         );
     previousPosition = null;
-    return Text("0 Km", style: TextStyle(color: swatch[700]));
+    return Text("0 Km", style: TextStyle(color: swatch[401]));
   }
 
   @override
@@ -119,6 +119,9 @@ class _DistanceTravelledText extends State<DistanceTravelledText> {
 
   @override
   Widget build(BuildContext context) {
-    return Text("${dp(widget.totalDistance / 1000, 2)} Km");
+    return Text(
+      "${dp(widget.totalDistance / 1000, 2)} Km",
+      style: TextStyle(color: swatch[401]),
+    );
   }
 }

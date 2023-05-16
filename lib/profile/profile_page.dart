@@ -69,125 +69,124 @@ class _Profile extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Create appBar widget
-        title: Text(user?["username"] ??
-            AppLocalizations.of(context)!.username), // Set title
-        actions: widget.userId == "0"
-            ? const [
-                // Define icon buttons
-                OptionsMenu()
-              ]
-            : null,
-      ),
-      // Basic list layout element
-      body: ListView(shrinkWrap: true, children: [
-        // Row to display the number of friends, followers, and following
-        Row(children: [
-          // Circle avatar
-          Padding(
-            padding: const EdgeInsets.all(8), // Add padding
-            child: user?["avatar"] == null
-                ? const CircleAvatar(
-                    // Create a circular avatar icon
-                    radius: 36, // Set radius to 36
-                    backgroundImage: AssetImage(
-                        "assets/placeholders/default.png"), // Set avatar to placeholder images
-                  )
-                : CachedNetworkImage(
-                    imageUrl: '${Config.uri}/image/${user!["avatar"]}',
-                    imageBuilder: (context, imageProvider) => Container(
-                      height: 72,
-                      width: 72,
-                      decoration: BoxDecoration(
-                        shape: BoxShape
-                            .circle, // Set the shape of the container to a circle
-                        image: DecorationImage(
-                            image: imageProvider, fit: BoxFit.cover),
-                      ),
-                    ),
-                    httpHeaders: const {"thumbnail": "true"},
-                  ),
+        appBar: AppBar(
+          // Create appBar widget
+          title: Text(user?["username"] ??
+              AppLocalizations.of(context)!.username), // Set title
+          actions: widget.userId == "0"
+              ? const [
+                  // Define icon buttons
+                  OptionsMenu()
+                ]
+              : null,
+        ),
+        // Basic list layout element
+        body: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: const AssetImage("assets/backgrounds/graffiti.png"),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.bottomLeft,
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+            ),
           ),
-          const Spacer(),
-          // Column to display the number of friends
+          ListView(shrinkWrap: true, children: [
+            // Row to display the number of friends, followers, and following
+            Row(children: [
+              // Circle avatar
+              Padding(
+                padding: const EdgeInsets.all(8), // Add padding
+                child: user?["avatar"] == null
+                    ? const CircleAvatar(
+                        // Create a circular avatar icon
+                        radius: 36, // Set radius to 36
+                        backgroundImage: AssetImage(
+                            "assets/placeholders/default.png"), // Set avatar to placeholder images
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: '${Config.uri}/image/${user!["avatar"]}',
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: 72,
+                          width: 72,
+                          decoration: BoxDecoration(
+                            shape: BoxShape
+                                .circle, // Set the shape of the container to a circle
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
+                          ),
+                        ),
+                        httpHeaders: const {"thumbnail": "true"},
+                      ),
+              ),
+              // Column to display the number of friends
 
-          Column(children: [
-            Text((user?["friends_count"] ?? 0).toString(),
-                style: TextStyle(color: swatch[600])),
-            Text(AppLocalizations.of(context)!.friends,
-                style: TextStyle(color: swatch[700]))
+              ConnectionLists(
+                user: user,
+              ),
+            ]),
+            // Display the user's name
+            Container(
+              margin: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(125, 0, 0, 0),
+                  borderRadius: BorderRadius.circular(8)),
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                  user?["username"] ?? AppLocalizations.of(context)!.username,
+                  style: TextStyle(color: swatch[601])),
+            ),
+            // Display the user's bio
+            Container(
+              margin: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(125, 0, 0, 0),
+                  borderRadius: BorderRadius.circular(8)),
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                  textAlign: TextAlign.justify,
+                  (user?["description"] ?? "").toString(),
+                  style: TextStyle(color: swatch[801])),
+            ),
+            // Row with two text buttons
+            Row(children: [
+              // First text button
+              Expanded(
+                  // Expand button to empty space
+                  child: FollowButton(user: widget.userId)), // Button text
+              // Second text button
+              Expanded(
+                  child: Container(
+                margin: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(2),
+                decoration: const BoxDecoration(
+                    color: Color.fromARGB(125, 0, 0, 0),
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
+                child: TextButton(
+                    // Expand button to empty space
+                    onPressed: () => print(
+                        "pressed"), // Prints "pressed" when button is pressed
+                    child: Text(AppLocalizations.of(context)!.shareProfile,
+                        style: TextStyle(color: swatch[401]))),
+              )), // Button text
+              Container(
+                  margin: const EdgeInsets.all(4),
+                  padding: const EdgeInsets.all(2),
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(125, 0, 0, 0),
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: TextButton(
+                      onPressed: () => print("pressed"),
+                      child: Icon(
+                        Icons.precision_manufacturing_outlined,
+                        color: swatch[401],
+                      )))
+            ]),
+            // Expanded grid view with images
+            UserPostsList(user: user)
           ]),
-          // Column to display the number of followers
-          const Spacer(),
-
-          GestureDetector(
-              onTap: () => Navigator.push(
-                  // Send to edit profile page
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const Lists(index: 0))),
-              child: Column(children: [
-                Text((user?["followers_count"] ?? 0).toString(),
-                    style: TextStyle(color: swatch[600])),
-                Text(AppLocalizations.of(context)!.followers,
-                    style: TextStyle(color: swatch[700]))
-              ])),
-          // Column to display the number of following
-          const Spacer(),
-
-          GestureDetector(
-              onTap: () => Navigator.push(
-                  // Send to edit profile page
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const Lists(index: 1))),
-              child: Column(children: [
-                Text((user?["following_count"] ?? 0).toString(),
-                    style: TextStyle(color: swatch[600])),
-                Text(AppLocalizations.of(context)!.following,
-                    style: TextStyle(color: swatch[700]))
-              ])),
-          const Spacer(),
-        ]),
-        // Display the user's name
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Text(
-              user?["username"] ?? AppLocalizations.of(context)!.username,
-              style: TextStyle(color: swatch[800])),
-        ),
-        // Display the user's bio
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Text(
-              textAlign: TextAlign.justify,
-              (user?["description"] ?? "").toString(),
-              style: TextStyle(color: swatch[600])),
-        ),
-        // Row with two text buttons
-        Row(children: [
-          // First text button
-          Expanded(
-              // Expand button to empty space
-              child: FollowButton(user: widget.userId)), // Button text
-          // Second text button
-          Expanded(
-            child: TextButton(
-                // Expand button to empty space
-                onPressed: () =>
-                    print("pressed"), // Prints "pressed" when button is pressed
-                child: Text(AppLocalizations.of(context)!.shareProfile,
-                    style: TextStyle(color: swatch[400]))),
-          ), // Button text
-          TextButton(
-              onPressed: () => print("pressed"),
-              child: const Icon(Icons.precision_manufacturing_outlined))
-        ]),
-        // Expanded grid view with images
-        UserPostsList(user: user)
-      ]),
-    );
+        ]));
   }
 }
 
@@ -203,6 +202,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<SampleItem>(
+      color: swatch[500],
       // Offset to set the position of the menu relative to the button
       offset: const Offset(0, 64),
       // Callback function that will be called when a menu item is selected
@@ -235,7 +235,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
           value: SampleItem.itemOne,
           // Text widget that displays the text for the menu item
           child: Text(AppLocalizations.of(context)!.editProfile,
-              style: TextStyle(color: swatch[800])),
+              style: TextStyle(color: swatch[801])),
         ),
         // Second menu item
         PopupMenuItem<SampleItem>(
@@ -243,7 +243,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
           value: SampleItem.itemTwo,
           // Text widget that displays the text for the menu item
           child: Text(AppLocalizations.of(context)!.settings,
-              style: TextStyle(color: swatch[800])),
+              style: TextStyle(color: swatch[801])),
         ),
         // Third menu item
         PopupMenuItem<SampleItem>(
@@ -251,7 +251,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
           value: SampleItem.itemThree,
           // Text widget that displays the text for the menu item
           child: Text(AppLocalizations.of(context)!.saved,
-              style: TextStyle(color: swatch[800])),
+              style: TextStyle(color: swatch[801])),
         ),
       ],
     );
@@ -268,9 +268,17 @@ Widget _createGridTileWidget(Map<String, dynamic> post) => Builder(
         },
         //onLongPressEnd: (details) => _popupDialog?.remove(),
         child: CachedNetworkImage(
-            imageUrl: '${Config.uri}/image/${post["image"]}',
-            httpHeaders: const {"thumbnail": "true"},
-            fit: BoxFit.cover), // Display the image from the URL
+          imageUrl: '${Config.uri}/image/${post["image"]}',
+          httpHeaders: const {"thumbnail": "true"},
+          fit: BoxFit.cover,
+          imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                  8), // Set the shape of the container to a circle
+              image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
+            ),
+          ),
+        ), // Display the image from the URL
       ),
     );
 
@@ -364,5 +372,61 @@ class _UserPostsListState extends State<UserPostsList> {
       print(e);
     }
     super.dispose();
+  }
+}
+
+class ConnectionLists extends StatelessWidget {
+  final Map<String, dynamic>? user;
+
+  const ConnectionLists({super.key, this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+                color: const Color.fromARGB(125, 0, 0, 0),
+                borderRadius: BorderRadius.circular(8)),
+            child: Row(children: [
+              const Spacer(),
+              Column(children: [
+                Text((user?["friends_count"] ?? 0).toString(),
+                    style: TextStyle(color: swatch[601])),
+                Text(AppLocalizations.of(context)!.friends,
+                    style: TextStyle(color: swatch[701]))
+              ]),
+              // Column to display the number of followers
+              const Spacer(),
+
+              GestureDetector(
+                  onTap: () => Navigator.push(
+                      // Send to edit profile page
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Lists(index: 0))),
+                  child: Column(children: [
+                    Text((user?["followers_count"] ?? 0).toString(),
+                        style: TextStyle(color: swatch[601])),
+                    Text(AppLocalizations.of(context)!.followers,
+                        style: TextStyle(color: swatch[701]))
+                  ])),
+              // Column to display the number of following
+              const Spacer(),
+
+              GestureDetector(
+                  onTap: () => Navigator.push(
+                      // Send to edit profile page
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Lists(index: 1))),
+                  child: Column(children: [
+                    Text((user?["following_count"] ?? 0).toString(),
+                        style: TextStyle(color: swatch[601])),
+                    Text(AppLocalizations.of(context)!.following,
+                        style: TextStyle(color: swatch[701]))
+                  ])),
+              const Spacer(),
+            ])));
   }
 }

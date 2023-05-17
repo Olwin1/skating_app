@@ -62,7 +62,6 @@ class _PostWidget extends State<PostWidget> {
     return Container(
       height: 314,
       padding: const EdgeInsets.all(0), // Add padding so doesn't touch edges
-      color: const Color(0xFFFFE306),
       margin: const EdgeInsets.only(
           bottom: 24), // For testing to highlight seperations
       child: Row(
@@ -82,6 +81,15 @@ class _PostWidget extends State<PostWidget> {
                       color: Color(0xffcecece),
                     )),
               ),
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      bottomLeft: Radius.circular(8)),
+                  image:
+                      DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                ),
+              ),
               errorWidget: (context, url, error) => const Icon(Icons.error),
               fit: BoxFit.contain,
             ), // Set child to post image
@@ -95,6 +103,9 @@ class _PostWidget extends State<PostWidget> {
                     // Set background image of container to image
                     image: AssetImage("assets/backgrounds/post_background.png"),
                     fit: BoxFit.cover), // Cover whole container
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(8),
+                    bottomRight: Radius.circular(8)),
               ),
               child: Column(
                   // Buttons below

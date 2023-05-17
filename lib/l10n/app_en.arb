@@ -50,7 +50,7 @@
   "@send": {
     "description": "May be used in place of the send icon in messages or send password recovery emails"
   },
-  "distanceTraveled": "Distance Traveled",
+  "distanceTraveled": "Distance Travelled",
   "@distanceTraveled": {
     "description": "Used as a heading for an infobox containing the total distance a user has traveled"
   },
@@ -298,11 +298,11 @@
   "@forgotPassword": {
     "description": "Used as text for a password recovery function"
   },
-  "forgotPasswordDesc": "Enter the email or phone number associated with your account and we will send an introductions to reset your password.'",
+  "forgotPasswordDesc": "Enter the email associated with your account and we will send an introductions to reset your password.",
   "@forgotPasswordDesc": {
     "description": "Used as description telling user what to do to recover their password"
   },
-  "loginConfirmCode": "Enter the 6 digit code sent to you at ******.'",
+  "loginConfirmCode": "Enter the 6 digit code sent to you at ******.",
   "@loginConfirmCode": {
     "description": "Used as desc for user auth confirmation"
   },

@@ -42,9 +42,9 @@ class _Comments extends State<Comments> {
         leadingWidth: 48,
         centerTitle: false,
         title: Title(
-          title: "Comments",
+          title: AppLocalizations.of(context)!.commentsTitle,
           color: const Color(0xFFDDDDDD),
-          child: const Text("Comments"),
+          child: Text(AppLocalizations.of(context)!.commentsTitle),
         ),
       ),
       body: CommentBox(

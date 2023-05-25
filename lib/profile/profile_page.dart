@@ -62,7 +62,9 @@ class _Profile extends State<Profile> {
   Map<String, dynamic>? user;
   @override
   void initState() {
-    getUserCache(widget.userId).then((value) => {setState(() => user = value)});
+    getUserCache(widget.userId).then((value) => {
+          if (mounted) {setState(() => user = value)}
+        });
     super.initState();
   }
 
@@ -315,10 +317,10 @@ class _UserPostsListState extends State<UserPostsList> {
       // Determine if this is the last page of posts
       final isLastPage = page.length < _pageSize;
 
-      if (isLastPage) {
+      if (isLastPage && mounted) {
         // If this is the last page of posts, append it to the PagingController as the final page
         _pagingController.appendLastPage(page);
-      } else {
+      } else if (mounted) {
         // If there are more pages of posts, append the current page to the PagingController
         // and specify the key for the next page
         final nextPageKey = pageKey += 1;

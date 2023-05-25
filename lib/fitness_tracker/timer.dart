@@ -27,7 +27,7 @@ class ClockWidget extends StatelessWidget {
             '${diff.inHours}:${(diff.inMinutes % 60).toString().padLeft(2, "0")}:${(diff.inSeconds % 60).toString().padLeft(2, '0')}';
       }
       // Return a Text widget displaying the calculated time.
-      return Text(time, style: TextStyle(color: swatch[700]));
+      return Text(time, style: TextStyle(color: swatch[401]));
     });
   }
 }

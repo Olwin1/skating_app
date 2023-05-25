@@ -21,23 +21,33 @@ class _PostWidget extends State<PostWidget> {
   bool liked = false;
   handleLikePressed() {
     if (liked) {
-      unlikePost(widget.post["_id"]).then((value) => {
-            if (mounted && liked)
-              {
-                setState(
-                  () => liked = false,
-                )
-              }
-          });
+      // If already liked, unlike the post
+      setState(
+        () => liked = false,
+      );
+      try {
+        unlikePost(widget
+            .post["_id"]); // Call the unlikePost function with the post ID
+      } catch (e) {
+        // If an error occurs while unliking, revert the liked state back to true
+        setState(
+          () => liked = true,
+        );
+      }
     } else {
-      likePost(widget.post["_id"]).then((value) => {
-            if (mounted && !liked)
-              {
-                setState(
-                  () => liked = true,
-                )
-              }
-          });
+      // If not liked, like the post
+      setState(
+        () => liked = true,
+      );
+      try {
+        likePost(
+            widget.post["_id"]); // Call the likePost function with the post ID
+      } catch (e) {
+        // If an error occurs while liking, revert the liked state back to false
+        setState(
+          () => liked = false,
+        );
+      }
     }
   }
 

@@ -49,15 +49,18 @@ class HomePage extends StatelessWidget {
                     "assets/icons/message.png")) // Set Button To Message icon
           ],
         ),
-        body: const Center(child: PostsListView()));
+        body: Center(
+            child: PostsListView(
+          scrollController: _scrollController,
+        )));
   }
 }
 
 class PostsListView extends StatefulWidget {
-  const PostsListView({
-    super.key,
-  }); //required this.update});
+  const PostsListView(
+      {super.key, required this.scrollController}); //required this.update});
   //final ValueChanged<String> update;
+  final ScrollController scrollController;
 
   @override
   State<PostsListView> createState() => _PostsListViewState();
@@ -134,6 +137,7 @@ class _PostsListViewState extends State<PostsListView> {
         ),
         PagedListView<int, Object>(
           pagingController: _pagingController,
+          scrollController: widget.scrollController,
           // builderDelegate is responsible for creating the actual widgets to be displayed
           builderDelegate: PagedChildBuilderDelegate<Object>(
               noItemsFoundIndicatorBuilder: (context) => Center(
@@ -163,3 +167,13 @@ class _PostsListViewState extends State<PostsListView> {
     super.dispose();
   }
 }
+
+
+/*
+Nearby skateparks
+gen areas
+scout hut opposite
+
+
+
+*/

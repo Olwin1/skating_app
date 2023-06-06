@@ -51,6 +51,7 @@ class _OverlaySettings extends State<OverlaySettings> {
                 style: TextStyle(color: swatch[701]),
               ),
               TextField(
+                maxLength: 100,
                 style: TextStyle(color: swatch[901]),
                 decoration: const InputDecoration(
                     fillColor: Color.fromARGB(255, 0, 0, 0), filled: true),
@@ -58,6 +59,7 @@ class _OverlaySettings extends State<OverlaySettings> {
               Text(AppLocalizations.of(context)!.newPassword,
                   style: TextStyle(color: swatch[701])),
               TextField(
+                maxLength: 100,
                 style: TextStyle(color: swatch[901]),
                 decoration: const InputDecoration(
                     fillColor: Color.fromARGB(255, 0, 0, 0), filled: true),
@@ -65,6 +67,7 @@ class _OverlaySettings extends State<OverlaySettings> {
               Text(AppLocalizations.of(context)!.retypePassword,
                   style: TextStyle(color: swatch[701])),
               TextField(
+                maxLength: 100,
                 style: TextStyle(color: swatch[901]),
                 decoration: const InputDecoration(
                     fillColor: Color.fromARGB(255, 0, 0, 0), filled: true),

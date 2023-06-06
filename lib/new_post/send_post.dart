@@ -114,6 +114,7 @@ class _SendPost extends State<SendPost> {
                   Text(AppLocalizations.of(context)!
                       .postDescription), // The label for the text field.
                   TextField(
+                    maxLength: 350,
                     controller:
                         descriptionController, // The controller for the text field.
                     autofocus:

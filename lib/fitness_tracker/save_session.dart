@@ -171,6 +171,7 @@ class _SaveSession extends State<SaveSession> {
                       Text(AppLocalizations.of(context)!.sessionName,
                           style: TextStyle(color: swatch[401])),
                       TextField(
+                        maxLength: 100,
                         decoration: InputDecoration(
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: swatch[200]!),
@@ -209,7 +210,7 @@ class _SaveSession extends State<SaveSession> {
                         style: TextStyle(color: swatch[601]),
                         maxLines: 4,
                         minLines: 4,
-                        maxLength: 250,
+                        maxLength: 350,
                         controller: descriptionController,
                         autofocus: true,
                       ),

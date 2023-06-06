@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:skating_app/swatch.dart';
@@ -16,6 +17,55 @@ class EditProfile extends StatefulWidget {
 
 // Define the state for the EditProfile widget
 class _EditProfile extends State<EditProfile> {
+  TextEditingController displayNameController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+  TextEditingController aboutMeController = TextEditingController();
+
+  showCountries() {
+    // Show the country picker dialog
+    showCountryPicker(
+      context: context, // The current build context
+      useSafeArea:
+          true, // Ensure the picker is displayed within the safe area of the screen
+      onSelect: (Country country) {
+        // Callback function when a country is selected
+        print('Select country: ${country.displayName}');
+        countryController.text = country.name;
+      },
+      countryListTheme: CountryListThemeData(
+        inputDecoration: InputDecoration(
+          filled: true,
+          fillColor: swatch[800], // Set the fill color of the input field
+          focusColor:
+              swatch[401], // Set the color when the input field is focused
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+                color: swatch[
+                    200]!), // Set the border color when the input field is enabled
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+                color: swatch[
+                    201]!), // Set the border color when the input field is focused
+          ),
+        ),
+        searchTextStyle:
+            TextStyle(color: swatch[701]), // Set the color of the search text
+        padding: const EdgeInsets.only(
+            top: 16,
+            left: 16,
+            right: 16), // Set the padding of the country list
+        margin: const EdgeInsets.only(
+            top: 16, left: 16, right: 16), // Set the margin of the country list
+        backgroundColor: const Color(
+            0xae000000), // Set the background color of the country list
+        textStyle: TextStyle(
+            color: swatch[801]), // Set the text color of the country names
+      ),
+    );
+  }
+
   @override
   // Build the UI for the EditProfile widget
   Widget build(BuildContext context) {
@@ -42,7 +92,7 @@ class _EditProfile extends State<EditProfile> {
           ),
           Container(
             padding: const EdgeInsets.all(16),
-            child: Column(children: [
+            child: ListView(children: [
               // First column with an avatar and an edit picture button
               Column(
                 children: [
@@ -76,6 +126,7 @@ class _EditProfile extends State<EditProfile> {
                               style: TextStyle(color: swatch[601])),
                         ),
                         TextField(
+                          maxLength: 30,
                           decoration: InputDecoration(
                             enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: swatch[200]!),
@@ -101,6 +152,7 @@ class _EditProfile extends State<EditProfile> {
                               style: TextStyle(color: swatch[601])),
                         ),
                         TextField(
+                          maxLength: 30,
                           // Remove default padding
                           decoration: InputDecoration(
                             enabledBorder: UnderlineInputBorder(
@@ -125,6 +177,11 @@ class _EditProfile extends State<EditProfile> {
                               style: TextStyle(color: swatch[601])),
                         ),
                         TextField(
+                          onTap: () => showCountries(),
+                          controller: countryController,
+
+                          readOnly: true,
+                          maxLength: 56,
                           // Remove default padding
                           decoration: InputDecoration(
                             enabledBorder: UnderlineInputBorder(
@@ -151,6 +208,8 @@ class _EditProfile extends State<EditProfile> {
                           ),
                         ),
                         TextField(
+                          maxLines: 5,
+                          maxLength: 150,
                           // Remove default padding
                           decoration: InputDecoration(
                             enabledBorder: UnderlineInputBorder(
@@ -169,5 +228,10 @@ class _EditProfile extends State<EditProfile> {
             ]),
           ),
         ]));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

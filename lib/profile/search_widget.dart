@@ -17,6 +17,7 @@ class _UserListWidget extends State<UserListWidget> {
   Widget build(BuildContext context) {
     // Return a TextField widget with an InputDecoration.
     return const TextField(
+      maxLength: 400,
       decoration:
           InputDecoration(isDense: true, contentPadding: EdgeInsets.zero),
     );

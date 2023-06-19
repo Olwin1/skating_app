@@ -69,7 +69,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
         child: userCache == null || userCache!["avatar"] == null
             // If there is no cached user information or avatar image, use a default image
             ? CircleAvatar(
-                radius: 36, // Set the radius of the circular avatar image
+                radius: 32, // Set the radius of the circular avatar image
                 child: ClipOval(
                   child: Image.asset("assets/placeholders/default.png"),
                 ),

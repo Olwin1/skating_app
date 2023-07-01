@@ -5,6 +5,7 @@ import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/profile_page.dart';
 import 'package:skating_app/swatch.dart';
 import 'package:skating_app/test.dart';
+import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
 import 'comments.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../api/config.dart';
@@ -61,27 +62,38 @@ class _PostWidget extends State<PostWidget> {
           // Add Post image to one row and buttons to another
           Expanded(
             flex: 5,
-            child: CachedNetworkImage(
-              imageUrl: "${Config.uri}/image/${widget.post['image']}",
-              placeholder: (context, url) => const Center(
-                child: SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      color: Color(0xffcecece),
-                    )),
-              ),
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      bottomLeft: Radius.circular(8)),
-                  image:
-                      DecorationImage(image: imageProvider, fit: BoxFit.cover),
+            child: ZoomOverlay(
+              modalBarrierColor: Colors.black12, // Optional
+              minScale: 0.5, // Optional
+              maxScale: 3.0, // Optional
+              animationCurve: Curves
+                  .fastOutSlowIn, // Defaults to fastOutSlowIn which mimics IOS instagram behavior
+              animationDuration: const Duration(
+                  milliseconds:
+                      600), // Defaults to 100 Milliseconds. Recommended duration is 300 milliseconds for Curves.fastOutSlowIn
+              twoTouchOnly: true, // Defaults to false
+              child: CachedNetworkImage(
+                imageUrl: "${Config.uri}/image/${widget.post['image']}",
+                placeholder: (context, url) => const Center(
+                  child: SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        color: Color(0xffcecece),
+                      )),
                 ),
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        bottomLeft: Radius.circular(8)),
+                    image: DecorationImage(
+                        image: imageProvider, fit: BoxFit.cover),
+                  ),
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                fit: BoxFit.contain,
               ),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
-              fit: BoxFit.contain,
             ), // Set child to post image
           ),
           Expanded(
@@ -105,7 +117,7 @@ class _PostWidget extends State<PostWidget> {
                         LikeButton(
                           isLiked: widget.post["liked"],
                           onTap: (isLiked) => handleLikePressed(isLiked),
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.only(bottom: 0, top: 18),
                           countPostion: CountPostion.bottom,
                           size: 32.0,
                           circleColor: CircleColor(

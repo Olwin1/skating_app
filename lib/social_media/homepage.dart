@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skating_app/social_media/private_messages/private_message_list.dart';
 import 'post_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -16,23 +17,31 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           //systemOverlayStyle:
           //    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-          leading: TextButton(
-            // Create a basic button
 
-            child: const Image(
-              // Set button to an image
-              image: AssetImage("assets/placeholders/320x114.png"),
-            ),
-            onPressed: () {
-              // When image pressed
-              _scrollController.animateTo(0, //Scroll to top in 500ms
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves
-                      .fastOutSlowIn); //Start scrolling fast then slow down when near top
-            },
-          ),
-          title: const Text("Home"),
+          //title: const Text("Home"),
           actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: TextButton(
+                // Create a basic button
+
+                child: SvgPicture.asset(
+                  "assets/icons/patinka.svg",
+                  fit: BoxFit.fitHeight,
+                  alignment: Alignment.centerLeft,
+                  colorFilter: const ColorFilter.mode(
+                      Color.fromARGB(255, 116, 0, 81), BlendMode.srcIn),
+                ), //#FF8360,
+
+                onPressed: () {
+                  // When image pressed
+                  _scrollController.animateTo(0, //Scroll to top in 500ms
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves
+                          .fastOutSlowIn); //Start scrolling fast then slow down when near top
+                },
+              ),
+            ),
             const Spacer(
               // Move button to far right of screen
               flex: 1,

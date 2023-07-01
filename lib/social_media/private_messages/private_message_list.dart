@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:uuid/uuid.dart';
 import '../../api/websocket.dart';
 import '../../swatch.dart';
 import 'list_widget.dart';
@@ -24,6 +25,15 @@ class PrivateMessageList extends StatefulWidget {
 }
 
 class _PrivateMessageList extends State<PrivateMessageList> {
+  String? currentUser;
+
+  @override
+  void initState() {
+    getUserId().then(
+        (value) => setState(() => currentUser = value ?? const Uuid().v1()));
+    super.initState();
+  }
+
   @override // Override existing build method
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,10 +56,14 @@ class _PrivateMessageList extends State<PrivateMessageList> {
           padding:
               const EdgeInsets.all(0), // Add padding so doesn't touch edges
           child: Column(
-            children: const [
+            children: [
               Expanded(
                   // Make list view expandable
-                  child: ChannelsListView()),
+                  child: currentUser == null
+                      ? Container()
+                      : ChannelsListView(
+                          currentUser: currentUser!,
+                        )),
             ],
           ),
         ));
@@ -57,7 +71,8 @@ class _PrivateMessageList extends State<PrivateMessageList> {
 }
 
 class ChannelsListView extends StatefulWidget {
-  const ChannelsListView({super.key});
+  const ChannelsListView({super.key, required this.currentUser});
+  final String currentUser;
 
   @override
   State<ChannelsListView> createState() => _ChannelsListViewState();
@@ -168,7 +183,8 @@ class _ChannelsListViewState extends State<ChannelsListView> {
               userId: title[index],
               index: index,
               channel: channel[index],
-              desc: channelsData[item["_id"]]), //item id
+              desc: channelsData[item["_id"]],
+              currentUser: widget.currentUser), //item id
         ),
       );
 

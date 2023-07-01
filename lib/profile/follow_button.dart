@@ -7,9 +7,10 @@ import 'edit_profile.dart';
 
 class FollowButton extends StatefulWidget {
   final String user;
+  final Map<String, dynamic>? userObj;
 
   // Constructor that takes a `key` and a required `user` parameter
-  const FollowButton({super.key, required this.user});
+  const FollowButton({super.key, required this.user, required this.userObj});
 
   // Overrides the `createState` method and returns an instance of `_FollowButtonState`
   @override
@@ -67,8 +68,12 @@ class _FollowButtonState extends State<FollowButton> {
       }
     } else {
       // If the user is editing their profile, navigate to the `EditProfile` screen
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const EditProfile()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => EditProfile(
+                    user: widget.userObj,
+                  )));
     }
   }
 

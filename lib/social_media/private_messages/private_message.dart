@@ -20,11 +20,16 @@ GetIt getIt = GetIt.instance;
 class PrivateMessage extends StatefulWidget {
   // Constructor takes an index and a channel as arguments
   const PrivateMessage(
-      {Key? key, required this.index, required this.channel, this.user})
+      {Key? key,
+      required this.index,
+      required this.channel,
+      this.user,
+      required this.currentUser})
       : super(key: key);
   final int index;
   final String channel;
   final Map<String, dynamic>? user;
+  final String currentUser;
 
   // Create and return a state for the widget
   @override
@@ -41,7 +46,6 @@ class _PrivateMessage extends State<PrivateMessage> {
   bool loading = false;
   // Initialize a stream subscription
   late StreamSubscription subscription;
-  final _user = const types.User(id: "82091008-a484-4a89-ae75-a22bf8d6f3ac");
 
   @override
   void initState() {
@@ -56,14 +60,16 @@ class _PrivateMessage extends State<PrivateMessage> {
         .listen((data) => {updateMessages(data)});
   }
 
-  List<types.User> users = [types.User(id: const Uuid().v1())];
-  types.User getUser(String user) {
+  List<types.User> users = [];
+  types.User getUser(String userId, String username) {
     for (var i = 0; i < users.length; i++) {
-      if (users[i].id == user) {
+      if (users[i].id == userId) {
+        print(users[i]);
         return users[i];
       }
     }
-    var newUser = types.User(id: user);
+    print("crweated");
+    var newUser = types.User(id: userId, firstName: username);
     users.add(newUser);
     return newUser;
   }
@@ -78,7 +84,7 @@ class _PrivateMessage extends State<PrivateMessage> {
         _messages.insert(
             0,
             types.TextMessage(
-              author: getUser(data["sender"]),
+              author: getUser(data["sender"], "ss"),
               createdAt: DateTime.now().millisecondsSinceEpoch,
               id: const Uuid().v1(),
               text: data["content"],
@@ -100,10 +106,10 @@ class _PrivateMessage extends State<PrivateMessage> {
       dynamic message = messagesRaw[i];
       messages.add(types.TextMessage(
         // Create new message
-        author: getUser(message["sender"]), // Set author of message
+        author: getUser(message["sender"], "ss"), // Set author of message
         createdAt: DateTime.parse(message["date_sent"])
             .millisecondsSinceEpoch, // Get time
-        id: const Uuid().v1(), // Generate random debug user id
+        id: message["_id"], // Generate random debug user id
         text: message["content"], // Set message content
       ));
     }
@@ -123,9 +129,9 @@ class _PrivateMessage extends State<PrivateMessage> {
       dynamic message = messagesRaw[i];
       messages.add(types.TextMessage(
         // Create new message
-        author: getUser(message["sender"]), // Set author of message
+        author: getUser(message["sender"], "ss"), // Set author of message
         createdAt: DateTime.now().millisecondsSinceEpoch, // Get time
-        id: const Uuid().v1(), // Generate random debug user id
+        id: message["_id"], // Generate random debug user id
         text: message["content"], // Set message content
       ));
     }
@@ -220,15 +226,27 @@ class _PrivateMessage extends State<PrivateMessage> {
             ),
           ),
           Chat(
+            nameBuilder: (String name) {
+              return Text(name);
+            },
             l10n: locale, // Set locale
             // Create basic chat widget
             messages:
                 _messages, // Set messages to message variable defined above
             onSendPressed: _handleSendPressed,
-            user: _user, // Set user to user id
+            onMessageTap: (context, p1) {
+              print("eeeeeadss  ${p1.author.id}");
+            },
+            user: getUser(widget.currentUser, "s"), // Set user to user id
             theme: DefaultChatTheme(
+                primaryColor: swatch[301]!,
+                sentMessageBodyTextStyle: TextStyle(
+                    color: swatch[800]!,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    height: 1.5),
                 backgroundColor: Colors.transparent, //swatch[501]!,
-                secondaryColor: swatch[301]!,
+                secondaryColor: swatch[50]!,
                 inputBackgroundColor: swatch[51]!,
                 inputTextColor: swatch[800]!,
                 dateDividerTextStyle: TextStyle(
@@ -257,7 +275,7 @@ class _PrivateMessage extends State<PrivateMessage> {
       // Define handleSendPressed function
       final textMessage = types.TextMessage(
         // Create new message
-        author: _user, // Set author of message
+        author: getUser(widget.currentUser, "s"), // Set author of message
         createdAt: DateTime.now().millisecondsSinceEpoch, // Get time
         id: const Uuid().v1(), // Generate random debug user id
         text: message.text, // Set message content

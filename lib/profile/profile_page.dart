@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:provider/provider.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:skating_app/objects/user.dart';
@@ -76,9 +77,11 @@ class _Profile extends State<Profile> {
           title: Text(user?["username"] ??
               AppLocalizations.of(context)!.username), // Set title
           actions: widget.userId == "0"
-              ? const [
+              ? [
                   // Define icon buttons
-                  OptionsMenu()
+                  OptionsMenu(
+                    user: user,
+                  )
                 ]
               : null,
         ),
@@ -156,7 +159,10 @@ class _Profile extends State<Profile> {
               // First text button
               Expanded(
                   // Expand button to empty space
-                  child: FollowButton(user: widget.userId)), // Button text
+                  child: FollowButton(
+                user: widget.userId,
+                userObj: user,
+              )), // Button text
               // Second text button
               Expanded(
                   child: Container(
@@ -193,8 +199,10 @@ class _Profile extends State<Profile> {
 }
 
 class OptionsMenu extends StatefulWidget {
+  final Map<String, dynamic>? user;
+
   // StatefulWidget that defines an options menu
-  const OptionsMenu({super.key});
+  const OptionsMenu({super.key, required this.user});
 
   @override
   State<OptionsMenu> createState() => _OptionsMenuState();
@@ -216,7 +224,10 @@ class _OptionsMenuState extends State<OptionsMenu> {
           Navigator.push(
               // Send to edit profile page
               context,
-              MaterialPageRoute(builder: (context) => const EditProfile()));
+              MaterialPageRoute(
+                  builder: (context) => EditProfile(
+                        user: widget.user,
+                      )));
         }
         if (item == SampleItem.itemTwo) {
           // If item pressed is Settings
@@ -263,25 +274,27 @@ class _OptionsMenuState extends State<OptionsMenu> {
 // Creates a grid tile widget from an image URL
 Widget _createGridTileWidget(Map<String, dynamic> post) => Builder(
       builder: (context) => GestureDetector(
-        onLongPress: () {
-          // Code for long press event
-          // _popupDialog = _createPopupDialog(url);
-          //Overlay.of(context).insert(_popupDialog);
-        },
-        //onLongPressEnd: (details) => _popupDialog?.remove(),
-        child: CachedNetworkImage(
-          imageUrl: '${Config.uri}/image/${post["image"]}',
-          httpHeaders: const {"thumbnail": "true"},
-          fit: BoxFit.cover,
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                  8), // Set the shape of the container to a circle
-              image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
-            ),
-          ),
-        ), // Display the image from the URL
-      ),
+          onLongPress: () {
+            // Code for long press event
+            // _popupDialog = _createPopupDialog(url);
+            //Overlay.of(context).insert(_popupDialog);
+          },
+          //onLongPressEnd: (details) => _popupDialog?.remove(),
+          child: InstaImageViewer(
+            child: CachedNetworkImage(
+              imageUrl: '${Config.uri}/image/${post["image"]}',
+              httpHeaders: const {"thumbnail": "true"},
+              fit: BoxFit.cover,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                      8), // Set the shape of the container to a circle
+                  image: DecorationImage(
+                      image: imageProvider, fit: BoxFit.contain),
+                ),
+              ),
+            ), // Display the image from the URL
+          )),
     );
 
 class UserPostsList extends StatefulWidget {

@@ -1,13 +1,18 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:skating_app/swatch.dart';
 
+import '../api/config.dart';
+
 // Define the EditProfile widget which extends StatefulWidget
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key}) : super(key: key);
+  final Map<String, dynamic>? user;
+
+  const EditProfile({Key? key, required this.user}) : super(key: key);
   // title is a required parameter
 
   @override
@@ -21,6 +26,13 @@ class _EditProfile extends State<EditProfile> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController countryController = TextEditingController();
   TextEditingController aboutMeController = TextEditingController();
+  @override
+  void initState() {
+    displayNameController.value =
+        TextEditingValue(text: widget.user?["username"]);
+
+    super.initState();
+  }
 
   showCountries() {
     // Show the country picker dialog
@@ -97,10 +109,28 @@ class _EditProfile extends State<EditProfile> {
               Column(
                 children: [
                   // Display the avatar
-                  const CircleAvatar(
-                    radius: 36,
-                    backgroundImage: AssetImage("assets/placeholders/150.png"),
-                  ),
+                  widget.user?["avatar"] == null
+                      ? const CircleAvatar(
+                          // Create a circular avatar icon
+                          radius: 36, // Set radius to 36
+                          backgroundImage: AssetImage(
+                              "assets/placeholders/default.png"), // Set avatar to placeholder images
+                        )
+                      : CachedNetworkImage(
+                          imageUrl:
+                              '${Config.uri}/image/${widget.user!["avatar"]}',
+                          imageBuilder: (context, imageProvider) => Container(
+                            height: 72,
+                            width: 72,
+                            decoration: BoxDecoration(
+                              shape: BoxShape
+                                  .circle, // Set the shape of the container to a circle
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                          httpHeaders: const {"thumbnail": "true"},
+                        ),
                   // Display the edit picture button
                   TextButton(
                       onPressed: () => print("pressed"),
@@ -126,6 +156,7 @@ class _EditProfile extends State<EditProfile> {
                               style: TextStyle(color: swatch[601])),
                         ),
                         TextField(
+                          controller: displayNameController,
                           maxLength: 30,
                           decoration: InputDecoration(
                             enabledBorder: UnderlineInputBorder(
@@ -152,6 +183,7 @@ class _EditProfile extends State<EditProfile> {
                               style: TextStyle(color: swatch[601])),
                         ),
                         TextField(
+                          controller: usernameController,
                           maxLength: 30,
                           // Remove default padding
                           decoration: InputDecoration(
@@ -208,6 +240,7 @@ class _EditProfile extends State<EditProfile> {
                           ),
                         ),
                         TextField(
+                          controller: aboutMeController,
                           maxLines: 5,
                           maxLength: 150,
                           // Remove default padding

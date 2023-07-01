@@ -12,12 +12,15 @@ class ListWidget extends StatefulWidget {
       required this.userId,
       required this.index,
       required this.channel,
-      required this.desc})
+      required this.desc,
+      required this.currentUser})
       : super(key: key); // Take 2 arguments optional key and title of post
   final int index; // Define title argument
   final String userId; // Define title argument
   final String channel; // Define title argument
   final String desc; // Define title argument
+  final String currentUser;
+
   @override
   State<ListWidget> createState() => _ListWidget(); //Create state for widget
 }
@@ -27,9 +30,11 @@ class _ListWidget extends State<ListWidget> {
   @override
   void initState() {
     getUserCache(widget.userId).then((value) => {
-          setState(
-            () => user = value,
-          )
+          mounted
+              ? setState(
+                  () => user = value,
+                )
+              : null
         });
     super.initState();
   }
@@ -55,10 +60,11 @@ class _ListWidget extends State<ListWidget> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => PrivateMessage(
-                        // Add private message page to top of navigation stack
-                        index: 1,
-                        channel: widget.channel,
-                        user: user))), //When list widget clicked
+                          // Add private message page to top of navigation stack
+                          index: 1,
+                          channel: widget.channel,
+                          user: user, currentUser: widget.currentUser,
+                        ))), //When list widget clicked
             child: Row(
               // Create a row
               crossAxisAlignment: CrossAxisAlignment.center,

@@ -107,18 +107,36 @@ class _SendPost extends State<SendPost> {
               CrossAxisAlignment.start, // Aligns the children to the left.
           children: [
             Container(
-              color: const Color(
-                  0xffcecece), // Sets the background color of the container.
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: const Color(
+                    0xaa000000), // Sets the background color of the container.
+              ),
+              margin: const EdgeInsets.all(8),
               child: Column(
                 children: [
-                  Text(AppLocalizations.of(context)!
-                      .postDescription), // The label for the text field.
+                  Container(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      AppLocalizations.of(context)!.postDescription,
+                      style: TextStyle(color: swatch[601]),
+                    ),
+                  ),
                   TextField(
-                    maxLength: 350,
-                    controller:
-                        descriptionController, // The controller for the text field.
-                    autofocus:
-                        false, // The text field doesn't automatically get focus when the page is opened.
+                    controller: descriptionController,
+                    maxLines: 5,
+                    maxLength: 150,
+                    // Remove default padding
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: swatch[200]!),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: swatch[401]!),
+                      ),
+                    ),
+                    cursorColor: swatch[601],
+                    style: TextStyle(color: swatch[601]),
                   ),
                 ],
               ),

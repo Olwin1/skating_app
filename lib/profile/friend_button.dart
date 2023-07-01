@@ -5,19 +5,20 @@ import 'package:skating_app/api/connections.dart';
 import '../swatch.dart';
 import 'edit_profile.dart';
 
-// Define a new StatelessWidget called FollowButton
-class FollowButton extends StatefulWidget {
+// Define a new StatelessWidget called FriendButton
+class FriendButton extends StatefulWidget {
   final String user;
+  final Map<String, dynamic>? userObj;
 
-  // Constructor for FollowButton, which calls the constructor for its superclass (StatelessWidget)
-  const FollowButton({super.key, required this.user});
+  // Constructor for FriendButton, which calls the constructor for its superclass (StatelessWidget)
+  const FriendButton({super.key, required this.user, required this.userObj});
 
   @override
-  State<FollowButton> createState() => _FollowButtonState();
+  State<FriendButton> createState() => _FriendButtonState();
 }
 
-// Define a State class for the FollowButton widget
-class _FollowButtonState extends State<FollowButton> {
+// Define a State class for the FriendButton widget
+class _FriendButtonState extends State<FriendButton> {
   // Initialize the default type of the button as "follow"
   String type = "follow";
 
@@ -73,8 +74,10 @@ class _FollowButtonState extends State<FollowButton> {
           });
     } else {
       // Navigate to the EditProfile page if no user is specified
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const EditProfile()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => EditProfile(user: widget.userObj)));
     }
   }
 

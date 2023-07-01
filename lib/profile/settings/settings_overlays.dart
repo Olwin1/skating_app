@@ -36,16 +36,14 @@ class _OverlaySettings extends State<OverlaySettings> {
       // If item is 1, return a container with a form to change the password
       case 1:
         return Container(
+            margin: EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: const Color.fromARGB(200, 0, 0, 0),
             ),
-            height: 300,
-            width: 250,
             key: const Key("1"),
             padding: const EdgeInsets.all(16),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child: Wrap(children: [
               Text(
                 AppLocalizations.of(context)!.oldPassword,
                 style: TextStyle(color: swatch[701]),

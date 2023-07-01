@@ -12,7 +12,8 @@ export 'package:skating_app/api/messages.dart'
         getMessage,
         getMessages,
         getChannels,
-        getChannel;
+        getChannel,
+        getUserId;
 
 // Creating an instance of SecureStorage class
 SecureStorage storage = SecureStorage();
@@ -45,6 +46,10 @@ Future<Object> postChannel(List<String> participants) async {
     // If there is any error, throw an exception with the error message
     throw Exception("Error during post: $e");
   }
+}
+
+Future<String?> getUserId() async {
+  return await storage.getId();
 }
 
 // Function to send a message to a channel

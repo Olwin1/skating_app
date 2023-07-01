@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:like_button/like_button.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/profile_page.dart';
+import 'package:skating_app/swatch.dart';
 import 'package:skating_app/test.dart';
 import 'comments.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,56 +20,34 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidget extends State<PostWidget> {
-  bool liked = false;
-  handleLikePressed() {
-    if (liked) {
+  //bool liked = false;
+  Future<bool> handleLikePressed(bool isLiked) async {
+    if (isLiked) {
       // If already liked, unlike the post
-      setState(
-        () => liked = false,
-      );
       try {
-        unlikePost(widget
+        await unlikePost(widget
             .post["_id"]); // Call the unlikePost function with the post ID
+        return true;
       } catch (e) {
         // If an error occurs while unliking, revert the liked state back to true
-        setState(
-          () => liked = true,
-        );
+        return false;
       }
     } else {
       // If not liked, like the post
-      setState(
-        () => liked = true,
-      );
       try {
-        likePost(
+        await likePost(
             widget.post["_id"]); // Call the likePost function with the post ID
+        return true;
       } catch (e) {
+        return false;
         // If an error occurs while liking, revert the liked state back to false
-        setState(
-          () => liked = false,
-        );
       }
     }
   }
 
-  @override
-  void initState() {
-    liked = widget.post["liked"];
-    print("liked post is $liked");
-
-    // TODO: implement initState
-    super.initState();
-  }
-
   @override // Override existing build method
   Widget build(BuildContext context) {
-    //Post post = widget.user.getPosts()[widget.index];
     print("${Config.uri}/image/${widget.post['image']}");
-    String likes = (liked
-            ? (widget.post['like_count'] + 1 ?? 1)
-            : (widget.post['like_count'] ?? 0))
-        .toString();
     String comments = (widget.post['comment_count'] ?? 0).toString();
     return Container(
       height: 314,
@@ -122,22 +102,50 @@ class _PostWidget extends State<PostWidget> {
                   children: [
                     Column(
                       children: [
-                        ListTile(
-                            title: IconButton(
-                              // Create Like Button
-                              onPressed: () => handleLikePressed(),
-                              icon: const Icon(
-                                Icons.thumb_up,
-                                color: Color(0xffcfcfcf),
-                              ),
-                              padding: const EdgeInsets.only(top: 16),
-                              constraints: const BoxConstraints(),
-                            ),
-                            subtitle: Text(
-                              likes,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: Color(0xffcfcfcf)),
-                            )),
+                        LikeButton(
+                          isLiked: widget.post["liked"],
+                          onTap: (isLiked) => handleLikePressed(isLiked),
+                          padding: const EdgeInsets.all(8),
+                          countPostion: CountPostion.bottom,
+                          size: 32.0,
+                          circleColor: CircleColor(
+                              start: swatch[401]!, end: swatch[201]!),
+                          bubblesColor: BubblesColor(
+                            dotPrimaryColor: swatch[101]!,
+                            dotSecondaryColor: swatch[201]!,
+                          ),
+                          likeBuilder: (bool isLiked) {
+                            return Icon(
+                              Icons.thumb_up_alt,
+                              color: isLiked
+                                  ? swatch[501]
+                                  : const Color(0xffcfcfcf),
+                              size: 32.0,
+                            );
+                          },
+                          likeCount: widget.post['like_count'],
+                          countBuilder:
+                              (int? count, bool isLiked, String text) {
+                            var color =
+                                isLiked ? swatch[501] : const Color(0xffcfcfcf);
+                            Widget result;
+                            if (count == 0) {
+                              result = Center(
+                                  child: Text(
+                                "Like",
+                                style: TextStyle(color: color),
+                              ));
+                            } else {
+                              result = Center(
+                                  child: Text(
+                                text,
+                                style: TextStyle(color: color),
+                                textAlign: TextAlign.center,
+                              ));
+                            }
+                            return result;
+                          },
+                        ),
                         ListTile(
                             title: IconButton(
                               // Create Comment Button

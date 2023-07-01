@@ -277,7 +277,7 @@ class _FitnessTracker extends State<FitnessTracker> {
                           : AppLocalizations.of(context)!.start;
                       stoppedTracking = !stoppedTracking;
                     }),
-                    if (!active)
+                    if (!active && initialPosition != null)
                       {
                         Navigator.of(context, rootNavigator: true).push(
                             // Root navigator hides navbar

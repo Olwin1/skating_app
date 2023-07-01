@@ -120,45 +120,59 @@ class _SaveSession extends State<SaveSession> {
                       MainAxisAlignment.center, // Center Children
                   // Top 2 elements
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: const BoxDecoration(
-                          color: Color.fromARGB(125, 0, 0, 0),
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      // Distance Traveled Box
-                      margin: const EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.distanceTraveled,
-                            style: TextStyle(color: swatch[401]),
-                          ), // Title
-                          Text(
-                              "${(widget.distance / 1000).toStringAsFixed(2)}km",
-                              style: TextStyle(color: swatch[601])) // Value
-                        ],
+                    Flexible(
+                      flex: 16,
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: const BoxDecoration(
+                            color: Color.fromARGB(125, 0, 0, 0),
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        // Distance Traveled Box
+                        margin: const EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.distanceTraveled,
+                              style: TextStyle(color: swatch[401]),
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                            ), // Title
+                            Text(
+                                "${(widget.distance / 1000).toStringAsFixed(2)}km",
+                                style: TextStyle(color: swatch[601])) // Value
+                          ],
+                        ),
                       ),
                     ),
                     const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: const BoxDecoration(
-                          color: Color.fromARGB(125, 0, 0, 0),
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      // Session Duration Box
-                      margin: const EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Text(AppLocalizations.of(context)!.sessionDuration,
-                              style: TextStyle(color: swatch[401])), // Title
-                          Text(
-                              widget.endTime
-                                  .difference(widget.startTime)
-                                  .toString(),
-                              style: TextStyle(color: swatch[601])) // Value
-                        ],
-                      ),
-                    )
+                    Flexible(
+                        flex: 16,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(
+                              color: Color.fromARGB(125, 0, 0, 0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8))),
+                          // Session Duration Box
+                          margin: const EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.sessionDuration,
+                                style: TextStyle(color: swatch[401]),
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                              ), // Title
+
+                              Text(
+                                  widget.endTime
+                                      .difference(widget.startTime)
+                                      .toString()
+                                      .substring(0, 8),
+                                  style: TextStyle(color: swatch[601])) // Value
+                            ],
+                          ),
+                        ))
                   ],
                 ),
                 Container(

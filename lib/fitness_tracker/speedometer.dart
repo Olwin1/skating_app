@@ -73,7 +73,7 @@ class _SpeedometerPage extends State<SpeedometerPage> {
         ),
         padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
         child: KdGaugeView(
-          baseGaugeColor: Colors.black87,
+          //baseGaugeColor: Colors.black87,
           speedTextStyle: TextStyle(
               color: swatch[401], fontSize: 60, fontWeight: FontWeight.bold),
           unitOfMeasurementTextStyle: TextStyle(
@@ -85,10 +85,11 @@ class _SpeedometerPage extends State<SpeedometerPage> {
           animate: true,
           unitOfMeasurement: "Km/h",
           fractionDigits: 2,
-          activeGaugeColor: swatch[900]!, //Color.fromARGB(255, 197, 213, 26),
+          activeGaugeColor: swatch[600]!, //Color.fromARGB(255, 197, 213, 26),
           subDivisionCircleColors: const Color.fromARGB(255, 13, 141, 13),
           divisionCircleColors: const Color.fromARGB(255, 13, 141, 13),
-          activeGaugeGradientColor: activeGradient,
+          inactiveGaugeColor: Colors.lightBlue,
+          //activeGaugeGradientColor: activeGradient,
         ),
       ),
     );

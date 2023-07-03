@@ -36,7 +36,7 @@ class _OverlaySettings extends State<OverlaySettings> {
       // If item is 1, return a container with a form to change the password
       case 1:
         return Container(
-            margin: EdgeInsets.all(16),
+            margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: const Color.fromARGB(200, 0, 0, 0),

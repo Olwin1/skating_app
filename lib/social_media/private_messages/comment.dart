@@ -1,6 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skating_app/objects/user.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
+import '../../api/config.dart';
 import '../../swatch.dart';
 
 class Comment extends StatefulWidget {
@@ -17,11 +21,23 @@ class Comment extends StatefulWidget {
 }
 
 class _Comment extends State<Comment> {
+  Map<String, dynamic>? user;
+  @override
+  void initState() {
+    getUserCache(widget.comment["sender"]).then((value) => mounted
+        ? setState(
+            () => user = value,
+          )
+        : null);
+    super.initState();
+  }
+
   @override // Override existing build method
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        border: Border(top: BorderSide(color: swatch[401]!)),
+        //borderRadius: BorderRadius.circular(8),
         color: const Color.fromARGB(125, 0, 0, 0),
       ),
       padding: const EdgeInsets.all(4), // Add padding so doesn't touch edges
@@ -30,21 +46,45 @@ class _Comment extends State<Comment> {
         // Make list widget clickable
         onLongPress: () => print("longPress"), //When list widget clicked
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           // Create Row
           children: [
-            const Padding(
-              padding: EdgeInsets.only(
-                // Only give right of avatar padding
-                right: 8,
-              ),
-              child: CircleAvatar(
-                //Put avatar on left
-                // Create a circular avatar icon
-                radius: 25, //Set radius to 20
-                backgroundImage: AssetImage(
-                    "assets/placeholders/150.png"), // Set avatar to placeholder images
-              ),
-            ),
+            Padding(
+                padding: const EdgeInsets.only(
+                  // Only give right of avatar padding
+                  right: 8,
+                ),
+                child: user == null || user!["avatar"] == null
+                    // If there is no cached user information or avatar image, use a default image
+                    ? CircleAvatar(
+                        radius:
+                            25, // Set the radius of the circular avatar image
+                        child: ClipOval(
+                          child: Image.asset("assets/placeholders/default.png"),
+                        ),
+                      )
+                    // If there is cached user information and an avatar image, use the cached image
+                    : CachedNetworkImage(
+                        imageUrl:
+                            '${Config.uri}/image/thumbnail/${user!["avatar"]}',
+                        placeholder: (context, url) => CircleAvatar(
+                              radius:
+                                  25, // Set the radius of the circular avatar image
+                              child: ClipOval(
+                                child: Image.asset(
+                                    "assets/placeholders/default.png"),
+                              ),
+                            ),
+                        imageBuilder: (context, imageProvider) => Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                shape: BoxShape
+                                    .circle, // Set the shape of the container to a circle
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
+                              ),
+                            ))),
             Expanded(
                 // Expanded Widget Wrapper
                 flex: 2,
@@ -52,18 +92,28 @@ class _Comment extends State<Comment> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   // Put rest on right
                   children: [
-                    Row(
+                    RichText(
                       // Create top row
-                      children: [
-                        Text(widget.comment["sender"], // User's Display Name
-                            style: TextStyle(color: swatch[101])), // Set colour
-                        Text(
-                          DateTime.parse(widget.comment["date"])
-                              .millisecondsSinceEpoch
-                              .toString(), //Time since sent
-                          style: TextStyle(color: swatch[501]), // Set colour
-                        )
-                      ],
+                      text: TextSpan(
+                        children: <InlineSpan>[
+                          TextSpan(
+                              text: user != null
+                                  ? user!["username"]
+                                  : "", // User's Display Name
+                              style:
+                                  TextStyle(color: swatch[101])), // Set colour
+                          const WidgetSpan(
+                              alignment: PlaceholderAlignment.baseline,
+                              baseline: TextBaseline.alphabetic,
+                              child: SizedBox(width: 6)),
+                          TextSpan(
+                            text: timeago
+                                .format(DateTime.parse(widget.comment["date"]))
+                                .toString(), //Time since sent
+                            style: TextStyle(color: swatch[501]), // Set colour
+                          )
+                        ],
+                      ),
                     ),
                     Text(
                       widget.comment["content"],

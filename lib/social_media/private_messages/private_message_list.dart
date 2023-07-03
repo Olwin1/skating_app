@@ -9,6 +9,7 @@ import 'list_widget.dart';
 import '../../api/messages.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 // Initialize GetIt for dependency injection
 GetIt getIt = GetIt.instance;
@@ -183,7 +184,8 @@ class _ChannelsListViewState extends State<ChannelsListView> {
               userId: title[index],
               index: index,
               channel: channel[index],
-              desc: channelsData[item["_id"]],
+              desc:
+                  "Last Message: ${timeago.format(DateTime.parse(channelsData[item['_id']]))}",
               currentUser: widget.currentUser), //item id
         ),
       );

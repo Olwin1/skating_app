@@ -81,6 +81,9 @@ class _PostWidget extends State<PostWidget> {
     String comments = (widget.post['comment_count'] ?? 0).toString();
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Container(
+        color: widget.post["description"] != null
+            ? const Color(0xcc000000)
+            : Colors.transparent,
         height: 314,
         padding: const EdgeInsets.all(0), // Add padding so doesn't touch edges
 
@@ -287,8 +290,7 @@ class _Avatar extends State<Avatar> {
               )
             // If there is cached user information and an avatar image, use the cached image
             : CachedNetworkImage(
-                imageUrl: '${Config.uri}/image/$image',
-                httpHeaders: const {"thumbnail": "a"},
+                imageUrl: '${Config.uri}/image/thumbnail/$image',
                 placeholder: (context, url) => CircleAvatar(
                       radius: 36, // Set the radius of the circular avatar image
                       child: ClipOval(
@@ -321,9 +323,11 @@ class _CaptionWrapper extends State<CaptionWrapper> {
   String? username;
   @override
   void initState() {
-    getUserCache(widget.post["author"]).then((user) => setState(
-          () => username = user["username"],
-        ));
+    getUserCache(widget.post["author"]).then((user) => mounted
+        ? setState(
+            () => username = user["username"],
+          )
+        : null);
 
     super.initState();
   }

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay/flutter_overlay.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:provider/provider.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:skating_app/objects/user.dart';
@@ -18,6 +18,8 @@ import '../swatch.dart';
 
 // Define item type for popup menu
 enum SampleItem { itemOne, itemTwo, itemThree }
+
+String? currentImage;
 
 // Define a new StatelessWidget called ProfilePage
 class ProfilePage extends StatelessWidget {
@@ -60,6 +62,40 @@ class Profile extends StatefulWidget {
 
 // The state class for the ProfilePage widget
 class _Profile extends State<Profile> {
+  void _show() {
+    HiOverlay.show(
+      context,
+      child: _dialog(),
+    ).then((value) {
+      print('---received:');
+    });
+  }
+
+  _dialog() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context, 'close');
+      },
+      child: currentImage != null
+          ? Container(
+              color: const Color(0x55000000),
+              padding: const EdgeInsets.all(4),
+              child: CachedNetworkImage(
+                imageUrl: '${Config.uri}/image/$currentImage',
+                //fit: BoxFit.cover,
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                        8), // Set the shape of the container to a circle
+                    image: DecorationImage(
+                        image: imageProvider, fit: BoxFit.contain),
+                  ),
+                ),
+              ))
+          : const SizedBox.shrink(),
+    );
+  }
+
   Map<String, dynamic>? user;
   @override
   void initState() {
@@ -192,7 +228,7 @@ class _Profile extends State<Profile> {
                       )))
             ]),
             // Expanded grid view with images
-            UserPostsList(user: user)
+            UserPostsList(user: user, imageViewerController: _show)
           ]),
         ]));
   }
@@ -272,7 +308,9 @@ class _OptionsMenuState extends State<OptionsMenu> {
 }
 
 // Creates a grid tile widget from an image URL
-Widget _createGridTileWidget(Map<String, dynamic> post) => Builder(
+Widget _createGridTileWidget(
+        Map<String, dynamic> post, dynamic imageViewerController) =>
+    Builder(
       builder: (context) => GestureDetector(
           onLongPress: () {
             // Code for long press event
@@ -280,10 +318,11 @@ Widget _createGridTileWidget(Map<String, dynamic> post) => Builder(
             //Overlay.of(context).insert(_popupDialog);
           },
           //onLongPressEnd: (details) => _popupDialog?.remove(),
-          child: InstaImageViewer(
+          child: GestureDetector(
+            onTap: () =>
+                {currentImage = post["image"], imageViewerController()},
             child: CachedNetworkImage(
-              imageUrl: '${Config.uri}/image/${post["image"]}',
-              httpHeaders: const {"thumbnail": "true"},
+              imageUrl: '${Config.uri}/image/thumbnail/${post["image"]}',
               fit: BoxFit.cover,
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
@@ -299,7 +338,10 @@ Widget _createGridTileWidget(Map<String, dynamic> post) => Builder(
 
 class UserPostsList extends StatefulWidget {
   final Map<String, dynamic>? user;
-  const UserPostsList({super.key, required this.user});
+
+  final dynamic imageViewerController;
+  const UserPostsList(
+      {super.key, required this.user, required this.imageViewerController});
 
   @override
   State<UserPostsList> createState() => _UserPostsListState();
@@ -372,7 +414,7 @@ class _UserPostsListState extends State<UserPostsList> {
               ),
               // Specify how to build each grid tile
               itemBuilder: (context, item, index) =>
-                  _createGridTileWidget(item),
+                  _createGridTileWidget(item, widget.imageViewerController),
             ),
           )
         : const SizedBox.shrink();

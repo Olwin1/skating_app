@@ -189,8 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             // If there is cached user information and an avatar image, use the cached image
             : CachedNetworkImage(
-                imageUrl: '${Config.uri}/image/$avatar',
-                httpHeaders: const {"thumbnail": "true"},
+                imageUrl: '${Config.uri}/image/thumbnail/$avatar',
                 placeholder: (context, url) => CircleAvatar(
                   // Set the radius of the circular avatar image
                   child: ClipOval(

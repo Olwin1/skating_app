@@ -118,7 +118,7 @@ class _EditProfile extends State<EditProfile> {
                         )
                       : CachedNetworkImage(
                           imageUrl:
-                              '${Config.uri}/image/${widget.user!["avatar"]}',
+                              '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',
                           imageBuilder: (context, imageProvider) => Container(
                             height: 72,
                             width: 72,
@@ -129,7 +129,6 @@ class _EditProfile extends State<EditProfile> {
                                   image: imageProvider, fit: BoxFit.cover),
                             ),
                           ),
-                          httpHeaders: const {"thumbnail": "true"},
                         ),
                   // Display the edit picture button
                   TextButton(

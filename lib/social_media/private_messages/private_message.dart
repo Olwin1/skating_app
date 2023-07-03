@@ -171,8 +171,8 @@ class _PrivateMessage extends State<PrivateMessage> {
                 CachedNetworkImage(
                     height: 40,
                     width: 40,
-                    imageUrl: '${Config.uri}/image/${widget.user!["avatar"]}',
-                    httpHeaders: const {"thumbnail": "true"},
+                    imageUrl:
+                        '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',
                     placeholder: (context, url) => CircleAvatar(
                           // Set the radius of the circular avatar image
                           child: ClipOval(

@@ -145,6 +145,7 @@ class _PostsListViewState extends State<PostsListView> {
           ),
         ),
         PagedListView<int, Object>(
+          cacheExtent: 1024,
           pagingController: _pagingController,
           scrollController: widget.scrollController,
           // builderDelegate is responsible for creating the actual widgets to be displayed

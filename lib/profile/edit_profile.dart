@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/swatch.dart';
 
 import '../api/config.dart';
@@ -110,12 +111,16 @@ class _EditProfile extends State<EditProfile> {
                 children: [
                   // Display the avatar
                   widget.user?["avatar"] == null
-                      ? const CircleAvatar(
-                          // Create a circular avatar icon
-                          radius: 36, // Set radius to 36
-                          backgroundImage: AssetImage(
-                              "assets/placeholders/default.png"), // Set avatar to placeholder images
-                        )
+                      ? Shimmer.fromColors(
+                          baseColor: const Color(0x66000000),
+                          highlightColor: const Color(0xff444444),
+                          child: CircleAvatar(
+                            // Create a circular avatar icon
+                            radius: 36, // Set radius to 36
+                            backgroundColor: swatch[900]!,
+                            // backgroundImage: AssetImage(
+                            //     "assets/placeholders/default.png"), // Set avatar to placeholder images
+                          ))
                       : CachedNetworkImage(
                           imageUrl:
                               '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',

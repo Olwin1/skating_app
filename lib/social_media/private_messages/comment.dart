@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -67,14 +68,16 @@ class _Comment extends State<Comment> {
                     : CachedNetworkImage(
                         imageUrl:
                             '${Config.uri}/image/thumbnail/${user!["avatar"]}',
-                        placeholder: (context, url) => CircleAvatar(
-                              radius:
-                                  25, // Set the radius of the circular avatar image
-                              child: ClipOval(
-                                child: Image.asset(
-                                    "assets/placeholders/default.png"),
-                              ),
-                            ),
+                        placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: const Color(0x66000000),
+                            highlightColor: const Color(0xff444444),
+                            child: CircleAvatar(
+                              // Create a circular avatar icon
+                              radius: 25, // Set radius to 36
+                              backgroundColor: swatch[900]!,
+                              // backgroundImage: AssetImage(
+                              //     "assets/placeholders/default.png"), // Set avatar to placeholder images
+                            )),
                         imageBuilder: (context, imageProvider) => Container(
                               width: 50,
                               height: 50,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/websocket.dart';
 import 'package:uuid/uuid.dart';
 import '../../api/config.dart';
@@ -60,6 +61,52 @@ class _PrivateMessage extends State<PrivateMessage> {
         .listen((data) => {updateMessages(data)});
   }
 
+  Widget _messagesSkeleton() {
+    Widget child(bool lalign, double width) {
+      return Shimmer.fromColors(
+          baseColor: const Color(0x66000000),
+          highlightColor: const Color(0xff444444),
+          child: Container(
+              width: 100,
+              padding: const EdgeInsets.only(top: 8),
+              child: Align(
+                  alignment:
+                      lalign ? Alignment.centerLeft : Alignment.centerRight,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Color(0xb5000000),
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    height: 42,
+                    width: width,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 8), // Add padding so doesn't touch edges
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8), // Add padding so doesn't touch edges
+                  ))));
+    }
+
+    return SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: ListView(
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            child(true, 100),
+            child(false, 150),
+            child(true, 100),
+            child(false, 100),
+            child(true, 250),
+            child(false, 100),
+            child(true, 80),
+            child(false, 100),
+            child(true, 300),
+            child(false, 100),
+            child(true, 200),
+            child(false, 100),
+          ],
+        ));
+  }
+
   List<types.User> users = [];
   types.User getUser(String userId, String username) {
     for (var i = 0; i < users.length; i++) {
@@ -113,11 +160,13 @@ class _PrivateMessage extends State<PrivateMessage> {
         text: message["content"], // Set message content
       ));
     }
-    setState(() {
-      _messages.addAll(messages);
-      _page++;
-      loading = false;
-    });
+    mounted
+        ? setState(() {
+            _messages.addAll(messages);
+            _page++;
+            loading = false;
+          })
+        : null;
   }
 
   Future<void> _loadMoreMessages() async {
@@ -173,13 +222,16 @@ class _PrivateMessage extends State<PrivateMessage> {
                     width: 40,
                     imageUrl:
                         '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',
-                    placeholder: (context, url) => CircleAvatar(
-                          // Set the radius of the circular avatar image
-                          child: ClipOval(
-                            child:
-                                Image.asset("assets/placeholders/default.png"),
-                          ),
-                        ),
+                    placeholder: (context, url) => Shimmer.fromColors(
+                        baseColor: const Color(0x66000000),
+                        highlightColor: const Color(0xff444444),
+                        child: CircleAvatar(
+                          // Create a circular avatar icon
+                          radius: 36, // Set radius to 36
+                          backgroundColor: swatch[900]!,
+                          // backgroundImage: AssetImage(
+                          //     "assets/placeholders/default.png"), // Set avatar to placeholder images
+                        )),
                     imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                             shape: BoxShape
@@ -225,41 +277,45 @@ class _PrivateMessage extends State<PrivateMessage> {
                       Colors.black.withOpacity(0.5), BlendMode.srcOver)),
             ),
           ),
-          Chat(
-            nameBuilder: (String name) {
-              return Text(name);
-            },
-            l10n: locale, // Set locale
-            // Create basic chat widget
-            messages:
-                _messages, // Set messages to message variable defined above
-            onSendPressed: _handleSendPressed,
-            onMessageTap: (context, p1) {
-              print("eeeeeadss  ${p1.author.id}");
-            },
-            user: getUser(widget.currentUser, "s"), // Set user to user id
-            theme: DefaultChatTheme(
-                primaryColor: swatch[301]!,
-                sentMessageBodyTextStyle: TextStyle(
-                    color: swatch[800]!,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    height: 1.5),
-                backgroundColor: Colors.transparent, //swatch[501]!,
-                secondaryColor: swatch[50]!,
-                inputBackgroundColor: swatch[51]!,
-                inputTextColor: swatch[800]!,
-                dateDividerTextStyle: TextStyle(
-                    color: swatch[701],
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                    height: 1.333),
-                inputMargin: const EdgeInsets.only(
-                    left: 8, right: 8, bottom: 8), // Add margins to text input
-                inputBorderRadius: const BorderRadius.all(
-                    Radius.circular(24))), // Make input rounded corners
-            onEndReached: () => _loadMoreMessages(),
-          ),
+          loading
+              ? _messagesSkeleton()
+              : Chat(
+                  nameBuilder: (String name) {
+                    return Text(name);
+                  },
+                  l10n: locale, // Set locale
+                  // Create basic chat widget
+                  messages:
+                      _messages, // Set messages to message variable defined above
+                  onSendPressed: _handleSendPressed,
+                  onMessageTap: (context, p1) {
+                    print("eeeeeadss  ${p1.author.id}");
+                  },
+                  user: getUser(widget.currentUser, "s"), // Set user to user id
+                  theme: DefaultChatTheme(
+                      primaryColor: swatch[301]!,
+                      sentMessageBodyTextStyle: TextStyle(
+                          color: swatch[800]!,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5),
+                      backgroundColor: Colors.transparent, //swatch[501]!,
+                      secondaryColor: swatch[50]!,
+                      inputBackgroundColor: swatch[51]!,
+                      inputTextColor: swatch[800]!,
+                      dateDividerTextStyle: TextStyle(
+                          color: swatch[701],
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          height: 1.333),
+                      inputMargin: const EdgeInsets.only(
+                          left: 8,
+                          right: 8,
+                          bottom: 8), // Add margins to text input
+                      inputBorderRadius: const BorderRadius.all(
+                          Radius.circular(24))), // Make input rounded corners
+                  onEndReached: () => _loadMoreMessages(),
+                ),
         ]));
   }
 

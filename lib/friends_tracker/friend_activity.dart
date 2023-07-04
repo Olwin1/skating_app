@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/config.dart';
 
 import '../objects/user.dart';
+import '../swatch.dart';
 
 class FriendActivity extends StatefulWidget {
   final List<Map<String, dynamic>> sessions;
@@ -68,12 +70,16 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
             "Pressed user icon"), // When the button is pressed, print a message
         child: userCache == null || userCache!["avatar"] == null
             // If there is no cached user information or avatar image, use a default image
-            ? CircleAvatar(
-                radius: 32, // Set the radius of the circular avatar image
-                child: ClipOval(
-                  child: Image.asset("assets/placeholders/default.png"),
-                ),
-              )
+            ? Shimmer.fromColors(
+                baseColor: const Color(0x66000000),
+                highlightColor: const Color(0xff444444),
+                child: CircleAvatar(
+                  // Create a circular avatar icon
+                  radius: 32, // Set radius to 36
+                  backgroundColor: swatch[900]!,
+                  // backgroundImage: AssetImage(
+                  //     "assets/placeholders/default.png"), // Set avatar to placeholder images
+                ))
             // If there is cached user information and an avatar image, use the cached image
             : CachedNetworkImage(
                 imageUrl: '${Config.uri}/image/${userCache!["avatar"]}',

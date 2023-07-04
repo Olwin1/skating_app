@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/websocket.dart';
 import 'package:skating_app/api/token.dart';
 import 'package:skating_app/social_media/login.dart';
@@ -181,21 +182,29 @@ class _MyHomePageState extends State<MyHomePage> {
         //icon: Icons.home,
         icon: avatar == null
             // If there is no cached user information or avatar image, use a default image
-            ? CircleAvatar(
-                // Set the radius of the circular avatar image
-                child: ClipOval(
-                  child: Image.asset("assets/placeholders/default.png"),
-                ),
-              )
+            ? Shimmer.fromColors(
+                baseColor: const Color(0x66000000),
+                highlightColor: const Color(0xff444444),
+                child: CircleAvatar(
+                  // Create a circular avatar icon
+                  radius: 36, // Set radius to 36
+                  backgroundColor: swatch[900]!,
+                  // backgroundImage: AssetImage(
+                  //     "assets/placeholders/default.png"), // Set avatar to placeholder images
+                ))
             // If there is cached user information and an avatar image, use the cached image
             : CachedNetworkImage(
                 imageUrl: '${Config.uri}/image/thumbnail/$avatar',
-                placeholder: (context, url) => CircleAvatar(
-                  // Set the radius of the circular avatar image
-                  child: ClipOval(
-                    child: Image.asset("assets/placeholders/default.png"),
-                  ),
-                ),
+                placeholder: (context, url) => Shimmer.fromColors(
+                    baseColor: const Color(0x66000000),
+                    highlightColor: const Color(0xff444444),
+                    child: CircleAvatar(
+                      // Create a circular avatar icon
+                      radius: 36, // Set radius to 36
+                      backgroundColor: swatch[900]!,
+                      // backgroundImage: AssetImage(
+                      //     "assets/placeholders/default.png"), // Set avatar to placeholder images
+                    )),
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     shape: BoxShape

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_overlay/flutter_overlay.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/edit_profile.dart';
@@ -110,8 +111,26 @@ class _Profile extends State<Profile> {
     return Scaffold(
         appBar: AppBar(
           // Create appBar widget
-          title: Text(user?["username"] ??
-              AppLocalizations.of(context)!.username), // Set title
+          title: user?["username"] != null
+              ? Text(
+                  user?["username"] ?? AppLocalizations.of(context)!.username)
+              : Shimmer.fromColors(
+                  baseColor: const Color(0x66000000),
+                  highlightColor: const Color(0xff444444),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 24.0,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  )), // Set title
           actions: widget.userId == "0"
               ? [
                   // Define icon buttons
@@ -140,12 +159,19 @@ class _Profile extends State<Profile> {
               Padding(
                 padding: const EdgeInsets.all(8), // Add padding
                 child: user?["avatar"] == null
-                    ? const CircleAvatar(
-                        // Create a circular avatar icon
-                        radius: 36, // Set radius to 36
-                        backgroundImage: AssetImage(
-                            "assets/placeholders/default.png"), // Set avatar to placeholder images
-                      )
+                    ? Shimmer.fromColors(
+                        baseColor: const Color(0x66000000),
+                        highlightColor: const Color(0xff444444),
+                        child: Shimmer.fromColors(
+                            baseColor: const Color(0x66000000),
+                            highlightColor: const Color(0xff444444),
+                            child: CircleAvatar(
+                              // Create a circular avatar icon
+                              radius: 36, // Set radius to 36
+                              backgroundColor: swatch[900]!,
+                              // backgroundImage: AssetImage(
+                              //     "assets/placeholders/default.png"), // Set avatar to placeholder images
+                            )))
                     : CachedNetworkImage(
                         imageUrl: '${Config.uri}/image/${user!["avatar"]}',
                         imageBuilder: (context, imageProvider) => Container(
@@ -174,8 +200,7 @@ class _Profile extends State<Profile> {
                   color: const Color.fromARGB(125, 0, 0, 0),
                   borderRadius: BorderRadius.circular(8)),
               padding: const EdgeInsets.all(8),
-              child: Text(
-                  user?["username"] ?? AppLocalizations.of(context)!.username,
+              child: Text(user?["username"] ?? "",
                   style: TextStyle(color: swatch[601])),
             ),
             // Display the user's bio
@@ -355,6 +380,41 @@ class _UserPostsListState extends State<UserPostsList> {
   final PagingController<int, Map<String, dynamic>> _pagingController =
       PagingController(firstPageKey: 0);
 
+  Widget _createGridLoadingWidgets() {
+    Widget child = Shimmer.fromColors(
+        baseColor: const Color(0x66000000),
+        highlightColor: const Color(0xff444444),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+          child: Image.asset("assets/placeholders/150.png"),
+        ));
+    return GridView(
+      shrinkWrap: true,
+      physics: const ScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        // Specify the properties for the grid tiles
+        childAspectRatio: 1,
+        mainAxisSpacing: 2,
+        crossAxisSpacing: 2,
+        maxCrossAxisExtent: MediaQuery.of(context).size.width / 3,
+      ),
+      children: [
+        child,
+        child,
+        child,
+        child,
+        child,
+        child,
+        child,
+        child,
+        child,
+        child,
+        child,
+        child
+      ],
+    );
+  }
+
   @override
   void initState() {
     // Add a listener to the PagingController that fetches the next page when requested
@@ -402,6 +462,8 @@ class _UserPostsListState extends State<UserPostsList> {
               maxCrossAxisExtent: MediaQuery.of(context).size.width / 3,
             ),
             builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+              firstPageProgressIndicatorBuilder: (context) =>
+                  _createGridLoadingWidgets(),
               noItemsFoundIndicatorBuilder: (context) => Center(
                 // Localized text string that will be displayed when no items are found
                 child: Text(

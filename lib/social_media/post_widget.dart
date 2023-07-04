@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/profile_page.dart';
@@ -106,14 +107,12 @@ class _PostWidget extends State<PostWidget> {
                 twoTouchOnly: true, // Defaults to false
                 child: CachedNetworkImage(
                   imageUrl: "${Config.uri}/image/${widget.post['image']}",
-                  placeholder: (context, url) => const Center(
-                    child: SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          color: Color(0xffcecece),
-                        )),
-                  ),
+                  placeholder: (context, url) => Shimmer.fromColors(
+                      baseColor: const Color(0x66000000),
+                      highlightColor: const Color(0xff444444),
+                      child: Image.asset(
+                        "assets/placeholders/1080.png",
+                      )),
                   imageBuilder: (context, imageProvider) => Container(
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.only(

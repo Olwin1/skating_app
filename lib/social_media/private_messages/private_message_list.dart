@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:uuid/uuid.dart';
 import '../../api/websocket.dart';
 import '../../swatch.dart';
@@ -69,6 +70,81 @@ class _PrivateMessageList extends State<PrivateMessageList> {
           ),
         ));
   }
+}
+
+Widget _loadingSkeleton() {
+  Widget child = Shimmer.fromColors(
+      baseColor: const Color(0x66000000),
+      highlightColor: const Color(0xff444444),
+      child: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Container(
+              decoration: const BoxDecoration(
+                color: Color(0xb5000000),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+              height: 82,
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(
+                  horizontal: 8), // Add padding so doesn't touch edges
+              padding: const EdgeInsets.symmetric(
+                  vertical: 8), // Add padding so doesn't touch edges
+              child:
+                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                // Add List image to one row and buttons to another
+                CircleAvatar(
+                  // Create a circular avatar icon
+                  radius: 36, // Set radius to 36
+                  backgroundColor: swatch[900]!,
+                  // backgroundImage: AssetImage(
+                  //     "assets/placeholders/default.png"), // Set avatar to placeholder images
+                ),
+                // If there is cached user information and an avatar image, use the cached image
+                const Padding(
+                    padding: EdgeInsets.only(
+                        left: 16)), // Space between avatar and text
+                Flexible(
+                  flex: 6,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Create a column aligned to the left
+                        const Padding(
+                          //Add padding to the top to move the text down a bit
+                          padding: EdgeInsets.only(top: 10),
+                        ),
+                        Container(
+                          width: 100,
+                          height: 24.0,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Container(
+                          width: 250,
+                          height: 24.0,
+                          color: Colors.white,
+                        ), // Last message sent from user
+                      ]),
+                ),
+              ]))));
+  return SizedBox(
+      height: 30,
+      child: ListView(
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          child,
+          child,
+          child,
+          child,
+          child,
+          child,
+          child,
+          child,
+          child
+        ],
+      ));
 }
 
 class ChannelsListView extends StatefulWidget {
@@ -180,6 +256,8 @@ class _ChannelsListViewState extends State<ChannelsListView> {
               style: const TextStyle(fontSize: 20),
             ),
           ])),
+          firstPageProgressIndicatorBuilder: (context) => _loadingSkeleton(),
+
           itemBuilder: (context, item, index) => ListWidget(
               userId: title[index],
               index: index,

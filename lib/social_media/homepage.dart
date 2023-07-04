@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/social_media/private_messages/private_message_list.dart';
 import 'post_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -63,6 +64,45 @@ class HomePage extends StatelessWidget {
           scrollController: _scrollController,
         )));
   }
+}
+
+_loadSkeleton() {
+  Widget child = Shimmer.fromColors(
+      baseColor: const Color(0x66000000),
+      highlightColor: const Color(0xff444444),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 24),
+        decoration: BoxDecoration(
+            color: const Color(0xcc000000),
+            borderRadius: BorderRadius.circular(8)),
+        height: 314,
+        padding: const EdgeInsets.all(0), // Add padding so doesn't touch edges
+
+        child: Row(
+          // Create a row
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Add Post image to one row and buttons to another
+            Expanded(flex: 5, child: Container() // Set child to post image
+                ),
+            Expanded(
+              flex: 1, // Make 2x Bigger than sibling
+              child: Container(
+                  // Make container widget to use BoxDecoration
+                  ),
+            ),
+          ],
+        ),
+      ));
+  return SizedBox(
+      height: 30,
+      child: ListView(
+        physics: const NeverScrollableScrollPhysics(),
+
+        padding: const EdgeInsets.all(
+            8), // Add padding to list so doesn't overflow to sides of screen
+        children: [child, child, child, child],
+      ));
 }
 
 class PostsListView extends StatefulWidget {
@@ -150,6 +190,7 @@ class _PostsListViewState extends State<PostsListView> {
           scrollController: widget.scrollController,
           // builderDelegate is responsible for creating the actual widgets to be displayed
           builderDelegate: PagedChildBuilderDelegate<Object>(
+              firstPageProgressIndicatorBuilder: (context) => _loadSkeleton(),
               noItemsFoundIndicatorBuilder: (context) => Center(
                       child: Column(children: [
                     Text(

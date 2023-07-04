@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/config.dart';
+
+import '../swatch.dart';
 
 class CustomMarker extends StatefulWidget {
   // Create FriendActivity widget
@@ -39,7 +42,16 @@ class _CustomMarker extends State<CustomMarker> {
                       DecorationImage(image: imageProvider, fit: BoxFit.cover),
                 ),
               ),
-              placeholder: (context, url) => const CircularProgressIndicator(),
+              placeholder: (context, url) => Shimmer.fromColors(
+                  baseColor: const Color(0x66000000),
+                  highlightColor: const Color(0xff444444),
+                  child: CircleAvatar(
+                    // Create a circular avatar icon
+                    radius: 32, // Set radius to 36
+                    backgroundColor: swatch[900]!,
+                    // backgroundImage: AssetImage(
+                    //     "assets/placeholders/default.png"), // Set avatar to placeholder images
+                  )),
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
@@ -57,8 +69,16 @@ class _CustomMarker extends State<CustomMarker> {
                           image: imageProvider, fit: BoxFit.cover),
                     ),
                   ),
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
+                  placeholder: (context, url) => Shimmer.fromColors(
+                      baseColor: const Color(0x66000000),
+                      highlightColor: const Color(0xff444444),
+                      child: CircleAvatar(
+                        // Create a circular avatar icon
+                        radius: 16, // Set radius to 36
+                        backgroundColor: swatch[900]!,
+                        // backgroundImage: AssetImage(
+                        //     "assets/placeholders/default.png"), // Set avatar to placeholder images
+                      )),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 )
               // If the user doesn't have an avatar, show a default placeholder image
@@ -86,18 +106,28 @@ class _CustomMarker extends State<CustomMarker> {
                 image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
               ),
             ),
-            placeholder: (context, url) => const CircularProgressIndicator(),
+            placeholder: (context, url) => Shimmer.fromColors(
+                baseColor: const Color(0x66000000),
+                highlightColor: const Color(0xff444444),
+                child: CircleAvatar(
+                  // Create a circular avatar icon
+                  radius: 32, // Set radius to 36
+                  backgroundColor: swatch[900]!,
+                  // backgroundImage: AssetImage(
+                  //     "assets/placeholders/default.png"), // Set avatar to placeholder images
+                )),
             errorWidget: (context, url, error) => const Icon(Icons.error),
           )
         // If the user doesn't have an avatar, show a default placeholder image
-        : CircleAvatar(
-            backgroundColor: Colors.transparent,
-            child: SizedBox(
-              width: 64,
-              height: 64,
-              child: ClipOval(
-                child: Image.asset("assets/placeholders/default.png"),
-              ),
+        : Shimmer.fromColors(
+            baseColor: const Color(0x66000000),
+            highlightColor: const Color(0xff444444),
+            child: CircleAvatar(
+              // Create a circular avatar icon
+              radius: 32, // Set radius to 36
+              backgroundColor: swatch[900]!,
+              // backgroundImage: AssetImage(
+              //     "assets/placeholders/default.png"), // Set avatar to placeholder images
             ));
   }
 }

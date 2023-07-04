@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/social_media/private_messages/private_message_list.dart';
+import 'package:skating_app/social_media/search_bar.dart';
 import 'post_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../api/social.dart';
@@ -29,6 +30,7 @@ class HomePage extends StatelessWidget {
                 child: SvgPicture.asset(
                   "assets/icons/patinka.svg",
                   fit: BoxFit.fitHeight,
+                  width: 130,
                   alignment: Alignment.centerLeft,
                   colorFilter: const ColorFilter.mode(
                       Color.fromARGB(255, 116, 0, 81), BlendMode.srcIn),
@@ -43,10 +45,7 @@ class HomePage extends StatelessWidget {
                 },
               ),
             ),
-            const Spacer(
-              // Move button to far right of screen
-              flex: 1,
-            ),
+            const SearchBar(),
             TextButton(
                 onPressed: () => Navigator.push(
                     context,

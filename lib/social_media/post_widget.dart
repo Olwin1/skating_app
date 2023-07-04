@@ -11,6 +11,10 @@ import 'comments.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../api/config.dart';
 
+Color selected = const Color(0xffa467b8);
+Color unselected = const Color.fromARGB(255, 116, 0, 81);
+Color secondary = const Color(0xffbb7ecf);
+
 class PostWidget extends StatefulWidget {
   // Create HomePage Class
   const PostWidget({Key? key, required this.post, required this.index})
@@ -152,39 +156,41 @@ class _PostWidget extends State<PostWidget> {
                             padding: const EdgeInsets.only(bottom: 0, top: 18),
                             countPostion: CountPostion.bottom,
                             size: 32.0,
-                            circleColor: CircleColor(
-                                start: swatch[401]!, end: swatch[201]!),
+                            circleColor:
+                                CircleColor(start: secondary, end: selected),
                             bubblesColor: BubblesColor(
-                              dotPrimaryColor: swatch[101]!,
-                              dotSecondaryColor: swatch[201]!,
+                              dotPrimaryColor: unselected,
+                              dotSecondaryColor: secondary,
                             ),
                             likeBuilder: (bool isLiked) {
                               return Icon(
-                                Icons.thumb_up_alt,
-                                color: isLiked
-                                    ? swatch[501]
-                                    : const Color(0xffcfcfcf),
+                                Icons.thumb_up,
+                                color: isLiked ? selected : unselected,
                                 size: 32.0,
                               );
                             },
                             likeCount: widget.post['like_count'],
                             countBuilder:
                                 (int? count, bool isLiked, String text) {
-                              var color = isLiked
-                                  ? swatch[501]
-                                  : const Color(0xffcfcfcf);
+                              var color = isLiked ? selected : unselected;
                               Widget result;
                               if (count == 0) {
                                 result = Center(
                                     child: Text(
                                   "Like",
-                                  style: TextStyle(color: color),
+                                  style: TextStyle(
+                                      color: color,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w100),
                                 ));
                               } else {
                                 result = Center(
                                     child: Text(
                                   text,
-                                  style: TextStyle(color: color),
+                                  style: TextStyle(
+                                      color: color,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w100),
                                   textAlign: TextAlign.center,
                                 ));
                               }
@@ -202,9 +208,9 @@ class _PostWidget extends State<PostWidget> {
                                             MaterialPageRoute(
                                                 builder: (context) => Comments(
                                                     post: widget.post["_id"]))),
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.comment,
-                                  color: Color(0xffcfcfcf),
+                                  color: unselected,
                                 ),
                                 padding: const EdgeInsets.only(top: 16),
                                 constraints: const BoxConstraints(),
@@ -212,8 +218,7 @@ class _PostWidget extends State<PostWidget> {
                               subtitle: Text(
                                 comments,
                                 textAlign: TextAlign.center,
-                                style:
-                                    const TextStyle(color: Color(0xffcfcfcf)),
+                                style: TextStyle(color: unselected),
                               )),
                           IconButton(
                               // Create Save Button
@@ -221,8 +226,7 @@ class _PostWidget extends State<PostWidget> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => const Testing())),
-                              icon: const Icon(Icons.save,
-                                  color: Color(0xffcfcfcf)))
+                              icon: Icon(Icons.save, color: unselected))
                         ],
                       ),
                       const Spacer(

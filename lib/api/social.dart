@@ -703,3 +703,35 @@ Future<List<Map<String, dynamic>>> getUserFriends(int page) async {
         "Error during post: $e"); // Throwing an exception with an error message
   }
 }
+
+// Search
+Future<List<Map<String, dynamic>>> searchUsers(String query) async {
+  // Define the URL for the HTTP request
+  var url = Uri.parse('${Config.uri}/user/search');
+
+  try {
+    // Make a POST request to the specified URL with headers and parameters
+    var response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer ${await storage.getToken()}',
+        'query': query
+      },
+    );
+
+    // If the response status code is 200 OK, parse and return the response body as a Map
+    if (response.statusCode == 200) {
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(json
+          .decode(response.body)
+          .map((model) => Map<String, dynamic>.from(model)));
+      return data;
+    } else {
+      // Otherwise, throw an exception with the reason phrase of the response
+      throw Exception("Search Unsuccessful: ${response.reasonPhrase}");
+    }
+  } catch (e) {
+    // If there's an error, throw an exception with the error message
+    throw Exception("Error during post: $e");
+  }
+}

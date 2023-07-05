@@ -67,7 +67,7 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
     String formattedTime = DateFormat('HH:mm').format(time);
 
     // Set the state of the widget to display the formatted sunset time
-    setState(() => {sunsetTime = formattedTime});
+    mounted ? setState(() => {sunsetTime = formattedTime}) : null;
   }
 
   @override
@@ -270,13 +270,15 @@ class _FitnessTracker extends State<FitnessTracker> {
                 TextButton(
                   // callback function to print "pressed" when clicked
                   onPressed: () => {
-                    setState(() {
-                      active = !active;
-                      buttonMessage = active
-                          ? AppLocalizations.of(context)!.stop
-                          : AppLocalizations.of(context)!.start;
-                      stoppedTracking = !stoppedTracking;
-                    }),
+                    mounted
+                        ? setState(() {
+                            active = !active;
+                            buttonMessage = active
+                                ? AppLocalizations.of(context)!.stop
+                                : AppLocalizations.of(context)!.start;
+                            stoppedTracking = !stoppedTracking;
+                          })
+                        : null,
                     if (!active && initialPosition != null)
                       {
                         Navigator.of(context, rootNavigator: true).push(

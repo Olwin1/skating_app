@@ -34,15 +34,20 @@ class _FriendButtonState extends State<FriendButton> {
             // Update the button's type based on the result of the doesFollow method
             if (value[0])
               {
-                setState(
-                  () => type = value[1] == false ? "following" : "requested",
-                )
+                mounted
+                    ? setState(
+                        () => type =
+                            value[1] == false ? "following" : "requested",
+                      )
+                    : null
               }
             else if (value[2])
               {
-                setState(
-                  () => type = "incoming",
-                )
+                mounted
+                    ? setState(
+                        () => type = "incoming",
+                      )
+                    : null
               }
           });
     }
@@ -61,15 +66,19 @@ class _FriendButtonState extends State<FriendButton> {
             // Update the button's type based on the result of the followUser method
             if (value["requested"] == true)
               {
-                setState(
-                  () => type = "requested",
-                )
+                mounted
+                    ? setState(
+                        () => type = "requested",
+                      )
+                    : null
               }
             else
               {
-                setState(
-                  () => type = "following",
-                )
+                mounted
+                    ? setState(
+                        () => type = "following",
+                      )
+                    : null
               }
           });
     } else {

@@ -329,11 +329,13 @@ class _SessionTypeState extends State<SessionType> {
 
         // Callback function called when an item is selected
         onChanged: (String? value) {
-          setState(() {
-            // Update the selected value in the corresponding `dropdownValue`
-            // depending on the value of `widget.id`
-            dropdownValue = value!;
-          });
+          mounted
+              ? setState(() {
+                  // Update the selected value in the corresponding `dropdownValue`
+                  // depending on the value of `widget.id`
+                  dropdownValue = value!;
+                })
+              : null;
           widget.callback(value);
         },
 
@@ -389,11 +391,13 @@ class _ShareOptionsState extends State<ShareOptions> {
       dropdownColor: swatch[900],
       // Callback function called when an item is selected
       onChanged: (String? value) {
-        setState(() {
-          // Update the selected value in the corresponding `dropdownValue`
-          // depending on the value of `widget.id`
-          dropdownValue = value!;
-        });
+        mounted
+            ? setState(() {
+                // Update the selected value in the corresponding `dropdownValue`
+                // depending on the value of `widget.id`
+                dropdownValue = value!;
+              })
+            : null;
         widget.callback(value);
       },
 

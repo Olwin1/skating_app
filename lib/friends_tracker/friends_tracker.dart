@@ -89,13 +89,15 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
           newSessions.addAll(values),
           if (newFriends
               .isNotEmpty) // If there are any new friends, update the state with the new list of markers
-            {setState(() => friends = newFriends)}
+            {mounted ? setState(() => friends = newFriends) : null}
         });
     super.initState(); // Call the superclass's initState method
   }
 
   void updateSearchOpened(e) {
-    setState(() => searchOpened = !e); // Update searchOpened state
+    mounted
+        ? setState(() => searchOpened = !e)
+        : null; // Update searchOpened state
   }
 
   @override
@@ -231,14 +233,16 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
               // Triggered when the button is pressed.
               onPressed: () {
                 // Update the widget state.
-                setState(() => {
-                      // Toggle the boolean value of the `active` variable.
-                      active = !active,
-                      // Set the `_followOnLocationUpdate` variable to either always or once based on the `active` variable.
-                      _followOnLocationUpdate = active
-                          ? FollowOnLocationUpdate.always
-                          : FollowOnLocationUpdate.once,
-                    });
+                mounted
+                    ? setState(() => {
+                          // Toggle the boolean value of the `active` variable.
+                          active = !active,
+                          // Set the `_followOnLocationUpdate` variable to either always or once based on the `active` variable.
+                          _followOnLocationUpdate = active
+                              ? FollowOnLocationUpdate.always
+                              : FollowOnLocationUpdate.once,
+                        })
+                    : null;
                 // If the `active` variable is true, add the zoom level (18) to the `_followCurrentLocationStreamController`.
                 // If the `active` variable is false, do nothing.
                 active ? _followCurrentLocationStreamController.add(18) : null;

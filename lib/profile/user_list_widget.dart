@@ -23,9 +23,11 @@ class _UserListWidget extends State<UserListWidget> {
   @override
   Widget build(BuildContext context) {
     if (user == null) {
-      getUserCache(widget.id).then((value) => setState(() {
-            user = value;
-          }));
+      getUserCache(widget.id).then((value) => mounted
+          ? setState(() {
+              user = value;
+            })
+          : null);
     }
     // Returns a row with a CircleAvatar, a text widget, and a TextButton
     return Padding(

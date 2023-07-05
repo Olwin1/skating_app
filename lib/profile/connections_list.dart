@@ -56,7 +56,7 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       }
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
-
+      if (!mounted) return;
       if (isLastPage) {
         // If this is the last page, append it to the list of pages
         _pagingController.appendLastPage(page);

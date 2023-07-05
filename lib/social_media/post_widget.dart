@@ -40,9 +40,11 @@ class _PostWidget extends State<PostWidget> {
           // Call the unlikePost function with the post ID
           unlikePost(widget.post["_id"]).then((value) => {
                 likedState!
-                    ? setState(
-                        () => likedState = false,
-                      )
+                    ? mounted
+                        ? setState(
+                            () => likedState = false,
+                          )
+                        : null
                     : null,
                 waiting = false
               });
@@ -59,9 +61,11 @@ class _PostWidget extends State<PostWidget> {
           // Call the likePost function with the post ID
           likePost(widget.post["_id"]).then((value) => {
                 !likedState!
-                    ? setState(
-                        () => likedState = true,
-                      )
+                    ? mounted
+                        ? setState(
+                            () => likedState = true,
+                          )
+                        : null
                     : null,
                 waiting = false
               });

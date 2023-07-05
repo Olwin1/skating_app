@@ -134,9 +134,11 @@ class _OverlaySettings extends State<OverlaySettings> {
                   value: Theme.dark,
                   groupValue: _theme,
                   onChanged: (Theme? value) {
-                    setState(() {
-                      _theme = value;
-                    });
+                    mounted
+                        ? setState(() {
+                            _theme = value;
+                          })
+                        : null;
                   },
                 ),
               ),
@@ -150,9 +152,11 @@ class _OverlaySettings extends State<OverlaySettings> {
                   value: Theme.light,
                   groupValue: _theme,
                   onChanged: (Theme? value) {
-                    setState(() {
-                      _theme = value;
-                    });
+                    mounted
+                        ? setState(() {
+                            _theme = value;
+                          })
+                        : null;
                   },
                 ),
               ),
@@ -166,9 +170,11 @@ class _OverlaySettings extends State<OverlaySettings> {
                   value: Theme.sysDefault,
                   groupValue: _theme,
                   onChanged: (Theme? value) {
-                    setState(() {
-                      _theme = value;
-                    });
+                    mounted
+                        ? setState(() {
+                            _theme = value;
+                          })
+                        : null;
                   },
                 ),
               )

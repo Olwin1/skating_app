@@ -101,7 +101,7 @@ class _Profile extends State<Profile> {
   @override
   void initState() {
     getUserCache(widget.userId).then((value) => {
-          if (mounted) {setState(() => user = value)}
+          if (mounted) {mounted ? setState(() => user = value) : null}
         });
     super.initState();
   }

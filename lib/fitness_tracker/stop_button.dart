@@ -22,7 +22,7 @@ class _StopButton extends State<StopButton>
     // Attach a listener to the controller
     controller.addListener(() {
       // Call setState() whenever the animation changes
-      setState(() {});
+      mounted ? setState(() {}) : null;
     });
   }
 

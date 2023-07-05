@@ -35,10 +35,12 @@ class _DistanceTravelled extends State<DistanceTravelled> {
   void updateDistance(difference) {
     double newDiff = totalDistance + difference;
     widget.callback(newDiff);
-    setState(() {
-      // Updating the total distance travelled
-      totalDistance = newDiff;
-    });
+    mounted
+        ? setState(() {
+            // Updating the total distance travelled
+            totalDistance = newDiff;
+          })
+        : null;
   }
 
   void createStream() {

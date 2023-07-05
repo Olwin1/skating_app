@@ -66,20 +66,22 @@ class _Comments extends State<Comments> {
             postComment(widget.post, commentController.text);
 
             // Clear the comment controller and update the UI with the new comment
-            setState(() {
-              newComments = [
-                ...newComments,
-                (<String, dynamic>{
-                  "_id": "newPost",
-                  "post": widget.post,
-                  "sender": "userid",
-                  "content": commentController.text,
-                  "like_users": [],
-                  "dislike_users": [],
-                  "date": DateTime.now().toString()
-                })
-              ];
-            });
+            mounted
+                ? setState(() {
+                    newComments = [
+                      ...newComments,
+                      (<String, dynamic>{
+                        "_id": "newPost",
+                        "post": widget.post,
+                        "sender": "userid",
+                        "content": commentController.text,
+                        "like_users": [],
+                        "dislike_users": [],
+                        "date": DateTime.now().toString()
+                      })
+                    ];
+                  })
+                : null;
             commentController.clear();
           }
         },
@@ -151,7 +153,7 @@ class _CommentsListViewState extends State<CommentsListView> {
 
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
-
+      if (!mounted) return;
       if (isLastPage) {
         // If this is the last page, append it to the list of pages
         _pagingController.appendLastPage(page);

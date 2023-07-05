@@ -58,7 +58,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
     super.initState();
     // Call the getUserCache function to retrieve user information and update the state
     getUserCache(widget.session["author"])
-        .then((value) => setState(() => userCache = value));
+        .then((value) => mounted ? setState(() => userCache = value) : null);
   }
 
   @override // Override the existing build method to create the user profile

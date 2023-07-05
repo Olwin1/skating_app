@@ -66,7 +66,7 @@ class _NewPostPage extends State<NewPostPage> {
   }
 
   void _update(String id) {
-    setState(() => _selectedImage = id);
+    mounted ? setState(() => _selectedImage = id) : null;
   }
 
   // This function loads the initial set of images.
@@ -80,17 +80,21 @@ class _NewPostPage extends State<NewPostPage> {
         skip: 0,
         take: 1,
       ); // Load the first page of images from the first album.
-      setState(() {
-        _selectedImage = imagePage.items.first
-            .id; // Set _selectedImage to the ID of the first image in the first page.
-        _albums = albums; // Assign the albums list to _albums.
-        _loading = false; // Set _loading to false.
-      });
+      mounted
+          ? setState(() {
+              _selectedImage = imagePage.items.first
+                  .id; // Set _selectedImage to the ID of the first image in the first page.
+              _albums = albums; // Assign the albums list to _albums.
+              _loading = false; // Set _loading to false.
+            })
+          : null;
     }
 
-    setState(() {
-      _loading = false; // Set _loading to false.
-    });
+    mounted
+        ? setState(() {
+            _loading = false; // Set _loading to false.
+          })
+        : null;
   }
 
 // This function prompts the user to grant permission to access the device's photo gallery.
@@ -117,9 +121,11 @@ class _NewPostPage extends State<NewPostPage> {
             builder: (context) => SendPost(
                   image: selectedImage!,
                 )));
-    setState(() {
-      selected = false;
-    });
+    mounted
+        ? setState(() {
+            selected = false;
+          })
+        : null;
   }
 
   @override
@@ -132,9 +138,11 @@ class _NewPostPage extends State<NewPostPage> {
           IconButton(
               onPressed: () => _selectedImage != null
                   ? {
-                      setState(
-                        () => selected = true,
-                      ),
+                      mounted
+                          ? setState(
+                              () => selected = true,
+                            )
+                          : null,
                       if (selectedImage != null)
                         {print("image has been selcected")}
                     }
@@ -219,6 +227,7 @@ class _PhotosGridViewState extends State<PhotosGridView> {
       );
       final newItems = page.items;
       final isLastPage = newItems.length < _pageSize;
+      if (!mounted) return;
       if (isLastPage) {
         // appendLastPage is called if there are no more items to load
         _pagingController.appendLastPage(newItems);

@@ -59,14 +59,14 @@ class _MyAppState extends State<MyApp> {
           if (token != null && !loggedIn)
             {
               // Update state to indicate user is now logged in
-              setState(() => loggedIn = true),
+              mounted ? setState(() => loggedIn = true) : null,
             }
         });
 
 // Function to set the logged in state of the user
     setLoggedIn(value) {
       // Update state to reflect whether the user is logged in or not
-      setState(() => {loggedIn = value});
+      mounted ? setState(() => {loggedIn = value}) : null;
     }
 
     return MaterialApp(
@@ -148,9 +148,11 @@ class _MyHomePageState extends State<MyHomePage> {
     storage.getId().then((value) => {
           value != null
               ? getUserCache(value).then((user) => {
-                    setState(() {
-                      avatar = user["avatar"];
-                    })
+                    mounted
+                        ? setState(() {
+                            avatar = user["avatar"];
+                          })
+                        : null
                   })
               : null
         });
@@ -279,10 +281,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     currentPage.tab, // Set initial selection to main page
                 onTap: (int i) => {
                   //When a navbar button is pressed set the current tab to the tabitem that was pressed
-                  setState(() {
-                    //  _currentTab = i;
-                    currentPage.set(i);
-                  }),
+                  mounted
+                      ? setState(() {
+                          //  _currentTab = i;
+                          currentPage.set(i);
+                        })
+                      : null,
                   print("setting curret page")
                 }, // When a button is pressed... output to console
                 style: TabStyle

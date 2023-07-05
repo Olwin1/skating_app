@@ -58,10 +58,12 @@ class _SearchResults extends State<SearchResults> {
             ),
             onSubmitted: (value) {
               entering = false; // Set entering flag to false
-              setState(() {
-                currentQuery = controller
-                    .text; // Update the current query with the new text value
-              });
+              mounted
+                  ? setState(() {
+                      currentQuery = controller
+                          .text; // Update the current query with the new text value
+                    })
+                  : null;
             },
           ),
         ),
@@ -124,12 +126,14 @@ class _SearchResultsList extends State<SearchResultsList> {
     print("searching users ${widget.query}");
 
     // Call the searchUsers function with the query and handle the returned value
-    searchUsers(widget.query).then((value) => setState(
-          () {
-            print("eeeeeeeeeeeeeeeeeeeee $value");
-            results = value;
-          },
-        ));
+    searchUsers(widget.query).then((value) => mounted
+        ? setState(
+            () {
+              print("eeeeeeeeeeeeeeeeeeeee $value");
+              results = value;
+            },
+          )
+        : null);
 
     // Return the Results widget with the updated results
     return Results(results: results);

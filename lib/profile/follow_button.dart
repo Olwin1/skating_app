@@ -32,8 +32,10 @@ class _FollowButtonState extends State<FollowButton> {
             // If the user is already followed, update `type` to "following" or "requested"
             if (value[0])
               {
-                setState(
-                    () => type = value[1] == false ? "following" : "requested")
+                mounted
+                    ? setState(() =>
+                        type = value[1] == false ? "following" : "requested")
+                    : null
               }
           });
     }
@@ -51,11 +53,11 @@ class _FollowButtonState extends State<FollowButton> {
               print(value),
               // If follow request is successful, update `type` to "requested"
               if (value["requested"] == true)
-                {setState(() => type = "requested")}
+                {mounted ? setState(() => type = "requested") : null}
               else
                 {
                   // If the user is being followed, update `type` to "following"
-                  setState(() => type = "following")
+                  mounted ? setState(() => type = "following") : null
                 }
             });
       } else {
@@ -63,7 +65,7 @@ class _FollowButtonState extends State<FollowButton> {
               // Logs the response from `followUser`
               print(value),
               // If follow request is successful, update `type` to "requested"
-              setState(() => type = "follow")
+              mounted ? setState(() => type = "follow") : null
             });
       }
     } else {

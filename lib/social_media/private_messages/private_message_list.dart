@@ -31,8 +31,9 @@ class _PrivateMessageList extends State<PrivateMessageList> {
 
   @override
   void initState() {
-    getUserId().then(
-        (value) => setState(() => currentUser = value ?? const Uuid().v1()));
+    getUserId().then((value) => mounted
+        ? setState(() => currentUser = value ?? const Uuid().v1())
+        : null);
     super.initState();
   }
 
@@ -180,9 +181,11 @@ class _ChannelsListViewState extends State<ChannelsListView> {
 
     // Subscribe to the websocket stream
     subscription = getIt<WebSocketConnection>().stream.listen((data) => {
-          setState(() {
-            channelsData[data["channel"]] = data["content"];
-          })
+          mounted
+              ? setState(() {
+                  channelsData[data["channel"]] = data["content"];
+                })
+              : null
         });
 
     super.initState();
@@ -222,7 +225,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
 
 // Determine if the loaded page is the last page
       final isLastPage = page.length < _pageSize;
-
+      if (!mounted) return;
 // If the page is the last page, append it using appendLastPage method
       if (isLastPage) {
         _pagingController.appendLastPage(page);

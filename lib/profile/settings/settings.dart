@@ -26,7 +26,13 @@ class Settings extends StatefulWidget {
 // Private class that represents the state of the Settings widget
 class _Settings extends State<Settings> {
   // When outside pressed set item state to hide overlay
-  void outsidePressed() => {item != 0 ? setState(() => item = 0) : null};
+  void outsidePressed() => {
+        item != 0
+            ? mounted
+                ? setState(() => item = 0)
+                : null
+            : null
+      };
   SettingsThemeData defaultTheme = SettingsThemeData(
       settingsListBackground: Colors.transparent,
       titleTextColor: swatch[501],
@@ -86,7 +92,7 @@ class _Settings extends State<Settings> {
                       value: const Text('••••••••'),
                       onPressed: (e) => {
                         print("text"),
-                        setState(() => {item = 1})
+                        mounted ? setState(() => {item = 1}) : null
                       },
                     ),
                     // Switch tile for toggling push notifications
@@ -149,7 +155,7 @@ class _Settings extends State<Settings> {
                       title: Text(AppLocalizations.of(context)!.language),
                       value: const Text('English'),
                       onPressed: (e) => {
-                        setState(() => {item = 2})
+                        mounted ? setState(() => {item = 2}) : null
                       },
                     ),
                     // Switch tile for toggling push notifications
@@ -178,7 +184,7 @@ class _Settings extends State<Settings> {
                       title: Text(AppLocalizations.of(context)!.theme),
                       value: const Text('Default'),
                       onPressed: (e) => {
-                        setState(() => {item = 3})
+                        mounted ? setState(() => {item = 3}) : null
                       },
                     ),
                   ],

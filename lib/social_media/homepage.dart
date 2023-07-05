@@ -146,7 +146,7 @@ class _PostsListViewState extends State<PostsListView> {
 
       // Determines if the page being fetched is the last page
       final isLastPage = page.isEmpty;
-
+      if (!mounted) return;
       if (isLastPage) {
         // If the page is the last page, call `appendLastPage` to add it to the list of items
         _pagingController.appendLastPage(page);

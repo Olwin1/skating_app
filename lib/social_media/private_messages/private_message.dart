@@ -127,16 +127,18 @@ class _PrivateMessage extends State<PrivateMessage> {
     if (data["channel"] == widget.channel) {
       print("ITS A MATCH!");
       // Add the new message to the beginning of the list
-      setState(() {
-        _messages.insert(
-            0,
-            types.TextMessage(
-              author: getUser(data["sender"], "ss"),
-              createdAt: DateTime.now().millisecondsSinceEpoch,
-              id: const Uuid().v1(),
-              text: data["content"],
-            ));
-      });
+      mounted
+          ? setState(() {
+              _messages.insert(
+                  0,
+                  types.TextMessage(
+                    author: getUser(data["sender"], "ss"),
+                    createdAt: DateTime.now().millisecondsSinceEpoch,
+                    id: const Uuid().v1(),
+                    text: data["content"],
+                  ));
+            })
+          : null;
     }
   }
 
@@ -184,10 +186,12 @@ class _PrivateMessage extends State<PrivateMessage> {
         text: message["content"], // Set message content
       ));
     }
-    setState(() {
-      _messages.addAll(messages);
-      _page = nextPage;
-    });
+    mounted
+        ? setState(() {
+            _messages.addAll(messages);
+            _page = nextPage;
+          })
+        : null;
   }
 
   @override // Override existing build method
@@ -321,9 +325,11 @@ class _PrivateMessage extends State<PrivateMessage> {
 
   void _addMessage(types.Message message) {
     // Define addMessage function
-    setState(() {
-      _messages.insert(0, message);
-    });
+    mounted
+        ? setState(() {
+            _messages.insert(0, message);
+          })
+        : null;
   }
 
   void _handleSendPressed(types.PartialText message) async {

@@ -43,10 +43,12 @@ class _EditPost extends State<EditPost> {
         mediumId:
             widget.selectedImage); // Set the provider for the selected image.
     getAssetImage().then((value) => {
-          setState(() => {
-                initialSelection = widget.selectedImage,
-                _imageToCrop = value, // Set the image data to be cropped.
-              }),
+          mounted
+              ? setState(() => {
+                    initialSelection = widget.selectedImage,
+                    _imageToCrop = value, // Set the image data to be cropped.
+                  })
+              : null,
         }); // Load the image data asynchronously.
 
     super.initState();
@@ -64,10 +66,13 @@ class _EditPost extends State<EditPost> {
     if (initialSelection != widget.selectedImage) {
       // If the selection has changed,
       getAssetImage().then((value) => {
-            setState(() => {
-                  initialSelection = widget.selectedImage,
-                  _imageToCrop = value, // Update the image data to be cropped.
-                }),
+            mounted
+                ? setState(() => {
+                      initialSelection = widget.selectedImage,
+                      _imageToCrop =
+                          value, // Update the image data to be cropped.
+                    })
+                : null,
           }); // Load the image data asynchronously.
     }
     if (widget.selected) {
@@ -127,7 +132,7 @@ class _EditPost extends State<EditPost> {
 // A method that sets the provider and updates the state of the widget.
   void setProvider(ImageProvider? provider) {
     this.provider = provider;
-    setState(() {});
+    mounted ? setState(() {}) : null;
   }
 
 // A method that sets the provider back to the original photo

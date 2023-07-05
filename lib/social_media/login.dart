@@ -127,21 +127,27 @@ class _Login extends State<Login> {
           loadHome();
           print(res);
         } catch (e) {
-          setState(() {
-            errorText = "Your username or password is incorrect";
-          });
+          mounted
+              ? setState(() {
+                  errorText = "Your username or password is incorrect";
+                })
+              : null;
           print(e);
         }
       },
       onPressedSignUp: () {
-        setState(() {
-          state = _State.signUp;
-        });
+        mounted
+            ? setState(() {
+                state = _State.signUp;
+              })
+            : null;
       },
       onPressedForgot: () {
-        setState(() {
-          state = _State.forgot;
-        });
+        mounted
+            ? setState(() {
+                state = _State.forgot;
+              })
+            : null;
       },
       /* term: LoginTemplateTerm(
         style: style,
@@ -156,15 +162,19 @@ class _Login extends State<Login> {
       style: style,
       onPressedSignIn: () {
         // When the user taps the "Sign In" button, set the state to signIn.
-        setState(() {
-          state = _State.signIn;
-        });
+        mounted
+            ? setState(() {
+                state = _State.signIn;
+              })
+            : null;
       },
       onPressedSignUp: () {
         // When the user taps the "Sign Up" button, set the state to confirm.
-        setState(() {
-          state = _State.confirm;
-        });
+        mounted
+            ? setState(() {
+                state = _State.confirm;
+              })
+            : null;
       },
       // Define a widget for the terms of service and privacy policy.
       term: LoginTemplateTerm(
@@ -180,9 +190,11 @@ class _Login extends State<Login> {
         style: style,
         onPressedNext: () {
           // When the user taps the "Next" button, set the state to confirm.
-          setState(() {
-            state = _State.confirm;
-          });
+          mounted
+              ? setState(() {
+                  state = _State.confirm;
+                })
+              : null;
         });
 
 // Define a variable for the Confirm Code page with logo, style, and buttons.
@@ -191,9 +203,11 @@ class _Login extends State<Login> {
       style: style,
       onPressedNext: () {
         // When the user taps the "Next" button, set the state to create.
-        setState(() {
-          state = _State.create;
-        });
+        mounted
+            ? setState(() {
+                state = _State.create;
+              })
+            : null;
       },
       onPressedResend: () {},
     );
@@ -205,9 +219,11 @@ class _Login extends State<Login> {
       errorTextPassword: 'The password you entered is incorrect.',
       onPressedNext: () {
         // When the user taps the "Next" button, set the state to signIn.
-        setState(() {
-          state = _State.signIn;
-        });
+        mounted
+            ? setState(() {
+                state = _State.signIn;
+              })
+            : null;
       },
     );
 
@@ -236,9 +252,11 @@ class _Login extends State<Login> {
     check() => {
           if (state != _State.signIn)
             {
-              setState(() {
-                state = _State.signIn;
-              })
+              mounted
+                  ? setState(() {
+                      state = _State.signIn;
+                    })
+                  : null
             }
         };
 

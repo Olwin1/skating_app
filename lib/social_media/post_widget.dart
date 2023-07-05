@@ -11,10 +11,6 @@ import 'comments.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../api/config.dart';
 
-Color selected = const Color(0xffa467b8);
-Color unselected = const Color.fromARGB(255, 116, 0, 81);
-Color secondary = const Color(0xffbb7ecf);
-
 class PostWidget extends StatefulWidget {
   // Create HomePage Class
   const PostWidget({Key? key, required this.post, required this.index})
@@ -80,6 +76,10 @@ class _PostWidget extends State<PostWidget> {
     return isLiked;
   }
 
+  Color selected = const Color.fromARGB(255, 136, 255, 0);
+  Color unselected = const Color.fromARGB(255, 31, 207, 46);
+  Color secondary = const Color.fromARGB(255, 15, 95, 5);
+
   @override // Override existing build method
   Widget build(BuildContext context) {
     print("${Config.uri}/image/${widget.post['image']}");
@@ -135,13 +135,16 @@ class _PostWidget extends State<PostWidget> {
               flex: 1, // Make 2x Bigger than sibling
               child: Container(
                 // Make container widget to use BoxDecoration
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   image: DecorationImage(
                       // Set background image of container to image
-                      image:
-                          AssetImage("assets/backgrounds/post_background.png"),
-                      fit: BoxFit.cover), // Cover whole container
-                  borderRadius: BorderRadius.only(
+                      image: const AssetImage(
+                          "assets/backgrounds/post_background.png"),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.3),
+                          BlendMode.srcOver)), // Cover whole container
+                  borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(8),
                       bottomRight: Radius.circular(8)),
                 ),

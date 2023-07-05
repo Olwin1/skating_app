@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skating_app/social_media/search_results.dart';
 import '../swatch.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchBar extends StatefulWidget {
   // Create HomePage Class
@@ -29,6 +30,7 @@ class _SearchBar extends State<SearchBar> {
         maxLines: 1,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
+          hintText: AppLocalizations.of(context)!.search,
           isDense: true,
           isCollapsed: true,
           filled: true,

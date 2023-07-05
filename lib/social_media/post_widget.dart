@@ -58,7 +58,7 @@ class _PostWidget extends State<PostWidget> {
           waiting = true;
           // Call the likePost function with the post ID
           likePost(widget.post["_id"]).then((value) => {
-                likedState!
+                !likedState!
                     ? setState(
                         () => likedState = true,
                       )

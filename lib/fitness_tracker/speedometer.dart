@@ -85,7 +85,7 @@ class _SpeedometerPage extends State<SpeedometerPage> {
           animate: true,
           unitOfMeasurement: "Km/h",
           fractionDigits: 2,
-          activeGaugeColor: swatch[600]!, //Color.fromARGB(255, 197, 213, 26),
+          activeGaugeColor: swatch[401]!, //Color.fromARGB(255, 197, 213, 26),
           subDivisionCircleColors: const Color.fromARGB(255, 13, 141, 13),
           divisionCircleColors: const Color.fromARGB(255, 13, 141, 13),
           inactiveGaugeColor: Colors.lightBlue,

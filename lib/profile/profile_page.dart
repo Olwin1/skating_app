@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:skating_app/objects/user.dart';
+import 'package:skating_app/profile/connections_list.dart';
 import 'package:skating_app/profile/edit_profile.dart';
 import 'package:skating_app/profile/follow_button.dart';
+import 'package:skating_app/profile/friends_lisrs.dart';
 import 'package:skating_app/profile/lists.dart';
 import 'package:skating_app/profile/settings/settings.dart';
 
@@ -509,12 +511,18 @@ class ConnectionLists extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8)),
             child: Row(children: [
               const Spacer(),
-              Column(children: [
-                Text((user?["friends_count"] ?? 0).toString(),
-                    style: TextStyle(color: swatch[601])),
-                Text(AppLocalizations.of(context)!.friends,
-                    style: TextStyle(color: swatch[701]))
-              ]),
+              GestureDetector(
+                  onTap: () => Navigator.push(
+                      // Send to edit profile page
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const FriendsList())),
+                  child: Column(children: [
+                    Text((user?["friends_count"] ?? 0).toString(),
+                        style: TextStyle(color: swatch[601])),
+                    Text(AppLocalizations.of(context)!.friends,
+                        style: TextStyle(color: swatch[701]))
+                  ])),
               // Column to display the number of followers
               const Spacer(),
 

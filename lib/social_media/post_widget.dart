@@ -80,6 +80,10 @@ class _PostWidget extends State<PostWidget> {
     return isLiked;
   }
 
+  Future<bool> handleSavePressed(bool isSaved) async {
+    return false;
+  }
+
   Color selected = const Color.fromARGB(255, 136, 255, 0);
   Color unselected = const Color.fromARGB(255, 31, 207, 46);
   Color secondary = const Color.fromARGB(255, 15, 95, 5);
@@ -227,13 +231,26 @@ class _PostWidget extends State<PostWidget> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: unselected),
                               )),
-                          IconButton(
-                              // Create Save Button
-                              onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const Testing())),
-                              icon: Icon(Icons.save, color: unselected))
+                          LikeButton(
+                            //isLiked: likedState ?? widget.post["liked"],
+                            onTap: (isSaved) => handleSavePressed(isSaved),
+                            padding: const EdgeInsets.only(bottom: 0, top: 18),
+                            countPostion: CountPostion.bottom,
+                            size: 28.0,
+                            circleColor:
+                                CircleColor(start: secondary, end: selected),
+                            bubblesColor: BubblesColor(
+                              dotPrimaryColor: unselected,
+                              dotSecondaryColor: secondary,
+                            ),
+                            likeBuilder: (bool isSaved) {
+                              return Icon(
+                                Icons.save,
+                                color: isSaved ? selected : unselected,
+                                size: 28.0,
+                              );
+                            },
+                          ),
                         ],
                       ),
                       const Spacer(

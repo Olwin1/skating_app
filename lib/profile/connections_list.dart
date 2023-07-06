@@ -39,19 +39,18 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
         page = await getUserFollowers(
           pageKey,
         );
-      }
-      if (widget.type == "following") {
+      } else if (widget.type == "following") {
         print("following");
         page = await getUserFollowing(
           pageKey,
         );
-      }
-      if (widget.type == "friends") {
+      } else if (widget.type == "friends") {
         print("friends");
         page = await getUserFriends(
           pageKey,
         );
       } else {
+        print("nuklling");
         page = [];
       }
       // Determine if this is the last page

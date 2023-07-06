@@ -1,6 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/objects/user.dart';
+
+import '../api/config.dart';
+import '../swatch.dart';
 
 // UserListWidget class creates a stateful widget that displays a list of users
 class UserListWidget extends StatefulWidget {
@@ -30,24 +35,57 @@ class _UserListWidget extends State<UserListWidget> {
           : null);
     }
     // Returns a row with a CircleAvatar, a text widget, and a TextButton
-    return Padding(
+    return Container(
+        decoration: BoxDecoration(
+          color: const Color(0xbb000000),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
           children: [
             // CircleAvatar with a radius of 26 and a background image from the assets folder
-            const Padding(
-              padding: EdgeInsets.all(4),
-              child: CircleAvatar(
-                radius: 26,
-                backgroundImage: AssetImage("assets/placeholders/150.png"),
-              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+              child: user?["avatar"] == null
+                  ? Shimmer.fromColors(
+                      baseColor: const Color(0x66000000),
+                      highlightColor: const Color(0xff444444),
+                      child: CircleAvatar(
+                        // Create a circular avatar icon
+                        radius: 26, // Set radius to 36
+                        backgroundColor: swatch[900]!,
+                        // backgroundImage: AssetImage(
+                        //     "assets/placeholders/default.png"), // Set avatar to placeholder images
+                      ))
+                  : CachedNetworkImage(
+                      imageUrl:
+                          '${Config.uri}/image/thumbnail/${user!["avatar"]}',
+                      imageBuilder: (context, imageProvider) => Container(
+                        height: 52,
+                        width: 52,
+                        decoration: BoxDecoration(
+                          shape: BoxShape
+                              .circle, // Set the shape of the container to a circle
+                          image: DecorationImage(
+                              image: imageProvider, fit: BoxFit.cover),
+                        ),
+                      ),
+                    ),
             ),
             // Text widget with the text "username"
-            Text(user?["username"] ?? AppLocalizations.of(context)!.username),
+            Text(
+              user?["username"] ?? AppLocalizations.of(context)!.username,
+              style: TextStyle(color: swatch[701]),
+            ),
+            const Spacer(
+              flex: 10,
+            ),
             // TextButton with an onPressed function that prints test value "ee" and a child text widget with the text "Follow"
             TextButton(
                 onPressed: () => print("ee"),
-                child: Text(AppLocalizations.of(context)!.follow))
+                child: Text(AppLocalizations.of(context)!.follow)),
+            const Spacer()
           ],
         ));
   }

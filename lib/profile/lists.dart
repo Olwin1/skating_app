@@ -4,9 +4,10 @@ import 'package:skating_app/profile/following_list.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../swatch.dart';
+
 // Defining some constants for the SnakeNavigationBar
 const SnakeShape snakeShape = SnakeShape.circle;
-const Color selectedColor = Color(0xff4343cd);
 
 // Lists widget
 class Lists extends StatefulWidget {
@@ -27,18 +28,18 @@ class _Lists extends State<Lists> {
     print(_selectedItemPosition);
     return Scaffold(
       appBar: AppBar(
-          // Setting the title of the AppBar
-          title: const Text("username"),
+          backgroundColor: swatch[700]!,
           // Setting the bottom of the AppBar
-          bottom: PreferredSize(
+          flexibleSpace: PreferredSize(
             preferredSize: const Size.fromHeight(48.0),
             child: SnakeNavigationBar.color(
+              backgroundColor: swatch[700]!,
               // Setting the color of the SnakeView
-              snakeViewColor: selectedColor,
+              snakeViewColor: swatch[701],
               // Setting the color of the selected item
-              selectedItemColor: const Color(0xff4d3d2d),
+              selectedItemColor: swatch[601],
               // Setting the color of the unselected item
-              unselectedItemColor: Colors.blueGrey,
+              unselectedItemColor: swatch[301],
               // Setting the behaviour of the SnakeBar
               behaviour: SnakeBarBehaviour.pinned,
               // Setting the shape of the Snake
@@ -62,35 +63,51 @@ class _Lists extends State<Lists> {
               // Setting the items of the SnakeBar
               items: [
                 BottomNavigationBarItem(
-                    icon: Text(AppLocalizations.of(context)!.followers)),
+                    icon: Text(
+                  AppLocalizations.of(context)!.followers,
+                  style: TextStyle(color: swatch[701]),
+                )),
                 BottomNavigationBarItem(
-                    icon: Text(AppLocalizations.of(context)!.following)),
+                    icon: Text(AppLocalizations.of(context)!.following,
+                        style: TextStyle(color: swatch[701]))),
               ],
             ),
           )),
       // Setting the body of the scaffold to a ListView with some UserListWidgets
-      body: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 800), // Duration for animation
-          transitionBuilder: (child, animation) {
-            // Function to build the transition
-            // Define the offset animation using a Tween and the provided animation
-            final offsetAnimation = Tween(
-              begin: const Offset(1.5, 0.0), // Starting position for the child
-              end: const Offset(0.0, 0.0), // Ending position for the child
-            ).animate(animation);
-            // Return the child wrapped in a ClipRect and SlideTransition
-            return ClipRect(
-              // Use the offset animation to position the child
-              child: SlideTransition(
-                position: offsetAnimation,
-                child: child,
-              ),
-            );
-          },
-          child: _selectedItemPosition == 0 // The child widget to animate
-              ? const FollowersList() // If _selectedItemPosition is 1, show the FollowersList
-              : const FollowingList() // Otherwise, show the FollowingList
-          ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: const AssetImage("assets/backgrounds/graffiti.png"),
+              fit: BoxFit.cover,
+              alignment: Alignment.topRight,
+              colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+        ),
+        child: AnimatedSwitcher(
+            duration:
+                const Duration(milliseconds: 800), // Duration for animation
+            transitionBuilder: (child, animation) {
+              // Function to build the transition
+              // Define the offset animation using a Tween and the provided animation
+              final offsetAnimation = Tween(
+                begin:
+                    const Offset(1.5, 0.0), // Starting position for the child
+                end: const Offset(0.0, 0.0), // Ending position for the child
+              ).animate(animation);
+              // Return the child wrapped in a ClipRect and SlideTransition
+              return ClipRect(
+                // Use the offset animation to position the child
+                child: SlideTransition(
+                  position: offsetAnimation,
+                  child: child,
+                ),
+              );
+            },
+            child: _selectedItemPosition == 0 // The child widget to animate
+                ? const FollowersList() // If _selectedItemPosition is 1, show the FollowersList
+                : const FollowingList() // Otherwise, show the FollowingList
+            ),
+      ),
     );
   }
 }

@@ -3,6 +3,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:skating_app/profile/user_list_widget.dart';
 
+import '../swatch.dart';
+
 class ConnectionsListView extends StatefulWidget {
   final String type;
 
@@ -78,6 +80,16 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
         // Use the Comment widget to build each item in the list view
         itemBuilder: (context, item, index) => UserListWidget(id: item["user"]),
+        noItemsFoundIndicatorBuilder: (context) => Center(
+            child: Column(children: [
+          Text(
+            "No Followier",
+            style: TextStyle(
+                fontSize: 24, fontWeight: FontWeight.bold, color: swatch[801]!),
+          ),
+          Text("eeeeeeeeeeeeeeee",
+              style: TextStyle(fontSize: 20, color: swatch[701]!)),
+        ])),
       ),
     );
   }

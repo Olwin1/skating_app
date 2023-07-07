@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:skating_app/common_logger.dart';
 import '../swatch.dart';
 import 'check_permission.dart';
 
@@ -85,7 +86,7 @@ class _DistanceTravelled extends State<DistanceTravelled> {
       );
     }
     stream?.cancel().then(
-          (value) => {stream = null, print("asaaaaaa")},
+          (value) => {stream = null, commonLogger.v("Cancelling stream")},
         );
     previousPosition = null;
     return Text("0 Km", style: TextStyle(color: swatch[401]));

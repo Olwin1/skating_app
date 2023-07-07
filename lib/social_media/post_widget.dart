@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/social.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/profile_page.dart';
 import 'package:skating_app/swatch.dart';
-import 'package:skating_app/test.dart';
 import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
 import 'comments.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -90,7 +90,7 @@ class _PostWidget extends State<PostWidget> {
 
   @override // Override existing build method
   Widget build(BuildContext context) {
-    print("${Config.uri}/image/${widget.post['image']}");
+    commonLogger.v("Building ${Config.uri}/image/${widget.post['image']}");
     String comments = (widget.post['comment_count'] ?? 0).toString();
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Container(
@@ -305,7 +305,8 @@ class _Avatar extends State<Avatar> {
                           userId: profile!,
                           navbar: false,
                         )))
-            : print("user not found"), // Otherwise, print "user not found"
+            : commonLogger
+                .w("User not found"), // Otherwise, print "user not found"
 
         child: image == null
             // If there is no cached user information or avatar image, use a default image

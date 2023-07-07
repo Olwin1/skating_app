@@ -5,8 +5,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/social.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/objects/user.dart';
-import 'package:skating_app/profile/connections_list.dart';
 import 'package:skating_app/profile/edit_profile.dart';
 import 'package:skating_app/profile/follow_button.dart';
 import 'package:skating_app/profile/friends_lisrs.dart';
@@ -70,7 +70,7 @@ class _Profile extends State<Profile> {
       context,
       child: _dialog(),
     ).then((value) {
-      print('---received:');
+      commonLogger.v('Recieved value: $value');
     });
   }
 
@@ -236,7 +236,7 @@ class _Profile extends State<Profile> {
                     borderRadius: BorderRadius.all(Radius.circular(8))),
                 child: TextButton(
                     // Expand button to empty space
-                    onPressed: () => print(
+                    onPressed: () => commonLogger.i(
                         "pressed"), // Prints "pressed" when button is pressed
                     child: Text(AppLocalizations.of(context)!.shareProfile,
                         style: TextStyle(color: swatch[401]))),
@@ -248,7 +248,7 @@ class _Profile extends State<Profile> {
                       color: Color.fromARGB(125, 0, 0, 0),
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: TextButton(
-                      onPressed: () => print("pressed"),
+                      onPressed: () => commonLogger.i("pressed"),
                       child: Icon(
                         Icons.precision_manufacturing_outlined,
                         color: swatch[401],
@@ -281,7 +281,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
       // Callback function that will be called when a menu item is selected
       onSelected: (SampleItem item) {
         // In this case, it just prints "selected" to the console
-        print("selected");
+        commonLogger.i("selected");
         if (item == SampleItem.itemOne) {
           // If item pressed is Edit Profile
           Navigator.push(
@@ -490,7 +490,7 @@ class _UserPostsListState extends State<UserPostsList> {
       // Dispose of the PagingController when the state object is disposed
       _pagingController.dispose();
     } catch (e) {
-      print(e);
+      commonLogger.e("An error has occured: $e");
     }
     super.dispose();
   }

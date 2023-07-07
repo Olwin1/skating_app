@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -43,9 +44,10 @@ class _Comment extends State<Comment> {
       ),
       padding: const EdgeInsets.all(4), // Add padding so doesn't touch edges
       child: TextButton(
-        onPressed: () => print("Pressed"),
+        onPressed: () => commonLogger.i("Pressed"),
         // Make list widget clickable
-        onLongPress: () => print("longPress"), //When list widget clicked
+        onLongPress: () =>
+            commonLogger.i("longPress"), //When list widget clicked
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           // Create Row

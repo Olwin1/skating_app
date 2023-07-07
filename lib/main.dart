@@ -8,6 +8,7 @@ import 'package:skating_app/api/websocket.dart';
 import 'package:skating_app/api/token.dart';
 import 'package:skating_app/social_media/login.dart';
 import 'api/config.dart';
+import 'common_logger.dart';
 import 'objects/user.dart';
 import 'swatch.dart';
 import 'tab_navigator.dart';
@@ -287,7 +288,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           currentPage.set(i);
                         })
                       : null,
-                  print("setting curret page")
+                  commonLogger.v("Setting the current page: $i")
                 }, // When a button is pressed... output to console
                 style: TabStyle
                     .fixedCircle, // Set the navbar style to have the circle stay at the centre

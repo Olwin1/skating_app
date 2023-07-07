@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/config.dart';
+import 'package:skating_app/common_logger.dart';
 
 import '../objects/user.dart';
 import '../swatch.dart';
@@ -66,7 +67,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
     return Column(children: [
       // Create a button with an icon that represents the user
       TextButton(
-        onPressed: () => print(
+        onPressed: () => commonLogger.d(
             "Pressed user icon"), // When the button is pressed, print a message
         child: userCache == null || userCache!["avatar"] == null
             // If there is no cached user information or avatar image, use a default image

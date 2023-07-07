@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skating_app/api/social.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/profile/user_list_widget.dart';
 
 import '../swatch.dart';
@@ -35,24 +36,24 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
     try {
       List<Map<String, dynamic>> page;
       // Fetch the page of comments using the getComments() function
-      print("selecting? ${widget.type}");
+      commonLogger.d("Selecting ${widget.type}");
       if (widget.type == "followers") {
-        print("followers");
+        commonLogger.d("followers selected");
         page = await getUserFollowers(
           pageKey,
         );
       } else if (widget.type == "following") {
-        print("following");
+        commonLogger.d("following selected");
         page = await getUserFollowing(
           pageKey,
         );
       } else if (widget.type == "friends") {
-        print("friends");
+        commonLogger.d("friends selected");
         page = await getUserFriends(
           pageKey,
         );
       } else {
-        print("nuklling");
+        commonLogger.d("nothing selected");
         page = [];
       }
       // Determine if this is the last page
@@ -100,7 +101,7 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       // Dispose the controller when the widget is disposed
       _pagingController.dispose();
     } catch (e) {
-      print(e);
+      commonLogger.e("Error in dispose: $e");
     }
     super.dispose();
   }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:skating_app/api/token.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
+import '../common_logger.dart';
 import 'config.dart';
 
 SecureStorage storage = SecureStorage();
@@ -27,7 +28,7 @@ class WebSocketConnection {
   // Method to connect to the WebSocket
   void _connect() async {
     try {
-      print("connectiong"); // logs to console
+      commonLogger.v("Connecting to websocket"); // logs to console
       // Creates an io.Socket instance with the given configuration
       socket = io.io(
           Config.uri,
@@ -39,18 +40,21 @@ class WebSocketConnection {
               .build());
       // Adds a listener for the 'connect' event
       socket.onConnect((_) {
-        print('connect'); // logs to console
+        commonLogger.d('Sending test message'); // logs to console
         socket.emit('msg', 'test'); // emits a test message to the server
       });
       // Adds a listener for the 'newMessage' event
       socket.on('newMessage', (data) {
-        print(data); // logs the received data to console
+        commonLogger.d(
+            "Sending NewMessage: $data"); // logs the received data to console
         _streamController.add(data); // adds data to the stream controller
       });
       // Adds a listener for the 'disconnect' event
-      socket.onDisconnect((_) => print('disconnect')); // logs to console
+      socket.onDisconnect((_) =>
+          commonLogger.v("Disconnecting from socket")); // logs to console
     } catch (e) {
-      print('Error connecting to WebSocket: $e'); // logs any errors to console
+      commonLogger
+          .e('Error connecting to WebSocket: $e'); // logs any errors to console
     }
   }
 }

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/objects/user.dart';
 
 import '../api/config.dart';
@@ -83,7 +84,7 @@ class _UserListWidget extends State<UserListWidget> {
             ),
             // TextButton with an onPressed function that prints test value "ee" and a child text widget with the text "Follow"
             TextButton(
-                onPressed: () => print("ee"),
+                onPressed: () => commonLogger.i("pressed"),
                 child: Text(AppLocalizations.of(context)!.follow)),
             const Spacer()
           ],

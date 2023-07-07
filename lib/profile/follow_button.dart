@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:skating_app/api/connections.dart';
+import 'package:skating_app/common_logger.dart';
 
 import '../swatch.dart';
 import 'edit_profile.dart';
@@ -28,7 +29,7 @@ class _FollowButtonState extends State<FollowButton> {
       // Calls `doesFollow` function to check if the user is being followed
       doesFollow(widget.user).then((value) => {
             // Logs the response from `doesFollow`
-            print(value.toString()),
+            commonLogger.v("User does follow: ${value.toString()}"),
             // If the user is already followed, update `type` to "following" or "requested"
             if (value[0])
               {
@@ -50,7 +51,7 @@ class _FollowButtonState extends State<FollowButton> {
         // Calls `followUser` function to follow/unfollow the user
         followUser(widget.user).then((value) => {
               // Logs the response from `followUser`
-              print(value),
+              commonLogger.v("Follow successful: $value"),
               // If follow request is successful, update `type` to "requested"
               if (value["requested"] == true)
                 {mounted ? setState(() => type = "requested") : null}
@@ -63,7 +64,7 @@ class _FollowButtonState extends State<FollowButton> {
       } else {
         unfollowUser(widget.user).then((value) => {
               // Logs the response from `followUser`
-              print(value),
+              commonLogger.v("Unfollow success $value"),
               // If follow request is successful, update `type` to "requested"
               mounted ? setState(() => type = "follow") : null
             });

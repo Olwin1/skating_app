@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:skating_app/api/session.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/swatch.dart';
 
 const List<String> sessionType = <String>[
@@ -83,7 +84,7 @@ class _SaveSession extends State<SaveSession> {
         Navigator.of(context).pop();
       } catch (e) {
         // If there is an error, print the error message to the console
-        print("An Error Occurred: $e");
+        commonLogger.e("An Error Occurred: $e");
       }
     }
 
@@ -238,7 +239,7 @@ class _SaveSession extends State<SaveSession> {
                       color: Color.fromARGB(125, 0, 0, 0),
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: TextButton(
-                      onPressed: () => print("Add photos"),
+                      onPressed: () => commonLogger.i("Add photos"),
                       child: Text(AppLocalizations.of(context)!.addPhotos)),
                 ), // Add Photos Infobox
                 Container(

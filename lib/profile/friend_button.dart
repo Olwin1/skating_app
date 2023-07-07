@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:skating_app/api/connections.dart';
+import 'package:skating_app/common_logger.dart';
 
 import '../swatch.dart';
 import 'edit_profile.dart';
@@ -30,7 +31,7 @@ class _FriendButtonState extends State<FriendButton> {
       // Call the doesFollow method to check if the user is being followed
       doesFollow(widget.user).then((value) => {
             // Print the result of the doesFollow method
-            print(value.toString()),
+            commonLogger.v("Does follow user: ${value.toString()}"),
             // Update the button's type based on the result of the doesFollow method
             if (value[0])
               {
@@ -62,7 +63,7 @@ class _FriendButtonState extends State<FriendButton> {
       // Call the followUser method to follow the user
       followUser(widget.user).then((value) => {
             // Print the result of the followUser method
-            print(value),
+            commonLogger.v("Follow user $value"),
             // Update the button's type based on the result of the followUser method
             if (value["requested"] == true)
               {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/friends_tracker/friend_activity.dart';
 import 'package:skating_app/friends_tracker/marker.dart';
 import 'package:skating_app/objects/user.dart';
@@ -111,9 +112,9 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
   @override
   Widget build(BuildContext context) {
     // create an instance of the User class and passing it an id of '1'
-    print("build refind");
+    commonLogger.v("Building Map");
 
-    bool isPortrait = true;
+    //bool isPortrait = true;
     return Scaffold(
         // Scaffold widget, which is the basic layout element in Flutter
         body: FlutterMap(
@@ -156,13 +157,13 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
               physics: const BouncingScrollPhysics(),
 
               // The alignment of the search bar along the x-axis
-              axisAlignment: isPortrait ? 0.0 : -1.0,
+              axisAlignment: 0.0, //isPortrait ? 0.0 : -1.0,
 
               // The alignment of the search bar along the x-axis when it's in an open state
               openAxisAlignment: 0.0,
 
               // The width of the search bar
-              width: isPortrait ? 600 : 500,
+              width: 600, //isPortrait ? 600 : 500,
 
               // The delay in milliseconds before the onQueryChanged function is called
               debounceDelay: const Duration(milliseconds: 500),
@@ -174,8 +175,10 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
 
               // The custom transition to be used for animating between opened and closed states
               transition: CircularFloatingSearchBarTransition(),
-              onFocusChanged: (e) =>
-                  {updateSearchOpened(e), print(e)}, // Hide user list
+              onFocusChanged: (e) => {
+                    updateSearchOpened(e),
+                    commonLogger.v("Focus changed $e")
+                  }, // Hide user list
 
               // An array of FloatingSearchBarAction widgets that provide actions within the search bar
               actions: [

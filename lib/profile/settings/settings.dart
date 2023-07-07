@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/profile/settings/settings_overlays.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:skating_app/swatch.dart';
@@ -91,7 +92,7 @@ class _Settings extends State<Settings> {
                       title: Text(AppLocalizations.of(context)!.password),
                       value: const Text('••••••••'),
                       onPressed: (e) => {
-                        print("text"),
+                        commonLogger.i("pressed"),
                         mounted ? setState(() => {item = 1}) : null
                       },
                     ),

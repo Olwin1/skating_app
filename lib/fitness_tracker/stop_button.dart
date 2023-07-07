@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skating_app/common_logger.dart';
 
 class StopButton extends StatefulWidget {
   // Create HomePage Class
@@ -57,7 +58,7 @@ class _StopButton extends State<StopButton>
                       stopwatch.stop(); // Stop stopwatch
                       stopwatch.reset(); // Reset timer
                       var timeElapsedInSeconds = stopwatch.elapsed.inSeconds;
-                      print("Time elapsed: $timeElapsedInSeconds");
+                      commonLogger.d("Time elapsed: $timeElapsedInSeconds");
                       if (controller.status == AnimationStatus.forward) {
                         controller.reverse(); // Reverse animation
                       }

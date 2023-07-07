@@ -1,3 +1,4 @@
+import 'package:skating_app/common_logger.dart';
 import 'package:stash/stash_api.dart';
 import 'package:stash_memory/stash_memory.dart';
 import 'package:skating_app/api/social.dart';
@@ -10,8 +11,8 @@ Future<Map<String, dynamic>> getUserCache(String userId) async {
       name: 'users',
       maxEntries: 30,
       eventListenerMode: EventListenerMode.synchronous)
-    ..on<CacheEntryCreatedEvent<Map<String, dynamic>>>().listen(
-        (event) => print('Key "${event.entry.key}" added to the cache'));
+    ..on<CacheEntryCreatedEvent<Map<String, dynamic>>>().listen((event) =>
+        commonLogger.v('Key "${event.entry.key}" added to the cache'));
   Map<String, dynamic>? user = await cache.get(userId);
   user ??= await getUser(userId);
   return user;

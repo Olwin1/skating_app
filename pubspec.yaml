@@ -84,6 +84,7 @@ dependencies:
   flutter_overlay: ^1.0.0
   timeago: ^3.3.0
   shimmer: ^3.0.0
+  logger: ^1.4.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/social_media/private_messages/private_message_list.dart';
 import 'package:skating_app/social_media/search_bar.dart';
 import 'post_widget.dart';
@@ -132,7 +133,7 @@ class _PostsListViewState extends State<PostsListView> {
 // Fetches the data for the given pageKey and appends it to the list of items
   Future<void> _fetchPage(int pageKey) async {
     try {
-      print("heeeeey");
+      commonLogger.v("Fetching page");
       // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
       final page = await getPosts(seenPosts);
       // _pagingController.refresh();
@@ -141,7 +142,7 @@ class _PostsListViewState extends State<PostsListView> {
       for (int i = 0; i < page.length; i++) {
         Map<String, dynamic> item = page[i];
         seenPosts.add(item['_id']);
-        print(seenPosts);
+        commonLogger.d("Seen posts: $seenPosts");
       }
 
       // Determines if the page being fetched is the last page

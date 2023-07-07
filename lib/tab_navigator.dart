@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:skating_app/new_post/new_post.dart';
 import 'package:skating_app/profile/profile_page.dart';
-import 'package:skating_app/social_media/login.dart';
-import 'package:skating_app/test2.dart';
 import 'friends_tracker/friends_tracker.dart';
 import 'social_media/homepage.dart';
 import 'fitness_tracker/fitness_tracker.dart';

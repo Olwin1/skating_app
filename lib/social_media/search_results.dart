@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/social.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/profile/profile_page.dart';
 import '../api/config.dart';
 import '../swatch.dart';
@@ -123,13 +124,13 @@ class _SearchResultsList extends State<SearchResultsList> {
     entering = true;
 
     // Print the search query
-    print("searching users ${widget.query}");
+    commonLogger.v("searching users ${widget.query}");
 
     // Call the searchUsers function with the query and handle the returned value
     searchUsers(widget.query).then((value) => mounted
         ? setState(
             () {
-              print("eeeeeeeeeeeeeeeeeeeee $value");
+              commonLogger.d("eeeeeeeeeeeeeeeeeeeee $value");
               results = value;
             },
           )

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login_template/flutter_login_template.dart';
-import 'package:skating_app/api/auth.dart' show login, signup;
+import 'package:skating_app/api/auth.dart' show login; // signup;
 import 'package:skating_app/api/social.dart';
 import 'package:skating_app/api/token.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skating_app/common_logger.dart';
 
 // Define an enum to represent different states of the login screen
 enum _State {
@@ -125,14 +126,14 @@ class _Login extends State<Login> {
           getUser("0").then((value) => storage.setId(value["_id"]));
           // Load the home screen
           loadHome();
-          print(res);
+          commonLogger.d("Result: $res");
         } catch (e) {
           mounted
               ? setState(() {
                   errorText = "Your username or password is incorrect";
                 })
               : null;
-          print(e);
+          commonLogger.e("An error has occured: $e");
         }
       },
       onPressedSignUp: () {

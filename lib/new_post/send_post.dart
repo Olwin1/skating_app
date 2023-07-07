@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:skating_app/api/image.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/swatch.dart';
 
 // Define a widget for sending a post with an image
@@ -41,7 +42,7 @@ class _SendPost extends State<SendPost> {
         // Close the current screen and go back to the previous screen
       } catch (e) {
         // If there is an error, print the error message to the console
-        print("An Error Occurred: $e");
+        commonLogger.e("An Error Occurred: $e");
       }
       return null;
     }
@@ -60,7 +61,7 @@ class _SendPost extends State<SendPost> {
                       Navigator.of(context).pop())
             });
       } catch (e) {
-        print("Error creating post");
+        commonLogger.e("Error creating post: $e");
       }
     }
 

@@ -1,6 +1,7 @@
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/social_media/private_messages/comment.dart';
 import 'package:skating_app/swatch.dart';
 
@@ -217,7 +218,7 @@ class _CommentsListViewState extends State<CommentsListView> {
       // Dispose the controller when the widget is disposed
       _pagingController.dispose();
     } catch (e) {
-      print(e);
+      commonLogger.e("An error has occured: $e");
     }
     super.dispose();
   }

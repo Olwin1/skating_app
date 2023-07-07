@@ -4,10 +4,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/swatch.dart';
 import 'check_permission.dart';
 
-import 'dart:ui' as ui;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Define a StatefulWidget for the Speedometer page
@@ -28,28 +28,16 @@ class _SpeedometerPage extends State<SpeedometerPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Define a gradient for the active gauge color
-    ui.Gradient activeGradient = ui.Gradient.linear(
-      const Offset(0, 0),
-      const Offset(550, 7),
-      [
-        const Color.fromARGB(255, 181, 214, 174),
-        const Color.fromARGB(255, 23, 189, 142),
-        const Color.fromARGB(255, 255, 50, 50)
-      ],
-      [0, 0.2, 0.6],
-    );
-
     // Check if location permission is granted and listen to position updates
     try {
       hasLocationPermission().then((value) => {
             stream = Geolocator.getPositionStream().listen((position) {
-              key.currentState!.updateSpeed(position.speed,
+              key.currentState?.updateSpeed(position.speed,
                   animate: true, duration: const Duration(milliseconds: 800));
             })
           });
     } catch (e) {
-      print("Speedometer Error: $e");
+      commonLogger.e("Speedometer Error: $e");
     }
     // Return a Scaffold with an AppBar and a KdGaugeView widget
     return Scaffold(
@@ -97,7 +85,7 @@ class _SpeedometerPage extends State<SpeedometerPage> {
 
   @override
   void dispose() {
-    print("SPEEDOMETER DISPOSE");
+    commonLogger.v("Disposing Speedometer");
     stream?.cancel();
     super.dispose();
   }

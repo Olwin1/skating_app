@@ -1,5 +1,6 @@
 // Importing necessary packages and files
 import 'package:flutter/material.dart';
+import 'package:skating_app/common_logger.dart';
 
 import '../../swatch.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -71,7 +72,7 @@ class _OverlaySettings extends State<OverlaySettings> {
                     fillColor: Color.fromARGB(255, 0, 0, 0), filled: true),
               ),
               TextButton(
-                  onPressed: () => print("pressed"),
+                  onPressed: () => commonLogger.i("pressed"),
                   child: Text(AppLocalizations.of(context)!.changePassword)),
             ]));
 
@@ -205,7 +206,7 @@ class _LanguagePopupItemState extends State<LanguagePopupItem> {
         padding: const EdgeInsets.all(8),
         child: TextButton(
             style: const ButtonStyle(alignment: Alignment.centerLeft),
-            onPressed: () => print("pressed"),
+            onPressed: () => commonLogger.i("pressed"),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

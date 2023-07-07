@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:photo_gallery/photo_gallery.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/new_post/edit_post.dart';
 import 'package:skating_app/new_post/send_post.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -71,7 +72,7 @@ class _NewPostPage extends State<NewPostPage> {
 
   // This function loads the initial set of images.
   Future<void> initAsync() async {
-    print(1); // Print 1.
+    commonLogger.d("Running initAsync");
     if (await _promptPermissionSetting()) {
       // Check if the user has granted permission to access the device's photo gallery.
       List<Album> albums = await PhotoGallery.listAlbums(
@@ -99,7 +100,7 @@ class _NewPostPage extends State<NewPostPage> {
 
 // This function prompts the user to grant permission to access the device's photo gallery.
   Future<bool> _promptPermissionSetting() async {
-    print(5); // Print 5.
+    commonLogger.v("Prompting image permissions");
     // Check if the device is iOS and both the storage and photos permissions have been granted,
     // or if the device is Android and the storage permission has been granted.
     if (Platform.isIOS &&
@@ -112,7 +113,8 @@ class _NewPostPage extends State<NewPostPage> {
   }
 
   callback(image) {
-    print("i gets an imaen");
+    commonLogger.v("Navigating to send post page");
+
     selectedImage = image;
     Navigator.of(context, rootNavigator: true).push(
         // Root navigator hides navbar
@@ -144,9 +146,9 @@ class _NewPostPage extends State<NewPostPage> {
                             )
                           : null,
                       if (selectedImage != null)
-                        {print("image has been selcected")}
+                        {commonLogger.i("No image has been selected")}
                     }
-                  : print("No image selected"),
+                  : commonLogger.i("No image has been selected."),
               icon: const Icon(Icons.arrow_forward))
         ],
       ),
@@ -260,7 +262,7 @@ class _PhotosGridViewState extends State<PhotosGridView> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
                 child: Container(
-                  color: Color(0x66000000),
+                  color: const Color(0x66000000),
                   child: FadeInImage(
                     fit: BoxFit.cover,
                     placeholder: MemoryImage(kTransparentImage),

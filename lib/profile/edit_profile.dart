@@ -5,6 +5,7 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/swatch.dart';
 
 import '../api/config.dart';
@@ -43,7 +44,7 @@ class _EditProfile extends State<EditProfile> {
           true, // Ensure the picker is displayed within the safe area of the screen
       onSelect: (Country country) {
         // Callback function when a country is selected
-        print('Select country: ${country.displayName}');
+        commonLogger.v('Select country: ${country.displayName}');
         countryController.text = country.name;
       },
       countryListTheme: CountryListThemeData(
@@ -137,7 +138,7 @@ class _EditProfile extends State<EditProfile> {
                         ),
                   // Display the edit picture button
                   TextButton(
-                      onPressed: () => print("pressed"),
+                      onPressed: () => commonLogger.i("pressed"),
                       child: Text(AppLocalizations.of(context)!.editPicture))
                 ],
               ),

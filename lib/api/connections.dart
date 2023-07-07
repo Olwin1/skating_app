@@ -4,6 +4,7 @@ import 'token.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
 import 'dart:convert';
+import '../common_logger.dart';
 
 // Export login and signup functions from auth.dart
 export 'package:skating_app/api/connections.dart'
@@ -34,7 +35,7 @@ Future<Map<String, dynamic>> followUser(String user) async {
     // If the request was successful (status code 200), parse the response body and return it
     if (response.statusCode == 200) {
       var y = json.decode(response.body)[0];
-      print("eess");
+      commonLogger.v("Response: 200 Follow User");
       return y;
     } else {
       // If the request was unsuccessful, throw an exception with the reason
@@ -63,7 +64,8 @@ Future<Map<String, dynamic>> unfollowUser(String user) async {
     // If the request was successful (status code 200), parse the response body and return it
     if (response.statusCode == 200) {
       var y = json.decode(response.body);
-      print("eess");
+      commonLogger.v("Response: 200 Unfollow User");
+
       return y;
     } else {
       // If the request was unsuccessful, throw an exception with the reason
@@ -90,6 +92,8 @@ Future<Map<String, dynamic>> friendUser(String user) async {
     });
     // If the request was successful (status code 200), parse the response body and return it
     if (response.statusCode == 200) {
+      commonLogger.v("Response: 200 Friend User");
+
       Map<String, dynamic> y = json.decode(response.body)[0];
       return y;
     } else {
@@ -118,6 +122,8 @@ Future<Map<String, dynamic>> followUserRequest(
           .toString() // Include whether the follow request has been accepted or not in the request body
     });
     if (response.statusCode == 200) {
+      commonLogger.v("Response: 200 Follow Request User");
+
       Map<String, dynamic> y = json.decode(response.body);
       return y; // Return the response body as a Map<String, dynamic>
     } else {
@@ -146,6 +152,8 @@ Future<Map<String, dynamic>> friendUserRequest(
           .toString() // Include whether the friend request has been accepted or not in the request body
     });
     if (response.statusCode == 200) {
+      commonLogger.v("Response: 200 Friend Request User");
+
       Map<String, dynamic> y = json.decode(response.body);
       return y; // Return the response body as a Map<String, dynamic>
     } else {
@@ -171,6 +179,8 @@ Future<List<bool>> doesFollow(String user) async {
     });
     // If the server returns a status code of 200, decode the response body into a list of booleans and return it.
     if (response.statusCode == 200) {
+      commonLogger.v("Response: 200 Does Follow User");
+
       List<bool> result = List<bool>.from(jsonDecode(response.body));
       return result;
       // If the server returns a status code of 404, return a list containing false (as the user doesn't exist).
@@ -199,6 +209,8 @@ Future<List<bool>> doesFriend(String user) async {
     });
     // If the server returns a status code of 200, decode the response body into a map of strings and dynamic values.
     if (response.statusCode == 200) {
+      commonLogger.v("Response: 200 Does Friend User");
+
       Map<String, dynamic>? result = jsonDecode(response.body);
       // If the result is null, return a list containing false (as the user doesn't exist).
       if (result == null) {

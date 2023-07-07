@@ -7,6 +7,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/websocket.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:uuid/uuid.dart';
 import '../../api/config.dart';
 import '../../api/messages.dart';
@@ -111,11 +112,11 @@ class _PrivateMessage extends State<PrivateMessage> {
   types.User getUser(String userId, String username) {
     for (var i = 0; i < users.length; i++) {
       if (users[i].id == userId) {
-        print(users[i]);
+        commonLogger.d(users[i]);
         return users[i];
       }
     }
-    print("crweated");
+    commonLogger.d("created");
     var newUser = types.User(id: userId, firstName: username);
     users.add(newUser);
     return newUser;
@@ -125,7 +126,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   void updateMessages(Map<String, dynamic> data) {
     // If the message is for the current channel
     if (data["channel"] == widget.channel) {
-      print("ITS A MATCH!");
+      commonLogger.d("ITS A MATCH!");
       // Add the new message to the beginning of the list
       mounted
           ? setState(() {
@@ -172,7 +173,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   Future<void> _loadMoreMessages() async {
-    print("eeee");
+    commonLogger.v("Loading more messages");
     final nextPage = _page + 1;
     final messagesRaw = await getMessages(nextPage, widget.channel);
     List<types.Message> messages = [];
@@ -293,7 +294,7 @@ class _PrivateMessage extends State<PrivateMessage> {
                       _messages, // Set messages to message variable defined above
                   onSendPressed: _handleSendPressed,
                   onMessageTap: (context, p1) {
-                    print("eeeeeadss  ${p1.author.id}");
+                    commonLogger.d("eeeeeadss  ${p1.author.id}");
                   },
                   user: getUser(widget.currentUser, "s"), // Set user to user id
                   theme: DefaultChatTheme(
@@ -343,7 +344,7 @@ class _PrivateMessage extends State<PrivateMessage> {
         text: message.text, // Set message content
       );
       _addMessage(textMessage); // Run addMessage function
-      print(await postMessage(widget.channel, message.text, null));
+      commonLogger.d(await postMessage(widget.channel, message.text, null));
     } catch (e) {
       final errorMessage = types.SystemMessage(
         // Create new message
@@ -352,7 +353,7 @@ class _PrivateMessage extends State<PrivateMessage> {
         text: "Message Failed To Send", // Set message content
       );
       _addMessage(errorMessage);
-      print("An error Occurred $e");
+      commonLogger.e("An error Occurred $e");
     }
   }
 
@@ -361,7 +362,7 @@ class _PrivateMessage extends State<PrivateMessage> {
     try {
       subscription.cancel(); // Stop listening to new messages
     } catch (e) {
-      print(e);
+      commonLogger.e("An error has occured: $e");
     }
     super.dispose();
   }

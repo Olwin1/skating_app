@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/profile/followers_list.dart';
 import 'package:skating_app/profile/following_list.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
@@ -25,7 +26,7 @@ class _Lists extends State<Lists> {
 
   @override
   Widget build(BuildContext context) {
-    print(_selectedItemPosition);
+    commonLogger.v("Selected item position: $_selectedItemPosition");
     return Scaffold(
       appBar: AppBar(
           backgroundColor: swatch[700]!,

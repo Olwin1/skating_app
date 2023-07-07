@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:uuid/uuid.dart';
 import '../../api/websocket.dart';
 import '../../swatch.dart';
@@ -283,7 +284,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
             .disconnect(); // Disconnect from websocket when user leaves messaging pages
       }
     } catch (e) {
-      print(e);
+      commonLogger.e("An error has occured: $e");
     }
     super.dispose();
   }

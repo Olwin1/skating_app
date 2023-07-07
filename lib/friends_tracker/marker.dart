@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:skating_app/api/config.dart';
+import 'package:skating_app/common_logger.dart';
 
 import '../swatch.dart';
 
@@ -21,7 +22,7 @@ class CustomMarker extends StatefulWidget {
 class _CustomMarker extends State<CustomMarker> {
   @override
   Widget build(BuildContext context) {
-    print('${Config.uri}/image/${widget.sessionData["images"][0]}');
+    commonLogger.v('${Config.uri}/image/${widget.sessionData["images"][0]}');
     // Check if the sessionData contains any images
     if (!widget.sessionData["images"].isEmpty) {
       // Return a Stack widget with two images

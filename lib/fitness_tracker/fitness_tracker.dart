@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/fitness_tracker/save_session.dart';
 import 'package:skating_app/fitness_tracker/speedometer.dart';
 import 'package:solar_calculator/solar_calculator.dart';
@@ -95,7 +96,7 @@ class _FitnessTracker extends State<FitnessTracker> {
     if (!stoppedTracking) {
       totalDistance = distance;
     }
-    print(totalDistance);
+    commonLogger.d("Total distance is: $totalDistance");
   }
 
   String buttonMessage = "Start";

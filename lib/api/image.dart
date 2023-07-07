@@ -5,6 +5,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart';
 import 'package:mime/mime.dart';
 
+import '../common_logger.dart';
 import 'token.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
@@ -22,8 +23,8 @@ Future<Uint8List> compressImage(Uint8List image) async {
     minWidth: 1080,
     quality: 96,
   );
-  print(image.length);
-  print(result.length);
+  commonLogger.v("Image Successfully Compressed: ${image.length}");
+
   return result;
 }
 
@@ -47,7 +48,7 @@ Future<StreamedResponse?> uploadFile(Uint8List image) async {
     var extension = mime!.split("/");
 
     // Print the file extension to the console for debugging purposes
-    print(extension);
+    commonLogger.d("File extension is: $extension");
 
     // Add an authorization header to the HTTP request using a bearer token obtained from a storage object
     request.headers['Authorization'] = 'Bearer ${await storage.getToken()}';
@@ -60,16 +61,18 @@ Future<StreamedResponse?> uploadFile(Uint8List image) async {
     StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       // If the server returns a 200 status code, print a success message to the console
-      print("Uploaded!");
+      commonLogger.v("Response: 200 Image Upload");
+
       return response;
     } else {
       // Otherwise, print an error message to the console
-      print("erorer");
+      commonLogger.e("Response: Non 200 - $response");
+
       return null;
     }
   } catch (e) {
     // If an error occurs during the file upload process, print an error message to the console
-    print("An Error Occurred during file upload");
+    commonLogger.e("An Error Occurred during file upload");
     return null;
   }
 }

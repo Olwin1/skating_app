@@ -9,6 +9,7 @@ import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:skating_app/profile/edit_profile.dart';
 import 'package:skating_app/profile/follow_button.dart';
+import 'package:skating_app/profile/friend_icon_button.dart';
 import 'package:skating_app/profile/friends_lisrs.dart';
 import 'package:skating_app/profile/lists.dart';
 import 'package:skating_app/profile/settings/settings.dart';
@@ -241,18 +242,7 @@ class _Profile extends State<Profile> {
                     child: Text(AppLocalizations.of(context)!.shareProfile,
                         style: TextStyle(color: swatch[401]))),
               )), // Button text
-              Container(
-                  margin: const EdgeInsets.all(4),
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                      color: Color.fromARGB(125, 0, 0, 0),
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
-                  child: TextButton(
-                      onPressed: () => commonLogger.i("pressed"),
-                      child: Icon(
-                        Icons.precision_manufacturing_outlined,
-                        color: swatch[401],
-                      )))
+              FriendIconButton(user: user)
             ]),
             // Expanded grid view with images
             UserPostsList(user: user, imageViewerController: _show)

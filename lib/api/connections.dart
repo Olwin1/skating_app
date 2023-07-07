@@ -80,7 +80,7 @@ Future<Map<String, dynamic>> unfollowUser(String user) async {
 // This method is used to friend a user
 Future<Map<String, dynamic>> friendUser(String user) async {
   // Set the API endpoint URL
-  var url = Uri.parse('${Config.uri}/connections/follow');
+  var url = Uri.parse('${Config.uri}/connections/friend');
   try {
     // Send a POST request to the endpoint with the user to friend
     var response = await http.post(url, headers: {
@@ -103,6 +103,36 @@ Future<Map<String, dynamic>> friendUser(String user) async {
   } catch (e) {
     // If there was an error while sending the request, throw an exception with the error message
     throw Exception("Error during friend: $e");
+  }
+}
+
+// This method is used to follow a user
+Future<Map<String, dynamic>> unfriendUser(String user) async {
+  // Set the API endpoint URL
+  var url = Uri.parse('${Config.uri}/connections/unfriend');
+  try {
+    // Send a POST request to the endpoint with the user to follow
+    var response = await http.post(url, headers: {
+      // Set the request headers
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Bearer ${await storage.getToken()}',
+    }, body: {
+      'user': user,
+    });
+
+    // If the request was successful (status code 200), parse the response body and return it
+    if (response.statusCode == 200) {
+      var y = json.decode(response.body);
+      commonLogger.v("Response: 200 Unfriend User");
+
+      return y;
+    } else {
+      // If the request was unsuccessful, throw an exception with the reason
+      throw Exception("Unfriend Unsuccessful: ${response.reasonPhrase}");
+    }
+  } catch (e) {
+    // If there was an error while sending the request, throw an exception with the error message
+    throw Exception("Error during unfriend: $e");
   }
 }
 
@@ -211,13 +241,18 @@ Future<List<bool>> doesFriend(String user) async {
     if (response.statusCode == 200) {
       commonLogger.v("Response: 200 Does Friend User");
 
-      Map<String, dynamic>? result = jsonDecode(response.body);
+      List<dynamic>? result = jsonDecode(response.body);
       // If the result is null, return a list containing false (as the user doesn't exist).
       if (result == null) {
         return [false];
       }
+
       // Otherwise, return a list containing true (as the users are friends) and a boolean indicating if the user has requested the friendship.
-      return [true, result["requested"] == true ? true : false];
+      return [
+        result[0],
+        result.length > 1 ? result[1] : false,
+        result.length > 2 ? result[2] : false
+      ];
       // If the server returns a status code of 404, return a list containing false (as the user doesn't exist).
     } else if (response.statusCode == 404) {
       return [false];

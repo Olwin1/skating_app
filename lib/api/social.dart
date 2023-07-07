@@ -1,3 +1,5 @@
+import 'package:email_validator/email_validator.dart';
+
 import 'token.dart';
 
 // Import necessary dependencies and files
@@ -745,5 +747,81 @@ Future<List<Map<String, dynamic>>> searchUsers(String query) async {
   } catch (e) {
     // If there's an error, throw an exception with the error message
     throw Exception("Error during post: $e");
+  }
+}
+
+Future<Map<String, dynamic>> setEmail(String email) async {
+  // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
+  if (!EmailValidator.validate(email)) throw Exception("Invalid Email");
+  var url = Uri.parse(
+      '${Config.uri}/user/email'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
+
+  try {
+    // Using a try-catch block to handle errors
+    var response = await http.post(
+        // Creating a variable 'response' and making a post request to the specified URL
+        url,
+        headers: {
+          'Content-Type':
+              'application/x-www-form-urlencoded', // Specifying the headers for the request
+          'Authorization':
+              'Bearer ${await storage.getToken()}', // Including the authorization token
+        },
+        body: {
+          'email': email,
+        });
+
+    if (response.statusCode == 200) {
+      // Checking if the response status code is 200
+      Map<String, dynamic> data = json.decode(response
+          .body); // Decoding the response body and converting it into a Map object
+      return data; // Returning the Map object
+    } else {
+      // If the response status code is not 200
+      throw Exception(
+          "Get Unsuccessful: ${response.reasonPhrase}"); // Throwing an exception with an error message
+    }
+  } catch (e) {
+    // Handling the error
+    throw Exception(
+        "Error during post: $e"); // Throwing an exception with an error message
+  }
+}
+
+Future<Map<String, dynamic>> setDescription(String desc) async {
+  // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
+  if (desc.length > 250) throw Exception("Invalid Description");
+  var url = Uri.parse(
+      '${Config.uri}/user/description'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
+
+  try {
+    // Using a try-catch block to handle errors
+    var response = await http.post(
+        // Creating a variable 'response' and making a post request to the specified URL
+        url,
+        headers: {
+          'Content-Type':
+              'application/x-www-form-urlencoded', // Specifying the headers for the request
+          'Authorization':
+              'Bearer ${await storage.getToken()}', // Including the authorization token
+        },
+        body: {
+          'description': desc,
+        });
+
+    if (response.statusCode == 200) {
+      // Checking if the response status code is 200
+      Map<String, dynamic> data = json.decode(response
+          .body); // Decoding the response body and converting it into a Map object
+      return data; // Returning the Map object
+    } else {
+      // If the response status code is not 200
+      throw Exception(
+          "Get Unsuccessful: ${response.reasonPhrase}"); // Throwing an exception with an error message
+    }
+  } catch (e) {
+    // Handling the error
+    throw Exception(
+        "Error during post: $e"); // Throwing an exception with an error message
   }
 }

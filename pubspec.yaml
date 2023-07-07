@@ -85,6 +85,7 @@ dependencies:
   timeago: ^3.3.0
   shimmer: ^3.0.0
   logger: ^1.4.0
+  email_validator: ^2.1.17
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skating_app/api/connections.dart';
 import 'package:skating_app/api/messages.dart';
 import 'package:skating_app/common_logger.dart';
@@ -16,44 +17,57 @@ class FriendIconButton extends StatefulWidget {
 }
 
 class _FriendIconButtonState extends State<FriendIconButton> {
+  bool loading = false;
   bool changed = false;
   String friend = "no"; // can be no, yes, maybe
   _handlePressed() {
-    if (friend == "maybeIncoming") {
-      friendUserRequest(widget.user!["_id"], true).then((value) => {
-            // Logs the response from `followUser`
-            commonLogger.v("Friend accept success $value"),
-            // If follow request is successful, update `type` to "requested"
-            mounted ? setState(() => friend = "yes") : null
-          });
-    } else if (friend != "no") {
-      unfriendUser(widget.user!["_id"]).then((value) => {
-            // Logs the response from `followUser`
-            commonLogger.v("Unfriend success $value"),
-            // If follow request is successful, update `type` to "requested"
-            mounted ? setState(() => friend = "no") : null
-          });
-    } else {
-      friendUser(widget.user!["_id"]).then((value) => {
-            // Logs the response from `followUser`
-            commonLogger.v("Friend success $value"),
-            // If follow request is successful, update `type` to "requested"
-            mounted ? setState(() => friend = "maybeOutgoing") : null
-          });
+    if (!loading) {
+      loading = true;
+      if (friend == "maybeIncoming") {
+        friendUserRequest(widget.user!["_id"], true).then((value) => {
+              // Logs the response from `followUser`
+              commonLogger.v("Friend accept success $value"),
+              // If follow request is successful, update `type` to "requested"
+              mounted ? setState(() => friend = "yes") : null,
+              loading = false
+            });
+      } else if (friend != "no") {
+        unfriendUser(widget.user!["_id"]).then((value) => {
+              // Logs the response from `followUser`
+              commonLogger.v("Unfriend success $value"),
+              // If follow request is successful, update `type` to "requested"
+              mounted ? setState(() => friend = "no") : null, loading = false
+            });
+      } else {
+        friendUser(widget.user!["_id"]).then((value) => {
+              // Logs the response from `followUser`
+              commonLogger.v("Friend success $value"),
+              // If follow request is successful, update `type` to "requested"
+              mounted ? setState(() => friend = "maybeOutgoing") : null,
+              loading = false
+            });
+      }
     }
   }
 
   Widget getIcon() {
     switch (friend) {
       case "no":
-        return Icon(
-          Icons.precision_manufacturing_outlined,
-          color: swatch[401],
+        return SvgPicture.asset(
+          "assets/icons/profile/add_friend.svg",
+          fit: BoxFit.fitHeight,
+          width: 32,
+          alignment: Alignment.centerLeft,
+          colorFilter: ColorFilter.mode(swatch[501]!, BlendMode.srcIn),
         );
       case "yes":
-        return Icon(
-          Icons.ac_unit,
-          color: swatch[401],
+        return SvgPicture.asset(
+          "assets/icons/profile/friends.svg",
+          fit: BoxFit.fitHeight,
+          width: 32,
+          alignment: Alignment.centerLeft,
+          colorFilter: const ColorFilter.mode(
+              Color.fromARGB(255, 116, 0, 81), BlendMode.srcIn),
         );
       case "self":
         return Icon(
@@ -61,14 +75,20 @@ class _FriendIconButtonState extends State<FriendIconButton> {
           color: swatch[401],
         );
       case "maybeOutgoing":
-        return Icon(
-          Icons.access_alarm_sharp,
-          color: swatch[401],
+        return SvgPicture.asset(
+          "assets/icons/profile/add_friend.svg",
+          fit: BoxFit.fitHeight,
+          width: 32,
+          alignment: Alignment.centerLeft,
+          colorFilter: ColorFilter.mode(swatch[600]!, BlendMode.srcIn),
         );
       case "maybeIncoming":
-        return Icon(
-          Icons.adb_sharp,
-          color: swatch[401],
+        return SvgPicture.asset(
+          "assets/icons/profile/add_friend.svg",
+          fit: BoxFit.fitHeight,
+          width: 32,
+          alignment: Alignment.centerLeft,
+          colorFilter: ColorFilter.mode(swatch[901]!, BlendMode.srcIn),
         );
       default:
         return const Icon(Icons.abc);

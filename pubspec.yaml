@@ -117,6 +117,7 @@ flutter:
     - assets/backgrounds/
     - assets/placeholders/
     - assets/icons/navbar/
+    - assets/icons/profile/
     - assets/icons/
 
   fonts:

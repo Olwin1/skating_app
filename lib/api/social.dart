@@ -584,7 +584,8 @@ Future<List<Map<String, dynamic>>> getUserPosts(String userId, int page) async {
   }
 }
 
-Future<List<Map<String, dynamic>>> getUserFollowing(int page) async {
+Future<List<Map<String, dynamic>>> getUserFollowing(
+    int page, Map<String, dynamic>? user) async {
   // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
 
   var url = Uri.parse(
@@ -592,17 +593,20 @@ Future<List<Map<String, dynamic>>> getUserFollowing(int page) async {
 
   try {
     // Using a try-catch block to handle errors
+    Map<String, String> headers = {
+      'Content-Type':
+          'application/x-www-form-urlencoded', // Specifying the headers for the request
+      'Authorization':
+          'Bearer ${await storage.getToken()}', // Including the authorization token
+      'page': page.toString(),
+    };
+    if (user?["_id"] != null) {
+      headers['user'] = user!["_id"];
+    }
     var response = await http.get(
-      // Creating a variable 'response' and making a post request to the specified URL
-      url,
-      headers: {
-        'Content-Type':
-            'application/x-www-form-urlencoded', // Specifying the headers for the request
-        'Authorization':
-            'Bearer ${await storage.getToken()}', // Including the authorization token
-        'page': page.toString(),
-      },
-    );
+        // Creating a variable 'response' and making a post request to the specified URL
+        url,
+        headers: headers);
 
     if (response.statusCode == 200) {
       // Checking if the response status code is 200
@@ -624,7 +628,8 @@ Future<List<Map<String, dynamic>>> getUserFollowing(int page) async {
   }
 }
 
-Future<List<Map<String, dynamic>>> getUserFollowers(int page) async {
+Future<List<Map<String, dynamic>>> getUserFollowers(
+    int page, Map<String, dynamic>? user) async {
   // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
 
   var url = Uri.parse(
@@ -632,17 +637,20 @@ Future<List<Map<String, dynamic>>> getUserFollowers(int page) async {
 
   try {
     // Using a try-catch block to handle errors
+    Map<String, String> headers = {
+      'Content-Type':
+          'application/x-www-form-urlencoded', // Specifying the headers for the request
+      'Authorization':
+          'Bearer ${await storage.getToken()}', // Including the authorization token
+      'page': page.toString(),
+    };
+    if (user?["_id"] != null) {
+      headers['user'] = user!["_id"];
+    }
     var response = await http.get(
-      // Creating a variable 'response' and making a post request to the specified URL
-      url,
-      headers: {
-        'Content-Type':
-            'application/x-www-form-urlencoded', // Specifying the headers for the request
-        'Authorization':
-            'Bearer ${await storage.getToken()}', // Including the authorization token
-        'page': page.toString(),
-      },
-    );
+        // Creating a variable 'response' and making a post request to the specified URL
+        url,
+        headers: headers);
 
     if (response.statusCode == 200) {
       // Checking if the response status code is 200
@@ -664,7 +672,8 @@ Future<List<Map<String, dynamic>>> getUserFollowers(int page) async {
   }
 }
 
-Future<List<Map<String, dynamic>>> getUserFriends(int page) async {
+Future<List<Map<String, dynamic>>> getUserFriends(
+    int page, Map<String, dynamic>? user) async {
   // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
 
   var url = Uri.parse(
@@ -672,17 +681,20 @@ Future<List<Map<String, dynamic>>> getUserFriends(int page) async {
 
   try {
     // Using a try-catch block to handle errors
+    Map<String, String> headers = {
+      'Content-Type':
+          'application/x-www-form-urlencoded', // Specifying the headers for the request
+      'Authorization':
+          'Bearer ${await storage.getToken()}', // Including the authorization token
+      'page': page.toString(),
+    };
+    if (user?["_id"] != null) {
+      headers['user'] = user!["_id"];
+    }
     var response = await http.get(
-      // Creating a variable 'response' and making a post request to the specified URL
-      url,
-      headers: {
-        'Content-Type':
-            'application/x-www-form-urlencoded', // Specifying the headers for the request
-        'Authorization':
-            'Bearer ${await storage.getToken()}', // Including the authorization token
-        'page': page.toString(),
-      },
-    );
+        // Creating a variable 'response' and making a post request to the specified URL
+        url,
+        headers: headers);
 
     if (response.statusCode == 200) {
       // Checking if the response status code is 200

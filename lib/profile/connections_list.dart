@@ -8,8 +8,9 @@ import '../swatch.dart';
 
 class ConnectionsListView extends StatefulWidget {
   final String type;
+  final Map<String, dynamic>? user;
 
-  const ConnectionsListView({super.key, required this.type});
+  const ConnectionsListView({super.key, required this.type, this.user});
 
   @override
   State<ConnectionsListView> createState() => _ConnectionsListViewState();
@@ -39,19 +40,13 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       commonLogger.d("Selecting ${widget.type}");
       if (widget.type == "followers") {
         commonLogger.d("followers selected");
-        page = await getUserFollowers(
-          pageKey,
-        );
+        page = await getUserFollowers(pageKey, widget.user);
       } else if (widget.type == "following") {
         commonLogger.d("following selected");
-        page = await getUserFollowing(
-          pageKey,
-        );
+        page = await getUserFollowing(pageKey, widget.user);
       } else if (widget.type == "friends") {
         commonLogger.d("friends selected");
-        page = await getUserFriends(
-          pageKey,
-        );
+        page = await getUserFriends(pageKey, widget.user);
       } else {
         commonLogger.d("nothing selected");
         page = [];

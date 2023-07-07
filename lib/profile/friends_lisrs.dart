@@ -5,7 +5,9 @@ import 'connections_list.dart';
 // FollowingList widget
 
 class FriendsList extends StatelessWidget {
-  const FriendsList({super.key});
+  final Map<String, dynamic>? user;
+
+  const FriendsList({super.key, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,9 @@ class FriendsList extends StatelessWidget {
                   colorFilter: ColorFilter.mode(
                       Colors.black.withOpacity(0.5), BlendMode.srcOver)),
             ),
-            child: const ConnectionsListView(type: "friends")));
+            child: ConnectionsListView(
+              type: "friends",
+              user: user,
+            )));
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_overlay/flutter_overlay.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:skating_app/api/messages.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/objects/user.dart';
@@ -490,9 +491,12 @@ class ConnectionLists extends StatelessWidget {
   final Map<String, dynamic>? user;
 
   const ConnectionLists({super.key, this.user});
-
   @override
   Widget build(BuildContext context) {
+    String? self = "";
+    if (user != null) {
+      getUserId().then((value) => self = value);
+    }
     return Expanded(
         child: Container(
             padding: const EdgeInsets.all(4),
@@ -506,7 +510,9 @@ class ConnectionLists extends StatelessWidget {
                       // Send to edit profile page
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const FriendsList())),
+                          builder: (context) => FriendsList(
+                                user: user?["_id"] != self ? user : null,
+                              ))),
                   child: Column(children: [
                     Text((user?["friends_count"] ?? 0).toString(),
                         style: TextStyle(color: swatch[601])),
@@ -521,7 +527,10 @@ class ConnectionLists extends StatelessWidget {
                       // Send to edit profile page
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Lists(index: 0))),
+                          builder: (context) => Lists(
+                                index: 0,
+                                user: user?["_id"] != self ? user : null,
+                              ))),
                   child: Column(children: [
                     Text((user?["followers_count"] ?? 0).toString(),
                         style: TextStyle(color: swatch[601])),

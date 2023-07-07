@@ -5,10 +5,11 @@ import 'connections_list.dart';
 // FollowingList widget
 
 class FollowingList extends StatelessWidget {
-  const FollowingList({super.key});
+  final Map<String, dynamic>? user;
+  const FollowingList({super.key, this.user});
 
   @override
   Widget build(BuildContext context) {
-    return const ConnectionsListView(type: "following");
+    return ConnectionsListView(type: "following", user: user);
   }
 }

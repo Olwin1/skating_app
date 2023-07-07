@@ -12,9 +12,10 @@ const SnakeShape snakeShape = SnakeShape.circle;
 
 // Lists widget
 class Lists extends StatefulWidget {
-  const Lists({Key? key, required this.index}) : super(key: key);
+  const Lists({Key? key, required this.index, this.user}) : super(key: key);
 
   final int index;
+  final Map<String, dynamic>? user;
 
   @override
   State<Lists> createState() => _Lists();
@@ -105,8 +106,12 @@ class _Lists extends State<Lists> {
               );
             },
             child: _selectedItemPosition == 0 // The child widget to animate
-                ? const FollowersList() // If _selectedItemPosition is 1, show the FollowersList
-                : const FollowingList() // Otherwise, show the FollowingList
+                ? FollowersList(
+                    user: widget
+                        .user) // If _selectedItemPosition is 1, show the FollowersList
+                : FollowingList(
+                    user: widget.user,
+                  ) // Otherwise, show the FollowingList
             ),
       ),
     );

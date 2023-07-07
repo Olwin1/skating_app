@@ -31,14 +31,14 @@ class _FriendIconButtonState extends State<FriendIconButton> {
               mounted ? setState(() => friend = "yes") : null,
               loading = false
             });
-      } else if (friend != "no") {
+      } else if (friend != "no" && friend != "self") {
         unfriendUser(widget.user!["_id"]).then((value) => {
               // Logs the response from `followUser`
               commonLogger.v("Unfriend success $value"),
               // If follow request is successful, update `type` to "requested"
               mounted ? setState(() => friend = "no") : null, loading = false
             });
-      } else {
+      } else if (friend != "self") {
         friendUser(widget.user!["_id"]).then((value) => {
               // Logs the response from `followUser`
               commonLogger.v("Friend success $value"),
@@ -70,10 +70,7 @@ class _FriendIconButtonState extends State<FriendIconButton> {
               Color.fromARGB(255, 116, 0, 81), BlendMode.srcIn),
         );
       case "self":
-        return Icon(
-          Icons.accessible_forward,
-          color: swatch[401],
-        );
+        return const SizedBox.shrink();
       case "maybeOutgoing":
         return SvgPicture.asset(
           "assets/icons/profile/add_friend.svg",

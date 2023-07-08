@@ -18,8 +18,10 @@ SecureStorage storage = SecureStorage();
 int item = 0;
 
 class Settings extends StatefulWidget {
-  const Settings({Key? key, required this.item}) : super(key: key);
+  const Settings({Key? key, required this.item, required this.user})
+      : super(key: key);
   final int item;
+  final Map<String, dynamic>? user;
   @override
   State<Settings> createState() => _Settings();
 }
@@ -84,7 +86,8 @@ class _Settings extends State<Settings> {
                     SettingsTile.navigation(
                       leading: const Icon(Icons.mail),
                       title: Text(AppLocalizations.of(context)!.email),
-                      value: const Text("default@example.com"),
+                      value:
+                          Text(widget.user?["email"] ?? "default@example.com"),
                     ),
                     // Navigation tile with a language icon, title, and value
                     SettingsTile.navigation(

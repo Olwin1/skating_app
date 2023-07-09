@@ -3,15 +3,15 @@ import 'package:skating_app/social_media/search_results.dart';
 import '../swatch.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class SearchBar extends StatefulWidget {
+class SearchBarr extends StatefulWidget {
   // Create HomePage Class
-  const SearchBar({Key? key})
+  const SearchBarr({Key? key})
       : super(key: key); // Take 2 arguments optional key and title of post
   @override
-  State<SearchBar> createState() => _SearchBar(); //Create state for widget
+  State<SearchBarr> createState() => _SearchBar(); //Create state for widget
 }
 
-class _SearchBar extends State<SearchBar> {
+class _SearchBar extends State<SearchBarr> {
   @override
   void initState() {
     super.initState();

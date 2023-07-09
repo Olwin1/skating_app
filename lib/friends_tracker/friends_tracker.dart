@@ -9,13 +9,13 @@ import 'package:skating_app/friends_tracker/marker.dart';
 import 'package:skating_app/objects/user.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+//import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:skating_app/api/session.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+//import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../current_tab.dart';
-import '../swatch.dart';
+//import '../swatch.dart';
 
 bool searchOpened = true;
 bool active = false;
@@ -135,81 +135,81 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                 maxZoom: 19),
             nonRotatedChildren: [
 // Creates a FloatingSearchBar widget with specified properties
-          FloatingSearchBar(
-              accentColor: swatch[400],
-              backdropColor: swatch[401],
-              backgroundColor: swatch[301],
-              hintStyle: TextStyle(color: swatch[400]),
-              queryStyle: TextStyle(color: swatch[600]),
-              // The text displayed as a placeholder in the search bar
-              hint: AppLocalizations.of(context)!.search,
+          // FloatingSearchBar(
+          //     accentColor: swatch[400],
+          //     backdropColor: swatch[401],
+          //     backgroundColor: swatch[301],
+          //     hintStyle: TextStyle(color: swatch[400]),
+          //     queryStyle: TextStyle(color: swatch[600]),
+          //     // The text displayed as a placeholder in the search bar
+          //     hint: AppLocalizations.of(context)!.search,
 
-              // The padding around the search bar while scrolling
-              scrollPadding: const EdgeInsets.only(top: 16, bottom: 40),
+          //     // The padding around the search bar while scrolling
+          //     scrollPadding: const EdgeInsets.only(top: 16, bottom: 40),
 
-              // The duration of the animation when the search bar transitions between opened and closed states
-              transitionDuration: const Duration(milliseconds: 800),
+          //     // The duration of the animation when the search bar transitions between opened and closed states
+          //     transitionDuration: const Duration(milliseconds: 800),
 
-              // The curve used for the animation when the search bar transitions between opened and closed states
-              transitionCurve: Curves.easeInOut,
+          //     // The curve used for the animation when the search bar transitions between opened and closed states
+          //     transitionCurve: Curves.easeInOut,
 
-              // The physics used for scrolling the search bar
-              physics: const BouncingScrollPhysics(),
+          //     // The physics used for scrolling the search bar
+          //     physics: const BouncingScrollPhysics(),
 
-              // The alignment of the search bar along the x-axis
-              axisAlignment: 0.0, //isPortrait ? 0.0 : -1.0,
+          //     // The alignment of the search bar along the x-axis
+          //     axisAlignment: 0.0, //isPortrait ? 0.0 : -1.0,
 
-              // The alignment of the search bar along the x-axis when it's in an open state
-              openAxisAlignment: 0.0,
+          //     // The alignment of the search bar along the x-axis when it's in an open state
+          //     openAxisAlignment: 0.0,
 
-              // The width of the search bar
-              width: 600, //isPortrait ? 600 : 500,
+          //     // The width of the search bar
+          //     width: 600, //isPortrait ? 600 : 500,
 
-              // The delay in milliseconds before the onQueryChanged function is called
-              debounceDelay: const Duration(milliseconds: 500),
+          //     // The delay in milliseconds before the onQueryChanged function is called
+          //     debounceDelay: const Duration(milliseconds: 500),
 
-              // A function that's called when the search query changes
-              onQueryChanged: (query) {
-                // Call your model, bloc, controller here.
-              },
+          //     // A function that's called when the search query changes
+          //     onQueryChanged: (query) {
+          //       // Call your model, bloc, controller here.
+          //     },
 
-              // The custom transition to be used for animating between opened and closed states
-              transition: CircularFloatingSearchBarTransition(),
-              onFocusChanged: (e) => {
-                    updateSearchOpened(e),
-                    commonLogger.v("Focus changed $e")
-                  }, // Hide user list
+          //     // The custom transition to be used for animating between opened and closed states
+          //     transition: CircularFloatingSearchBarTransition(),
+          //     onFocusChanged: (e) => {
+          //           updateSearchOpened(e),
+          //           commonLogger.v("Focus changed $e")
+          //         }, // Hide user list
 
-              // An array of FloatingSearchBarAction widgets that provide actions within the search bar
-              actions: [
-                FloatingSearchBarAction(
-                  showIfOpened: false,
-                  child: CircularButton(
-                    icon: const Icon(Icons.place),
-                    onPressed: () {},
-                  ),
-                ),
-                FloatingSearchBarAction.searchToClear(
-                  showIfClosed: false,
-                ),
-              ],
+          //     // An array of FloatingSearchBarAction widgets that provide actions within the search bar
+          //     actions: [
+          //       FloatingSearchBarAction(
+          //         showIfOpened: false,
+          //         child: CircularButton(
+          //           icon: const Icon(Icons.place),
+          //           onPressed: () {},
+          //         ),
+          //       ),
+          //       FloatingSearchBarAction.searchToClear(
+          //         showIfClosed: false,
+          //       ),
+          //     ],
 
-              // A function that returns a widget that's displayed within the search bar
-              builder: (context, transition) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Material(
-                    color: Colors.white,
-                    elevation: 4.0,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: Colors.accents.map((color) {
-                        return Container(height: 100, color: color);
-                      }).toList(),
-                    ),
-                  ),
-                );
-              }),
+          //     // A function that returns a widget that's displayed within the search bar
+          //     builder: (context, transition) {
+          //       return ClipRRect(
+          //         borderRadius: BorderRadius.circular(8),
+          //         child: Material(
+          //           color: Colors.white,
+          //           elevation: 4.0,
+          //           child: Column(
+          //             mainAxisSize: MainAxisSize.min,
+          //             children: Colors.accents.map((color) {
+          //               return Container(height: 100, color: color);
+          //             }).toList(),
+          //           ),
+          //         ),
+          //       );
+          //     }),
           AnimatedSwitcher(
               duration: const Duration(
                   milliseconds:

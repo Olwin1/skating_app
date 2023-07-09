@@ -93,174 +93,182 @@ class _PostWidget extends State<PostWidget> {
     commonLogger.v("Building ${Config.uri}/image/${widget.post['image']}");
     String comments = (widget.post['comment_count'] ?? 0).toString();
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Container(
-        color: widget.post["description"] != null
-            ? const Color(0xcc000000)
-            : Colors.transparent,
-        height: 314,
-        padding: const EdgeInsets.all(0), // Add padding so doesn't touch edges
+      Expanded(
+        child: Container(
+          color: widget.post["description"] != null
+              ? const Color(0xcc000000)
+              : Colors.transparent,
+          //height: 314,
+          padding:
+              const EdgeInsets.all(0), // Add padding so doesn't touch edges
 
-        child: Row(
-          // Create a row
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Add Post image to one row and buttons to another
-            Expanded(
-              flex: 5,
-              child: ZoomOverlay(
-                modalBarrierColor: Colors.black12, // Optional
-                minScale: 0.5, // Optional
-                maxScale: 3.0, // Optional
-                animationCurve: Curves
-                    .fastOutSlowIn, // Defaults to fastOutSlowIn which mimics IOS instagram behavior
-                animationDuration: const Duration(
-                    milliseconds:
-                        600), // Defaults to 100 Milliseconds. Recommended duration is 300 milliseconds for Curves.fastOutSlowIn
-                twoTouchOnly: true, // Defaults to false
-                child: CachedNetworkImage(
-                  imageUrl: "${Config.uri}/image/${widget.post['image']}",
-                  placeholder: (context, url) => Shimmer.fromColors(
-                      baseColor: const Color(0x66000000),
-                      highlightColor: const Color(0xff444444),
-                      child: Image.asset(
-                        "assets/placeholders/1080.png",
-                      )),
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          bottomLeft: Radius.circular(8)),
-                      image: DecorationImage(
-                          image: imageProvider, fit: BoxFit.cover),
+          child: Row(
+            // Create a row
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Add Post image to one row and buttons to another
+              Expanded(
+                flex: 5,
+                child: ZoomOverlay(
+                  modalBarrierColor: Colors.black12, // Optional
+                  minScale: 0.5, // Optional
+                  maxScale: 3.0, // Optional
+                  animationCurve: Curves
+                      .fastOutSlowIn, // Defaults to fastOutSlowIn which mimics IOS instagram behavior
+                  animationDuration: const Duration(
+                      milliseconds:
+                          600), // Defaults to 100 Milliseconds. Recommended duration is 300 milliseconds for Curves.fastOutSlowIn
+                  twoTouchOnly: true, // Defaults to false
+                  child: CachedNetworkImage(
+                    imageUrl: "${Config.uri}/image/${widget.post['image']}",
+                    placeholder: (context, url) => Shimmer.fromColors(
+                        baseColor: const Color(0x66000000),
+                        highlightColor: const Color(0xff444444),
+                        child: Image.asset(
+                          "assets/placeholders/1080.png",
+                        )),
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8)),
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover),
+                      ),
                     ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    fit: BoxFit.contain,
                   ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                  fit: BoxFit.contain,
-                ),
-              ), // Set child to post image
-            ),
-            Expanded(
-              flex: 1, // Make 2x Bigger than sibling
-              child: Container(
-                // Make container widget to use BoxDecoration
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      // Set background image of container to image
-                      image: const AssetImage(
-                          "assets/backgrounds/post_background.png"),
-                      fit: BoxFit.cover,
-                      colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.3),
-                          BlendMode.srcOver)), // Cover whole container
-                  borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(8),
-                      bottomRight: Radius.circular(8)),
-                ),
-                child: Column(
-                    // Buttons below
-                    children: [
-                      Column(
-                        children: [
-                          LikeButton(
-                            isLiked: likedState ?? widget.post["liked"],
-                            onTap: (isLiked) => handleLikePressed(isLiked),
-                            padding: const EdgeInsets.only(bottom: 0, top: 18),
-                            countPostion: CountPostion.bottom,
-                            size: 32.0,
-                            circleColor:
-                                CircleColor(start: secondary, end: selected),
-                            bubblesColor: BubblesColor(
-                              dotPrimaryColor: unselected,
-                              dotSecondaryColor: secondary,
-                            ),
-                            likeBuilder: (bool isLiked) {
-                              return Icon(
-                                Icons.thumb_up,
-                                color: isLiked ? selected : unselected,
-                                size: 32.0,
-                              );
-                            },
-                            likeCount: widget.post['like_count'],
-                            countBuilder:
-                                (int? count, bool isLiked, String text) {
-                              var color = isLiked ? selected : unselected;
-                              Widget result;
-                              if (count == 0) {
-                                result = Center(
-                                    child: Text(
-                                  "Like",
-                                  style: TextStyle(
-                                      color: color,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w100),
-                                ));
-                              } else {
-                                result = Center(
-                                    child: Text(
-                                  text,
-                                  style: TextStyle(
-                                      color: color,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w100),
-                                  textAlign: TextAlign.center,
-                                ));
-                              }
-                              return result;
-                            },
-                          ),
-                          ListTile(
-                              title: IconButton(
-                                // Create Comment Button
-                                onPressed: () =>
-                                    // RootNavigator hides navbar
-                                    Navigator.of(context, rootNavigator: true)
-                                        .push(
-                                            // Send to comments page
-                                            MaterialPageRoute(
-                                                builder: (context) => Comments(
-                                                    post: widget.post["_id"]))),
-                                icon: Icon(
-                                  Icons.comment,
-                                  color: unselected,
-                                ),
-                                padding: const EdgeInsets.only(top: 16),
-                                constraints: const BoxConstraints(),
-                              ),
-                              subtitle: Text(
-                                comments,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: unselected),
-                              )),
-                          LikeButton(
-                            //isLiked: likedState ?? widget.post["liked"],
-                            onTap: (isSaved) => handleSavePressed(isSaved),
-                            padding: const EdgeInsets.only(bottom: 0, top: 18),
-                            countPostion: CountPostion.bottom,
-                            size: 28.0,
-                            circleColor:
-                                CircleColor(start: secondary, end: selected),
-                            bubblesColor: BubblesColor(
-                              dotPrimaryColor: unselected,
-                              dotSecondaryColor: secondary,
-                            ),
-                            likeBuilder: (bool isSaved) {
-                              return Icon(
-                                Icons.save,
-                                color: isSaved ? selected : unselected,
-                                size: 28.0,
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      const Spacer(
-                        flex: 1,
-                      ),
-                      Flexible(child: Avatar(user: widget.post["author"])),
-                    ]),
+                ), // Set child to post image
               ),
-            ),
-          ],
+              Expanded(
+                flex: 1, // Make 2x Bigger than sibling
+                child: Container(
+                  // Make container widget to use BoxDecoration
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        // Set background image of container to image
+                        image: const AssetImage(
+                            "assets/backgrounds/post_background.png"),
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                            Colors.black.withOpacity(0.3),
+                            BlendMode.srcOver)), // Cover whole container
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(8),
+                        bottomRight: Radius.circular(8)),
+                  ),
+                  child: Column(
+                      // Buttons below
+                      children: [
+                        Column(
+                          children: [
+                            LikeButton(
+                              isLiked: likedState ?? widget.post["liked"],
+                              onTap: (isLiked) => handleLikePressed(isLiked),
+                              padding:
+                                  const EdgeInsets.only(bottom: 0, top: 18),
+                              countPostion: CountPostion.bottom,
+                              size: 32.0,
+                              circleColor:
+                                  CircleColor(start: secondary, end: selected),
+                              bubblesColor: BubblesColor(
+                                dotPrimaryColor: unselected,
+                                dotSecondaryColor: secondary,
+                              ),
+                              likeBuilder: (bool isLiked) {
+                                return Icon(
+                                  Icons.thumb_up,
+                                  color: isLiked ? selected : unselected,
+                                  size: 32.0,
+                                );
+                              },
+                              likeCount: widget.post['like_count'],
+                              countBuilder:
+                                  (int? count, bool isLiked, String text) {
+                                var color = isLiked ? selected : unselected;
+                                Widget result;
+                                if (count == 0) {
+                                  result = Center(
+                                      child: Text(
+                                    "Like",
+                                    style: TextStyle(
+                                        color: color,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w100),
+                                  ));
+                                } else {
+                                  result = Center(
+                                      child: Text(
+                                    text,
+                                    style: TextStyle(
+                                        color: color,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w100),
+                                    textAlign: TextAlign.center,
+                                  ));
+                                }
+                                return result;
+                              },
+                            ),
+                            ListTile(
+                                title: IconButton(
+                                  // Create Comment Button
+                                  onPressed: () =>
+                                      // RootNavigator hides navbar
+                                      Navigator.of(context, rootNavigator: true)
+                                          .push(
+                                              // Send to comments page
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Comments(
+                                                          post: widget
+                                                              .post["_id"]))),
+                                  icon: Icon(
+                                    Icons.comment,
+                                    color: unselected,
+                                  ),
+                                  padding: const EdgeInsets.only(top: 16),
+                                  constraints: const BoxConstraints(),
+                                ),
+                                subtitle: Text(
+                                  comments,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: unselected),
+                                )),
+                            LikeButton(
+                              //isLiked: likedState ?? widget.post["liked"],
+                              onTap: (isSaved) => handleSavePressed(isSaved),
+                              padding:
+                                  const EdgeInsets.only(bottom: 0, top: 18),
+                              countPostion: CountPostion.bottom,
+                              size: 28.0,
+                              circleColor:
+                                  CircleColor(start: secondary, end: selected),
+                              bubblesColor: BubblesColor(
+                                dotPrimaryColor: unselected,
+                                dotSecondaryColor: secondary,
+                              ),
+                              likeBuilder: (bool isSaved) {
+                                return Icon(
+                                  Icons.save,
+                                  color: isSaved ? selected : unselected,
+                                  size: 28.0,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                        const Spacer(
+                          flex: 1,
+                        ),
+                        Flexible(child: Avatar(user: widget.post["author"])),
+                      ]),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       CaptionWrapper(post: widget.post)

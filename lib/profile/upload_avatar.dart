@@ -6,17 +6,13 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:http/http.dart';
 import 'package:photo_gallery/photo_gallery.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
 import 'package:skating_app/api/social.dart';
 import 'package:skating_app/common_logger.dart';
 import 'package:skating_app/new_post/avatar_interact.dart';
-import 'package:skating_app/new_post/edit_post.dart';
-import 'package:skating_app/new_post/send_post.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../api/image.dart';
-import '../current_tab.dart';
 import '../swatch.dart';
 
 // Define the NewPost widget which extends StatefulWidget

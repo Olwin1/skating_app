@@ -181,13 +181,12 @@ class _ChannelsListViewState extends State<ChannelsListView> {
     }
 
     // Subscribe to the websocket stream
-    subscription = getIt<WebSocketConnection>().stream.listen((data) => {
-          mounted
+    subscription = getIt<WebSocketConnection>().stream.listen((data) => mounted
               ? setState(() {
                   channelsData[data["channel"]] = data["content"];
                 })
               : null
-        });
+        );
 
     super.initState();
   }

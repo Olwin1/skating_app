@@ -68,7 +68,7 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
     String formattedTime = DateFormat('HH:mm').format(time);
 
     // Set the state of the widget to display the formatted sunset time
-    mounted ? setState(() => {sunsetTime = formattedTime}) : null;
+    mounted ? setState(() => sunsetTime = formattedTime) : null;
   }
 
   @override

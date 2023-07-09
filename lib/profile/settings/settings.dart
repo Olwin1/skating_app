@@ -96,7 +96,7 @@ class _Settings extends State<Settings> {
                       value: const Text('••••••••'),
                       onPressed: (e) => {
                         commonLogger.i("pressed"),
-                        mounted ? setState(() => {item = 1}) : null
+                        mounted ? setState(() => item = 1) : null
                       },
                     ),
                     // Switch tile for toggling push notifications
@@ -159,7 +159,7 @@ class _Settings extends State<Settings> {
                       title: Text(AppLocalizations.of(context)!.language),
                       value: const Text('English'),
                       onPressed: (e) => {
-                        mounted ? setState(() => {item = 2}) : null
+                        mounted ? setState(() => item = 2) : null
                       },
                     ),
                     // Switch tile for toggling push notifications
@@ -188,7 +188,7 @@ class _Settings extends State<Settings> {
                       title: Text(AppLocalizations.of(context)!.theme),
                       value: const Text('Default'),
                       onPressed: (e) => {
-                        mounted ? setState(() => {item = 3}) : null
+                        mounted ? setState(() => item = 3) : null
                       },
                     ),
                   ],

@@ -28,7 +28,7 @@ Future<void> main() async {
   ));
 
   // Initialize the FlutterMapTileCaching package for caching map tiles
-  await FlutterMapTileCaching.initialise();
+  await FlutterMapTileCaching.initialise(debugMode: true);
 
   // Create an instance of the cache manager for map tiles and register it with GetIt dependency injection
   FMTC.instance('mapCache').manage.create();
@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
 // Function to set the logged in state of the user
     setLoggedIn(value) {
       // Update state to reflect whether the user is logged in or not
-      mounted ? setState(() => {loggedIn = value}) : null;
+      mounted ? setState(() => loggedIn = value) : null;
     }
 
     return MaterialApp(

@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
                 },
               ),
             ),
-            const SearchBar(),
+            const SearchBarr(),
             TextButton(
                 onPressed: () => Navigator.push(
                     context,
@@ -171,45 +171,57 @@ class _PostsListViewState extends State<PostsListView> {
   }
 
   @override
-  Widget build(BuildContext context) => RefreshIndicator(
-      onRefresh: () => refreshPage(),
-      child: Stack(children: [
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: const AssetImage("assets/backgrounds/graffiti.png"),
-                fit: BoxFit.cover,
-                alignment: Alignment.bottomLeft,
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+  Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double size = height >= width ? width : height;
+    if (size > 1080) {
+      commonLogger.i("larger than 1080");
+      size = 1080;
+    }
+    commonLogger.i("resif");
+    return RefreshIndicator(
+        onRefresh: () => refreshPage(),
+        child: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: const AssetImage("assets/backgrounds/graffiti.png"),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.bottomLeft,
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+            ),
           ),
-        ),
-        PagedListView<int, Object>(
-          cacheExtent: 1024,
-          pagingController: _pagingController,
-          scrollController: widget.scrollController,
-          // builderDelegate is responsible for creating the actual widgets to be displayed
-          builderDelegate: PagedChildBuilderDelegate<Object>(
-              firstPageProgressIndicatorBuilder: (context) => _loadSkeleton(),
-              noItemsFoundIndicatorBuilder: (context) => Center(
-                      child: Column(children: [
-                    Text(
-                      AppLocalizations.of(context)!.noPostsFound,
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.makeFriends,
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                  ])),
-              // itemBuilder is called for each item in the list to create a widget for that item
-              itemBuilder: (context, item, index) =>
-                  PostWidget(post: item, index: index)),
-          padding: const EdgeInsets.all(
-              8), // Add padding to list so doesn't overflow to sides of screen
-        )
-      ]));
+          PagedListView<int, Object>(
+            cacheExtent: 1024,
+            pagingController: _pagingController,
+            scrollController: widget.scrollController,
+            // builderDelegate is responsible for creating the actual widgets to be displayed
+            builderDelegate: PagedChildBuilderDelegate<Object>(
+                firstPageProgressIndicatorBuilder: (context) => _loadSkeleton(),
+                noItemsFoundIndicatorBuilder: (context) => Center(
+                        child: Column(children: [
+                      Text(
+                        AppLocalizations.of(context)!.noPostsFound,
+                        style: const TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        AppLocalizations.of(context)!.makeFriends,
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ])),
+                // itemBuilder is called for each item in the list to create a widget for that item
+                itemBuilder: (context, item, index) => SizedBox(
+                    width: size,
+                    height: size,
+                    child: PostWidget(post: item, index: index))),
+            padding: const EdgeInsets.all(
+                8), // Add padding to list so doesn't overflow to sides of screen
+          )
+        ]));
+  }
 
   @override
   void dispose() {

@@ -24,7 +24,7 @@ class _SignalStrengthInfo extends State<SignalStrengthInfo> {
           child: const Text("SignalStrengthInfo"),
         ),
       ),
-      body: Column(children: const [
+      body: const Column(children: [
         Text(// Placeholder page purpose description
             """Your GPS signal strength is visible throughout your sessions.
             The stronger the signal the more accurate the tracking can be.

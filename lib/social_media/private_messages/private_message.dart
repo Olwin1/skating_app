@@ -40,6 +40,7 @@ class PrivateMessage extends StatefulWidget {
 
 // Define the state for PrivateMessage widget
 class _PrivateMessage extends State<PrivateMessage> {
+  bool sending = false;
   // Initialize a list to store messages
   final List<types.Message> _messages = [];
   // Initialize a page number for pagination
@@ -48,6 +49,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   bool loading = false;
   // Initialize a stream subscription
   late StreamSubscription subscription;
+  TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
@@ -59,7 +61,7 @@ class _PrivateMessage extends State<PrivateMessage> {
     // Subscribe to the websocket stream
     subscription = getIt<WebSocketConnection>()
         .stream
-        .listen((data) => {updateMessages(data)});
+        .listen((data) => updateMessages(data));
   }
 
   Widget _messagesSkeleton() {
@@ -285,8 +287,13 @@ class _PrivateMessage extends State<PrivateMessage> {
           loading
               ? _messagesSkeleton()
               : Chat(
-                  nameBuilder: (String name) {
-                    return Text(name);
+                  inputOptions: InputOptions(
+                      inputClearMode: InputClearMode.never,
+                      textEditingController: controller),
+                  nameBuilder: (types.User user) {
+                    return user.firstName != null
+                        ? Text(user.firstName!)
+                        : const Text("placeholdser");
                   },
                   l10n: locale, // Set locale
                   // Create basic chat widget
@@ -335,16 +342,22 @@ class _PrivateMessage extends State<PrivateMessage> {
 
   void _handleSendPressed(types.PartialText message) async {
     try {
-      // Define handleSendPressed function
-      final textMessage = types.TextMessage(
-        // Create new message
-        author: getUser(widget.currentUser, "s"), // Set author of message
-        createdAt: DateTime.now().millisecondsSinceEpoch, // Get time
-        id: const Uuid().v1(), // Generate random debug user id
-        text: message.text, // Set message content
-      );
-      _addMessage(textMessage); // Run addMessage function
-      commonLogger.d(await postMessage(widget.channel, message.text, null));
+      if (!sending) {
+        controller.clear();
+        commonLogger.d("Setting sending to true");
+        sending = true;
+        // Define handleSendPressed function
+        final textMessage = types.TextMessage(
+          // Create new message
+          author: getUser(widget.currentUser, "s"), // Set author of message
+          createdAt: DateTime.now().millisecondsSinceEpoch, // Get time
+          id: const Uuid().v1(), // Generate random debug user id
+          text: message.text, // Set message content
+        );
+        _addMessage(textMessage); // Run addMessage function
+        await postMessage(widget.channel, message.text, null)
+            .then((value) => {sending = false});
+      }
     } catch (e) {
       final errorMessage = types.SystemMessage(
         // Create new message
@@ -354,6 +367,7 @@ class _PrivateMessage extends State<PrivateMessage> {
       );
       _addMessage(errorMessage);
       commonLogger.e("An error Occurred $e");
+      sending = false;
     }
   }
 

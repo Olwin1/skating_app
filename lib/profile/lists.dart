@@ -60,7 +60,7 @@ class _Lists extends State<Lists> {
               currentIndex: _selectedItemPosition,
               // Setting the onTap function of the SnakeBar
               onTap: (index) => {
-                mounted ? setState(() => {_selectedItemPosition = index}) : null
+                mounted ? setState(() => _selectedItemPosition = index) : null
               },
               // Setting the items of the SnakeBar
               items: [

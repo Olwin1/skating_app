@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:skating_app/api/social.dart';
-import 'package:skating_app/common_logger.dart';
-import 'package:skating_app/profile/user_list_widget.dart';
+import 'package:patinka/api/social.dart';
+import 'package:patinka/common_logger.dart';
+import 'package:patinka/profile/user_list_widget.dart';
 
 import '../swatch.dart';
 

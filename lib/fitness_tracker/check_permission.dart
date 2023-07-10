@@ -2,7 +2,7 @@
 import 'package:geolocator/geolocator.dart';
 
 // Export the function 'hasLocationPermission' from the 'check_permission.dart' file
-export 'package:skating_app/fitness_tracker/check_permission.dart'
+export 'package:patinka/fitness_tracker/check_permission.dart'
     show hasLocationPermission;
 
 // Define a function that returns a Future of boolean value indicating whether the app has location permission

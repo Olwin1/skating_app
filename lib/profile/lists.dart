@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:skating_app/common_logger.dart';
-import 'package:skating_app/profile/followers_list.dart';
-import 'package:skating_app/profile/following_list.dart';
+import 'package:patinka/common_logger.dart';
+import 'package:patinka/profile/followers_list.dart';
+import 'package:patinka/profile/following_list.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

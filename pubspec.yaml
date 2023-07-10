@@ -1,5 +1,5 @@
-name: skating_app
-description: A new Flutter project.
+name: patinka
+description: A social media app for skaters.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -85,6 +85,8 @@ dependencies:
   logger: ^1.4.0
   email_validator: ^2.1.17
   flutter_map_tile_caching: ^7.2.0
+  firebase_messaging: ^14.6.4
+  firebase_core: ^2.14.0
 
 dependency_overrides:
     isar: 3.0.6-dev.0

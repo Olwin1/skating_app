@@ -5,10 +5,10 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:skating_app/api/social.dart';
-import 'package:skating_app/common_logger.dart';
-import 'package:skating_app/profile/upload_avatar.dart';
-import 'package:skating_app/swatch.dart';
+import 'package:patinka/api/social.dart';
+import 'package:patinka/common_logger.dart';
+import 'package:patinka/profile/upload_avatar.dart';
+import 'package:patinka/swatch.dart';
 
 import '../api/config.dart';
 

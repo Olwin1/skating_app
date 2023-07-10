@@ -4,7 +4,7 @@ import 'package:http/http.dart'
 import 'config.dart'; // Importing the 'config.dart' file
 import 'dart:convert'; // Importing the 'dart:convert' package
 
-export 'package:skating_app/api/session.dart' // Exporting the 'session.dart' file
+export 'package:patinka/api/session.dart' // Exporting the 'session.dart' file
     show
         createSession,
         getSessions; // Exporting the functions from the 'session.dart' file

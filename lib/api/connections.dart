@@ -7,7 +7,7 @@ import 'dart:convert';
 import '../common_logger.dart';
 
 // Export login and signup functions from auth.dart
-export 'package:skating_app/api/connections.dart'
+export 'package:patinka/api/connections.dart'
     show
         followUser,
         friendUser,

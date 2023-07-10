@@ -5,7 +5,7 @@ import 'config.dart';
 import 'dart:convert';
 
 // Exporting functions from the messages.dart file
-export 'package:skating_app/api/messages.dart'
+export 'package:patinka/api/messages.dart'
     show
         postChannel,
         postMessage,

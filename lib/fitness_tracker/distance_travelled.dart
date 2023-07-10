@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:skating_app/common_logger.dart';
+import 'package:patinka/common_logger.dart';
 import '../swatch.dart';
 import 'check_permission.dart';
 

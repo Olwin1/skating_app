@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skating_app/profile/connections_list.dart';
+import 'package:patinka/profile/connections_list.dart';
 
 // FollowersList widget
 

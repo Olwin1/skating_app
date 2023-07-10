@@ -12,7 +12,7 @@ import 'config.dart';
 import 'package:http_parser/http_parser.dart';
 
 // Exporting functions from the messages.dart file
-export 'package:skating_app/api/image.dart' show uploadFile;
+export 'package:patinka/api/image.dart' show uploadFile;
 
 // Creating an instance of SecureStorage class
 SecureStorage storage = SecureStorage();

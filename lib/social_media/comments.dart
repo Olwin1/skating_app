@@ -1,9 +1,9 @@
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:skating_app/common_logger.dart';
-import 'package:skating_app/social_media/private_messages/comment.dart';
-import 'package:skating_app/swatch.dart';
+import 'package:patinka/common_logger.dart';
+import 'package:patinka/social_media/private_messages/comment.dart';
+import 'package:patinka/swatch.dart';
 
 import '../api/social.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

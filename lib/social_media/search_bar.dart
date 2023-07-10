@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skating_app/social_media/search_results.dart';
+import 'package:patinka/social_media/search_results.dart';
 import '../swatch.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

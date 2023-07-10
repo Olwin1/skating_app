@@ -1,9 +1,13 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:skating_app/common_logger.dart';
-import 'package:skating_app/social_media/private_messages/private_message_list.dart';
-import 'package:skating_app/social_media/search_bar.dart';
+import 'package:patinka/common_logger.dart';
+import 'package:patinka/social_media/private_messages/private_message_list.dart';
+import 'package:patinka/social_media/search_bar.dart';
+import '../api/fcm_token.dart';
+import '../api/messages.dart';
+import '../objects/user.dart';
 import 'post_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../api/social.dart';
@@ -123,6 +127,20 @@ class _PostsListViewState extends State<PostsListView> {
 
   @override
   void initState() {
+    getUserId().then((userId) {
+      getUserCache(userId!).then((user) {
+        // if (user["fcm_tokens"] == null) {
+        FirebaseMessaging.instance.getToken().then(
+            (fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
+        //}
+        //   if (user["fcm_tokens"] == null) {
+        //     FirebaseMessaging.instance.getToken().then(
+        //         (fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
+
+        // }
+      });
+    });
+
     // addPageRequestListener is called whenever the user scrolls near the end of the list
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);

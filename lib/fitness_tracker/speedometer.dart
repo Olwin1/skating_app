@@ -4,8 +4,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:skating_app/common_logger.dart';
-import 'package:skating_app/swatch.dart';
+import 'package:patinka/common_logger.dart';
+import 'package:patinka/swatch.dart';
 import 'check_permission.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

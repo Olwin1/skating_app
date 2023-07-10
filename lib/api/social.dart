@@ -8,7 +8,7 @@ import 'config.dart';
 import 'dart:convert';
 
 // Export login and signup functions from auth.dart
-export 'package:skating_app/api/social.dart'
+export 'package:patinka/api/social.dart'
     show
         postPost,
         getPost,

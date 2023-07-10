@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:skating_app/api/social.dart';
-import 'package:skating_app/common_logger.dart';
-import 'package:skating_app/objects/user.dart';
-import 'package:skating_app/profile/profile_page.dart';
-import 'package:skating_app/swatch.dart';
+import 'package:patinka/api/social.dart';
+import 'package:patinka/common_logger.dart';
+import 'package:patinka/objects/user.dart';
+import 'package:patinka/profile/profile_page.dart';
+import 'package:patinka/swatch.dart';
 import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
 import 'comments.dart';
 import 'package:cached_network_image/cached_network_image.dart';

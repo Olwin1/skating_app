@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:skating_app/api/session.dart';
+import 'package:patinka/api/session.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:skating_app/common_logger.dart';
-import 'package:skating_app/swatch.dart';
+import 'package:patinka/common_logger.dart';
+import 'package:patinka/swatch.dart';
 
 const List<String> sessionType = <String>[
   'Recreational/Fitness Skating',

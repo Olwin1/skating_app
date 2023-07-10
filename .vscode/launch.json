@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "skating_app",
+            "name": "patinka",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "skating_app (profile mode)",
+            "name": "patinka (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "skating_app (release mode)",
+            "name": "patinka (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

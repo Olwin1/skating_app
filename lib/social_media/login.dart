@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login_template/flutter_login_template.dart';
-import 'package:skating_app/api/auth.dart' show login; // signup;
-import 'package:skating_app/api/social.dart';
-import 'package:skating_app/api/token.dart';
+import 'package:patinka/api/auth.dart' show login; // signup;
+import 'package:patinka/api/social.dart';
+import 'package:patinka/api/token.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:skating_app/common_logger.dart';
+import 'package:patinka/common_logger.dart';
 
 // Define an enum to represent different states of the login screen
 enum _State {

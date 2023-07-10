@@ -2,11 +2,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:skating_app/api/image.dart';
-import 'package:skating_app/api/social.dart';
+import 'package:patinka/api/image.dart';
+import 'package:patinka/api/social.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:skating_app/common_logger.dart';
-import 'package:skating_app/swatch.dart';
+import 'package:patinka/common_logger.dart';
+import 'package:patinka/swatch.dart';
 
 // Define a widget for sending a post with an image
 class SendPost extends StatefulWidget {

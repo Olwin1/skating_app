@@ -6,9 +6,9 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:http/http.dart';
 import 'package:photo_gallery/photo_gallery.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:skating_app/api/social.dart';
-import 'package:skating_app/common_logger.dart';
-import 'package:skating_app/new_post/avatar_interact.dart';
+import 'package:patinka/api/social.dart';
+import 'package:patinka/common_logger.dart';
+import 'package:patinka/new_post/avatar_interact.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:skating_app/api/connections.dart';
-import 'package:skating_app/common_logger.dart';
+import 'package:patinka/api/connections.dart';
+import 'package:patinka/common_logger.dart';
 
 import '../swatch.dart';
 import 'edit_profile.dart';

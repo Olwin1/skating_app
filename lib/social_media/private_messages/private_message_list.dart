@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:skating_app/common_logger.dart';
+import 'package:patinka/common_logger.dart';
 import 'package:uuid/uuid.dart';
 import '../../api/websocket.dart';
 import '../../swatch.dart';
@@ -182,11 +182,10 @@ class _ChannelsListViewState extends State<ChannelsListView> {
 
     // Subscribe to the websocket stream
     subscription = getIt<WebSocketConnection>().stream.listen((data) => mounted
-              ? setState(() {
-                  channelsData[data["channel"]] = data["content"];
-                })
-              : null
-        );
+        ? setState(() {
+            channelsData[data["channel"]] = data["content"];
+          })
+        : null);
 
     super.initState();
   }

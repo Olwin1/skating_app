@@ -1,7 +1,7 @@
-import 'package:skating_app/common_logger.dart';
+import 'package:patinka/common_logger.dart';
 import 'package:stash/stash_api.dart';
 import 'package:stash_memory/stash_memory.dart';
-import 'package:skating_app/api/social.dart';
+import 'package:patinka/api/social.dart';
 
 Future<Map<String, dynamic>> getUserCache(String userId) async {
   final store = await newMemoryCacheStore();

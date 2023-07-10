@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:skating_app/api/connections.dart';
-import 'package:skating_app/api/messages.dart';
-import 'package:skating_app/common_logger.dart';
+import 'package:patinka/api/connections.dart';
+import 'package:patinka/api/messages.dart';
+import 'package:patinka/common_logger.dart';
 
 import '../swatch.dart';
 

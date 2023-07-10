@@ -4,7 +4,7 @@ The Skating App *(Name TDB)* is a social media platform designed specifically fo
 
 ## Additional Information
 
-This is the front-end repository of the Skating App. There is also a repository for the back-end of the application, which can be found at [skating_app_backend](https://github.com/Olwin1/skating_app_backend).
+This is the front-end repository of the Skating App. There is also a repository for the back-end of the application, which can be found at [patinka_backend](https://github.com/Olwin1/patinka_backend).
 
 ## Features in Development
 

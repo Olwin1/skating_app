@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:skating_app/api/token.dart';
+import 'package:patinka/api/token.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../common_logger.dart';

@@ -1,6 +1,6 @@
 // Importing necessary packages and files
 import 'package:flutter/material.dart';
-import 'package:skating_app/common_logger.dart';
+import 'package:patinka/common_logger.dart';
 
 import '../../swatch.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

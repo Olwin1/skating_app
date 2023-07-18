@@ -1,14 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:skating_app/api/websocket.dart';
-import 'package:skating_app/api/token.dart';
-import 'package:skating_app/social_media/login.dart';
+import 'package:patinka/api/websocket.dart';
+import 'package:patinka/api/token.dart';
+import 'package:patinka/social_media/login.dart';
 import 'api/config.dart';
 import 'common_logger.dart';
+import 'firebase_options.dart';
+import 'local_notification.dart';
 import 'objects/user.dart';
 import 'swatch.dart';
 import 'tab_navigator.dart';
@@ -18,10 +22,55 @@ import 'current_tab.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
+AndroidNotificationChannel channel = const AndroidNotificationChannel(
+  'ChannelId', // id
+  'ChannelId', // title
+  description:
+      'This channel is used for important notifications.', // description
+  importance: Importance.high,
+);
+
+// @pragma('vm:entry-point')
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   print("recieceing");
+//   NotificationManager.instance.
+// //   // If you're going to use other Firebase services in the background, such as Firestore,
+// //   // make sure you call `initializeApp` before using other Firebase services.
+
+//   print("Handling a background message: ${message.messageId}");
+// }
+
 // Define the main function
 Future<void> main() async {
   // Ensure that the Flutter widgets are initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // FirebaseMessaging messaging = FirebaseMessaging.instance;
+  // /*NotificationSettings settings = */ await messaging.requestPermission(
+  //   alert: true,
+  //   announcement: false,
+  //   badge: true,
+  //   carPlay: false,
+  //   criticalAlert: false,
+  //   provisional: false,
+  //   sound: true,
+  // );
+  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //   print('Got a message whilst in the foreground!');
+  //   print('Message data: ${message.data}');
+
+  //   if (message.notification != null) {
+  //     print('Message also contained a notification: ${message.notification}');
+  //   }
+  // });
+
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ).then((value) => NotificationManager.instance.initialize());
+
+  //FirebaseMessaging.instance.deleteToken();
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: swatch[200], // transparent status bar

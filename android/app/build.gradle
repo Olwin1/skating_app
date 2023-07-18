@@ -33,6 +33,8 @@ android {
     ndkVersion flutter.ndkVersion // 23.1.7779620
 
     compileOptions {
+            // Flag to enable support for the new language APIs
+    coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -54,6 +56,7 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -71,4 +74,8 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    implementation 'androidx.window:window:1.0.0'
+    implementation 'androidx.window:window-java:1.0.0'
+    implementation 'com.google.firebase:firebase-messaging:18.0.0' 
 }

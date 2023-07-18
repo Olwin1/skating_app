@@ -53,7 +53,8 @@ Future<String?> getUserId() async {
 }
 
 // Function to send a message to a channel
-Future<Object> postMessage(String channel, String content, String? img) async {
+Future<Object> postMessage(String channel, String content, String? img,
+    List<dynamic>? fcmToken) async {
   var url = Uri.parse('${Config.uri}/message/message');
 
   try {
@@ -67,7 +68,8 @@ Future<Object> postMessage(String channel, String content, String? img) async {
       body: {
         'channel': channel,
         'content': content,
-        if (img != null) 'img': img
+        if (img != null) 'img': img,
+        "fcm_token": jsonEncode(fcmToken)
       },
     );
 

@@ -343,6 +343,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   void _handleSendPressed(types.PartialText message) async {
     try {
       if (!sending) {
+        //for (int i = 0; i < users.length; i++) {}
         controller.clear();
         commonLogger.d("Setting sending to true");
         sending = true;
@@ -355,7 +356,8 @@ class _PrivateMessage extends State<PrivateMessage> {
           text: message.text, // Set message content
         );
         _addMessage(textMessage); // Run addMessage function
-        await postMessage(widget.channel, message.text, null)
+        await postMessage(
+                widget.channel, message.text, null, widget.user?["fcm_token"])
             .then((value) => {sending = false});
       }
     } catch (e) {

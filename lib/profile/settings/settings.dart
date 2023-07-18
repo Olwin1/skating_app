@@ -4,10 +4,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:skating_app/common_logger.dart';
-import 'package:skating_app/profile/settings/settings_overlays.dart';
+import 'package:patinka/common_logger.dart';
+import 'package:patinka/profile/settings/settings_overlays.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:skating_app/swatch.dart';
+import 'package:patinka/swatch.dart';
 
 import '../../api/token.dart';
 
@@ -158,9 +158,8 @@ class _Settings extends State<Settings> {
                       leading: const Icon(Icons.language),
                       title: Text(AppLocalizations.of(context)!.language),
                       value: const Text('English'),
-                      onPressed: (e) => {
-                        mounted ? setState(() => item = 2) : null
-                      },
+                      onPressed: (e) =>
+                          {mounted ? setState(() => item = 2) : null},
                     ),
                     // Switch tile for toggling push notifications
                     SettingsTile.switchTile(
@@ -187,9 +186,8 @@ class _Settings extends State<Settings> {
                       leading: const Icon(Icons.theater_comedy),
                       title: Text(AppLocalizations.of(context)!.theme),
                       value: const Text('Default'),
-                      onPressed: (e) => {
-                        mounted ? setState(() => item = 3) : null
-                      },
+                      onPressed: (e) =>
+                          {mounted ? setState(() => item = 3) : null},
                     ),
                   ],
                 ),

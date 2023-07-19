@@ -72,8 +72,8 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
         child: userCache == null || userCache!["avatar"] == null
             // If there is no cached user information or avatar image, use a default image
             ? Shimmer.fromColors(
-                baseColor: const Color(0x66000000),
-                highlightColor: const Color(0xff444444),
+                baseColor: shimmer["base"]!,
+                highlightColor: shimmer["highlight"]!,
                 child: CircleAvatar(
                   // Create a circular avatar icon
                   radius: 32, // Set radius to 36

@@ -44,8 +44,8 @@ class _CustomMarker extends State<CustomMarker> {
                 ),
               ),
               placeholder: (context, url) => Shimmer.fromColors(
-                  baseColor: const Color(0x66000000),
-                  highlightColor: const Color(0xff444444),
+                  baseColor: shimmer["base"]!,
+                  highlightColor: shimmer["highlight"]!,
                   child: CircleAvatar(
                     // Create a circular avatar icon
                     radius: 32, // Set radius to 36
@@ -69,8 +69,8 @@ class _CustomMarker extends State<CustomMarker> {
                     ),
                   ),
                   placeholder: (context, url) => Shimmer.fromColors(
-                      baseColor: const Color(0x66000000),
-                      highlightColor: const Color(0xff444444),
+                      baseColor: shimmer["base"]!,
+                      highlightColor: shimmer["highlight"]!,
                       child: CircleAvatar(
                         // Create a circular avatar icon
                         radius: 16, // Set radius to 36
@@ -104,8 +104,8 @@ class _CustomMarker extends State<CustomMarker> {
               ),
             ),
             placeholder: (context, url) => Shimmer.fromColors(
-                baseColor: const Color(0x66000000),
-                highlightColor: const Color(0xff444444),
+                baseColor: shimmer["base"]!,
+                highlightColor: shimmer["highlight"]!,
                 child: CircleAvatar(
                   // Create a circular avatar icon
                   radius: 32, // Set radius to 36
@@ -115,8 +115,8 @@ class _CustomMarker extends State<CustomMarker> {
           )
         // If the user doesn't have an avatar, show a default placeholder image
         : Shimmer.fromColors(
-            baseColor: const Color(0x66000000),
-            highlightColor: const Color(0xff444444),
+            baseColor: shimmer["base"]!,
+            highlightColor: shimmer["highlight"]!,
             child: CircleAvatar(
               // Create a circular avatar icon
               radius: 32, // Set radius to 36

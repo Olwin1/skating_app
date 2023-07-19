@@ -12,6 +12,7 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../current_tab.dart';
+import '../swatch.dart';
 
 // Define the NewPost widget which extends StatefulWidget
 
@@ -262,7 +263,7 @@ class _PhotosGridViewState extends State<PhotosGridView> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
                 child: Container(
-                  color: const Color(0x66000000),
+                  color: shimmer["base"]!,
                   child: FadeInImage(
                     fit: BoxFit.cover,
                     placeholder: MemoryImage(kTransparentImage),

@@ -122,8 +122,8 @@ class _PostWidget extends State<PostWidget> {
                   child: CachedNetworkImage(
                     imageUrl: "${Config.uri}/image/${widget.post['image']}",
                     placeholder: (context, url) => Shimmer.fromColors(
-                        baseColor: const Color(0x66000000),
-                        highlightColor: const Color(0xff444444),
+                        baseColor: shimmer["base"]!,
+                        highlightColor: shimmer["highlight"]!,
                         child: Image.asset(
                           "assets/placeholders/1080.png",
                         )),
@@ -319,8 +319,8 @@ class _Avatar extends State<Avatar> {
         child: image == null
             // If there is no cached user information or avatar image, use a default image
             ? Shimmer.fromColors(
-                baseColor: const Color(0x66000000),
-                highlightColor: const Color(0xff444444),
+                baseColor: shimmer["base"]!,
+                highlightColor: shimmer["highlight"]!,
                 child: CircleAvatar(
                   // Create a circular avatar icon
                   radius: 36, // Set radius to 36
@@ -330,8 +330,8 @@ class _Avatar extends State<Avatar> {
             : CachedNetworkImage(
                 imageUrl: '${Config.uri}/image/thumbnail/$image',
                 placeholder: (context, url) => Shimmer.fromColors(
-                    baseColor: const Color(0x66000000),
-                    highlightColor: const Color(0xff444444),
+                    baseColor: shimmer["base"]!,
+                    highlightColor: shimmer["highlight"]!,
                     child: CircleAvatar(
                       // Create a circular avatar icon
                       radius: 36, // Set radius to 36

@@ -119,8 +119,8 @@ class _Profile extends State<Profile> {
               ? Text(
                   user?["username"] ?? AppLocalizations.of(context)!.username)
               : Shimmer.fromColors(
-                  baseColor: const Color(0x66000000),
-                  highlightColor: const Color(0xff444444),
+                  baseColor: shimmer["base"]!,
+                  highlightColor: shimmer["highlight"]!,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 0.0),
                     child: Column(
@@ -164,11 +164,11 @@ class _Profile extends State<Profile> {
                 padding: const EdgeInsets.all(8), // Add padding
                 child: user?["avatar"] == null
                     ? Shimmer.fromColors(
-                        baseColor: const Color(0x66000000),
-                        highlightColor: const Color(0xff444444),
+                        baseColor: shimmer["base"]!,
+                        highlightColor: shimmer["highlight"]!,
                         child: Shimmer.fromColors(
-                            baseColor: const Color(0x66000000),
-                            highlightColor: const Color(0xff444444),
+                            baseColor: shimmer["base"]!,
+                            highlightColor: shimmer["highlight"]!,
                             child: CircleAvatar(
                               // Create a circular avatar icon
                               radius: 36, // Set radius to 36
@@ -176,8 +176,8 @@ class _Profile extends State<Profile> {
                             )))
                     : CachedNetworkImage(
                         placeholder: (context, url) => Shimmer.fromColors(
-                            baseColor: const Color(0x66000000),
-                            highlightColor: const Color(0xff444444),
+                            baseColor: shimmer["base"]!,
+                            highlightColor: shimmer["highlight"]!,
                             child: CircleAvatar(
                               // Create a circular avatar icon
                               radius: 36, // Set radius to 36
@@ -379,8 +379,8 @@ class _UserPostsListState extends State<UserPostsList> {
 
   Widget _createGridLoadingWidgets() {
     Widget child = Shimmer.fromColors(
-        baseColor: const Color(0x66000000),
-        highlightColor: const Color(0xff444444),
+        baseColor: shimmer["base"]!,
+        highlightColor: shimmer["highlight"]!,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8.0),
           child: Image.asset("assets/placeholders/150.png"),

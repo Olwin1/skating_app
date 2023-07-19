@@ -8,6 +8,7 @@ import 'package:patinka/social_media/search_bar.dart';
 import '../api/fcm_token.dart';
 import '../api/messages.dart';
 import '../objects/user.dart';
+import '../swatch.dart';
 import 'post_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../api/social.dart';
@@ -72,8 +73,8 @@ class HomePage extends StatelessWidget {
 
 _loadSkeleton() {
   Widget child = Shimmer.fromColors(
-      baseColor: const Color(0x66000000),
-      highlightColor: const Color(0xff444444),
+      baseColor: shimmer["base"]!,
+      highlightColor: shimmer["highlight"]!,
       child: Container(
         margin: const EdgeInsets.only(bottom: 24),
         decoration: BoxDecoration(

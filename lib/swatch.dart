@@ -109,3 +109,8 @@ const Map<int, Color> swatch = {
 
   0: Color(0xff1eb723)
 };
+
+const Map<String, Color> shimmer = {
+  "base": Color(0x66000000),
+  "highlight": Color(0xff444444),
+};

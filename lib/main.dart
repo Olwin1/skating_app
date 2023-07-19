@@ -204,8 +204,8 @@ class _MyHomePageState extends State<MyHomePage> {
         icon: avatar == null
             // If there is no cached user information or avatar image, use a default image
             ? Shimmer.fromColors(
-                baseColor: const Color(0x66000000),
-                highlightColor: const Color(0xff444444),
+                baseColor: shimmer["base"]!,
+                highlightColor: shimmer["highlight"]!,
                 child: CircleAvatar(
                   // Create a circular avatar icon
                   radius: 36, // Set radius to 36
@@ -215,8 +215,8 @@ class _MyHomePageState extends State<MyHomePage> {
             : CachedNetworkImage(
                 imageUrl: '${Config.uri}/image/thumbnail/$avatar',
                 placeholder: (context, url) => Shimmer.fromColors(
-                    baseColor: const Color(0x66000000),
-                    highlightColor: const Color(0xff444444),
+                    baseColor: shimmer["base"]!,
+                    highlightColor: shimmer["highlight"]!,
                     child: CircleAvatar(
                       // Create a circular avatar icon
                       radius: 36, // Set radius to 36

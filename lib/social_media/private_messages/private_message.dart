@@ -67,8 +67,8 @@ class _PrivateMessage extends State<PrivateMessage> {
   Widget _messagesSkeleton() {
     Widget child(bool lalign, double width) {
       return Shimmer.fromColors(
-          baseColor: const Color(0x66000000),
-          highlightColor: const Color(0xff444444),
+          baseColor: shimmer["base"]!,
+          highlightColor: shimmer["highlight"]!,
           child: Container(
               width: 100,
               padding: const EdgeInsets.only(top: 8),
@@ -217,8 +217,8 @@ class _PrivateMessage extends State<PrivateMessage> {
             widget.user == null || widget.user?["avatar"] == null
                 // If there is no cached user information or avatar image, use a default image
                 ? Shimmer.fromColors(
-                    baseColor: const Color(0x66000000),
-                    highlightColor: const Color(0xff444444),
+                    baseColor: shimmer["base"]!,
+                    highlightColor: shimmer["highlight"]!,
                     child: CircleAvatar(
                       // Create a circular avatar icon
                       radius: 20, // Set radius to 36
@@ -232,8 +232,8 @@ class _PrivateMessage extends State<PrivateMessage> {
                     imageUrl:
                         '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',
                     placeholder: (context, url) => Shimmer.fromColors(
-                        baseColor: const Color(0x66000000),
-                        highlightColor: const Color(0xff444444),
+                        baseColor: shimmer["base"]!,
+                        highlightColor: shimmer["highlight"]!,
                         child: CircleAvatar(
                           // Create a circular avatar icon
                           radius: 20, // Set radius to 36

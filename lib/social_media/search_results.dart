@@ -173,8 +173,8 @@ class Results extends StatelessWidget {
                   children: [
                     results[index]["avatar"] == null
                         ? Shimmer.fromColors(
-                            baseColor: const Color(0x66000000),
-                            highlightColor: const Color(0xff444444),
+                            baseColor: shimmer["base"]!,
+                            highlightColor: shimmer["highlight"]!,
                             child: CircleAvatar(
                               radius: 36,
                               backgroundColor: swatch[900]!,
@@ -185,8 +185,8 @@ class Results extends StatelessWidget {
                                     '${Config.uri}/image/thumbnail/${results[index]["avatar"]}',
                                 placeholder: (context, url) =>
                                     Shimmer.fromColors(
-                                        baseColor: const Color(0x66000000),
-                                        highlightColor: const Color(0xff444444),
+                                        baseColor: shimmer["base"]!,
+                                        highlightColor: shimmer["highlight"]!,
                                         child: CircleAvatar(
                                           radius: 36,
                                           backgroundColor: swatch[900]!,

@@ -76,8 +76,8 @@ class _PrivateMessageList extends State<PrivateMessageList> {
 
 Widget _loadingSkeleton() {
   Widget child = Shimmer.fromColors(
-      baseColor: const Color(0x66000000),
-      highlightColor: const Color(0xff444444),
+      baseColor: shimmer["base"]!,
+      highlightColor: shimmer["highlight"]!,
       child: Padding(
           padding: const EdgeInsets.only(top: 8),
           child: Container(

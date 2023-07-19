@@ -62,8 +62,8 @@ class _UserListWidget extends State<UserListWidget> {
                       const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
                   child: user?["avatar"] == null
                       ? Shimmer.fromColors(
-                          baseColor: const Color(0x66000000),
-                          highlightColor: const Color(0xff444444),
+                          baseColor: shimmer["base"]!,
+                          highlightColor: shimmer["highlight"]!,
                           child: CircleAvatar(
                             // Create a circular avatar icon
                             radius: 26, // Set radius to 36

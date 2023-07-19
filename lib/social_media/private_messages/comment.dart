@@ -60,8 +60,8 @@ class _Comment extends State<Comment> {
                 child: user == null || user!["avatar"] == null
                     // If there is no cached user information or avatar image, use a default image
                     ? Shimmer.fromColors(
-                        baseColor: const Color(0x66000000),
-                        highlightColor: const Color(0xff444444),
+                        baseColor: shimmer["base"]!,
+                        highlightColor: shimmer["highlight"]!,
                         child: CircleAvatar(
                           // Create a circular avatar icon
                           radius: 25, // Set radius to 36
@@ -72,8 +72,8 @@ class _Comment extends State<Comment> {
                         imageUrl:
                             '${Config.uri}/image/thumbnail/${user!["avatar"]}',
                         placeholder: (context, url) => Shimmer.fromColors(
-                            baseColor: const Color(0x66000000),
-                            highlightColor: const Color(0xff444444),
+                            baseColor: shimmer["base"]!,
+                            highlightColor: shimmer["highlight"]!,
                             child: CircleAvatar(
                               // Create a circular avatar icon
                               radius: 25, // Set radius to 36

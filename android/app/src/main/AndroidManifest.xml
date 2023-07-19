@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.olwin.patinka">
-    <application android:label="{Patinka}" android:name="${applicationName}" android:icon="@mipmap/ic_launcher">
+    <application android:label="Patinka" android:name="${applicationName}" android:icon="@mipmap/ic_launcher">
         <activity 
         android:name=".MainActivity" 
         android:exported="true" 
@@ -15,6 +15,11 @@
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
             <meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme" />
+                    <!-- <meta-data
+          android:name="com.google.firebase.messaging.default_notification_icon"
+          android:resource="@drawable/ic_notification" />
+          <meta-data android:name="com.google.firebase.messaging.default_notification_color"
+    android:resource="@color/google_blue" /> -->
             <!-- <meta-data
         android:name="com.google.firebase.messaging.default_notification_channel_id"
         android:value="@string/notification_channel_id" /> -->

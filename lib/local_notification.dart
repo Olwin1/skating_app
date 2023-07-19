@@ -102,12 +102,12 @@ class CustomNotification {
   String title;
   String? body;
   String? route;
-  String iconPath;
+  String? iconPath;
 
-  CustomNotification(
-      {required this.title,
-      this.body,
-      this.route,
-      this.iconPath = "eee" //CustomIcons.bell,
-      });
+  CustomNotification({
+    required this.title,
+    this.body,
+    this.route,
+    this.iconPath,
+  });
 }

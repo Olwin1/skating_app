@@ -54,13 +54,19 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
       if (!mounted) return;
+      List<Map<String, dynamic>> usersToDisplay = [];
+      for (int i = 0; i < page.length; i++) {
+        if (!(page[i]["requested"] == true)) {
+          usersToDisplay.add(page[i]);
+        }
+      }
       if (isLastPage) {
         // If this is the last page, append it to the list of pages
-        _pagingController.appendLastPage(page);
+        _pagingController.appendLastPage(usersToDisplay);
       } else {
         // If this is not the last page, append it to the list of pages and request the next page
         final nextPageKey = pageKey += 1;
-        _pagingController.appendPage(page, nextPageKey);
+        _pagingController.appendPage(usersToDisplay, nextPageKey);
       }
     } catch (error) {
       // If there's an error fetching the page, set the error on the controller
@@ -79,12 +85,11 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
         noItemsFoundIndicatorBuilder: (context) => Center(
             child: Column(children: [
           Text(
-            "No Followier",
+            "No Followers",
             style: TextStyle(
                 fontSize: 24, fontWeight: FontWeight.bold, color: swatch[801]!),
           ),
-          Text("eeeeeeeeeeeeeeee",
-              style: TextStyle(fontSize: 20, color: swatch[701]!)),
+          Text("", style: TextStyle(fontSize: 20, color: swatch[701]!)),
         ])),
       ),
     );

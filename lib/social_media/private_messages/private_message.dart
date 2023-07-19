@@ -216,12 +216,14 @@ class _PrivateMessage extends State<PrivateMessage> {
             //Create title as row
             widget.user == null || widget.user?["avatar"] == null
                 // If there is no cached user information or avatar image, use a default image
-                ? CircleAvatar(
-                    radius: 15, // Set the radius of the circular avatar image
-                    child: ClipOval(
-                      child: Image.asset("assets/placeholders/default.png"),
-                    ),
-                  )
+                ? Shimmer.fromColors(
+                    baseColor: const Color(0x66000000),
+                    highlightColor: const Color(0xff444444),
+                    child: CircleAvatar(
+                      // Create a circular avatar icon
+                      radius: 20, // Set radius to 36
+                      backgroundColor: swatch[900]!,
+                    ))
                 // If there is cached user information and an avatar image, use the cached image
                 : //Flexible(
                 CachedNetworkImage(
@@ -234,10 +236,8 @@ class _PrivateMessage extends State<PrivateMessage> {
                         highlightColor: const Color(0xff444444),
                         child: CircleAvatar(
                           // Create a circular avatar icon
-                          radius: 36, // Set radius to 36
+                          radius: 20, // Set radius to 36
                           backgroundColor: swatch[900]!,
-                          // backgroundImage: AssetImage(
-                          //     "assets/placeholders/default.png"), // Set avatar to placeholder images
                         )),
                     imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(

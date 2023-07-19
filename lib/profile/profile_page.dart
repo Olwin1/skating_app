@@ -173,10 +173,16 @@ class _Profile extends State<Profile> {
                               // Create a circular avatar icon
                               radius: 36, // Set radius to 36
                               backgroundColor: swatch[900]!,
-                              // backgroundImage: AssetImage(
-                              //     "assets/placeholders/default.png"), // Set avatar to placeholder images
                             )))
                     : CachedNetworkImage(
+                        placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: const Color(0x66000000),
+                            highlightColor: const Color(0xff444444),
+                            child: CircleAvatar(
+                              // Create a circular avatar icon
+                              radius: 36, // Set radius to 36
+                              backgroundColor: swatch[900]!,
+                            )),
                         imageUrl: '${Config.uri}/image/${user!["avatar"]}',
                         imageBuilder: (context, imageProvider) => Container(
                           height: 72,

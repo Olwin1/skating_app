@@ -214,9 +214,11 @@ class Results extends StatelessWidget {
                                 style: TextStyle(
                                   color: swatch[301],
                                 )),
-                            Text(results[index]["_id"],
-                                style:
-                                    TextStyle(color: swatch[601], height: 1.5)),
+                            Text(
+                              results[index]["description"] ?? "",
+                              style: TextStyle(color: swatch[601], height: 1.5),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ]),
                     ),
                   ],

@@ -157,8 +157,6 @@ class _EditProfile extends State<EditProfile> {
                                 // Create a circular avatar icon
                                 radius: 36, // Set radius to 36
                                 backgroundColor: swatch[900]!,
-                                // backgroundImage: AssetImage(
-                                //     "assets/placeholders/default.png"), // Set avatar to placeholder images
                               ))
                           : CachedNetworkImage(
                               imageUrl:

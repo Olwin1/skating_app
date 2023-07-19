@@ -318,21 +318,25 @@ class _Avatar extends State<Avatar> {
 
         child: image == null
             // If there is no cached user information or avatar image, use a default image
-            ? CircleAvatar(
-                radius: 36, // Set the radius of the circular avatar image
-                child: ClipOval(
-                  child: Image.asset("assets/placeholders/default.png"),
-                ),
-              )
+            ? Shimmer.fromColors(
+                baseColor: const Color(0x66000000),
+                highlightColor: const Color(0xff444444),
+                child: CircleAvatar(
+                  // Create a circular avatar icon
+                  radius: 36, // Set radius to 36
+                  backgroundColor: swatch[900]!,
+                ))
             // If there is cached user information and an avatar image, use the cached image
             : CachedNetworkImage(
                 imageUrl: '${Config.uri}/image/thumbnail/$image',
-                placeholder: (context, url) => CircleAvatar(
-                      radius: 36, // Set the radius of the circular avatar image
-                      child: ClipOval(
-                        child: Image.asset("assets/placeholders/default.png"),
-                      ),
-                    ),
+                placeholder: (context, url) => Shimmer.fromColors(
+                    baseColor: const Color(0x66000000),
+                    highlightColor: const Color(0xff444444),
+                    child: CircleAvatar(
+                      // Create a circular avatar icon
+                      radius: 36, // Set radius to 36
+                      backgroundColor: swatch[900]!,
+                    )),
                 imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
                         shape: BoxShape

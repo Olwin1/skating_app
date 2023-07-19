@@ -98,8 +98,6 @@ Widget _loadingSkeleton() {
                   // Create a circular avatar icon
                   radius: 36, // Set radius to 36
                   backgroundColor: swatch[900]!,
-                  // backgroundImage: AssetImage(
-                  //     "assets/placeholders/default.png"), // Set avatar to placeholder images
                 ),
                 // If there is cached user information and an avatar image, use the cached image
                 const Padding(

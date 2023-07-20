@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_gallery/photo_gallery.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -75,13 +76,20 @@ class _NewPostPage extends State<NewPostPage> {
   Future<void> initAsync() async {
     commonLogger.d("Running initAsync");
     if (await _promptPermissionSetting()) {
+      commonLogger.d("Permissions confirmed runnning rest");
+
       // Check if the user has granted permission to access the device's photo gallery.
       List<Album> albums = await PhotoGallery.listAlbums(
           mediumType: MediumType.image); // Load all albums that contain images.
+      commonLogger.d("Available albulms are: $albums");
+
       MediaPage imagePage = await albums[0].listMedia(
         skip: 0,
         take: 1,
       ); // Load the first page of images from the first album.
+      commonLogger.d("Available images are: $imagePage");
+      commonLogger.d("Still mounted? $mounted");
+
       mounted
           ? setState(() {
               _selectedImage = imagePage.items.first
@@ -104,12 +112,24 @@ class _NewPostPage extends State<NewPostPage> {
     commonLogger.v("Prompting image permissions");
     // Check if the device is iOS and both the storage and photos permissions have been granted,
     // or if the device is Android and the storage permission has been granted.
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     if (Platform.isIOS &&
             await Permission.storage.request().isGranted &&
             await Permission.photos.request().isGranted ||
-        Platform.isAndroid && await Permission.storage.request().isGranted) {
+        Platform.isAndroid &&
+            androidInfo.version.sdkInt < 33 &&
+            await Permission.storage.request().isGranted ||
+        Platform.isAndroid &&
+            androidInfo.version.sdkInt >= 33 &&
+            await Permission.photos.request().isGranted) {
+      await Permission.videos.request();
+      commonLogger.d("Permissions are true");
+
       return true; // Return true if the permissions have been granted.
     }
+    commonLogger.d("Permissions are false");
+
     return false; // Return false if the permissions have not been granted.
   }
 
@@ -170,13 +190,15 @@ class _NewPostPage extends State<NewPostPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // A container that displays the selected image
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: EditPost(
-                          selected: selected,
-                          selectedImage: _selectedImage!,
-                          callback: callback,
-                        )),
+                    _selectedImage == null
+                        ? const SizedBox.shrink()
+                        : SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: EditPost(
+                              selected: selected,
+                              selectedImage: _selectedImage!,
+                              callback: callback,
+                            )),
                     const Spacer(),
                     // A layout builder that displays a grid of images from the photo gallery
                     LayoutBuilder(
@@ -223,23 +245,26 @@ class _PhotosGridViewState extends State<PhotosGridView> {
   // Fetches the data for the given pageKey and appends it to the list of items
   Future<void> _fetchPage(int pageKey) async {
     try {
-      // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
-      final page = await _albums![0].listMedia(
-        skip: pageKey,
-        take: _pageSize,
-      );
-      final newItems = page.items;
-      final isLastPage = newItems.length < _pageSize;
-      if (!mounted) return;
-      if (isLastPage) {
-        // appendLastPage is called if there are no more items to load
-        _pagingController.appendLastPage(newItems);
-      } else {
-        // appendPage is called to add the newly loaded items to the list of items
-        final nextPageKey = pageKey + newItems.length;
-        _pagingController.appendPage(newItems, nextPageKey);
+      if (_albums != null) {
+        // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
+        final page = await _albums![0].listMedia(
+          skip: pageKey,
+          take: _pageSize,
+        );
+        final newItems = page.items;
+        final isLastPage = newItems.length < _pageSize;
+        if (!mounted) return;
+        if (isLastPage) {
+          // appendLastPage is called if there are no more items to load
+          _pagingController.appendLastPage(newItems);
+        } else {
+          // appendPage is called to add the newly loaded items to the list of items
+          final nextPageKey = pageKey + newItems.length;
+          _pagingController.appendPage(newItems, nextPageKey);
+        }
       }
     } catch (error) {
+      commonLogger.e(error);
       _pagingController.error = error;
     }
   }

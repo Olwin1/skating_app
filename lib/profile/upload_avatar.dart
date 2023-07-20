@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:http/http.dart';
@@ -84,10 +85,20 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
     commonLogger.v("Prompting image permissions");
     // Check if the device is iOS and both the storage and photos permissions have been granted,
     // or if the device is Android and the storage permission has been granted.
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     if (Platform.isIOS &&
             await Permission.storage.request().isGranted &&
             await Permission.photos.request().isGranted ||
-        Platform.isAndroid && await Permission.storage.request().isGranted) {
+        Platform.isAndroid &&
+            androidInfo.version.sdkInt < 33 &&
+            await Permission.storage.request().isGranted ||
+        Platform.isAndroid &&
+            androidInfo.version.sdkInt >= 33 &&
+            await Permission.photos.request().isGranted) {
+      await Permission.videos.request();
+      commonLogger.d("Permissions are true");
+
       return true; // Return true if the permissions have been granted.
     }
     return false; // Return false if the permissions have not been granted.
@@ -249,21 +260,23 @@ class _PhotosGridViewState extends State<PhotosGridView> {
   // Fetches the data for the given pageKey and appends it to the list of items
   Future<void> _fetchPage(int pageKey) async {
     try {
-      // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
-      final page = await _albums![0].listMedia(
-        skip: pageKey,
-        take: _pageSize,
-      );
-      final newItems = page.items;
-      final isLastPage = newItems.length < _pageSize;
-      if (!mounted) return;
-      if (isLastPage) {
-        // appendLastPage is called if there are no more items to load
-        _pagingController.appendLastPage(newItems);
-      } else {
-        // appendPage is called to add the newly loaded items to the list of items
-        final nextPageKey = pageKey + newItems.length;
-        _pagingController.appendPage(newItems, nextPageKey);
+      if (_albums != null) {
+        // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
+        final page = await _albums![0].listMedia(
+          skip: pageKey,
+          take: _pageSize,
+        );
+        final newItems = page.items;
+        final isLastPage = newItems.length < _pageSize;
+        if (!mounted) return;
+        if (isLastPage) {
+          // appendLastPage is called if there are no more items to load
+          _pagingController.appendLastPage(newItems);
+        } else {
+          // appendPage is called to add the newly loaded items to the list of items
+          final nextPageKey = pageKey + newItems.length;
+          _pagingController.appendPage(newItems, nextPageKey);
+        }
       }
     } catch (error) {
       _pagingController.error = error;

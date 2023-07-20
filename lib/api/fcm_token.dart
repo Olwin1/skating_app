@@ -1,4 +1,5 @@
 // Import necessary dependencies and files
+import '../common_logger.dart';
 import 'token.dart';
 
 import 'package:http/http.dart' as http;
@@ -13,6 +14,7 @@ Future<Map<String, dynamic>?> updateToken(String fcmToken) async {
   var url = Uri.parse('${Config.uri}/notifications/token');
 
   try {
+    commonLogger.d("Stored user auth token is: ${await storage.getToken()}");
     // Make a POST request to the login endpoint with the user's credentials
     var response = await http.post(
       url,

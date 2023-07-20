@@ -129,17 +129,19 @@ class _PostsListViewState extends State<PostsListView> {
   @override
   void initState() {
     getUserId().then((userId) {
-      getUserCache(userId!).then((user) {
-        // if (user["fcm_tokens"] == null) {
-        FirebaseMessaging.instance.getToken().then(
-            (fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
-        //}
-        //   if (user["fcm_tokens"] == null) {
-        //     FirebaseMessaging.instance.getToken().then(
-        //         (fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
+      if (userId != null) {
+        getUserCache(userId).then((user) {
+          // if (user["fcm_tokens"] == null) {
+          FirebaseMessaging.instance.getToken().then(
+              (fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
+          //}
+          //   if (user["fcm_tokens"] == null) {
+          //     FirebaseMessaging.instance.getToken().then(
+          //         (fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
 
-        // }
-      });
+          // }
+        });
+      }
     });
 
     // addPageRequestListener is called whenever the user scrolls near the end of the list

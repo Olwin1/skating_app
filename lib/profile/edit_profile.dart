@@ -32,9 +32,14 @@ class _EditProfile extends State<EditProfile> {
   TextEditingController aboutMeController = TextEditingController();
   @override
   void initState() {
-    usernameController.value = TextEditingValue(text: widget.user?["username"]);
-    aboutMeController.value =
-        TextEditingValue(text: widget.user?["description"]);
+    usernameController.value = TextEditingValue(
+        text: widget.user == null || widget.user!["username"] == null
+            ? ""
+            : widget.user!["username"]);
+    aboutMeController.value = TextEditingValue(
+        text: widget.user == null || widget.user!["description"] == null
+            ? ""
+            : widget.user!["description"]);
 
     super.initState();
   }

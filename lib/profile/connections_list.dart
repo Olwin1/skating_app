@@ -87,9 +87,9 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
           Text(
             "No Followers",
             style: TextStyle(
-                fontSize: 24, fontWeight: FontWeight.bold, color: swatch[801]!),
+                fontSize: 24, fontWeight: FontWeight.bold, color: swatch[701]!),
           ),
-          Text("", style: TextStyle(fontSize: 20, color: swatch[701]!)),
+          Text("", style: TextStyle(fontSize: 20, color: swatch[601]!)),
         ])),
       ),
     );

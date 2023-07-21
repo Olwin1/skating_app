@@ -225,12 +225,14 @@ class _PostsListViewState extends State<PostsListView> {
                         child: Column(children: [
                       Text(
                         AppLocalizations.of(context)!.noPostsFound,
-                        style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: swatch[701]),
                       ),
                       Text(
                         AppLocalizations.of(context)!.makeFriends,
-                        style: const TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20, color: swatch[601]),
                       ),
                     ])),
                 // itemBuilder is called for each item in the list to create a widget for that item

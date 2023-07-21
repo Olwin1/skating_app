@@ -468,7 +468,7 @@ class _UserPostsListState extends State<UserPostsList> {
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: swatch[900]),
+                      color: swatch[701]!),
                 ),
               ),
               // Specify how to build each grid tile

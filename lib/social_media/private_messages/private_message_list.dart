@@ -249,11 +249,14 @@ class _ChannelsListViewState extends State<ChannelsListView> {
               child: Column(children: [
             Text(
               AppLocalizations.of(context)!.noMessagesFound,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: swatch[701]),
             ),
             Text(
               AppLocalizations.of(context)!.makeFriends,
-              style: const TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 20, color: swatch[601]),
             ),
           ])),
           firstPageProgressIndicatorBuilder: (context) => _loadingSkeleton(),

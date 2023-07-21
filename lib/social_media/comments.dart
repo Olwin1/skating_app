@@ -45,7 +45,10 @@ class _Comments extends State<Comments> {
         title: Title(
           title: AppLocalizations.of(context)!.commentsTitle,
           color: const Color(0xFFDDDDDD),
-          child: Text(AppLocalizations.of(context)!.commentsTitle),
+          child: Text(
+            AppLocalizations.of(context)!.commentsTitle,
+            style: TextStyle(color: swatch[601]),
+          ),
         ),
       ),
       body: CommentBox(
@@ -196,7 +199,7 @@ class _CommentsListViewState extends State<CommentsListView> {
             child: Text(
               AppLocalizations.of(context)!.noCommentsFound,
               style: TextStyle(
-                  color: swatch[201],
+                  color: swatch[701],
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
             ),

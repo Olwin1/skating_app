@@ -1,6 +1,7 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_template/flutter_login_template.dart';
-import 'package:patinka/api/auth.dart' show login; // signup;
+import 'package:patinka/api/auth.dart' show login, signup; // signup;
 import 'package:patinka/api/social.dart';
 import 'package:patinka/api/token.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -88,6 +89,10 @@ class _Login extends State<Login> {
 // Create controllers for the username and password input fields
   var usernameController = TextEditingController();
   var passwordController = TextEditingController();
+  var usernameSignupController = TextEditingController();
+  var emailSignupController = TextEditingController();
+  var passwordSignupController = TextEditingController();
+  var passwordConfirmSignupController = TextEditingController();
 // Set a variable for error text that will be displayed if there is an error during sign-in
   String errorText = "";
 
@@ -159,6 +164,10 @@ class _Login extends State<Login> {
 
 // Define a variable for the SignUp page with logo, style, and buttons.
     var signUpPage = LoginTemplateSignUpPage(
+      controllerFullName: usernameSignupController,
+      controllerUser: emailSignupController,
+      hintTextFullName: "Username",
+      hintTextUser: "Email",
       logo: logo,
       style: style,
       onPressedSignIn: () {
@@ -170,12 +179,21 @@ class _Login extends State<Login> {
             : null;
       },
       onPressedSignUp: () {
-        // When the user taps the "Sign Up" button, set the state to confirm.
-        mounted
-            ? setState(() {
-                state = _State.confirm;
-              })
-            : null;
+        if (EmailValidator.validate(emailSignupController.text)) {
+          if (usernameSignupController.text.length > 3 &&
+              usernameSignupController.text.length < 29) {
+            // When the user taps the "Sign Up" button, set the state to confirm.
+            mounted
+                ? setState(() {
+                    state = _State.create;
+                  })
+                : null;
+          } else {
+            commonLogger.i("Username is too short");
+          }
+        } else {
+          commonLogger.i("Email format is incorrect");
+        }
       },
       // Define a widget for the terms of service and privacy policy.
       term: LoginTemplateTerm(
@@ -215,16 +233,27 @@ class _Login extends State<Login> {
 
 // Define a variable for the Create Password page with logo, style, and button.
     var createPassword = LoginTemplateCreatePasswordPage(
+      controllerPassword: passwordSignupController,
+      controllerConfirmPassword: passwordConfirmSignupController,
       logo: logo,
       style: style,
       errorTextPassword: 'The password you entered is incorrect.',
       onPressedNext: () {
-        // When the user taps the "Next" button, set the state to signIn.
-        mounted
-            ? setState(() {
-                state = _State.signIn;
-              })
-            : null;
+        if (passwordSignupController.text ==
+            passwordConfirmSignupController.text) {
+          if (passwordSignupController.text.length >= 6) {
+            signup(usernameSignupController.text, passwordSignupController.text,
+                    emailSignupController.text)
+                .then((value) => {
+                      mounted
+                          ? setState(() {
+                              state = _State.signIn;
+                            })
+                          : null
+                    });
+            // When the user taps the "Next" button, set the state to signIn.
+          }
+        }
       },
     );
 

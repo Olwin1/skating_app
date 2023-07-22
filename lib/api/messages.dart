@@ -210,3 +210,38 @@ Future<Object> getChannel(String channel) async {
     throw Exception("Error during API call: $e");
   }
 }
+
+Future<List<String>> getSuggestions(int page) async {
+  // `url` is a Uri object that is constructed with a string
+  // that includes the base URI and the endpoint path.
+  var url = Uri.parse('${Config.uri}/message/users');
+
+  try {
+    // `response` is an HTTP response that is returned from an asynchronous
+    // HTTP GET request that is made using the `http` package.
+    // It includes headers and body.
+    var response = await http.get(url, headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Bearer ${await storage.getToken()}',
+      'page': page.toString(),
+    });
+
+    // If the HTTP response status code is 200,
+    // then the response body is decoded from JSON
+    // and returned as a Map of String to dynamic values.
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      return data.map((element) => element.toString()).toList();
+
+      // Decoding the response body and converting it into a List of Map objects
+    } else {
+      // If the HTTP response status code is not 200,
+      // then an exception is thrown with the response reason phrase.
+      throw Exception("Get Unsuccessful: ${response.reasonPhrase}");
+    }
+  } catch (e) {
+    // If an error occurs during the HTTP GET request,
+    // then an exception is thrown with the error message.
+    throw Exception("Error during post: $e");
+  }
+}

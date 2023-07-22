@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:patinka/social_media/private_messages/new_channel.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:uuid/uuid.dart';
@@ -47,6 +48,15 @@ class _PrivateMessageList extends State<PrivateMessageList> {
               style: TextStyle(
                 color: swatch[700],
               )),
+          actions: [
+            IconButton(
+                onPressed: () => Navigator.of(context, rootNavigator: true)
+                    .push(
+                        // Send to signal info page
+                        MaterialPageRoute(
+                            builder: (context) => const NewChannelPage())),
+                icon: const Icon(Icons.add))
+          ],
         ), // Add a basic app bar
         body: Container(
           decoration: BoxDecoration(

@@ -1,4 +1,6 @@
 // Importing the required dependencies
+import 'package:patinka/api/response_handler.dart';
+
 import 'token.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
@@ -33,15 +35,7 @@ Future<Map<String, dynamic>> postChannel(List<String> participants) async {
       body: {'participants': jsonEncode(participants)},
     );
 
-    // If the response status code is 200, return the response body
-    if (response.statusCode == 200) {
-      Map<String, dynamic> y = json.decode(response.body);
-      return y;
-    } else {
-      // If the response status code is not 200, throw an exception with the reason phrase
-      throw Exception(
-          "Channel Creation Unsuccessful: ${response.reasonPhrase}");
-    }
+    return ResponseHandler.handleResponse(response);
   } catch (e) {
     // If there is any error, throw an exception with the error message
     throw Exception("Error during post: $e");
@@ -73,15 +67,7 @@ Future<Object> postMessage(String channel, String content, String? img,
       },
     );
 
-    // If the response status code is 200, return the response body
-    if (response.statusCode == 200) {
-      Map<String, dynamic> y = json.decode(response.body);
-      return y;
-    } else {
-      // If the response status code is not 200, throw an exception with the reason phrase
-      throw Exception(
-          "Message Creation Unsuccessful: ${response.reasonPhrase}");
-    }
+    return ResponseHandler.handleListResponse(response);
   } catch (e) {
     // If there is any error, throw an exception with the error message
     throw Exception("Error during post: $e");
@@ -102,14 +88,7 @@ Future<Object> getMessage(
       'channel': channel,
     });
 
-    // If the response status code is 200 (OK), decode the response body as a JSON object and return it
-    if (response.statusCode == 200) {
-      Map<String, dynamic> y = json.decode(response.body);
-      return y;
-    } else {
-      // If the response status code is not 200, throw an exception with the reason phrase
-      throw Exception("Get Unsuccessful: ${response.reasonPhrase}");
-    }
+    return ResponseHandler.handleResponse(response);
   } catch (e) {
     // If an error occurs during the HTTP request, throw an exception with the error message
     throw Exception("Error during post: $e");
@@ -138,14 +117,7 @@ Future<List<Object>> getMessages(int page, String channel) async {
     // If the HTTP response status code is 200,
     // then the response body is decoded from JSON
     // and returned as a Map of String to dynamic values.
-    if (response.statusCode == 200) {
-      List<Object> y = json.decode(response.body).cast<Object>();
-      return y;
-    } else {
-      // If the HTTP response status code is not 200,
-      // then an exception is thrown with the response reason phrase.
-      throw Exception("Get Unsuccessful: ${response.reasonPhrase}");
-    }
+    return ResponseHandler.handleListResponse(response);
   } catch (e) {
     // If an error occurs during the HTTP GET request,
     // then an exception is thrown with the error message.
@@ -168,17 +140,7 @@ Future<List<Map<String, dynamic>>> getChannels(int page) async {
     });
 
     // If the response status code is 200, then decode the response body into a new map object called 'y' and return it
-    if (response.statusCode == 200) {
-      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(
-        json
-            .decode(response.body)
-            .map((model) => Map<String, dynamic>.from(model)),
-      );
-      return data;
-    } else {
-      // If the response status code is anything other than 200, then throw an Exception containing the reason phrase of the response
-      throw Exception("Get Unsuccessful: ${response.reasonPhrase}");
-    }
+    return ResponseHandler.handleListResponse(response);
   } catch (e) {
     // If an error is thrown within the try-catch block, then throw a different Exception which contains a message that describes the error that was encountered
     throw Exception("Error during post: $e");
@@ -197,14 +159,7 @@ Future<Object> getChannel(String channel) async {
       'channel': channel,
     });
 
-    if (response.statusCode == 200) {
-      // Parse the JSON response into a Map object and return it
-      Map<String, dynamic> y = json.decode(response.body);
-      return y;
-    } else {
-      // Throw an exception if the API call was unsuccessful
-      throw Exception("Get Unsuccessful: ${response.reasonPhrase}");
-    }
+    return ResponseHandler.handleResponse(response);
   } catch (e) {
     // Catch any errors that occur during the API call and throw an exception
     throw Exception("Error during API call: $e");
@@ -229,16 +184,7 @@ Future<List<String>> getSuggestions(int page) async {
     // If the HTTP response status code is 200,
     // then the response body is decoded from JSON
     // and returned as a Map of String to dynamic values.
-    if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
-      return data.map((element) => element.toString()).toList();
-
-      // Decoding the response body and converting it into a List of Map objects
-    } else {
-      // If the HTTP response status code is not 200,
-      // then an exception is thrown with the response reason phrase.
-      throw Exception("Get Unsuccessful: ${response.reasonPhrase}");
-    }
+    return ResponseHandler.handleListStringResponse(response);
   } catch (e) {
     // If an error occurs during the HTTP GET request,
     // then an exception is thrown with the error message.

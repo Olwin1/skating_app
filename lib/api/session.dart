@@ -1,3 +1,5 @@
+import 'package:patinka/api/response_handler.dart';
+
 import 'token.dart'; // Importing the 'token.dart' file
 import 'package:http/http.dart'
     as http; // Importing the 'http' package from the 'http' file
@@ -56,16 +58,7 @@ Future<Map<String, dynamic>> createSession(
       },
     );
 
-    if (response.statusCode == 200) {
-      // Checking if the response status code is 200
-      Map<String, dynamic> data = json.decode(response
-          .body); // Decoding the response body and converting it into a Map object
-      return data; // Returning the Map object
-    } else {
-      // If the response status code is not 200
-      throw Exception(
-          "Get Unsuccessful: ${response.reasonPhrase}"); // Throwing an exception with an error message
-    }
+    return ResponseHandler.handleResponse(response);
   } catch (e) {
     // Handling the error
     throw Exception(
@@ -86,21 +79,7 @@ Future<List<Map<String, dynamic>>> getSessions() async {
       'Authorization': 'Bearer ${await storage.getToken()}',
     });
 
-    // If the response status code is 200, the request was successful.
-    if (response.statusCode == 200) {
-      // Decode the response body as a JSON object, map each element to a Map<String, dynamic> object, and return the resulting list of maps.
-      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(
-        json
-            .decode(response.body)
-            .map((model) => Map<String, dynamic>.from(model)),
-      );
-      return data;
-
-      // If the response status code is not 200, throw an Exception indicating the request was unsuccessful.
-    } else {
-      throw Exception("Get Unsuccessful: ${response.reasonPhrase}");
-    }
-
+    return ResponseHandler.handleListResponse(response);
     // If an exception occurs during the request, throw a more descriptive Exception object containing the error message.
   } catch (e) {
     throw Exception("Error during post: $e");

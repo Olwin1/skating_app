@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../current_tab.dart';
 import '../swatch.dart';
 
 class ListError extends StatelessWidget {

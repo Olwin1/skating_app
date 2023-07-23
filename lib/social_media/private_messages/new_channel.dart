@@ -3,9 +3,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:patinka/api/messages.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/social_media/private_messages/suggestion_widget.dart';
-
 import '../../components/list_error.dart';
-import '../../swatch.dart';
 
 class NewChannelPage extends StatefulWidget {
   const NewChannelPage({super.key});

@@ -1,10 +1,11 @@
 // Import necessary dependencies and files
+import 'package:patinka/api/response_handler.dart';
+
 import '../common_logger.dart';
 import 'token.dart';
 
 import 'package:http/http.dart' as http;
 import 'config.dart';
-import 'dart:convert';
 
 SecureStorage storage = SecureStorage();
 
@@ -25,14 +26,7 @@ Future<Map<String, dynamic>?> updateToken(String fcmToken) async {
       body: {'fcm_token': fcmToken},
     );
 
-    // If the response is successful, extract the token from the response body and return it
-    if (response.statusCode == 200) {
-      Map<String, dynamic> y = json.decode(response.body);
-      return y;
-    } else {
-      // If the response is not successful, throw an exception with the reason phrase
-      throw Exception("Login Unsuccessful: ${response.reasonPhrase}");
-    }
+    return ResponseHandler.handleResponse(response);
   } catch (e) {
     // If there is an error during login, throw an exception with the error message
     throw Exception("Error during login: $e");

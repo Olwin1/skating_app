@@ -5,8 +5,6 @@ import 'package:patinka/common_logger.dart';
 import 'package:patinka/components/list_error.dart';
 import 'package:patinka/profile/user_list_widget.dart';
 
-import '../swatch.dart';
-
 class ConnectionsListView extends StatefulWidget {
   final String type;
   final Map<String, dynamic>? user;

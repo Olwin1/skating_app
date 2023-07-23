@@ -1,3 +1,5 @@
+import 'package:patinka/api/response_handler.dart';
+
 import 'token.dart';
 
 // Import necessary dependencies and files
@@ -33,14 +35,7 @@ Future<Map<String, dynamic>> followUser(String user) async {
     });
 
     // If the request was successful (status code 200), parse the response body and return it
-    if (response.statusCode == 200) {
-      var y = json.decode(response.body)[0];
-      commonLogger.v("Response: 200 Follow User");
-      return y;
-    } else {
-      // If the request was unsuccessful, throw an exception with the reason
-      throw Exception("Follow Unsuccessful: ${response.reasonPhrase}");
-    }
+    return ResponseHandler.handleResponse(response);
   } catch (e) {
     // If there was an error while sending the request, throw an exception with the error message
     throw Exception("Error during follow: $e");
@@ -61,16 +56,7 @@ Future<Map<String, dynamic>> unfollowUser(String user) async {
       'user': user,
     });
 
-    // If the request was successful (status code 200), parse the response body and return it
-    if (response.statusCode == 200) {
-      var y = json.decode(response.body);
-      commonLogger.v("Response: 200 Unfollow User");
-
-      return y;
-    } else {
-      // If the request was unsuccessful, throw an exception with the reason
-      throw Exception("Unfollow Unsuccessful: ${response.reasonPhrase}");
-    }
+    return ResponseHandler.handleResponse(response);
   } catch (e) {
     // If there was an error while sending the request, throw an exception with the error message
     throw Exception("Error during unfollow: $e");
@@ -91,15 +77,7 @@ Future<Map<String, dynamic>> friendUser(String user) async {
       'user': user,
     });
     // If the request was successful (status code 200), parse the response body and return it
-    if (response.statusCode == 200) {
-      commonLogger.v("Response: 200 Friend User");
-
-      Map<String, dynamic> y = json.decode(response.body)[0];
-      return y;
-    } else {
-      // If the request was unsuccessful, throw an exception with the reason
-      throw Exception("Friend Unsuccessful: ${response.reasonPhrase}");
-    }
+    return ResponseHandler.handleResponse(response);
   } catch (e) {
     // If there was an error while sending the request, throw an exception with the error message
     throw Exception("Error during friend: $e");
@@ -121,15 +99,7 @@ Future<Map<String, dynamic>> unfriendUser(String user) async {
     });
 
     // If the request was successful (status code 200), parse the response body and return it
-    if (response.statusCode == 200) {
-      var y = json.decode(response.body);
-      commonLogger.v("Response: 200 Unfriend User");
-
-      return y;
-    } else {
-      // If the request was unsuccessful, throw an exception with the reason
-      throw Exception("Unfriend Unsuccessful: ${response.reasonPhrase}");
-    }
+    return ResponseHandler.handleResponse(response);
   } catch (e) {
     // If there was an error while sending the request, throw an exception with the error message
     throw Exception("Error during unfriend: $e");
@@ -151,15 +121,7 @@ Future<Map<String, dynamic>> followUserRequest(
       'accepted': accepted
           .toString() // Include whether the follow request has been accepted or not in the request body
     });
-    if (response.statusCode == 200) {
-      commonLogger.v("Response: 200 Follow Request User");
-
-      Map<String, dynamic> y = json.decode(response.body);
-      return y; // Return the response body as a Map<String, dynamic>
-    } else {
-      throw Exception(
-          "Follow Request Unsuccessful: ${response.reasonPhrase}"); // Throw an exception if the request was not successful
-    }
+    return ResponseHandler.handleResponse(response);
   } catch (e) {
     throw Exception(
         "Error during responding to follow request: $e"); // Throw an exception if an error occurred while processing the request
@@ -181,15 +143,7 @@ Future<Map<String, dynamic>> friendUserRequest(
       'accepted': accepted
           .toString() // Include whether the friend request has been accepted or not in the request body
     });
-    if (response.statusCode == 200) {
-      commonLogger.v("Response: 200 Friend Request User");
-
-      Map<String, dynamic> y = json.decode(response.body);
-      return y; // Return the response body as a Map<String, dynamic>
-    } else {
-      throw Exception(
-          "Freind Request Unsuccessful: ${response.reasonPhrase}"); // Throw an exception if the request was not successful
-    }
+    return ResponseHandler.handleResponse(response);
   } catch (e) {
     throw Exception(
         "Error during friend request response: $e"); // Throw an exception if an error occurred while processing the request

@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:uuid/uuid.dart';
 import '../../api/websocket.dart';
+import '../../components/list_error.dart';
 import '../../swatch.dart';
 import 'list_widget.dart';
 import '../../api/messages.dart';
@@ -255,20 +256,9 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       PagedListView<int, Map<String, dynamic>>(
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-          noItemsFoundIndicatorBuilder: (context) => Center(
-              child: Column(children: [
-            Text(
-              AppLocalizations.of(context)!.noMessagesFound,
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: swatch[701]),
-            ),
-            Text(
-              AppLocalizations.of(context)!.makeFriends,
-              style: TextStyle(fontSize: 20, color: swatch[601]),
-            ),
-          ])),
+          noItemsFoundIndicatorBuilder: (context) => ListError(
+              title: AppLocalizations.of(context)!.noPostsFound,
+              body: AppLocalizations.of(context)!.makeFriends),
           firstPageProgressIndicatorBuilder: (context) => _loadingSkeleton(),
 
           itemBuilder: (context, item, index) => ListWidget(

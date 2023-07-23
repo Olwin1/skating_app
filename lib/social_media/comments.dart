@@ -8,6 +8,8 @@ import 'package:patinka/swatch.dart';
 import '../api/social.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../components/list_error.dart';
+
 class Comments extends StatefulWidget {
   final String post;
 
@@ -194,16 +196,8 @@ class _CommentsListViewState extends State<CommentsListView> {
       PagedListView<int, Map<String, dynamic>>(
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-          noItemsFoundIndicatorBuilder: (context) => Center(
-            // This is a localized text string that will be displayed when no items are found
-            child: Text(
-              AppLocalizations.of(context)!.noCommentsFound,
-              style: TextStyle(
-                  color: swatch[701],
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
+          noItemsFoundIndicatorBuilder: (context) => ListError(
+              title: AppLocalizations.of(context)!.noCommentsFound, body: ""),
           // Use the Comment widget to build each item in the list view
           itemBuilder: (context, item, index) => Comment(
             index: index,

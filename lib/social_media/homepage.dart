@@ -7,6 +7,7 @@ import 'package:patinka/social_media/private_messages/private_message_list.dart'
 import 'package:patinka/social_media/search_bar.dart';
 import '../api/fcm_token.dart';
 import '../api/messages.dart';
+import '../components/list_error.dart';
 import '../objects/user.dart';
 import '../swatch.dart';
 import 'post_widget.dart';
@@ -221,20 +222,9 @@ class _PostsListViewState extends State<PostsListView> {
             // builderDelegate is responsible for creating the actual widgets to be displayed
             builderDelegate: PagedChildBuilderDelegate<Object>(
                 firstPageProgressIndicatorBuilder: (context) => _loadSkeleton(),
-                noItemsFoundIndicatorBuilder: (context) => Center(
-                        child: Column(children: [
-                      Text(
-                        AppLocalizations.of(context)!.noPostsFound,
-                        style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: swatch[701]),
-                      ),
-                      Text(
-                        AppLocalizations.of(context)!.makeFriends,
-                        style: TextStyle(fontSize: 20, color: swatch[601]),
-                      ),
-                    ])),
+                noItemsFoundIndicatorBuilder: (context) => ListError(
+                    title: AppLocalizations.of(context)!.noPostsFound,
+                    body: AppLocalizations.of(context)!.makeFriends),
                 // itemBuilder is called for each item in the list to create a widget for that item
                 itemBuilder: (context, item, index) => SizedBox(
                     width: size,

@@ -18,6 +18,7 @@ import 'package:patinka/profile/settings/settings.dart';
 import '../api/config.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../components/list_error.dart';
 import '../current_tab.dart';
 import '../swatch.dart';
 
@@ -461,16 +462,8 @@ class _UserPostsListState extends State<UserPostsList> {
             builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
               firstPageProgressIndicatorBuilder: (context) =>
                   _createGridLoadingWidgets(),
-              noItemsFoundIndicatorBuilder: (context) => Center(
-                // Localized text string that will be displayed when no items are found
-                child: Text(
-                  AppLocalizations.of(context)!.noPostsFound,
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: swatch[701]!),
-                ),
-              ),
+              noItemsFoundIndicatorBuilder: (context) => ListError(
+                  title: AppLocalizations.of(context)!.noPostsFound, body: ""),
               // Specify how to build each grid tile
               itemBuilder: (context, item, index) =>
                   _createGridTileWidget(item, widget.imageViewerController),

@@ -4,6 +4,7 @@ import 'package:patinka/api/messages.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/social_media/private_messages/suggestion_widget.dart';
 
+import '../../components/list_error.dart';
 import '../../swatch.dart';
 
 class NewChannelPage extends StatefulWidget {
@@ -90,18 +91,10 @@ class _NewChannelListViewState extends State<NewChannelListView> {
     return PagedListView<int, String>(
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<String>(
-        // Use the Comment widget to build each item in the list view
-        itemBuilder: (context, item, index) => SuggestionListWidget(id: item),
-        noItemsFoundIndicatorBuilder: (context) => Center(
-            child: Column(children: [
-          Text(
-            "No suggested messages",
-            style: TextStyle(
-                fontSize: 24, fontWeight: FontWeight.bold, color: swatch[701]!),
-          ),
-          Text("", style: TextStyle(fontSize: 20, color: swatch[601]!)),
-        ])),
-      ),
+          // Use the Comment widget to build each item in the list view
+          itemBuilder: (context, item, index) => SuggestionListWidget(id: item),
+          noItemsFoundIndicatorBuilder: (context) =>
+              const ListError(title: "No suggested messages", body: "")),
     );
   }
 

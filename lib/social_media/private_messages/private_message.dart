@@ -24,12 +24,12 @@ class PrivateMessage extends StatefulWidget {
   const PrivateMessage(
       {Key? key,
       required this.index,
-      required this.channel,
+      this.channel,
       this.user,
       required this.currentUser})
       : super(key: key);
   final int index;
-  final String channel;
+  final String? channel;
   final Map<String, dynamic>? user;
   final String currentUser;
 
@@ -41,6 +41,7 @@ class PrivateMessage extends StatefulWidget {
 // Define the state for PrivateMessage widget
 class _PrivateMessage extends State<PrivateMessage> {
   bool sending = false;
+  String? channelId;
   // Initialize a list to store messages
   final List<types.Message> _messages = [];
   // Initialize a page number for pagination
@@ -53,11 +54,12 @@ class _PrivateMessage extends State<PrivateMessage> {
 
   @override
   void initState() {
+    channelId = widget.channel;
     super.initState();
     // Load initial messages
     loadMessages();
     // Join the channel using websockets
-    getIt<WebSocketConnection>().socket.emit("joinChannel", [widget.channel]);
+    getIt<WebSocketConnection>().socket.emit("joinChannel", [channelId]);
     // Subscribe to the websocket stream
     subscription = getIt<WebSocketConnection>()
         .stream
@@ -127,7 +129,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   // Function to update messages when new messages arrive
   void updateMessages(Map<String, dynamic> data) {
     // If the message is for the current channel
-    if (data["channel"] == widget.channel) {
+    if (data["channel"] == channelId) {
       commonLogger.d("ITS A MATCH!");
       // Add the new message to the beginning of the list
       mounted
@@ -151,19 +153,20 @@ class _PrivateMessage extends State<PrivateMessage> {
     }
 
     loading = true;
-
-    final messagesRaw = await getMessages(_page, widget.channel);
     List<types.Message> messages = [];
-    for (int i = 0; i < messagesRaw.length; i++) {
-      dynamic message = messagesRaw[i];
-      messages.add(types.TextMessage(
-        // Create new message
-        author: getUser(message["sender"], "ss"), // Set author of message
-        createdAt: DateTime.parse(message["date_sent"])
-            .millisecondsSinceEpoch, // Get time
-        id: message["_id"], // Generate random debug user id
-        text: message["content"], // Set message content
-      ));
+    if (channelId != null) {
+      final messagesRaw = await getMessages(_page, channelId!);
+      for (int i = 0; i < messagesRaw.length; i++) {
+        dynamic message = messagesRaw[i];
+        messages.add(types.TextMessage(
+          // Create new message
+          author: getUser(message["sender"], "ss"), // Set author of message
+          createdAt: DateTime.parse(message["date_sent"])
+              .millisecondsSinceEpoch, // Get time
+          id: message["_id"], // Generate random debug user id
+          text: message["content"], // Set message content
+        ));
+      }
     }
     mounted
         ? setState(() {
@@ -175,26 +178,28 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   Future<void> _loadMoreMessages() async {
-    commonLogger.v("Loading more messages");
-    final nextPage = _page + 1;
-    final messagesRaw = await getMessages(nextPage, widget.channel);
-    List<types.Message> messages = [];
-    for (int i = 0; i < messagesRaw.length; i++) {
-      dynamic message = messagesRaw[i];
-      messages.add(types.TextMessage(
-        // Create new message
-        author: getUser(message["sender"], "ss"), // Set author of message
-        createdAt: DateTime.now().millisecondsSinceEpoch, // Get time
-        id: message["_id"], // Generate random debug user id
-        text: message["content"], // Set message content
-      ));
+    if (channelId != null) {
+      commonLogger.v("Loading more messages");
+      final nextPage = _page + 1;
+      final messagesRaw = await getMessages(nextPage, channelId!);
+      List<types.Message> messages = [];
+      for (int i = 0; i < messagesRaw.length; i++) {
+        dynamic message = messagesRaw[i];
+        messages.add(types.TextMessage(
+          // Create new message
+          author: getUser(message["sender"], "ss"), // Set author of message
+          createdAt: DateTime.now().millisecondsSinceEpoch, // Get time
+          id: message["_id"], // Generate random debug user id
+          text: message["content"], // Set message content
+        ));
+      }
+      mounted
+          ? setState(() {
+              _messages.addAll(messages);
+              _page = nextPage;
+            })
+          : null;
     }
-    mounted
-        ? setState(() {
-            _messages.addAll(messages);
-            _page = nextPage;
-          })
-        : null;
   }
 
   @override // Override existing build method
@@ -207,128 +212,133 @@ class _PrivateMessage extends State<PrivateMessage> {
       default:
         locale = const ChatL10nEn();
     }
-    return Scaffold(
-        appBar: AppBar(
-          // Create appBar
-          leadingWidth: 48, // Remove extra leading space
-          centerTitle: false, // Align title to left
-          title: Row(children: [
-            //Create title as row
-            widget.user == null || widget.user?["avatar"] == null
-                // If there is no cached user information or avatar image, use a default image
-                ? Shimmer.fromColors(
-                    baseColor: shimmer["base"]!,
-                    highlightColor: shimmer["highlight"]!,
-                    child: CircleAvatar(
-                      // Create a circular avatar icon
-                      radius: 20, // Set radius to 36
-                      backgroundColor: swatch[900]!,
-                    ))
-                // If there is cached user information and an avatar image, use the cached image
-                : //Flexible(
-                CachedNetworkImage(
-                    height: 40,
-                    width: 40,
-                    imageUrl:
-                        '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',
-                    placeholder: (context, url) => Shimmer.fromColors(
+    return WillPopScope(
+        onWillPop: () => _onWillPop(),
+        child: Scaffold(
+            appBar: AppBar(
+              // Create appBar
+              leadingWidth: 48, // Remove extra leading space
+              centerTitle: false, // Align title to left
+              title: Row(children: [
+                //Create title as row
+                widget.user == null || widget.user?["avatar"] == null
+                    // If there is no cached user information or avatar image, use a default image
+                    ? Shimmer.fromColors(
                         baseColor: shimmer["base"]!,
                         highlightColor: shimmer["highlight"]!,
                         child: CircleAvatar(
                           // Create a circular avatar icon
                           radius: 20, // Set radius to 36
                           backgroundColor: swatch[900]!,
-                        )),
-                    imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape
-                                .circle, // Set the shape of the container to a circle
-                            image: DecorationImage(
-                                image: imageProvider, fit: BoxFit.fill),
-                          ),
-                        )),
-            //),
-            //Flexible(
-            //flex: 6,
-            Padding(
-                // Create basic padding to space from avatar
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  // Create column of text
-                  crossAxisAlignment: CrossAxisAlignment
-                      .start, // Align to the left instead of center
-                  children: [
-                    Text(
-                      //Username Text
-                      widget.user?["username"] ??
-                          AppLocalizations.of(context)!.username,
-                      style: TextStyle(fontSize: 16, color: swatch[700]),
-                    ),
-                    Text(
-                      // Last active text
-                      AppLocalizations.of(context)!.activityOnline,
-                      style: TextStyle(fontSize: 12, color: swatch[600]),
-                    )
-                  ],
-                )) //),
-          ]),
-        ),
-        body: Stack(children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: const AssetImage("assets/backgrounds/graffiti.png"),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.bottomLeft,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+                        ))
+                    // If there is cached user information and an avatar image, use the cached image
+                    : //Flexible(
+                    CachedNetworkImage(
+                        height: 40,
+                        width: 40,
+                        imageUrl:
+                            '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',
+                        placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: shimmer["base"]!,
+                            highlightColor: shimmer["highlight"]!,
+                            child: CircleAvatar(
+                              // Create a circular avatar icon
+                              radius: 20, // Set radius to 36
+                              backgroundColor: swatch[900]!,
+                            )),
+                        imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape
+                                    .circle, // Set the shape of the container to a circle
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.fill),
+                              ),
+                            )),
+                //),
+                //Flexible(
+                //flex: 6,
+                Padding(
+                    // Create basic padding to space from avatar
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      // Create column of text
+                      crossAxisAlignment: CrossAxisAlignment
+                          .start, // Align to the left instead of center
+                      children: [
+                        Text(
+                          //Username Text
+                          widget.user?["username"] ??
+                              AppLocalizations.of(context)!.username,
+                          style: TextStyle(fontSize: 16, color: swatch[700]),
+                        ),
+                        Text(
+                          // Last active text
+                          AppLocalizations.of(context)!.activityOnline,
+                          style: TextStyle(fontSize: 12, color: swatch[600]),
+                        )
+                      ],
+                    )) //),
+              ]),
             ),
-          ),
-          loading
-              ? _messagesSkeleton()
-              : Chat(
-                  inputOptions: InputOptions(
-                      inputClearMode: InputClearMode.never,
-                      textEditingController: controller),
-                  nameBuilder: (types.User user) {
-                    return user.firstName != null
-                        ? Text(user.firstName!)
-                        : const Text("placeholdser");
-                  },
-                  l10n: locale, // Set locale
-                  // Create basic chat widget
-                  messages:
-                      _messages, // Set messages to message variable defined above
-                  onSendPressed: _handleSendPressed,
-                  onMessageTap: (context, p1) {
-                    commonLogger.d("eeeeeadss  ${p1.author.id}");
-                  },
-                  user: getUser(widget.currentUser, "s"), // Set user to user id
-                  theme: DefaultChatTheme(
-                      primaryColor: swatch[301]!,
-                      sentMessageBodyTextStyle: TextStyle(
-                          color: swatch[800]!,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          height: 1.5),
-                      backgroundColor: Colors.transparent, //swatch[501]!,
-                      secondaryColor: swatch[50]!,
-                      inputBackgroundColor: swatch[51]!,
-                      inputTextColor: swatch[800]!,
-                      dateDividerTextStyle: TextStyle(
-                          color: swatch[701],
-                          fontSize: 12,
-                          fontWeight: FontWeight.w800,
-                          height: 1.333),
-                      inputMargin: const EdgeInsets.only(
-                          left: 8,
-                          right: 8,
-                          bottom: 8), // Add margins to text input
-                      inputBorderRadius: const BorderRadius.all(
-                          Radius.circular(24))), // Make input rounded corners
-                  onEndReached: () => _loadMoreMessages(),
+            body: Stack(children: [
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image:
+                          const AssetImage("assets/backgrounds/graffiti.png"),
+                      fit: BoxFit.cover,
+                      alignment: Alignment.bottomLeft,
+                      colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.5), BlendMode.srcOver)),
                 ),
-        ]));
+              ),
+              loading
+                  ? _messagesSkeleton()
+                  : Chat(
+                      inputOptions: InputOptions(
+                          inputClearMode: InputClearMode.never,
+                          textEditingController: controller),
+                      nameBuilder: (types.User user) {
+                        return user.firstName != null
+                            ? Text(user.firstName!)
+                            : const Text("placeholdser");
+                      },
+                      l10n: locale, // Set locale
+                      // Create basic chat widget
+                      messages:
+                          _messages, // Set messages to message variable defined above
+                      onSendPressed: _handleSendPressed,
+                      onMessageTap: (context, p1) {
+                        commonLogger.d("eeeeeadss  ${p1.author.id}");
+                      },
+                      user: getUser(
+                          widget.currentUser, "s"), // Set user to user id
+                      theme: DefaultChatTheme(
+                          primaryColor: swatch[301]!,
+                          sentMessageBodyTextStyle: TextStyle(
+                              color: swatch[800]!,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              height: 1.5),
+                          backgroundColor: Colors.transparent, //swatch[501]!,
+                          secondaryColor: swatch[50]!,
+                          inputBackgroundColor: swatch[51]!,
+                          inputTextColor: swatch[800]!,
+                          dateDividerTextStyle: TextStyle(
+                              color: swatch[701],
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800,
+                              height: 1.333),
+                          inputMargin: const EdgeInsets.only(
+                              left: 8,
+                              right: 8,
+                              bottom: 8), // Add margins to text input
+                          inputBorderRadius: const BorderRadius.all(
+                              Radius.circular(
+                                  24))), // Make input rounded corners
+                      onEndReached: () => _loadMoreMessages(),
+                    ),
+            ])));
   }
 
   void _addMessage(types.Message message) {
@@ -356,9 +366,21 @@ class _PrivateMessage extends State<PrivateMessage> {
           text: message.text, // Set message content
         );
         _addMessage(textMessage); // Run addMessage function
-        await postMessage(
-                widget.channel, message.text, null, widget.user?["fcm_token"])
-            .then((value) => {sending = false});
+        if (channelId != null) {
+          await postMessage(
+                  channelId!, message.text, null, widget.user?["fcm_token"])
+              .then((value) => {sending = false});
+        } else {
+          List<String> participants = [widget.currentUser];
+          Map<String, dynamic> channel = await postChannel(participants);
+          channelId = channel["_id"];
+          if (channelId != null) {
+            await postMessage(
+                    channelId!, message.text, null, widget.user?["fcm_token"])
+                .then((value) => {sending = false});
+          }
+          commonLogger.d(channel);
+        }
       }
     } catch (e) {
       final errorMessage = types.SystemMessage(
@@ -371,6 +393,16 @@ class _PrivateMessage extends State<PrivateMessage> {
       commonLogger.e("An error Occurred $e");
       sending = false;
     }
+  }
+
+  Future<bool> _onWillPop() async {
+    // Pop the dialog
+    if (mounted && widget.channel == null) {
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    }
+    // Return 'true' to allow the user to navigate back
+    return true;
   }
 
   @override

@@ -19,7 +19,7 @@ export 'package:patinka/api/messages.dart'
 SecureStorage storage = SecureStorage();
 
 // Function to create a new channel
-Future<Object> postChannel(List<String> participants) async {
+Future<Map<String, dynamic>> postChannel(List<String> participants) async {
   var url = Uri.parse('${Config.uri}/message/channel');
 
   try {
@@ -30,7 +30,7 @@ Future<Object> postChannel(List<String> participants) async {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Bearer ${await storage.getToken()}'
       },
-      body: {'participants': participants},
+      body: {'participants': jsonEncode(participants)},
     );
 
     // If the response status code is 200, return the response body

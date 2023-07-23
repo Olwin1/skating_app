@@ -7,6 +7,7 @@ import 'package:patinka/objects/user.dart';
 
 import '../../swatch.dart';
 import '../../api/config.dart';
+import 'private_message.dart';
 
 // SuggestionListWidget class creates a stateful widget that displays a list of users
 class SuggestionListWidget extends StatefulWidget {
@@ -24,14 +25,21 @@ class SuggestionListWidget extends StatefulWidget {
 // _SuggestionListWidget class is the state of the SuggestionListWidget
 class _SuggestionListWidget extends State<SuggestionListWidget> {
   Map<String, dynamic>? user;
-  handlePress() {
-    // Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) => Profile(
-    //               userId: user?["_id"],
-    //             )
-    //             ));
+  handlePress() async {
+    Map<String, dynamic> targetUser = await getUserCache(widget.id);
+    sendUser(targetUser);
+  }
+
+  sendUser(Map<String, dynamic> targetUser) {
+    Navigator.push(
+        // When button pressed
+        context,
+        MaterialPageRoute(
+            builder: (context) => PrivateMessage(
+                  // Add private message page to top of navigation stack
+                  index: 1,
+                  user: targetUser, currentUser: user!["_id"],
+                )));
   }
 
   // Builds the widget

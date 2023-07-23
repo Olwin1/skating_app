@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:patinka/api/messages.dart';
 import 'package:patinka/common_logger.dart';
-import 'package:patinka/profile/user_list_widget.dart';
 import 'package:patinka/social_media/private_messages/suggestion_widget.dart';
 
 import '../../swatch.dart';

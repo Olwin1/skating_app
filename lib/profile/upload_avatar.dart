@@ -195,6 +195,7 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
               child: CircularProgressIndicator(),
             )
           : Container(
+              padding: const EdgeInsets.only(top: 8),
               decoration: BoxDecoration(
                 image: DecorationImage(
                     image: const AssetImage("assets/backgrounds/graffiti.png"),
@@ -214,7 +215,7 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
                           selectedImage: _selectedImage!,
                           callback: callback,
                         )),
-                    const Spacer(),
+                    //const Spacer(),
                     // A layout builder that displays a grid of images from the photo gallery
                     LayoutBuilder(
                       builder: (context, constraints) {
@@ -222,7 +223,7 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
                         return SizedBox(
                             height: MediaQuery.of(context).size.height -
                                 MediaQuery.of(context).size.width -
-                                180,
+                                140,
                             child: PhotosGridView(
                               update: _update,
                             ));

@@ -178,6 +178,7 @@ class _NewPostPage extends State<NewPostPage> {
               child: CircularProgressIndicator(),
             )
           : Container(
+              padding: const EdgeInsets.only(top: 8),
               decoration: BoxDecoration(
                 image: DecorationImage(
                     image: const AssetImage("assets/backgrounds/graffiti.png"),
@@ -207,7 +208,7 @@ class _NewPostPage extends State<NewPostPage> {
                         return SizedBox(
                             height: MediaQuery.of(context).size.height -
                                 MediaQuery.of(context).size.width -
-                                180,
+                                188,
                             child: PhotosGridView(
                               update: _update,
                             ));

@@ -257,7 +257,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
           noItemsFoundIndicatorBuilder: (context) => ListError(
-              title: AppLocalizations.of(context)!.noPostsFound,
+              title: AppLocalizations.of(context)!.noMessagesFound,
               body: AppLocalizations.of(context)!.makeFriends),
           firstPageProgressIndicatorBuilder: (context) => _loadingSkeleton(),
 

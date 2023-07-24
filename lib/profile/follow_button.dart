@@ -23,7 +23,7 @@ class _FollowButtonState extends State<FollowButton> {
   String type = "follow";
 
   @override
-  initState() {
+  void initState() {
     // Runs once when the widget is inserted into the widget tree
     if (widget.user != "0") {
       // Calls `doesFollow` function to check if the user is being followed
@@ -45,7 +45,7 @@ class _FollowButtonState extends State<FollowButton> {
   }
 
   // Function to handle button press
-  handlePressed() {
+  void handlePressed() {
     if (widget.user != "0") {
       if (type == "follow") {
         // Calls `followUser` function to follow/unfollow the user

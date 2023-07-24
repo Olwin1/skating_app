@@ -11,22 +11,22 @@ import 'dart:convert';
 // Export login and signup functions from auth.dart
 export 'package:patinka/api/social.dart'
     show
-        postPost,
+        delComment,
+        delPost,
+        dislikeComment,
+        getComment,
+        getComments,
         getPost,
         getPosts,
-        delPost,
-        getComments,
-        getComment,
         likeComment,
-        dislikeComment,
-        unlikeComment,
-        undislikeComment,
-        delComment,
-        postComment,
-        savePost,
-        unsavePost,
         likePost,
-        unlikePost;
+        postComment,
+        postPost,
+        savePost,
+        undislikeComment,
+        unlikeComment,
+        unlikePost,
+        unsavePost;
 
 SecureStorage storage = SecureStorage();
 

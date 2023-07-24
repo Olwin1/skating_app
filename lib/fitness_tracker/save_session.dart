@@ -60,7 +60,7 @@ class _SaveSession extends State<SaveSession> {
   @override // Override existing build method
   Widget build(BuildContext context) {
 // This function is used to create a session and send information to the server
-    sendInfo() {
+    void sendInfo() {
       try {
         // Call createSession function with necessary parameters
         createSession(

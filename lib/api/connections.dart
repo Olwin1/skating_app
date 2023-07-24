@@ -11,12 +11,12 @@ import '../common_logger.dart';
 // Export login and signup functions from auth.dart
 export 'package:patinka/api/connections.dart'
     show
-        followUser,
-        friendUser,
-        followUserRequest,
-        friendUserRequest,
         doesFollow,
-        doesFriend;
+        doesFriend,
+        followUser,
+        followUserRequest,
+        friendUser,
+        friendUserRequest;
 
 SecureStorage storage = SecureStorage();
 

@@ -47,7 +47,7 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
   }
 
   // This function calculates and retrieves the sunset time at a given position
-  getSunsetTime(Position value) {
+  void getSunsetTime(Position value) {
     if (!mounted) {
       return;
     }
@@ -92,7 +92,7 @@ class _FitnessTracker extends State<FitnessTracker> {
   Position? previousPosition;
   late DateTime startTime;
 
-  callback(double distance) {
+  void callback(double distance) {
     if (!stoppedTracking) {
       totalDistance = distance;
     }

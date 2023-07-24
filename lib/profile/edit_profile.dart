@@ -76,7 +76,7 @@ class _EditProfile extends State<EditProfile> {
     return true;
   }
 
-  showCountries() {
+  void showCountries() {
     // Show the country picker dialog
     showCountryPicker(
       context: context, // The current build context

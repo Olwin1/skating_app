@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
         });
 
 // Function to set the logged in state of the user
-    setLoggedIn(value) {
+    void setLoggedIn(value) {
       // Update state to reflect whether the user is logged in or not
       mounted ? setState(() => loggedIn = value) : null;
     }

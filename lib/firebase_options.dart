@@ -2,7 +2,7 @@
 // ignore_for_file: lines_longer_than_80_chars, avoid_classes_with_only_static_members
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, kIsWeb, TargetPlatform;
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -66,7 +66,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '775856893434',
     projectId: 'patinka-657',
     storageBucket: 'patinka-657.appspot.com',
-    iosClientId: '775856893434-1thgd9vo3m5eqe1qji53mthc7lqkj3o4.apps.googleusercontent.com',
+    iosClientId:
+        '775856893434-1thgd9vo3m5eqe1qji53mthc7lqkj3o4.apps.googleusercontent.com',
     iosBundleId: 'com.olwin.patinka',
   );
 
@@ -76,7 +77,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '775856893434',
     projectId: 'patinka-657',
     storageBucket: 'patinka-657.appspot.com',
-    iosClientId: '775856893434-1thgd9vo3m5eqe1qji53mthc7lqkj3o4.apps.googleusercontent.com',
+    iosClientId:
+        '775856893434-1thgd9vo3m5eqe1qji53mthc7lqkj3o4.apps.googleusercontent.com',
     iosBundleId: 'com.olwin.patinka',
   );
 }

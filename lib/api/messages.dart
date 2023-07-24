@@ -9,13 +9,13 @@ import 'dart:convert';
 // Exporting functions from the messages.dart file
 export 'package:patinka/api/messages.dart'
     show
-        postChannel,
-        postMessage,
+        getChannel,
+        getChannels,
         getMessage,
         getMessages,
-        getChannels,
-        getChannel,
-        getUserId;
+        getUserId,
+        postChannel,
+        postMessage;
 
 // Creating an instance of SecureStorage class
 SecureStorage storage = SecureStorage();

@@ -20,7 +20,7 @@ class _FriendIconButtonState extends State<FriendIconButton> {
   bool loading = false;
   bool changed = false;
   String friend = "no"; // can be no, yes, maybe
-  _handlePressed() {
+  void _handlePressed() {
     if (!loading) {
       loading = true;
       if (friend == "maybeIncoming") {

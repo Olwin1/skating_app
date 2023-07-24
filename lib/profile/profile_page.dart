@@ -77,7 +77,7 @@ class _Profile extends State<Profile> {
     });
   }
 
-  _dialog() {
+  GestureDetector _dialog() {
     return GestureDetector(
       onTap: () {
         Navigator.pop(context, 'close');
@@ -334,7 +334,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
 Widget _createGridTileWidget(
     Map<String, dynamic> post, dynamic imageViewerController) {
   return Builder(builder: (context) {
-    popNavigator() {
+    void popNavigator() {
       Navigator.of(context).pop();
     }
 

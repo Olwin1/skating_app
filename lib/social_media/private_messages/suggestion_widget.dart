@@ -25,12 +25,12 @@ class SuggestionListWidget extends StatefulWidget {
 // _SuggestionListWidget class is the state of the SuggestionListWidget
 class _SuggestionListWidget extends State<SuggestionListWidget> {
   Map<String, dynamic>? user;
-  handlePress() async {
+  void handlePress() async {
     Map<String, dynamic> targetUser = await getUserCache(widget.id);
     sendUser(targetUser);
   }
 
-  sendUser(Map<String, dynamic> targetUser) {
+  void sendUser(Map<String, dynamic> targetUser) {
     Navigator.push(
         // When button pressed
         context,

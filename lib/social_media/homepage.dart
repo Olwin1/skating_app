@@ -72,7 +72,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-_loadSkeleton() {
+Widget _loadSkeleton() {
   Widget child = Shimmer.fromColors(
       baseColor: shimmer["base"]!,
       highlightColor: shimmer["highlight"]!,

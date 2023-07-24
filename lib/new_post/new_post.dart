@@ -134,7 +134,7 @@ class _NewPostPage extends State<NewPostPage> {
     return false; // Return false if the permissions have not been granted.
   }
 
-  callback(image) {
+  void callback(image) {
     commonLogger.v("Navigating to send post page");
 
     selectedImage = image;

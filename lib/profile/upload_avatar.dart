@@ -156,7 +156,7 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
     }
   }
 
-  callback(image) {
+  void callback(image) {
     commonLogger.v("Navigating to send post page");
 
     selectedImage = image;

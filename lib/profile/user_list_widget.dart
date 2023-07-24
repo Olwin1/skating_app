@@ -25,7 +25,7 @@ class UserListWidget extends StatefulWidget {
 // _UserListWidget class is the state of the UserListWidget
 class _UserListWidget extends State<UserListWidget> {
   Map<String, dynamic>? user;
-  handlePress() {
+  void handlePress() {
     Navigator.push(
         context,
         MaterialPageRoute(

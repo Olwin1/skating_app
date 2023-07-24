@@ -100,7 +100,7 @@ class _Login extends State<Login> {
   @override
   Widget build(BuildContext context) {
     // Define a function to load the home screen when sign-in is successful
-    loadHome() {
+    void loadHome() {
       widget.setLoggedIn(true);
     }
 
@@ -279,7 +279,7 @@ class _Login extends State<Login> {
     }
 
 // Define a function to check if the state is not signIn and set it to signIn if needed.
-    check() => {
+    void check() => {
           if (state != _State.signIn)
             {
               mounted

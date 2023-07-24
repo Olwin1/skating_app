@@ -291,7 +291,7 @@ class _PhotosGridViewState extends State<PhotosGridView> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
                 child: Container(
-                  color: shimmer["base"]!,
+                  color: shimmer["base"],
                   child: FadeInImage(
                     fit: BoxFit.cover,
                     placeholder: MemoryImage(kTransparentImage),

@@ -49,7 +49,7 @@ class _CustomMarker extends State<CustomMarker> {
                   child: CircleAvatar(
                     // Create a circular avatar icon
                     radius: 32, // Set radius to 36
-                    backgroundColor: swatch[900]!,
+                    backgroundColor: swatch[900],
                   )),
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
@@ -74,7 +74,7 @@ class _CustomMarker extends State<CustomMarker> {
                       child: CircleAvatar(
                         // Create a circular avatar icon
                         radius: 16, // Set radius to 36
-                        backgroundColor: swatch[900]!,
+                        backgroundColor: swatch[900],
                       )),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 )
@@ -109,7 +109,7 @@ class _CustomMarker extends State<CustomMarker> {
                 child: CircleAvatar(
                   // Create a circular avatar icon
                   radius: 32, // Set radius to 36
-                  backgroundColor: swatch[900]!,
+                  backgroundColor: swatch[900],
                 )),
             errorWidget: (context, url, error) => const Icon(Icons.error),
           )
@@ -120,7 +120,7 @@ class _CustomMarker extends State<CustomMarker> {
             child: CircleAvatar(
               // Create a circular avatar icon
               radius: 32, // Set radius to 36
-              backgroundColor: swatch[900]!,
+              backgroundColor: swatch[900],
             ));
   }
 }

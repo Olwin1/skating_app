@@ -18,9 +18,9 @@ class ListError extends StatelessWidget {
       Text(
         title,
         style: TextStyle(
-            fontSize: 24, fontWeight: FontWeight.bold, color: swatch[701]!),
+            fontSize: 24, fontWeight: FontWeight.bold, color: swatch[701]),
       ),
-      Text(body, style: TextStyle(fontSize: 20, color: swatch[601]!)),
+      Text(body, style: TextStyle(fontSize: 20, color: swatch[601])),
     ]));
   }
 }

@@ -79,7 +79,7 @@ class _ListWidget extends State<ListWidget> {
                         child: CircleAvatar(
                           // Create a circular avatar icon
                           radius: 36, // Set radius to 36
-                          backgroundColor: swatch[900]!,
+                          backgroundColor: swatch[900],
                         ))
                     // If there is cached user information and an avatar image, use the cached image
                     : Flexible(
@@ -92,7 +92,7 @@ class _ListWidget extends State<ListWidget> {
                                 child: CircleAvatar(
                                   // Create a circular avatar icon
                                   radius: 36, // Set radius to 36
-                                  backgroundColor: swatch[900]!,
+                                  backgroundColor: swatch[900],
                                 )),
                             imageBuilder: (context, imageProvider) => Container(
                                   decoration: BoxDecoration(

@@ -75,7 +75,7 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
                           child: CircleAvatar(
                             // Create a circular avatar icon
                             radius: 26, // Set radius to 36
-                            backgroundColor: swatch[900]!,
+                            backgroundColor: swatch[900],
                           ))
                       : CachedNetworkImage(
                           imageUrl:

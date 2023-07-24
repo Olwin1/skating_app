@@ -77,7 +77,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
                 child: CircleAvatar(
                   // Create a circular avatar icon
                   radius: 32, // Set radius to 36
-                  backgroundColor: swatch[900]!,
+                  backgroundColor: swatch[900],
                 ))
             // If there is cached user information and an avatar image, use the cached image
             : CachedNetworkImage(

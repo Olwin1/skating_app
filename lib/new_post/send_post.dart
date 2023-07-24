@@ -66,7 +66,7 @@ class _SendPost extends State<SendPost> {
           barrierDismissible: false,
           builder: (BuildContext context) {
             return AlertDialog(
-              backgroundColor: swatch[800]!,
+              backgroundColor: swatch[800],
               title: Text(
                 'Processing',
                 style: TextStyle(color: swatch[701]),

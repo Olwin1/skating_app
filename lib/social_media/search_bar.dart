@@ -34,7 +34,7 @@ class _SearchBar extends State<SearchBarr> {
           isDense: true,
           isCollapsed: true,
           filled: true,
-          fillColor: swatch[601]!,
+          fillColor: swatch[601],
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32),
             borderSide: const BorderSide(

@@ -46,7 +46,7 @@ class _SearchResults extends State<SearchResults> {
               isDense: true,
               isCollapsed: true,
               filled: true,
-              fillColor: swatch[601]!, // Fill color for the text field
+              fillColor: swatch[601], // Fill color for the text field
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(32),
                 borderSide: const BorderSide(
@@ -177,7 +177,7 @@ class Results extends StatelessWidget {
                             highlightColor: shimmer["highlight"]!,
                             child: CircleAvatar(
                               radius: 36,
-                              backgroundColor: swatch[900]!,
+                              backgroundColor: swatch[900],
                             ))
                         : Flexible(
                             child: CachedNetworkImage(
@@ -189,7 +189,7 @@ class Results extends StatelessWidget {
                                         highlightColor: shimmer["highlight"]!,
                                         child: CircleAvatar(
                                           radius: 36,
-                                          backgroundColor: swatch[900]!,
+                                          backgroundColor: swatch[900],
                                         )),
                                 imageBuilder: (context, imageProvider) =>
                                     Container(

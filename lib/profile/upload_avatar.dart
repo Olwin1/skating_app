@@ -129,7 +129,7 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            backgroundColor: swatch[800]!,
+            backgroundColor: swatch[800],
             title: Text(
               'Processing',
               style: TextStyle(color: swatch[701]),
@@ -303,7 +303,7 @@ class _PhotosGridViewState extends State<PhotosGridView> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
                 child: Container(
-                  color: shimmer["base"]!,
+                  color: shimmer["base"],
                   child: FadeInImage(
                     fit: BoxFit.cover,
                     placeholder: MemoryImage(kTransparentImage),

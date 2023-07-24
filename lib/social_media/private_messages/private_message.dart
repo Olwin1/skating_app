@@ -229,7 +229,7 @@ class _PrivateMessage extends State<PrivateMessage> {
                         child: CircleAvatar(
                           // Create a circular avatar icon
                           radius: 20, // Set radius to 36
-                          backgroundColor: swatch[900]!,
+                          backgroundColor: swatch[900],
                         ))
                     // If there is cached user information and an avatar image, use the cached image
                     : //Flexible(
@@ -244,7 +244,7 @@ class _PrivateMessage extends State<PrivateMessage> {
                             child: CircleAvatar(
                               // Create a circular avatar icon
                               radius: 20, // Set radius to 36
-                              backgroundColor: swatch[900]!,
+                              backgroundColor: swatch[900],
                             )),
                         imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
@@ -316,7 +316,7 @@ class _PrivateMessage extends State<PrivateMessage> {
                       theme: DefaultChatTheme(
                           primaryColor: swatch[301]!,
                           sentMessageBodyTextStyle: TextStyle(
-                              color: swatch[800]!,
+                              color: swatch[800],
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               height: 1.5),

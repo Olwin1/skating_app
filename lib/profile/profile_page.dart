@@ -173,7 +173,7 @@ class _Profile extends State<Profile> {
                             child: CircleAvatar(
                               // Create a circular avatar icon
                               radius: 36, // Set radius to 36
-                              backgroundColor: swatch[900]!,
+                              backgroundColor: swatch[900],
                             )))
                     : CachedNetworkImage(
                         placeholder: (context, url) => Shimmer.fromColors(
@@ -182,7 +182,7 @@ class _Profile extends State<Profile> {
                             child: CircleAvatar(
                               // Create a circular avatar icon
                               radius: 36, // Set radius to 36
-                              backgroundColor: swatch[900]!,
+                              backgroundColor: swatch[900],
                             )),
                         imageUrl: '${Config.uri}/image/${user!["avatar"]}',
                         imageBuilder: (context, imageProvider) => Container(
@@ -345,7 +345,7 @@ Widget _createGridTileWidget(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                  backgroundColor: swatch[800]!,
+                  backgroundColor: swatch[800],
                   title: Text(
                     'Are you sure you want to delete this post?',
                     style: TextStyle(color: swatch[701]),

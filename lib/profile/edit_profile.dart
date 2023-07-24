@@ -54,7 +54,7 @@ class _EditProfile extends State<EditProfile> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: swatch[800]!,
+          backgroundColor: swatch[800],
           title: Text(
             'Processing',
             style: TextStyle(color: swatch[701]),
@@ -161,7 +161,7 @@ class _EditProfile extends State<EditProfile> {
                               child: CircleAvatar(
                                 // Create a circular avatar icon
                                 radius: 36, // Set radius to 36
-                                backgroundColor: swatch[900]!,
+                                backgroundColor: swatch[900],
                               ))
                           : CachedNetworkImage(
                               imageUrl:

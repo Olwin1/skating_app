@@ -67,7 +67,7 @@ class _UserListWidget extends State<UserListWidget> {
                           child: CircleAvatar(
                             // Create a circular avatar icon
                             radius: 26, // Set radius to 36
-                            backgroundColor: swatch[900]!,
+                            backgroundColor: swatch[900],
                           ))
                       : CachedNetworkImage(
                           imageUrl:

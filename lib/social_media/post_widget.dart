@@ -324,7 +324,7 @@ class _Avatar extends State<Avatar> {
                 child: CircleAvatar(
                   // Create a circular avatar icon
                   radius: 36, // Set radius to 36
-                  backgroundColor: swatch[900]!,
+                  backgroundColor: swatch[900],
                 ))
             // If there is cached user information and an avatar image, use the cached image
             : CachedNetworkImage(
@@ -335,7 +335,7 @@ class _Avatar extends State<Avatar> {
                     child: CircleAvatar(
                       // Create a circular avatar icon
                       radius: 36, // Set radius to 36
-                      backgroundColor: swatch[900]!,
+                      backgroundColor: swatch[900],
                     )),
                 imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
@@ -418,9 +418,9 @@ class Caption extends StatelessWidget {
             TextSpan(
                 // padding: const EdgeInsets.only(right: 6),
                 // child: Text(
-                text: username!,
+                text: username,
                 style: TextStyle(
-                    color: swatch[801]!,
+                    color: swatch[801],
                     fontWeight: FontWeight.bold,
                     fontSize: 15)), //),
             const WidgetSpan(
@@ -431,8 +431,8 @@ class Caption extends StatelessWidget {
 
             //   child:
             TextSpan(
-              text: description!,
-              style: TextStyle(color: swatch[801]!, fontSize: 15),
+              text: description,
+              style: TextStyle(color: swatch[801], fontSize: 15),
 
               //),
             )

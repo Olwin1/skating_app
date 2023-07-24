@@ -27,12 +27,12 @@ class _Lists extends State<Lists> {
     commonLogger.v("Selected item position: $_selectedItemPosition");
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: swatch[700]!,
+          backgroundColor: swatch[700],
           // Setting the bottom of the AppBar
           flexibleSpace: PreferredSize(
             preferredSize: const Size.fromHeight(48.0),
             child: SnakeNavigationBar.color(
-              backgroundColor: swatch[700]!,
+              backgroundColor: swatch[700],
               // Setting the color of the SnakeView
               snakeViewColor: swatch[701],
               // Setting the color of the selected item

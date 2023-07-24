@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:patinka/common_logger.dart';
 import 'package:patinka/profile/settings/settings_overlays.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/swatch.dart';
@@ -18,9 +17,7 @@ SecureStorage storage = SecureStorage();
 int item = 0;
 
 class Settings extends StatefulWidget {
-  const Settings({Key? key, required this.item, required this.user})
-      : super(key: key);
-  final int item;
+  const Settings({Key? key, required this.user}) : super(key: key);
   final Map<String, dynamic>? user;
   @override
   State<Settings> createState() => _Settings();
@@ -28,14 +25,8 @@ class Settings extends StatefulWidget {
 
 // Private class that represents the state of the Settings widget
 class _Settings extends State<Settings> {
+  OverlaySettings overlaySettings = OverlaySettings();
   // When outside pressed set item state to hide overlay
-  void outsidePressed() => {
-        item != 0
-            ? mounted
-                ? setState(() => item = 0)
-                : null
-            : null
-      };
   SettingsThemeData defaultTheme = SettingsThemeData(
       settingsListBackground: Colors.transparent,
       titleTextColor: swatch[501],
@@ -94,10 +85,7 @@ class _Settings extends State<Settings> {
                       leading: const Icon(Icons.password),
                       title: Text(AppLocalizations.of(context)!.password),
                       value: const Text('••••••••'),
-                      onPressed: (e) => {
-                        commonLogger.i("pressed"),
-                        mounted ? setState(() => item = 1) : null
-                      },
+                      onPressed: (e) => overlaySettings.password(context),
                     ),
                     // Switch tile for toggling push notifications
                     SettingsTile.switchTile(
@@ -158,8 +146,7 @@ class _Settings extends State<Settings> {
                       leading: const Icon(Icons.language),
                       title: Text(AppLocalizations.of(context)!.language),
                       value: const Text('English'),
-                      onPressed: (e) =>
-                          {mounted ? setState(() => item = 2) : null},
+                      onPressed: (e) => overlaySettings.languages(context),
                     ),
                     // Switch tile for toggling push notifications
                     SettingsTile.switchTile(
@@ -186,8 +173,7 @@ class _Settings extends State<Settings> {
                       leading: const Icon(Icons.theater_comedy),
                       title: Text(AppLocalizations.of(context)!.theme),
                       value: const Text('Default'),
-                      onPressed: (e) =>
-                          {mounted ? setState(() => item = 3) : null},
+                      onPressed: (e) => overlaySettings.theme(context),
                     ),
                   ],
                 ),
@@ -214,23 +200,6 @@ class _Settings extends State<Settings> {
               ],
             ),
           ),
-          GestureDetector(
-            // GestureDetector registers tap with the onTap callback function `outsidePressed()`
-            onTap: () {
-              outsidePressed();
-            },
-            child: item != 0
-                ? Container(
-                    // Semi-transparent overlay
-                    color: const Color(0x20000000),
-                    key: const Key("0"),
-                  )
-                : Container(key: const Key("1")),
-          ),
-          Center(
-              // The Center widget has a height factor of 1.5 and a child widget of an OverlaySettings widget that receives the value of item as a parameter
-              heightFactor: 1.5,
-              child: OverlaySettings(item: item))
 // The specific behavior of the `outsidePressed()` function and the `OverlaySettings` widget cannot be determined from this code snippet alone
         ]));
   }

@@ -111,9 +111,9 @@ class _SaveSession extends State<SaveSession> {
                       Colors.black.withOpacity(0.5), BlendMode.srcOver)),
             ),
             padding: const EdgeInsets.all(48),
-            child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start, // Left align children
+            child: ListView(
+              // crossAxisAlignment:
+              //     CrossAxisAlignment.start, // Left align children
               // Split layout into individual rows
               children: [
                 Row(

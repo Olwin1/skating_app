@@ -332,32 +332,68 @@ class _OptionsMenuState extends State<OptionsMenu> {
 
 // Creates a grid tile widget from an image URL
 Widget _createGridTileWidget(
-        Map<String, dynamic> post, dynamic imageViewerController) =>
-    Builder(
-      builder: (context) => GestureDetector(
-          onLongPress: () {
-            // Code for long press event
-            // _popupDialog = _createPopupDialog(url);
-            //Overlay.of(context).insert(_popupDialog);
-          },
-          //onLongPressEnd: (details) => _popupDialog?.remove(),
-          child: GestureDetector(
-            onTap: () =>
-                {currentImage = post["image"], imageViewerController()},
-            child: CachedNetworkImage(
-              imageUrl: '${Config.uri}/image/thumbnail/${post["image"]}',
-              fit: BoxFit.cover,
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                      8), // Set the shape of the container to a circle
-                  image: DecorationImage(
-                      image: imageProvider, fit: BoxFit.contain),
-                ),
+    Map<String, dynamic> post, dynamic imageViewerController) {
+  return Builder(builder: (context) {
+    popNavigator() {
+      Navigator.of(context).pop();
+    }
+
+    return GestureDetector(
+        onLongPress: () async {
+          await showDialog(
+            useRootNavigator: false,
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  backgroundColor: swatch[800]!,
+                  title: Text(
+                    'Are you sure you want to delete this post?',
+                    style: TextStyle(color: swatch[701]),
+                  ),
+                  content: SizedBox(
+                      height: 96,
+                      child: Column(children: [
+                        TextButton(
+                          onPressed: () async {
+                            await delPost(post["_id"]);
+                            popNavigator();
+                          },
+                          child: Text(
+                            'Delete',
+                            style: TextStyle(color: swatch[901]),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            popNavigator();
+                          },
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(color: swatch[901]),
+                          ),
+                        )
+                      ])));
+            },
+          );
+        },
+        //onLongPressEnd: (details) => _popupDialog?.remove(),
+        child: GestureDetector(
+          onTap: () => {currentImage = post["image"], imageViewerController()},
+          child: CachedNetworkImage(
+            imageUrl: '${Config.uri}/image/thumbnail/${post["image"]}',
+            fit: BoxFit.cover,
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                    8), // Set the shape of the container to a circle
+                image:
+                    DecorationImage(image: imageProvider, fit: BoxFit.contain),
               ),
-            ), // Display the image from the URL
-          )),
-    );
+            ),
+          ), // Display the image from the URL
+        ));
+  });
+}
 
 class UserPostsList extends StatefulWidget {
   final Map<String, dynamic>? user;

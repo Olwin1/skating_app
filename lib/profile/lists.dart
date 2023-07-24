@@ -7,9 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../swatch.dart';
 
-// Defining some constants for the SnakeNavigationBar
-const SnakeShape snakeShape = SnakeShape.circle;
-
 // Lists widget
 class Lists extends StatefulWidget {
   const Lists({Key? key, required this.index, this.user}) : super(key: key);

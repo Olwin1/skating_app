@@ -5,9 +5,6 @@ import 'package:patinka/profile/profile_page.dart';
 import 'friends_tracker/friends_tracker.dart';
 import 'social_media/homepage.dart';
 import 'fitness_tracker/fitness_tracker.dart';
-import 'package:patinka/api/token.dart';
-
-SecureStorage storage = SecureStorage();
 
 class TabNavigator extends StatelessWidget {
   const TabNavigator(

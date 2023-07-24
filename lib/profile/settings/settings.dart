@@ -13,9 +13,6 @@ import '../../api/token.dart';
 SecureStorage storage = SecureStorage();
 
 // Settings widget
-
-int item = 0;
-
 class Settings extends StatefulWidget {
   const Settings({Key? key, required this.user}) : super(key: key);
   final Map<String, dynamic>? user;

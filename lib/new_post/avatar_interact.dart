@@ -130,7 +130,7 @@ class _AvatarInteract extends State<AvatarInteract> {
   }
 
 // A method that sets the provider and updates the state of the widget.
-  void setProvider(ImageProvider? provider) {
+  void setProvider(ImageProvider provider) {
     this.provider = provider;
     mounted ? setState(() {}) : null;
   }

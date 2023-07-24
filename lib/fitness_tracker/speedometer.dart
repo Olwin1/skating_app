@@ -17,9 +17,6 @@ class SpeedometerPage extends StatefulWidget {
   State<SpeedometerPage> createState() => _SpeedometerPage();
 }
 
-// Initialize current speed and start time variables
-double currentSpeed = 0;
-
 // Define the State for the Speedometer page
 class _SpeedometerPage extends State<SpeedometerPage> {
   // Define a global key for the KdGaugeView widget

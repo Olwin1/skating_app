@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/websocket.dart';
@@ -22,13 +22,13 @@ import 'current_tab.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
-AndroidNotificationChannel channel = const AndroidNotificationChannel(
-  'ChannelId', // id
-  'ChannelId', // title
-  description:
-      'This channel is used for important notifications.', // description
-  importance: Importance.high,
-);
+// AndroidNotificationChannel channel = const AndroidNotificationChannel(
+//   'ChannelId', // id
+//   'ChannelId', // title
+//   description:
+//       'This channel is used for important notifications.', // description
+//   importance: Importance.high,
+// );
 
 // Define the main function
 Future<void> main() async {

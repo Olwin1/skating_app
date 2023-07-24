@@ -14,10 +14,13 @@ class Comment extends StatefulWidget {
 
   // Create HomePage Class
   const Comment(
-      {Key? key, required this.index, this.focus, required this.comment})
+      {Key? key,
+      required this.index,
+      required this.focus,
+      required this.comment})
       : super(key: key); // Take 2 arguments optional key and title of post
   final int index; // Define title argument
-  final FocusNode? focus; // Define focus argument
+  final FocusNode focus; // Define focus argument
   @override
   State<Comment> createState() => _Comment(); //Create state for widget
 }
@@ -137,7 +140,7 @@ class _Comment extends State<Comment> {
                             child: TextButton(
                               // Create text button
                               onPressed: () => widget.focus
-                                  ?.requestFocus(), // When reply pressed focus on text input
+                                  .requestFocus(), // When reply pressed focus on text input
                               child: Text(
                                 // Reply Placeholder
                                 AppLocalizations.of(context)!.reply,

@@ -8,10 +8,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/swatch.dart';
 
+import '../current_tab.dart';
+
 // Define a widget for sending a post with an image
 class SendPost extends StatefulWidget {
-  const SendPost({Key? key, required this.image}) : super(key: key);
+  const SendPost({Key? key, required this.image, required this.currentPage})
+      : super(key: key);
   final Uint8List image;
+  final CurrentPage currentPage;
 
   @override
   State<SendPost> createState() => _SendPost(); // Create state for widget
@@ -26,18 +30,24 @@ class _SendPost extends State<SendPost> {
     super.initState();
   }
 
+  bool sending = false;
+
   // Override the existing build method to create the widget UI
   @override
   Widget build(BuildContext context) {
     // Define a function to send the post information
     Future<String?> sendImage() async {
       try {
-        // Upload the image file
-        StreamedResponse? response = await uploadFile(widget.image);
-        String? id = await response?.stream.bytesToString();
-        if (id != null) {
-          return id.substring(1, id.length - 1);
-          //Navigator.of(context).pop();
+        if (!sending) {
+          sending = true;
+
+          // Upload the image file
+          StreamedResponse? response = await uploadFile(widget.image);
+          String? id = await response?.stream.bytesToString();
+          if (id != null) {
+            return id.substring(1, id.length - 1);
+          }
+          sending = false;
         }
         // Close the current screen and go back to the previous screen
       } catch (e) {
@@ -50,15 +60,36 @@ class _SendPost extends State<SendPost> {
 // Define a function named "sendInfo"
     void sendInfo() {
       try {
+        showDialog(
+          useRootNavigator: false,
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: swatch[800]!,
+              title: Text(
+                'Processing',
+                style: TextStyle(color: swatch[701]),
+              ),
+              content: Text(
+                'Please wait...',
+                style: TextStyle(color: swatch[901]),
+              ),
+            );
+          },
+        );
         // Call the "sendImage" function and wait for it to complete
         sendImage().then((value) => {
               // When "sendImage" completes successfully, call "postPost"
               // with the text from "descriptionController" and the returned value
               postPost(descriptionController.text, value!)
                   // Wait for "postPost" to complete successfully
-                  .then((value) =>
-                      // When "postPost" completes successfully, close the current screen
-                      Navigator.of(context).pop())
+                  .then((value) => {
+                        // When "postPost" completes successfully, close the current screen
+                        Navigator.of(context).pop(),
+                        Navigator.of(context).pop(),
+                        widget.currentPage.set(0)
+                      })
             });
       } catch (e) {
         commonLogger.e("Error creating post: $e");

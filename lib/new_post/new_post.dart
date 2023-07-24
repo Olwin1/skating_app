@@ -32,7 +32,7 @@ class NewPost extends StatelessWidget {
       builder: (context, currentPage, widget) =>
           // If the CurrentPage's tab value is 2 (New Post Page), return a NewPostPage widget
           currentPage.tab == 2
-              ? const NewPostPage()
+              ? NewPostPage(currentPage: currentPage)
               :
               // Otherwise, return an empty SizedBox widget
               const SizedBox.shrink(),
@@ -41,7 +41,8 @@ class NewPost extends StatelessWidget {
 }
 
 class NewPostPage extends StatefulWidget {
-  const NewPostPage({Key? key}) : super(key: key);
+  final CurrentPage currentPage;
+  const NewPostPage({Key? key, required this.currentPage}) : super(key: key);
 
   @override
   // Create the state for the NewPost widget
@@ -143,6 +144,7 @@ class _NewPostPage extends State<NewPostPage> {
         MaterialPageRoute(
             builder: (context) => SendPost(
                   image: selectedImage!,
+                  currentPage: widget.currentPage,
                 )));
     mounted
         ? setState(() {

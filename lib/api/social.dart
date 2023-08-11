@@ -1,5 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:patinka/api/response_handler.dart';
+import 'package:patinka/api/type_casts.dart';
+import 'package:patinka/caching/manager.dart';
+import 'package:patinka/common_logger.dart';
 
 import 'token.dart';
 
@@ -52,10 +55,7 @@ Future<Map<String, dynamic>> postPost(String description, String image) async {
     // Make a POST request to the login endpoint with the user's credentials
     var response = await http.post(
       url,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${await storage.getToken()}'
-      },
+      headers: await Config.getDefaultHeadersAuth,
       body: {'description': description, 'image': image},
     );
 
@@ -94,6 +94,18 @@ Future<Map<String, dynamic>> getPost(String post) async {
 // Get a list of posts, excluding those with IDs in the "seen" list
 Future<List<Map<String, dynamic>>> getPosts(List<String> seen) async {
   String seenPosts = jsonEncode(seen);
+  if (seen.isEmpty) {
+    String? localData = await NetworkManager.instance
+        .getLocalData(name: "posts", type: CacheTypes.list);
+
+    if (localData != null) {
+      List<Map<String, dynamic>> cachedPosts =
+          TypeCasts.stringArrayToJsonArray(localData);
+      return cachedPosts;
+    }
+    commonLogger.d(localData);
+    commonLogger.d("localData");
+  }
   // Define the URL for the HTTP request
   var url = Uri.parse('${Config.uri}/post/posts');
 
@@ -101,15 +113,17 @@ Future<List<Map<String, dynamic>>> getPosts(List<String> seen) async {
     // Make a POST request to the specified URL with headers and parameters
     var response = await http.post(
       url,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${await storage.getToken()}'
-      },
+      headers: await Config.getDefaultHeadersAuth,
       body: {'seen': seenPosts},
     );
-
+    List<Map<String, dynamic>> data =
+        ResponseHandler.handleListResponse(response);
+    if (seen.isEmpty) {
+      await NetworkManager.instance
+          .saveData(name: "posts", type: CacheTypes.list, data: data);
+    }
     // If the response status code is 200 OK, parse and return the response body as a Map
-    return ResponseHandler.handleListResponse(response);
+    return data;
   } catch (e) {
     // If there's an error, throw an exception with the error message
     throw Exception("Error during post: $e");
@@ -125,10 +139,7 @@ Future<Map<String, dynamic>> delPost(String post) async {
     // Make a DELETE request to the specified URL with headers and parameters
     var response = await http.delete(
       url,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${await storage.getToken()}'
-      },
+      headers: await Config.getDefaultHeadersAuth,
       body: {'post': post},
     );
 
@@ -195,12 +206,9 @@ Future<Map<String, dynamic>> likeComment(String comment) async {
 
   try {
     // Send the HTTP POST request with the comment data and authentication headers
-    var response = await http.post(url, headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${await storage.getToken()}',
-    }, body: {
-      'comment': comment
-    });
+    var response = await http.post(url,
+        headers: await Config.getDefaultHeadersAuth,
+        body: {'comment': comment});
 
     return ResponseHandler.handleResponse(response);
   } catch (e) {
@@ -216,12 +224,9 @@ Future<Map<String, dynamic>> dislikeComment(String comment) async {
 
   try {
     // Send the HTTP POST request with the comment data and authentication headers
-    var response = await http.post(url, headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${await storage.getToken()}',
-    }, body: {
-      'comment': comment
-    });
+    var response = await http.post(url,
+        headers: await Config.getDefaultHeadersAuth,
+        body: {'comment': comment});
 
     // If the response status code is 200 OK, parse the JSON response body and return it
     return ResponseHandler.handleResponse(response);
@@ -236,12 +241,9 @@ Future<Map<String, dynamic>> unlikeComment(String comment) async {
   var url = Uri.parse('${Config.uri}/post/unlike_comment');
 
   try {
-    var response = await http.post(url, headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${await storage.getToken()}',
-    }, body: {
-      'comment': comment
-    });
+    var response = await http.post(url,
+        headers: await Config.getDefaultHeadersAuth,
+        body: {'comment': comment});
 
     return ResponseHandler.handleResponse(response);
   } catch (e) {
@@ -255,12 +257,9 @@ Future<Map<String, dynamic>> undislikeComment(String comment) async {
   var url = Uri.parse('${Config.uri}/post/undislike_comment');
 
   try {
-    var response = await http.post(url, headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${await storage.getToken()}',
-    }, body: {
-      'comment': comment
-    });
+    var response = await http.post(url,
+        headers: await Config.getDefaultHeadersAuth,
+        body: {'comment': comment});
 
     return ResponseHandler.handleResponse(response);
   } catch (e) {
@@ -274,12 +273,9 @@ Future<Map<String, dynamic>> delComment(String comment) async {
   var url = Uri.parse('${Config.uri}/post/comment');
 
   try {
-    var response = await http.delete(url, headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${await storage.getToken()}',
-    }, body: {
-      'comment': comment
-    });
+    var response = await http.delete(url,
+        headers: await Config.getDefaultHeadersAuth,
+        body: {'comment': comment});
 
     return ResponseHandler.handleResponse(response);
   } catch (e) {
@@ -294,13 +290,9 @@ Future<Map<String, dynamic>> postComment(String post, String content) async {
 
   try {
     // The code tries to make an HTTP POST request to the given URL with the given headers and body parameters.
-    var response = await http.post(url, headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${await storage.getToken()}',
-    }, body: {
-      'post': post,
-      'content': content
-    });
+    var response = await http.post(url,
+        headers: await Config.getDefaultHeadersAuth,
+        body: {'post': post, 'content': content});
 
     return ResponseHandler.handleResponse(response);
   } catch (e) {
@@ -315,10 +307,8 @@ Future<Map<String, dynamic>> savePost(String post) async {
 
   try {
     // The code tries to make an HTTP POST request to the given URL with the given headers and body parameters.
-    var response = await http.post(url, headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${await storage.getToken()}',
-    }, body: {
+    var response = await http
+        .post(url, headers: await Config.getDefaultHeadersAuth, body: {
       'post': post,
     });
 
@@ -334,12 +324,8 @@ Future<Map<String, dynamic>> unsavePost(String post) async {
   var url = Uri.parse('${Config.uri}/post/unsave'); // endpoint URL
 
   try {
-    var response = await http.post(url, headers: {
-      // make a HTTP POST request with headers
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization':
-          'Bearer ${await storage.getToken()}', // include authorization token in headers
-    }, body: {
+    var response = await http
+        .post(url, headers: await Config.getDefaultHeadersAuth, body: {
       'post': post, // include the post ID in the request body
     });
 
@@ -356,12 +342,8 @@ Future<Map<String, dynamic>> likePost(String post) async {
   var url = Uri.parse('${Config.uri}/post/like'); // endpoint URL
 
   try {
-    var response = await http.post(url, headers: {
-      // make a HTTP POST request with headers
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization':
-          'Bearer ${await storage.getToken()}', // include authorization token in headers
-    }, body: {
+    var response = await http
+        .post(url, headers: await Config.getDefaultHeadersAuth, body: {
       'post': post, // include the post ID in the request body
     });
 
@@ -378,12 +360,8 @@ Future<Map<String, dynamic>> unlikePost(String post) async {
   var url = Uri.parse('${Config.uri}/post/unlike'); // endpoint URL
 
   try {
-    var response = await http.post(url, headers: {
-      // make a HTTP POST request with headers
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization':
-          'Bearer ${await storage.getToken()}', // include authorization token in headers
-    }, body: {
+    var response = await http
+        .post(url, headers: await Config.getDefaultHeadersAuth, body: {
       'post': post, // include the post ID in the request body
     });
 
@@ -401,26 +379,36 @@ Future<Map<String, dynamic>> getUser(String id) async {
   var url = Uri.parse(
       '${Config.uri}/user/'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
 
-  try {
-    // Using a try-catch block to handle errors
-    var response = await http.get(
-      // Creating a variable 'response' and making a post request to the specified URL
-      url,
-      headers: {
-        'Content-Type':
-            'application/x-www-form-urlencoded', // Specifying the headers for the request
-        'Authorization':
-            'Bearer ${await storage.getToken()}', // Including the authorization token
-        'id': id,
-      },
-    );
+  // try {
+  // Using a try-catch block to handle errors
+  String? localData = await NetworkManager.instance
+      .getLocalData(name: id, type: CacheTypes.user);
 
-    return ResponseHandler.handleResponse(response);
-  } catch (e) {
-    // Handling the error
-    throw Exception(
-        "Error during post: $e"); // Throwing an exception with an error message
+  if (localData != null) {
+    Map<String, dynamic> cachedUser = TypeCasts.stringToJson(localData);
+    return cachedUser;
   }
+  var response = await http.get(
+    // Creating a variable 'response' and making a post request to the specified URL
+    url,
+    headers: {
+      'Content-Type':
+          'application/x-www-form-urlencoded', // Specifying the headers for the request
+      'Authorization':
+          'Bearer ${await storage.getToken()}', // Including the authorization token
+      'id': id,
+    },
+  );
+  Map<String, dynamic> data = ResponseHandler.handleResponse(response);
+  await NetworkManager.instance
+      .saveData(name: id, type: CacheTypes.user, data: data);
+
+  return data;
+  // } catch (e) {
+  //   // Handling the error
+  //   throw Exception(
+  //       "Error during post: $e"); // Throwing an exception with an error message
+  // }
 }
 
 Future<List<Map<String, dynamic>>> getUserPosts(String userId, int page) async {
@@ -430,6 +418,14 @@ Future<List<Map<String, dynamic>>> getUserPosts(String userId, int page) async {
       '${Config.uri}/post/user_posts'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
 
   try {
+    String? localData = await NetworkManager.instance
+        .getLocalData(name: "user-posts-$userId", type: CacheTypes.list);
+
+    if (localData != null) {
+      List<Map<String, dynamic>> cachedPosts =
+          TypeCasts.stringArrayToJsonArray(localData);
+      return cachedPosts;
+    }
     // Using a try-catch block to handle errors
     var response = await http.get(
       // Creating a variable 'response' and making a post request to the specified URL
@@ -443,8 +439,12 @@ Future<List<Map<String, dynamic>>> getUserPosts(String userId, int page) async {
         'user': userId
       },
     );
+    List<Map<String, dynamic>> data =
+        ResponseHandler.handleListResponse(response);
+    await NetworkManager.instance.saveData(
+        name: "user-posts-$userId", type: CacheTypes.list, data: data);
 
-    return ResponseHandler.handleListResponse(response);
+    return data;
   } catch (e) {
     // Handling the error
     throw Exception(
@@ -460,6 +460,15 @@ Future<List<Map<String, dynamic>>> getUserFollowing(
       '${Config.uri}/connections/following'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
 
   try {
+    String userId = user?['_id'] ?? await storage.getId();
+    String? localData = await NetworkManager.instance
+        .getLocalData(name: "user-following-$userId", type: CacheTypes.list);
+
+    if (localData != null) {
+      List<Map<String, dynamic>> cachedUsers =
+          TypeCasts.stringArrayToJsonArray(localData);
+      return cachedUsers;
+    }
     // Using a try-catch block to handle errors
     Map<String, String> headers = {
       'Content-Type':
@@ -475,8 +484,12 @@ Future<List<Map<String, dynamic>>> getUserFollowing(
         // Creating a variable 'response' and making a post request to the specified URL
         url,
         headers: headers);
+    List<Map<String, dynamic>> data =
+        ResponseHandler.handleListResponse(response);
+    await NetworkManager.instance.saveData(
+        name: "user-following-$userId", type: CacheTypes.list, data: data);
 
-    return ResponseHandler.handleListResponse(response);
+    return data;
   } catch (e) {
     // Handling the error
     throw Exception(
@@ -487,6 +500,16 @@ Future<List<Map<String, dynamic>>> getUserFollowing(
 Future<List<Map<String, dynamic>>> getUserFollowers(
     int page, Map<String, dynamic>? user) async {
   // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
+  String userId = user?['_id'] ?? await storage.getId();
+
+  String? localData = await NetworkManager.instance
+      .getLocalData(name: "user-followers-$userId", type: CacheTypes.list);
+
+  if (localData != null) {
+    List<Map<String, dynamic>> cachedUsers =
+        TypeCasts.stringArrayToJsonArray(localData);
+    return cachedUsers;
+  }
 
   var url = Uri.parse(
       '${Config.uri}/connections/followers'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
@@ -507,8 +530,12 @@ Future<List<Map<String, dynamic>>> getUserFollowers(
         // Creating a variable 'response' and making a post request to the specified URL
         url,
         headers: headers);
+    List<Map<String, dynamic>> data =
+        ResponseHandler.handleListResponse(response);
+    await NetworkManager.instance.saveData(
+        name: "user-followers-$userId", type: CacheTypes.list, data: data);
 
-    return ResponseHandler.handleListResponse(response);
+    return data;
   } catch (e) {
     // Handling the error
     throw Exception(
@@ -519,6 +546,16 @@ Future<List<Map<String, dynamic>>> getUserFollowers(
 Future<List<Map<String, dynamic>>> getUserFriends(
     int page, Map<String, dynamic>? user) async {
   // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
+  String userId = user?['_id'] ?? await storage.getId();
+
+  String? localData = await NetworkManager.instance
+      .getLocalData(name: "user-friends-$userId", type: CacheTypes.list);
+
+  if (localData != null) {
+    List<Map<String, dynamic>> cachedUsers =
+        TypeCasts.stringArrayToJsonArray(localData);
+    return cachedUsers;
+  }
 
   var url = Uri.parse(
       '${Config.uri}/connections/friends'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
@@ -539,8 +576,11 @@ Future<List<Map<String, dynamic>>> getUserFriends(
         // Creating a variable 'response' and making a post request to the specified URL
         url,
         headers: headers);
-
-    return ResponseHandler.handleListResponse(response);
+    List<Map<String, dynamic>> data =
+        ResponseHandler.handleListResponse(response);
+    await NetworkManager.instance.saveData(
+        name: "user-friends-$userId", type: CacheTypes.list, data: data);
+    return data;
   } catch (e) {
     // Handling the error
     throw Exception(
@@ -583,12 +623,7 @@ Future<Map<String, dynamic>> setEmail(String email) async {
     var response = await http.post(
         // Creating a variable 'response' and making a post request to the specified URL
         url,
-        headers: {
-          'Content-Type':
-              'application/x-www-form-urlencoded', // Specifying the headers for the request
-          'Authorization':
-              'Bearer ${await storage.getToken()}', // Including the authorization token
-        },
+        headers: await Config.getDefaultHeadersAuth,
         body: {
           'email': email,
         });
@@ -612,12 +647,7 @@ Future<Map<String, dynamic>> setDescription(String desc) async {
     var response = await http.post(
         // Creating a variable 'response' and making a post request to the specified URL
         url,
-        headers: {
-          'Content-Type':
-              'application/x-www-form-urlencoded', // Specifying the headers for the request
-          'Authorization':
-              'Bearer ${await storage.getToken()}', // Including the authorization token
-        },
+        headers: await Config.getDefaultHeadersAuth,
         body: {
           'description': desc,
         });
@@ -640,12 +670,7 @@ Future<Map<String, dynamic>> setAvatar(String avatar) async {
     var response = await http.post(
         // Creating a variable 'response' and making a post request to the specified URL
         url,
-        headers: {
-          'Content-Type':
-              'application/x-www-form-urlencoded', // Specifying the headers for the request
-          'Authorization':
-              'Bearer ${await storage.getToken()}', // Including the authorization token
-        },
+        headers: await Config.getDefaultHeadersAuth,
         body: {
           'avatar': avatar,
         });

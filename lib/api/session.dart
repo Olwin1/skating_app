@@ -37,12 +37,7 @@ Future<Map<String, dynamic>> createSession(
     var response = await http.post(
       // Creating a variable 'response' and making a post request to the specified URL
       url,
-      headers: {
-        'Content-Type':
-            'application/x-www-form-urlencoded', // Specifying the headers for the request
-        'Authorization':
-            'Bearer ${await storage.getToken()}', // Including the authorization token
-      },
+      headers: await Config.getDefaultHeadersAuth,
       body: {
         // Specifying the body of the request
         'name': name,

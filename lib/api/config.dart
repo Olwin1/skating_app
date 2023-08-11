@@ -2,6 +2,12 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 
+import 'token.dart';
+
+SecureStorage storage = SecureStorage();
+
+enum CacheTypes { user, post, messages, list }
+
 class Config {
   // static String uri =
   //     Platform.isAndroid ? 'http://10.0.2.2:4000' : 'http://localhost:4000';
@@ -10,4 +16,12 @@ class Config {
           ? 'http://10.0.2.2:4000'
           : 'http://localhost:4000'
       : "https://sabreguild.com:4000";
+  static Map<String, String>? defaultHeaders = {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  };
+  static Future<Map<String, String>?> get getDefaultHeadersAuth async => {
+        // Set the request headers
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer ${await storage.getToken()}',
+      };
 }

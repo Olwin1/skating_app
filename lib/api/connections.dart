@@ -26,11 +26,8 @@ Future<Map<String, dynamic>> followUser(String user) async {
   var url = Uri.parse('${Config.uri}/connections/follow');
   try {
     // Send a POST request to the endpoint with the user to follow
-    var response = await http.post(url, headers: {
-      // Set the request headers
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${await storage.getToken()}',
-    }, body: {
+    var response = await http
+        .post(url, headers: await Config.getDefaultHeadersAuth, body: {
       'user': user,
     });
 
@@ -48,11 +45,8 @@ Future<Map<String, dynamic>> unfollowUser(String user) async {
   var url = Uri.parse('${Config.uri}/connections/unfollow');
   try {
     // Send a POST request to the endpoint with the user to follow
-    var response = await http.post(url, headers: {
-      // Set the request headers
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${await storage.getToken()}',
-    }, body: {
+    var response = await http
+        .post(url, headers: await Config.getDefaultHeadersAuth, body: {
       'user': user,
     });
 
@@ -69,11 +63,8 @@ Future<Map<String, dynamic>> friendUser(String user) async {
   var url = Uri.parse('${Config.uri}/connections/friend');
   try {
     // Send a POST request to the endpoint with the user to friend
-    var response = await http.post(url, headers: {
-      // Set the request headers
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${await storage.getToken()}',
-    }, body: {
+    var response = await http
+        .post(url, headers: await Config.getDefaultHeadersAuth, body: {
       'user': user,
     });
     // If the request was successful (status code 200), parse the response body and return it
@@ -90,11 +81,8 @@ Future<Map<String, dynamic>> unfriendUser(String user) async {
   var url = Uri.parse('${Config.uri}/connections/unfriend');
   try {
     // Send a POST request to the endpoint with the user to follow
-    var response = await http.post(url, headers: {
-      // Set the request headers
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${await storage.getToken()}',
-    }, body: {
+    var response = await http
+        .post(url, headers: await Config.getDefaultHeadersAuth, body: {
       'user': user,
     });
 
@@ -111,11 +99,8 @@ Future<Map<String, dynamic>> followUserRequest(
     String user, bool accepted) async {
   var url = Uri.parse('${Config.uri}/connections/follow');
   try {
-    var response = await http.patch(url, headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization':
-          'Bearer ${await storage.getToken()}', // Include the user's auth token in the headers
-    }, body: {
+    var response = await http
+        .patch(url, headers: await Config.getDefaultHeadersAuth, body: {
       'user':
           user, // Include the ID of the user to be followed in the request body
       'accepted': accepted
@@ -133,11 +118,8 @@ Future<Map<String, dynamic>> friendUserRequest(
     String user, bool accepted) async {
   var url = Uri.parse('${Config.uri}/connections/friend');
   try {
-    var response = await http.patch(url, headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization':
-          'Bearer ${await storage.getToken()}', // Include the user's auth token in the headers
-    }, body: {
+    var response = await http
+        .patch(url, headers: await Config.getDefaultHeadersAuth, body: {
       'user':
           user, // Include the ID of the user to be friended in the request body
       'accepted': accepted

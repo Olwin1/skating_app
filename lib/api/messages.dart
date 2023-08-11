@@ -28,10 +28,7 @@ Future<Map<String, dynamic>> postChannel(List<String> participants) async {
     // Making a POST request to the specified URL with the required headers and body
     var response = await http.post(
       url,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${await storage.getToken()}'
-      },
+      headers: await Config.getDefaultHeadersAuth,
       body: {'participants': jsonEncode(participants)},
     );
 
@@ -55,10 +52,7 @@ Future<Object> postMessage(String channel, String content, String? img,
     // Making a POST request to the specified URL with the required headers and body
     var response = await http.post(
       url,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${await storage.getToken()}'
-      },
+      headers: await Config.getDefaultHeadersAuth,
       body: {
         'channel': channel,
         'content': content,

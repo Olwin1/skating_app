@@ -15,7 +15,7 @@ Future<String> login(String username, String password) async {
     // Make a POST request to the login endpoint with the user's credentials
     var response = await http.post(
       url,
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      headers: Config.defaultHeaders,
       body: {'username': username, 'password': password},
     );
 
@@ -41,7 +41,7 @@ Future<String> signup(String username, String password, String email) async {
   // Make a POST request to the signup endpoint with the user's credentials
   var response = await http.post(
     url,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    headers: Config.defaultHeaders,
     body: {'username': username, 'password': password, 'email': email},
   );
 

@@ -19,10 +19,7 @@ Future<Map<String, dynamic>?> updateToken(String fcmToken) async {
     // Make a POST request to the login endpoint with the user's credentials
     var response = await http.post(
       url,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${await storage.getToken()}',
-      },
+      headers: await Config.getDefaultHeadersAuth,
       body: {'fcm_token': fcmToken},
     );
 

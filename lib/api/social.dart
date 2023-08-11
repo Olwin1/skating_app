@@ -119,7 +119,7 @@ Future<List<Map<String, dynamic>>> getPosts(List<String> seen) async {
     List<Map<String, dynamic>> data =
         ResponseHandler.handleListResponse(response);
     if (seen.isEmpty) {
-      await NetworkManager.instance
+      NetworkManager.instance
           .saveData(name: "posts", type: CacheTypes.list, data: data);
     }
     // If the response status code is 200 OK, parse and return the response body as a Map

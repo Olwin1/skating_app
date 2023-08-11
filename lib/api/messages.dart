@@ -1,6 +1,8 @@
 // Importing the required dependencies
 import 'package:patinka/api/response_handler.dart';
+import 'package:patinka/api/type_casts.dart';
 
+import '../caching/manager.dart';
 import 'token.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
@@ -126,15 +128,31 @@ Future<List<Map<String, dynamic>>> getChannels(int page) async {
   var url = Uri.parse('${Config.uri}/message/channels');
 
   try {
+    if (page == 0) {
+      String? localData = await NetworkManager.instance
+          .getLocalData(name: "channels", type: CacheTypes.list);
+
+      if (localData != null) {
+        List<Map<String, dynamic>> cachedChannels =
+            TypeCasts.stringArrayToJsonArray(localData);
+        return cachedChannels;
+      }
+    }
     // Issue an HTTP GET request to the aforementioned URL, with some headers added for good measure
     var response = await http.get(url, headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': 'Bearer ${await storage.getToken()}',
       'page': page.toString(),
     });
+    List<Map<String, dynamic>> data =
+        ResponseHandler.handleListResponse(response);
+    if (page == 0) {
+      NetworkManager.instance
+          .saveData(name: "channels", type: CacheTypes.list, data: data);
+    }
 
     // If the response status code is 200, then decode the response body into a new map object called 'y' and return it
-    return ResponseHandler.handleListResponse(response);
+    return data;
   } catch (e) {
     // If an error is thrown within the try-catch block, then throw a different Exception which contains a message that describes the error that was encountered
     throw Exception("Error during post: $e");

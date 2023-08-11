@@ -5,6 +5,8 @@ import 'package:patinka/common_logger.dart';
 import 'package:patinka/fitness_tracker/save_session.dart';
 import 'package:patinka/fitness_tracker/speedometer.dart';
 import 'package:solar_calculator/solar_calculator.dart';
+import '../api/config.dart';
+import '../api/type_casts.dart';
 import '../swatch.dart';
 import 'distance_travelled.dart';
 import 'signal_strength_info.dart';
@@ -13,6 +15,7 @@ import 'check_permission.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../current_tab.dart';
+import 'package:patinka/caching/manager.dart';
 
 String sunsetTime = "00:00";
 
@@ -38,10 +41,24 @@ class SunsetTimeWidget extends StatefulWidget {
 class _SunsetTimeWidget extends State<SunsetTimeWidget> {
   @override
   void initState() {
-    hasLocationPermission().then((value) => {
-          Geolocator.getCurrentPosition()
-              .then((position) => {getSunsetTime(position)})
-        });
+    NetworkManager.instance
+        .getLocalData(name: "cache-sunset", type: CacheTypes.misc)
+        .then((String? localData) => {
+              if (localData != null)
+                {
+                  mounted
+                      ? setState(() => sunsetTime =
+                          localData.substring(1, localData.length - 1))
+                      : null
+                }
+              else
+                {
+                  hasLocationPermission().then((value) => {
+                        Geolocator.getCurrentPosition()
+                            .then((position) => {getSunsetTime(position)})
+                      })
+                }
+            });
 
     super.initState();
   }
@@ -66,6 +83,8 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
 
     // Format the sunset time as a string with the format 'HH:mm' (hours:minutes)
     String formattedTime = DateFormat('HH:mm').format(time);
+    NetworkManager.instance.saveData(
+        name: "cache-sunset", type: CacheTypes.misc, data: formattedTime);
 
     // Set the state of the widget to display the formatted sunset time
     mounted ? setState(() => sunsetTime = formattedTime) : null;

@@ -1,4 +1,5 @@
 import 'package:patinka/api/response_handler.dart';
+import 'package:patinka/caching/manager.dart';
 
 import 'token.dart';
 
@@ -25,6 +26,9 @@ Future<Map<String, dynamic>> followUser(String user) async {
   // Set the API endpoint URL
   var url = Uri.parse('${Config.uri}/connections/follow');
   try {
+    NetworkManager.instance
+        .deleteLocalData(name: "user-following-$user", type: CacheTypes.list);
+    NetworkManager.instance.deleteLocalData(name: user, type: CacheTypes.user);
     // Send a POST request to the endpoint with the user to follow
     var response = await http
         .post(url, headers: await Config.getDefaultHeadersAuth, body: {
@@ -44,6 +48,9 @@ Future<Map<String, dynamic>> unfollowUser(String user) async {
   // Set the API endpoint URL
   var url = Uri.parse('${Config.uri}/connections/unfollow');
   try {
+    NetworkManager.instance
+        .deleteLocalData(name: "user-following-$user", type: CacheTypes.list);
+    NetworkManager.instance.deleteLocalData(name: user, type: CacheTypes.user);
     // Send a POST request to the endpoint with the user to follow
     var response = await http
         .post(url, headers: await Config.getDefaultHeadersAuth, body: {
@@ -62,6 +69,9 @@ Future<Map<String, dynamic>> friendUser(String user) async {
   // Set the API endpoint URL
   var url = Uri.parse('${Config.uri}/connections/friend');
   try {
+    NetworkManager.instance
+        .deleteLocalData(name: "user-friends-$user", type: CacheTypes.list);
+    NetworkManager.instance.deleteLocalData(name: user, type: CacheTypes.user);
     // Send a POST request to the endpoint with the user to friend
     var response = await http
         .post(url, headers: await Config.getDefaultHeadersAuth, body: {
@@ -80,6 +90,9 @@ Future<Map<String, dynamic>> unfriendUser(String user) async {
   // Set the API endpoint URL
   var url = Uri.parse('${Config.uri}/connections/unfriend');
   try {
+    NetworkManager.instance
+        .deleteLocalData(name: "user-friends-$user", type: CacheTypes.list);
+    NetworkManager.instance.deleteLocalData(name: user, type: CacheTypes.user);
     // Send a POST request to the endpoint with the user to follow
     var response = await http
         .post(url, headers: await Config.getDefaultHeadersAuth, body: {
@@ -99,6 +112,9 @@ Future<Map<String, dynamic>> followUserRequest(
     String user, bool accepted) async {
   var url = Uri.parse('${Config.uri}/connections/follow');
   try {
+    NetworkManager.instance
+        .deleteLocalData(name: "user-following-$user", type: CacheTypes.list);
+    NetworkManager.instance.deleteLocalData(name: user, type: CacheTypes.user);
     var response = await http
         .patch(url, headers: await Config.getDefaultHeadersAuth, body: {
       'user':
@@ -118,6 +134,9 @@ Future<Map<String, dynamic>> friendUserRequest(
     String user, bool accepted) async {
   var url = Uri.parse('${Config.uri}/connections/friend');
   try {
+    NetworkManager.instance
+        .deleteLocalData(name: "user-friends-$user", type: CacheTypes.list);
+    NetworkManager.instance.deleteLocalData(name: user, type: CacheTypes.user);
     var response = await http
         .patch(url, headers: await Config.getDefaultHeadersAuth, body: {
       'user':

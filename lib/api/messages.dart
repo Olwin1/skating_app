@@ -27,6 +27,8 @@ Future<Map<String, dynamic>> postChannel(List<String> participants) async {
   var url = Uri.parse('${Config.uri}/message/channel');
 
   try {
+    NetworkManager.instance
+        .deleteLocalData(name: "channels", type: CacheTypes.list);
     // Making a POST request to the specified URL with the required headers and body
     var response = await http.post(
       url,

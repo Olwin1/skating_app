@@ -6,7 +6,6 @@ import 'package:patinka/fitness_tracker/save_session.dart';
 import 'package:patinka/fitness_tracker/speedometer.dart';
 import 'package:solar_calculator/solar_calculator.dart';
 import '../api/config.dart';
-import '../api/type_casts.dart';
 import '../swatch.dart';
 import 'distance_travelled.dart';
 import 'signal_strength_info.dart';

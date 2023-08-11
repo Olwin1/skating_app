@@ -93,6 +93,21 @@ class _PostWidget extends State<PostWidget> {
     commonLogger.v("Building ${Config.uri}/image/${widget.post['image']}");
     String comments = (widget.post['comment_count'] ?? 0).toString();
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      widget.post["initial_influencer"]
+          ? Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: const Color(0x77000000),
+              ),
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.all(4),
+              child: Text("Suggested Posts",
+                  style: TextStyle(
+                      color: swatch[401],
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)))
+          : const SizedBox.shrink(),
       Expanded(
         child: Container(
           color: widget.post["description"] != null

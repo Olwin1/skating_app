@@ -12,10 +12,13 @@ import 'private_message.dart';
 // SuggestionListWidget class creates a stateful widget that displays a list of users
 class SuggestionListWidget extends StatefulWidget {
   // Constructor for SuggestionListWidget
-  const SuggestionListWidget({Key? key, required this.id}) : super(key: key);
+  const SuggestionListWidget(
+      {Key? key, required this.id, required this.callback})
+      : super(key: key);
 
   // Title for the widget
   final String id;
+  final Function callback;
 
   // Creates the state for the SuggestionListWidget
   @override
@@ -39,6 +42,7 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
                   // Add private message page to top of navigation stack
                   index: 1,
                   user: targetUser, currentUser: user!["_id"],
+                  callback: widget.callback,
                 )));
   }
 

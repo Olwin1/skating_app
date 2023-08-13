@@ -56,16 +56,18 @@ class _ListWidget extends State<ListWidget> {
               vertical: 8), // Add padding so doesn't touch edges
           child: TextButton(
             // Make list widget clickable
-            onPressed: () => Navigator.push(
-                // When button pressed
-                context,
-                MaterialPageRoute(
-                    builder: (context) => PrivateMessage(
-                          // Add private message page to top of navigation stack
-                          index: 1,
-                          channel: widget.channel,
-                          user: user, currentUser: widget.currentUser,
-                        ))), //When list widget clicked
+            onPressed: () => {
+              Navigator.push(
+                  // When button pressed
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PrivateMessage(
+                            // Add private message page to top of navigation stack
+                            index: 1,
+                            channel: widget.channel,
+                            user: user, currentUser: widget.currentUser,
+                          ))),
+            }, //When list widget clicked
             child: Row(
               // Create a row
               crossAxisAlignment: CrossAxisAlignment.center,

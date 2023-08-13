@@ -40,8 +40,16 @@ class _PrivateMessageList extends State<PrivateMessageList> {
     super.initState();
   }
 
+  final PagingController<int, Map<String, dynamic>> _pagingController =
+      PagingController(firstPageKey: 0);
+  void refreshList() {
+    commonLogger.d("REFERESHING LIST");
+    _pagingController.refresh();
+  }
+
   @override // Override existing build method
   Widget build(BuildContext context) {
+    commonLogger.w("REBUILGING PAGe");
     return Scaffold(
         //Create a scaffold
         appBar: AppBar(
@@ -51,11 +59,13 @@ class _PrivateMessageList extends State<PrivateMessageList> {
               )),
           actions: [
             IconButton(
-                onPressed: () => Navigator.of(context, rootNavigator: true)
-                    .push(
+                onPressed: () =>
+                    Navigator.of(context, rootNavigator: true).push(
                         // Send to signal info page
                         MaterialPageRoute(
-                            builder: (context) => const NewChannelPage())),
+                            builder: (context) => NewChannelPage(
+                                  callback: refreshList,
+                                ))),
                 icon: const Icon(Icons.add))
           ],
         ), // Add a basic app bar
@@ -78,7 +88,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
                       ? Container()
                       : ChannelsListView(
                           currentUser: currentUser!,
-                        )),
+                          pagingController: _pagingController)),
             ],
           ),
         ));
@@ -159,8 +169,10 @@ Widget _loadingSkeleton() {
 }
 
 class ChannelsListView extends StatefulWidget {
-  const ChannelsListView({super.key, required this.currentUser});
+  const ChannelsListView(
+      {super.key, required this.currentUser, required this.pagingController});
   final String currentUser;
+  final PagingController<int, Map<String, dynamic>> pagingController;
 
   @override
   State<ChannelsListView> createState() => _ChannelsListViewState();
@@ -172,15 +184,15 @@ class _ChannelsListViewState extends State<ChannelsListView> {
   List<String> channel = [];
   late StreamSubscription subscription;
   Map<String, dynamic> channelsData = <String, dynamic>{};
+  PagingController<int, Map<String, dynamic>>? _pagingController;
 
   // PagingController manages the loading of pages as the user scrolls
-  final PagingController<int, Map<String, dynamic>> _pagingController =
-      PagingController(firstPageKey: 0);
 
   @override
   void initState() {
+    _pagingController = widget.pagingController;
     // addPageRequestListener is called whenever the user scrolls near the end of the list
-    _pagingController.addPageRequestListener((pageKey) {
+    _pagingController?.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
     if (getIt<WebSocketConnection>().socket.disconnected) {
@@ -236,46 +248,47 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       if (!mounted) return;
 // If the page is the last page, append it using appendLastPage method
       if (isLastPage) {
-        _pagingController.appendLastPage(page);
+        _pagingController?.appendLastPage(page);
       }
 // If the page is not the last page, append it using appendPage method
       else {
         // Calculate the next page key
         final nextPageKey = pageKey += 1;
-        _pagingController.appendPage(page, nextPageKey);
+        _pagingController?.appendPage(page, nextPageKey);
       }
     }
 // Handle any errors that occur during loading
     catch (error) {
-      _pagingController.error = error;
+      _pagingController?.error = error;
     }
   }
 
   @override
-  Widget build(BuildContext context) =>
-      PagedListView<int, Map<String, dynamic>>(
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-          noItemsFoundIndicatorBuilder: (context) => ListError(
-              title: AppLocalizations.of(context)!.noMessagesFound,
-              body: AppLocalizations.of(context)!.makeFriends),
-          firstPageProgressIndicatorBuilder: (context) => _loadingSkeleton(),
+  Widget build(BuildContext context) => _pagingController != null
+      ? PagedListView<int, Map<String, dynamic>>(
+          pagingController: _pagingController!,
+          builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+            noItemsFoundIndicatorBuilder: (context) => ListError(
+                title: AppLocalizations.of(context)!.noMessagesFound,
+                body: AppLocalizations.of(context)!.makeFriends),
+            firstPageProgressIndicatorBuilder: (context) => _loadingSkeleton(),
 
-          itemBuilder: (context, item, index) => ListWidget(
-              userId: title[index],
-              index: index,
-              channel: channel[index],
-              desc:
-                  "Last Message: ${timeago.format(DateTime.parse(channelsData[item['_id']]))}",
-              currentUser: widget.currentUser), //item id
-        ),
-      );
+            itemBuilder: (context, item, index) => ListWidget(
+                userId: title[index],
+                index: index,
+                channel: channel[index],
+                desc:
+                    "Last Message: ${timeago.format(DateTime.parse(channelsData[item['_id']]))}",
+                currentUser: widget.currentUser), //item id
+          ),
+        )
+      : const SizedBox.shrink();
 
   @override
   void dispose() {
     try {
       // Disposes of the PagingController to free up resources
-      _pagingController.dispose();
+      _pagingController?.dispose();
       subscription.cancel(); // Stop listening to new messages
       if (getIt<WebSocketConnection>().socket.connected) {
         getIt<WebSocketConnection>()

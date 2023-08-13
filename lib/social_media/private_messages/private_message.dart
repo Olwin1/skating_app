@@ -26,12 +26,14 @@ class PrivateMessage extends StatefulWidget {
       required this.index,
       this.channel,
       this.user,
-      required this.currentUser})
+      required this.currentUser,
+      this.callback})
       : super(key: key);
   final int index;
   final String? channel;
   final Map<String, dynamic>? user;
   final String currentUser;
+  final Function? callback;
 
   // Create and return a state for the widget
   @override
@@ -378,6 +380,9 @@ class _PrivateMessage extends State<PrivateMessage> {
             await postMessage(
                     channelId!, message.text, null, widget.user?["fcm_token"])
                 .then((value) => {sending = false});
+          }
+          if (widget.callback != null) {
+            widget.callback!();
           }
           commonLogger.d(channel);
         }

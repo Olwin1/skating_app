@@ -6,7 +6,9 @@ import 'package:patinka/social_media/private_messages/suggestion_widget.dart';
 import '../../components/list_error.dart';
 
 class NewChannelPage extends StatefulWidget {
-  const NewChannelPage({super.key});
+  const NewChannelPage({super.key, required this.callback});
+
+  final Function callback;
 
   @override
   State<NewChannelPage> createState() => _NewChannelPageState();
@@ -31,13 +33,16 @@ class _NewChannelPageState extends State<NewChannelPage> {
           ),
           padding:
               const EdgeInsets.all(0), // Add padding so doesn't touch edges
-          child: const NewChannelListView()),
+          child: NewChannelListView(
+            callback: widget.callback,
+          )),
     );
   }
 }
 
 class NewChannelListView extends StatefulWidget {
-  const NewChannelListView({super.key});
+  const NewChannelListView({super.key, required this.callback});
+  final Function callback;
 
   @override
   State<NewChannelListView> createState() => _NewChannelListViewState();
@@ -90,7 +95,10 @@ class _NewChannelListViewState extends State<NewChannelListView> {
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<String>(
           // Use the Comment widget to build each item in the list view
-          itemBuilder: (context, item, index) => SuggestionListWidget(id: item),
+          itemBuilder: (context, item, index) => SuggestionListWidget(
+                id: item,
+                callback: widget.callback,
+              ),
           noItemsFoundIndicatorBuilder: (context) =>
               const ListError(title: "No suggested messages", body: "")),
     );

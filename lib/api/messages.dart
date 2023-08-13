@@ -65,7 +65,7 @@ Future<Object> postMessage(String channel, String content, String? img,
       },
     );
 
-    return ResponseHandler.handleListResponse(response);
+    return ResponseHandler.handleResponse(response);
   } catch (e) {
     // If there is any error, throw an exception with the error message
     throw Exception("Error during post: $e");

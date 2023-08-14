@@ -10,10 +10,10 @@ import 'package:patinka/api/websocket.dart';
 import 'package:patinka/api/token.dart';
 import 'package:patinka/social_media/login.dart';
 import 'api/config.dart';
+import 'api/social.dart';
 import 'common_logger.dart';
 import 'firebase_options.dart';
 import 'local_notification.dart';
-import 'objects/user.dart';
 import 'swatch.dart';
 import 'tab_navigator.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
@@ -166,14 +166,16 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     storage.getId().then((value) => {
           value != null
-              ? getUserCache(value).then((user) => {
+              ? getUser(value).then((user) => {
                     mounted
                         ? setState(() {
                             avatar = user["avatar"];
                           })
                         : null
                   })
-              : null
+              : setState(() {
+                  avatar = "default";
+                })
         });
     super.initState();
   }
@@ -212,25 +214,32 @@ class _MyHomePageState extends State<MyHomePage> {
                   backgroundColor: swatch[900],
                 ))
             // If there is cached user information and an avatar image, use the cached image
-            : CachedNetworkImage(
-                imageUrl: '${Config.uri}/image/thumbnail/$avatar',
-                placeholder: (context, url) => Shimmer.fromColors(
-                    baseColor: shimmer["base"]!,
-                    highlightColor: shimmer["highlight"]!,
-                    child: CircleAvatar(
-                      // Create a circular avatar icon
-                      radius: 36, // Set radius to 36
-                      backgroundColor: swatch[900],
-                    )),
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape
-                        .circle, // Set the shape of the container to a circle
-                    image:
-                        DecorationImage(image: imageProvider, fit: BoxFit.fill),
+            : avatar != "default"
+                ? CachedNetworkImage(
+                    imageUrl: '${Config.uri}/image/thumbnail/$avatar',
+                    placeholder: (context, url) => Shimmer.fromColors(
+                        baseColor: shimmer["base"]!,
+                        highlightColor: shimmer["highlight"]!,
+                        child: CircleAvatar(
+                          // Create a circular avatar icon
+                          radius: 36, // Set radius to 36
+                          backgroundColor: swatch[900],
+                        )),
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape
+                            .circle, // Set the shape of the container to a circle
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.fill),
+                      ),
+                    ),
+                  )
+                : CircleAvatar(
+                    foregroundImage: const AssetImage("assets/icons/hand.png"),
+                    // Create a circular avatar icon
+                    radius: 36, // Set radius to 36
+                    backgroundColor: swatch[900],
                   ),
-                ),
-              ),
       ), // Create Profile Button Object
     ]);
   }

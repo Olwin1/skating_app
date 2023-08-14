@@ -7,7 +7,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/messages.dart';
 import 'package:patinka/api/social.dart';
 import 'package:patinka/common_logger.dart';
-import 'package:patinka/objects/user.dart';
 import 'package:patinka/profile/edit_profile.dart';
 import 'package:patinka/profile/follow_button.dart';
 import 'package:patinka/profile/friend_icon_button.dart';
@@ -103,10 +102,17 @@ class _Profile extends State<Profile> {
   }
 
   Map<String, dynamic>? user;
+  String? avatar;
   @override
   void initState() {
-    getUserCache(widget.userId).then((value) => {
-          if (mounted) {mounted ? setState(() => user = value) : null}
+    getUser(widget.userId).then((value) => {
+          if (mounted)
+            {
+              setState(() {
+                user = value;
+                avatar = value["avatar"];
+              })
+            }
         });
     super.initState();
   }
@@ -163,7 +169,7 @@ class _Profile extends State<Profile> {
               // Circle avatar
               Padding(
                 padding: const EdgeInsets.all(8), // Add padding
-                child: user?["avatar"] == null
+                child: avatar == null
                     ? Shimmer.fromColors(
                         baseColor: shimmer["base"]!,
                         highlightColor: shimmer["highlight"]!,
@@ -175,28 +181,36 @@ class _Profile extends State<Profile> {
                               radius: 36, // Set radius to 36
                               backgroundColor: swatch[900],
                             )))
-                    : CachedNetworkImage(
-                        placeholder: (context, url) => Shimmer.fromColors(
-                            baseColor: shimmer["base"]!,
-                            highlightColor: shimmer["highlight"]!,
-                            child: CircleAvatar(
-                              // Create a circular avatar icon
-                              radius: 36, // Set radius to 36
-                              backgroundColor: swatch[900],
-                            )),
-                        imageUrl: '${Config.uri}/image/${user!["avatar"]}',
-                        imageBuilder: (context, imageProvider) => Container(
-                          height: 72,
-                          width: 72,
-                          decoration: BoxDecoration(
-                            shape: BoxShape
-                                .circle, // Set the shape of the container to a circle
-                            image: DecorationImage(
-                                image: imageProvider, fit: BoxFit.cover),
+                    : avatar != "default"
+                        ? CachedNetworkImage(
+                            placeholder: (context, url) => Shimmer.fromColors(
+                                baseColor: shimmer["base"]!,
+                                highlightColor: shimmer["highlight"]!,
+                                child: CircleAvatar(
+                                  // Create a circular avatar icon
+                                  radius: 36, // Set radius to 36
+                                  backgroundColor: swatch[900],
+                                )),
+                            imageUrl: '${Config.uri}/image/${user!["avatar"]}',
+                            imageBuilder: (context, imageProvider) => Container(
+                              height: 72,
+                              width: 72,
+                              decoration: BoxDecoration(
+                                shape: BoxShape
+                                    .circle, // Set the shape of the container to a circle
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
+                              ),
+                            ),
+                            httpHeaders: const {"thumbnail": "true"},
+                          )
+                        : CircleAvatar(
+                            foregroundImage:
+                                const AssetImage("assets/icons/hand.png"),
+                            // Create a circular avatar icon
+                            radius: 36, // Set radius to 36
+                            backgroundColor: swatch[900],
                           ),
-                        ),
-                        httpHeaders: const {"thumbnail": "true"},
-                      ),
               ),
               // Column to display the number of friends
 

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
-import 'package:patinka/objects/user.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../api/config.dart';
+import '../../api/social.dart';
 import '../../swatch.dart';
 
 class Comment extends StatefulWidget {
@@ -27,11 +27,15 @@ class Comment extends StatefulWidget {
 
 class _Comment extends State<Comment> {
   Map<String, dynamic>? user;
+  String? avatar;
   @override
   void initState() {
-    getUserCache(widget.comment["sender"]).then((value) => mounted
+    getUser(widget.comment["sender"]).then((value) => mounted
         ? setState(
-            () => user = value,
+            () {
+              user = value;
+              avatar = value["avatar"];
+            },
           )
         : null);
     super.initState();
@@ -60,7 +64,7 @@ class _Comment extends State<Comment> {
                   // Only give right of avatar padding
                   right: 8,
                 ),
-                child: user == null || user!["avatar"] == null
+                child: user == null || avatar == null
                     // If there is no cached user information or avatar image, use a default image
                     ? Shimmer.fromColors(
                         baseColor: shimmer["base"]!,
@@ -71,27 +75,36 @@ class _Comment extends State<Comment> {
                           backgroundColor: swatch[900],
                         ))
                     // If there is cached user information and an avatar image, use the cached image
-                    : CachedNetworkImage(
-                        imageUrl:
-                            '${Config.uri}/image/thumbnail/${user!["avatar"]}',
-                        placeholder: (context, url) => Shimmer.fromColors(
-                            baseColor: shimmer["base"]!,
-                            highlightColor: shimmer["highlight"]!,
-                            child: CircleAvatar(
-                              // Create a circular avatar icon
-                              radius: 25, // Set radius to 36
-                              backgroundColor: swatch[900],
-                            )),
-                        imageBuilder: (context, imageProvider) => Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                shape: BoxShape
-                                    .circle, // Set the shape of the container to a circle
-                                image: DecorationImage(
-                                    image: imageProvider, fit: BoxFit.cover),
-                              ),
-                            ))),
+                    : avatar != "default"
+                        ? CachedNetworkImage(
+                            imageUrl:
+                                '${Config.uri}/image/thumbnail/${user!["avatar"]}',
+                            placeholder: (context, url) => Shimmer.fromColors(
+                                baseColor: shimmer["base"]!,
+                                highlightColor: shimmer["highlight"]!,
+                                child: CircleAvatar(
+                                  // Create a circular avatar icon
+                                  radius: 25, // Set radius to 36
+                                  backgroundColor: swatch[900],
+                                )),
+                            imageBuilder: (context, imageProvider) => Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape
+                                        .circle, // Set the shape of the container to a circle
+                                    image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover),
+                                  ),
+                                ))
+                        : CircleAvatar(
+                            foregroundImage:
+                                const AssetImage("assets/icons/hand.png"),
+                            // Create a circular avatar icon
+                            radius: 25, // Set radius to 36
+                            backgroundColor: swatch[900],
+                          )),
             Expanded(
                 // Expanded Widget Wrapper
                 flex: 2,

@@ -163,21 +163,30 @@ class _EditProfile extends State<EditProfile> {
                                 radius: 36, // Set radius to 36
                                 backgroundColor: swatch[900],
                               ))
-                          : CachedNetworkImage(
-                              imageUrl:
-                                  '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                height: 72,
-                                width: 72,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape
-                                      .circle, // Set the shape of the container to a circle
-                                  image: DecorationImage(
-                                      image: imageProvider, fit: BoxFit.cover),
+                          : widget.user?["avatar"] != "default"
+                              ? CachedNetworkImage(
+                                  imageUrl:
+                                      '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    height: 72,
+                                    width: 72,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape
+                                          .circle, // Set the shape of the container to a circle
+                                      image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover),
+                                    ),
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  foregroundImage:
+                                      const AssetImage("assets/icons/hand.png"),
+                                  // Create a circular avatar icon
+                                  radius: 36, // Set radius to 36
+                                  backgroundColor: swatch[900],
                                 ),
-                              ),
-                            ),
                       // Display the edit picture button
                       TextButton(
                           onPressed: () =>

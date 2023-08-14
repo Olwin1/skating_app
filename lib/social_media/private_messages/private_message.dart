@@ -235,27 +235,35 @@ class _PrivateMessage extends State<PrivateMessage> {
                         ))
                     // If there is cached user information and an avatar image, use the cached image
                     : //Flexible(
-                    CachedNetworkImage(
-                        height: 40,
-                        width: 40,
-                        imageUrl:
-                            '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',
-                        placeholder: (context, url) => Shimmer.fromColors(
-                            baseColor: shimmer["base"]!,
-                            highlightColor: shimmer["highlight"]!,
-                            child: CircleAvatar(
-                              // Create a circular avatar icon
-                              radius: 20, // Set radius to 36
-                              backgroundColor: swatch[900],
-                            )),
-                        imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape
-                                    .circle, // Set the shape of the container to a circle
-                                image: DecorationImage(
-                                    image: imageProvider, fit: BoxFit.fill),
-                              ),
-                            )),
+                    widget.user!["avatar"] != "default"
+                        ? CachedNetworkImage(
+                            height: 40,
+                            width: 40,
+                            imageUrl:
+                                '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',
+                            placeholder: (context, url) => Shimmer.fromColors(
+                                baseColor: shimmer["base"]!,
+                                highlightColor: shimmer["highlight"]!,
+                                child: CircleAvatar(
+                                  // Create a circular avatar icon
+                                  radius: 20, // Set radius to 36
+                                  backgroundColor: swatch[900],
+                                )),
+                            imageBuilder: (context, imageProvider) => Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape
+                                        .circle, // Set the shape of the container to a circle
+                                    image: DecorationImage(
+                                        image: imageProvider, fit: BoxFit.fill),
+                                  ),
+                                ))
+                        : CircleAvatar(
+                            foregroundImage:
+                                const AssetImage("assets/icons/hand.png"),
+                            // Create a circular avatar icon
+                            radius: 20, // Set radius to 36
+                            backgroundColor: swatch[900],
+                          ),
                 //),
                 //Flexible(
                 //flex: 6,

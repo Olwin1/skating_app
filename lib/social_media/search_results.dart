@@ -172,13 +172,13 @@ class Results extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     results[index]["avatar"] == null
-                        ? Shimmer.fromColors(
-                            baseColor: shimmer["base"]!,
-                            highlightColor: shimmer["highlight"]!,
-                            child: CircleAvatar(
-                              radius: 36,
-                              backgroundColor: swatch[900],
-                            ))
+                        ? CircleAvatar(
+                            foregroundImage:
+                                const AssetImage("assets/icons/hand.png"),
+                            // Create a circular avatar icon
+                            radius: 36, // Set radius to 36
+                            backgroundColor: swatch[900],
+                          )
                         : Flexible(
                             child: CachedNetworkImage(
                                 imageUrl:

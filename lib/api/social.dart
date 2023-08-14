@@ -379,36 +379,39 @@ Future<Map<String, dynamic>> getUser(String id) async {
   var url = Uri.parse(
       '${Config.uri}/user/'); // Creating a variable 'url' and assigning it the value of the URI of the specified string
 
-  // try {
-  // Using a try-catch block to handle errors
-  String? localData = await NetworkManager.instance
-      .getLocalData(name: id, type: CacheTypes.user);
+  try {
+    // Using a try-catch block to handle errors
+    String? localData = await NetworkManager.instance
+        .getLocalData(name: id, type: CacheTypes.user);
 
-  if (localData != null) {
-    Map<String, dynamic> cachedUser = TypeCasts.stringToJson(localData);
-    return cachedUser;
+    if (localData != null) {
+      Map<String, dynamic> cachedUser = TypeCasts.stringToJson(localData);
+      return cachedUser;
+    }
+    var response = await http.get(
+      // Creating a variable 'response' and making a post request to the specified URL
+      url,
+      headers: {
+        'Content-Type':
+            'application/x-www-form-urlencoded', // Specifying the headers for the request
+        'Authorization':
+            'Bearer ${await storage.getToken()}', // Including the authorization token
+        'id': id,
+      },
+    );
+    Map<String, dynamic> data = ResponseHandler.handleResponse(response);
+    if (data["avatar"] == null) {
+      data["avatar"] = "default";
+    }
+    await NetworkManager.instance
+        .saveData(name: id, type: CacheTypes.user, data: data);
+
+    return data;
+  } catch (e) {
+    // Handling the error
+    throw Exception(
+        "Error during post: $e"); // Throwing an exception with an error message
   }
-  var response = await http.get(
-    // Creating a variable 'response' and making a post request to the specified URL
-    url,
-    headers: {
-      'Content-Type':
-          'application/x-www-form-urlencoded', // Specifying the headers for the request
-      'Authorization':
-          'Bearer ${await storage.getToken()}', // Including the authorization token
-      'id': id,
-    },
-  );
-  Map<String, dynamic> data = ResponseHandler.handleResponse(response);
-  await NetworkManager.instance
-      .saveData(name: id, type: CacheTypes.user, data: data);
-
-  return data;
-  // } catch (e) {
-  //   // Handling the error
-  //   throw Exception(
-  //       "Error during post: $e"); // Throwing an exception with an error message
-  // }
 }
 
 Future<List<Map<String, dynamic>>> getUserPosts(String userId, int page) async {

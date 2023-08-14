@@ -3,7 +3,6 @@ import 'package:like_button/like_button.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/social.dart';
 import 'package:patinka/common_logger.dart';
-import 'package:patinka/objects/user.dart';
 import 'package:patinka/profile/profile_page.dart';
 import 'package:patinka/swatch.dart';
 import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
@@ -303,7 +302,7 @@ class Avatar extends StatefulWidget {
 class _Avatar extends State<Avatar> {
   @override
   void initState() {
-    getUserCache(widget.user).then((userCache) => {
+    getUser(widget.user).then((userCache) => {
           if (mounted)
             {
               setState(() =>
@@ -342,24 +341,31 @@ class _Avatar extends State<Avatar> {
                   backgroundColor: swatch[900],
                 ))
             // If there is cached user information and an avatar image, use the cached image
-            : CachedNetworkImage(
-                imageUrl: '${Config.uri}/image/thumbnail/$image',
-                placeholder: (context, url) => Shimmer.fromColors(
-                    baseColor: shimmer["base"]!,
-                    highlightColor: shimmer["highlight"]!,
-                    child: CircleAvatar(
-                      // Create a circular avatar icon
-                      radius: 36, // Set radius to 36
-                      backgroundColor: swatch[900],
-                    )),
-                imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape
-                            .circle, // Set the shape of the container to a circle
-                        image: DecorationImage(
-                            image: imageProvider, fit: BoxFit.cover),
-                      ),
-                    )));
+            : image != "default"
+                ? CachedNetworkImage(
+                    imageUrl: '${Config.uri}/image/thumbnail/$image',
+                    placeholder: (context, url) => Shimmer.fromColors(
+                        baseColor: shimmer["base"]!,
+                        highlightColor: shimmer["highlight"]!,
+                        child: CircleAvatar(
+                          // Create a circular avatar icon
+                          radius: 36, // Set radius to 36
+                          backgroundColor: swatch[900],
+                        )),
+                    imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape
+                                .circle, // Set the shape of the container to a circle
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
+                          ),
+                        ))
+                : CircleAvatar(
+                    foregroundImage: const AssetImage("assets/icons/hand.png"),
+                    // Create a circular avatar icon
+                    radius: 36, // Set radius to 36
+                    backgroundColor: swatch[900],
+                  ));
   }
 }
 
@@ -378,7 +384,7 @@ class _CaptionWrapper extends State<CaptionWrapper> {
   String? username;
   @override
   void initState() {
-    getUserCache(widget.post["author"]).then((user) => mounted
+    getUser(widget.post["author"]).then((user) => mounted
         ? setState(
             () => username = user["username"],
           )

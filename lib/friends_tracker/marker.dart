@@ -85,7 +85,7 @@ class _CustomMarker extends State<CustomMarker> {
                     width: 32,
                     height: 32,
                     child: ClipOval(
-                      child: Image.asset("assets/placeholders/default.png"),
+                      child: Image.asset("assets/icons/hand.png"),
                     ),
                   ))
         ],
@@ -94,7 +94,7 @@ class _CustomMarker extends State<CustomMarker> {
     // If there are no images in sessionData, show the user's avatar as a larger circular image, if available
     return widget.userData["avatar"] != null
         ? CachedNetworkImage(
-            imageUrl: '${Config.uri}/image/widget.sessionData["images"][0]',
+            imageUrl: '${Config.uri}/image/${widget.sessionData["images"][0]}',
             imageBuilder: (context, imageProvider) => Container(
               width: 64.0,
               height: 64.0,

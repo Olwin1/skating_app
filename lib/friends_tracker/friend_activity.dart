@@ -4,7 +4,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/config.dart';
 import 'package:patinka/common_logger.dart';
 
-import '../objects/user.dart';
+import '../api/social.dart';
 import '../swatch.dart';
 
 class FriendActivity extends StatefulWidget {
@@ -53,13 +53,18 @@ class FriendActivityProfile extends StatefulWidget {
 class _FriendActivityProfile extends State<FriendActivityProfile> {
   // Define a variable to hold the user cache
   Map<String, dynamic>? userCache;
+  String? avatar;
 
   @override
   void initState() {
     super.initState();
-    // Call the getUserCache function to retrieve user information and update the state
-    getUserCache(widget.session["author"])
-        .then((value) => mounted ? setState(() => userCache = value) : null);
+    // Call the getUser function to retrieve user information and update the state
+    getUser(widget.session["author"]).then((value) => mounted
+        ? setState(() {
+            userCache = value;
+            avatar = value["avatar"];
+          })
+        : null);
   }
 
   @override // Override the existing build method to create the user profile
@@ -69,7 +74,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
       TextButton(
         onPressed: () => commonLogger.d(
             "Pressed user icon"), // When the button is pressed, print a message
-        child: userCache == null || userCache!["avatar"] == null
+        child: userCache == null || avatar == null
             // If there is no cached user information or avatar image, use a default image
             ? Shimmer.fromColors(
                 baseColor: shimmer["base"]!,
@@ -80,17 +85,24 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
                   backgroundColor: swatch[900],
                 ))
             // If there is cached user information and an avatar image, use the cached image
-            : CachedNetworkImage(
-                imageUrl: '${Config.uri}/image/${userCache!["avatar"]}',
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape
-                        .circle, // Set the shape of the container to a circle
-                    image: DecorationImage(
-                        image: imageProvider, fit: BoxFit.cover),
+            : avatar != "default"
+                ? CachedNetworkImage(
+                    imageUrl: '${Config.uri}/image/${userCache!["avatar"]}',
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape
+                            .circle, // Set the shape of the container to a circle
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover),
+                      ),
+                    ),
+                  )
+                : CircleAvatar(
+                    foregroundImage: const AssetImage("assets/icons/hand.png"),
+                    // Create a circular avatar icon
+                    radius: 32, // Set radius to 36
+                    backgroundColor: swatch[900],
                   ),
-                ),
-              ),
       ),
       // Display the username of the user whose information is cached
       Text(userCache != null ? userCache!["username"] : "Username")

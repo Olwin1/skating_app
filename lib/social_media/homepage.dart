@@ -7,12 +7,11 @@ import 'package:patinka/social_media/private_messages/private_message_list.dart'
 import 'package:patinka/social_media/search_bar.dart';
 import '../api/fcm_token.dart';
 import '../api/messages.dart';
+import '../api/social.dart';
 import '../components/list_error.dart';
-import '../objects/user.dart';
 import '../swatch.dart';
 import 'post_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import '../api/social.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatelessWidget {
@@ -131,7 +130,7 @@ class _PostsListViewState extends State<PostsListView> {
   void initState() {
     getUserId().then((userId) {
       if (userId != null) {
-        getUserCache(userId).then((user) {
+        getUser(userId).then((user) {
           // if (user["fcm_tokens"] == null) {
           FirebaseMessaging.instance.getToken().then(
               (fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);

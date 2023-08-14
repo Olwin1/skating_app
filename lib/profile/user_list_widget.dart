@@ -4,9 +4,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/profile/profile_page.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
-import 'package:patinka/objects/user.dart';
 
 import '../api/config.dart';
+import '../api/social.dart';
 import '../swatch.dart';
 
 // UserListWidget class creates a stateful widget that displays a list of users
@@ -34,13 +34,16 @@ class _UserListWidget extends State<UserListWidget> {
                 )));
   }
 
+  String? avatar;
+
   // Builds the widget
   @override
   Widget build(BuildContext context) {
     if (user == null) {
-      getUserCache(widget.id).then((value) => mounted
+      getUser(widget.id).then((value) => mounted
           ? setState(() {
               user = value;
+              avatar = value["avatar"];
             })
           : null);
     }
@@ -60,7 +63,7 @@ class _UserListWidget extends State<UserListWidget> {
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                  child: user?["avatar"] == null
+                  child: avatar == null
                       ? Shimmer.fromColors(
                           baseColor: shimmer["base"]!,
                           highlightColor: shimmer["highlight"]!,
@@ -69,20 +72,29 @@ class _UserListWidget extends State<UserListWidget> {
                             radius: 26, // Set radius to 36
                             backgroundColor: swatch[900],
                           ))
-                      : CachedNetworkImage(
-                          imageUrl:
-                              '${Config.uri}/image/thumbnail/${user!["avatar"]}',
-                          imageBuilder: (context, imageProvider) => Container(
-                            height: 52,
-                            width: 52,
-                            decoration: BoxDecoration(
-                              shape: BoxShape
-                                  .circle, // Set the shape of the container to a circle
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover),
+                      : avatar != "default"
+                          ? CachedNetworkImage(
+                              imageUrl:
+                                  '${Config.uri}/image/thumbnail/${user!["avatar"]}',
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                height: 52,
+                                width: 52,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape
+                                      .circle, // Set the shape of the container to a circle
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover),
+                                ),
+                              ),
+                            )
+                          : CircleAvatar(
+                              foregroundImage:
+                                  const AssetImage("assets/icons/hand.png"),
+                              // Create a circular avatar icon
+                              radius: 26, // Set radius to 36
+                              backgroundColor: swatch[900],
                             ),
-                          ),
-                        ),
                 ),
                 // Text widget with the text "username"
                 Text(

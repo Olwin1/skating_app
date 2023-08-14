@@ -6,7 +6,6 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/friends_tracker/friend_activity.dart';
 import 'package:patinka/friends_tracker/marker.dart';
-import 'package:patinka/objects/user.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 //import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:patinka/api/session.dart';
 //import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import '../api/social.dart';
 import '../current_tab.dart';
 //import '../swatch.dart';
 
@@ -75,8 +75,8 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
           // Get the list of sessions for each friend
           for (var session in values) // Loop through the sessions
             {
-              userCache = await getUserCache(
-                  session["author"]), // Get the user information
+              userCache =
+                  await getUser(session["author"]), // Get the user information
               newFriends.add(
                 // Add the marker for the friend's location to the temporary list
                 Marker(

@@ -1,5 +1,6 @@
 // Import the FlutterSecureStorage package
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:patinka/caching/manager.dart';
 import 'package:patinka/common_logger.dart';
 
 // Create a class named SecureStorage
@@ -42,5 +43,6 @@ class SecureStorage {
     commonLogger.d("Deleting local storage");
     // Use the FlutterSecureStorage instance to write the token to storage with the _keyToken key
     await storage.deleteAll();
+    NetworkManager.instance.deleteAllLocalData();
   }
 }

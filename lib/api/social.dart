@@ -58,7 +58,11 @@ Future<Map<String, dynamic>> postPost(String description, String image) async {
       headers: await Config.getDefaultHeadersAuth,
       body: {'description': description, 'image': image},
     );
-
+    String? id = await storage.getId();
+    if (id != null) {
+      NetworkManager.instance
+          .deleteLocalData(name: "user-posts-$id", type: CacheTypes.list);
+    }
     // If the response is successful, extract the token from the response body and return it
     return ResponseHandler.handleResponse(response);
   } catch (e) {
@@ -142,6 +146,11 @@ Future<Map<String, dynamic>> delPost(String post) async {
       headers: await Config.getDefaultHeadersAuth,
       body: {'post': post},
     );
+    String? id = await storage.getId();
+    if (id != null) {
+      await NetworkManager.instance
+          .deleteLocalData(name: "user-posts-$id", type: CacheTypes.list);
+    }
 
     // If the response status code is 200 OK, parse and return the response body as a Map
     return ResponseHandler.handleResponse(response);
@@ -276,7 +285,6 @@ Future<Map<String, dynamic>> delComment(String comment) async {
     var response = await http.delete(url,
         headers: await Config.getDefaultHeadersAuth,
         body: {'comment': comment});
-
     return ResponseHandler.handleResponse(response);
   } catch (e) {
     // Catch any exceptions that occur during the post and throw a new exception with the error message.

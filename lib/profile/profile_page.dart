@@ -345,8 +345,8 @@ class _OptionsMenuState extends State<OptionsMenu> {
 }
 
 // Creates a grid tile widget from an image URL
-Widget _createGridTileWidget(
-    Map<String, dynamic> post, dynamic imageViewerController) {
+Widget _createGridTileWidget(Map<String, dynamic> post,
+    dynamic imageViewerController, Function refreshPage) {
   return Builder(builder: (context) {
     void popNavigator() {
       Navigator.of(context).pop();
@@ -370,6 +370,7 @@ Widget _createGridTileWidget(
                         TextButton(
                           onPressed: () async {
                             await delPost(post["_id"]);
+                            refreshPage();
                             popNavigator();
                           },
                           child: Text(
@@ -472,6 +473,10 @@ class _UserPostsListState extends State<UserPostsList> {
     super.initState();
   }
 
+  void refreshPage() {
+    _pagingController.refresh();
+  }
+
   Future<void> _fetchPage(int pageKey) async {
     try {
       // Fetch the next page of posts from the user's account
@@ -515,8 +520,8 @@ class _UserPostsListState extends State<UserPostsList> {
               noItemsFoundIndicatorBuilder: (context) => ListError(
                   title: AppLocalizations.of(context)!.noPostsFound, body: ""),
               // Specify how to build each grid tile
-              itemBuilder: (context, item, index) =>
-                  _createGridTileWidget(item, widget.imageViewerController),
+              itemBuilder: (context, item, index) => _createGridTileWidget(
+                  item, widget.imageViewerController, refreshPage),
             ),
           )
         : const SizedBox.shrink();

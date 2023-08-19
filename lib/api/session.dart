@@ -1,16 +1,17 @@
+// Import necessary packages and files
 import 'package:patinka/api/response_handler.dart';
+import 'package:http/http.dart' as http;
+import 'config.dart';
+import 'dart:convert';
 
-import 'package:http/http.dart'
-    as http; // Importing the 'http' package from the 'http' file
-import 'config.dart'; // Importing the 'config.dart' file
-import 'dart:convert'; // Importing the 'dart:convert' package
-
+// Define a class for handling Session API operations
 class SessionAPI {
+  // Define URLs for creating and retrieving sessions
   static final Uri _sessionUrl = Uri.parse('${Config.uri}/session/session');
   static final Uri _sessionsUrl = Uri.parse('${Config.uri}/session/sessions');
 
+  // Method to create a new session
   static Future<Map<String, dynamic>> createSession(
-    // Creating a function 'createSession' with the specified parameters
     String name,
     String description,
     List<String> images,
@@ -22,16 +23,12 @@ class SessionAPI {
     double latitude,
     double longitude,
   ) async {
-    // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
-
     try {
-      // Using a try-catch block to handle errors
+      // Make a POST request to create a session
       var response = await http.post(
-        // Creating a variable 'response' and making a post request to the specified URL
         _sessionUrl,
         headers: await Config.getDefaultHeadersAuth,
         body: {
-          // Specifying the body of the request
           'name': name,
           'description': description,
           'images': jsonEncode(images),
@@ -45,29 +42,27 @@ class SessionAPI {
         },
       );
 
+      // Handle the response using a custom response handler
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
-      // Handling the error
-      throw Exception(
-          "Error during post: $e"); // Throwing an exception with an error message
+      // Throw an exception if an error occurs during the POST request
+      throw Exception("Error during post: $e");
     }
   }
 
-// This function returns a Future object that contains a List of Maps with String keys and dynamic values, representing session data.
-
+  // Method to get a list of sessions
   static Future<List<Map<String, dynamic>>> getSessions() async {
-    // Define the URL endpoint to request the session data from.
-
     try {
-      // Send an HTTP GET request to the defined URL and include headers for Content-Type and Authorization.
+      // Make a GET request to retrieve sessions
       var response = await http.get(_sessionsUrl, headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Bearer ${await storage.getToken()}',
       });
 
+      // Handle the response using a custom response handler
       return handleResponse(response, Resp.listResponse);
-      // If an exception occurs during the request, throw a more descriptive Exception object containing the error message.
     } catch (e) {
+      // Throw an exception if an error occurs during the GET request
       throw Exception("Error during post: $e");
     }
   }

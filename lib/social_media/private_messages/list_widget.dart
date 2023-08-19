@@ -31,7 +31,7 @@ class _ListWidget extends State<ListWidget> {
   String? avatar;
   @override
   void initState() {
-    getUser(widget.userId).then((value) => {
+    SocialAPI.getUser(widget.userId).then((value) => {
           mounted
               ? setState(
                   () {

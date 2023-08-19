@@ -146,7 +146,7 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
       // When "sendImage" completes successfully, call "postPost"
       // with the text from "descriptionController" and the returned value
       if (imageId != null) {
-        await setAvatar(imageId);
+        await SocialAPI.setAvatar(imageId);
         // Wait for "postPost" to complete successfully
         // When "postPost" completes successfully, close the current screen
         if (mounted) Phoenix.rebirth(context);

@@ -34,7 +34,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
 
   @override
   void initState() {
-    getUserId().then((value) => mounted
+    MessagesAPI.getUserId().then((value) => mounted
         ? setState(() => currentUser = value ?? const Uuid().v1())
         : null);
     super.initState();
@@ -215,7 +215,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
   Future<void> _fetchPage(int pageKey) async {
     try {
 // Loads the next page of channels
-      final page = await getChannels(
+      final page = await MessagesAPI.getChannels(
         pageKey,
       );
 // Create an empty list to hold new channel items

@@ -71,12 +71,12 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
     List<Marker> newFriends =
         []; // Temporary list for storing the markers of the friends' locations
     Map<String, dynamic> userCache; // Cache for storing user information
-    getSessions().then((values) async => {
+    SessionAPI.getSessions().then((values) async => {
           // Get the list of sessions for each friend
           for (var session in values) // Loop through the sessions
             {
-              userCache =
-                  await getUser(session["author"]), // Get the user information
+              userCache = await SocialAPI.getUser(
+                  session["author"]), // Get the user information
               newFriends.add(
                 // Add the marker for the friend's location to the temporary list
                 Marker(

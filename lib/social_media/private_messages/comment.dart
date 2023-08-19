@@ -30,7 +30,7 @@ class _Comment extends State<Comment> {
   String? avatar;
   @override
   void initState() {
-    getUser(widget.comment["sender"]).then((value) => mounted
+    SocialAPI.getUser(widget.comment["sender"]).then((value) => mounted
         ? setState(
             () {
               user = value;

@@ -40,7 +40,7 @@ class _UserListWidget extends State<UserListWidget> {
   @override
   Widget build(BuildContext context) {
     if (user == null) {
-      getUser(widget.id).then((value) => mounted
+      SocialAPI.getUser(widget.id).then((value) => mounted
           ? setState(() {
               user = value;
               avatar = value["avatar"];

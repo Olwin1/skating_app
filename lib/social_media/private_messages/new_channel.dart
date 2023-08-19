@@ -68,7 +68,7 @@ class _NewChannelListViewState extends State<NewChannelListView> {
   Future<void> _fetchPage(int pageKey) async {
     try {
       List<String> page;
-      page = await getSuggestions(pageKey);
+      page = await MessagesAPI.getSuggestions(pageKey);
       // Fetch the page of comments using the getComments() function
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;

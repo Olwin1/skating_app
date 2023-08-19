@@ -2,12 +2,9 @@
 import 'package:patinka/api/response_handler.dart';
 
 import '../common_logger.dart';
-import 'token.dart';
 
 import 'package:http/http.dart' as http;
 import 'config.dart';
-
-SecureStorage storage = SecureStorage();
 
 // Define a function to authenticate user credentials and return a token
 Future<Map<String, dynamic>?> updateToken(String fcmToken) async {

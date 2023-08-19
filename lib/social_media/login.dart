@@ -1,7 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_template/flutter_login_template.dart';
-import 'package:patinka/api/auth.dart' show login, signup; // signup;
+import 'package:patinka/api/auth.dart'; // signup;
 import 'package:patinka/api/social.dart';
 import 'package:patinka/api/token.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -128,7 +128,7 @@ class _Login extends State<Login> {
               await login(usernameController.text, passwordController.text);
           // If login is successful, save the user's token to local storage
           await storage.setToken(res);
-          getUser("0").then((value) => storage.setId(value["_id"]));
+          SocialAPI.getUser("0").then((value) => storage.setId(value["_id"]));
           // Load the home screen
           loadHome();
           commonLogger.d("Result: $res");

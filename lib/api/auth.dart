@@ -4,7 +4,7 @@ import 'config.dart';
 import 'dart:convert';
 
 // Export login and signup functions from auth.dart
-export 'package:patinka/api/auth.dart' show login, signup;
+export 'package:patinka/api/auth.dart';
 
 // Define a function to authenticate user credentials and return a token
 Future<String> login(String username, String password) async {

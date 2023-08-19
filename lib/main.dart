@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     storage.getId().then((value) => {
           value != null
-              ? getUser(value).then((user) => {
+              ? SocialAPI.getUser(value).then((user) => {
                     mounted
                         ? setState(() {
                             avatar = user["avatar"];

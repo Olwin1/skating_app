@@ -157,7 +157,7 @@ class _PrivateMessage extends State<PrivateMessage> {
     loading = true;
     List<types.Message> messages = [];
     if (channelId != null) {
-      final messagesRaw = await getMessages(_page, channelId!);
+      final messagesRaw = await MessagesAPI.getMessages(_page, channelId!);
       for (int i = 0; i < messagesRaw.length; i++) {
         dynamic message = messagesRaw[i];
         messages.add(types.TextMessage(
@@ -183,7 +183,7 @@ class _PrivateMessage extends State<PrivateMessage> {
     if (channelId != null) {
       commonLogger.v("Loading more messages");
       final nextPage = _page + 1;
-      final messagesRaw = await getMessages(nextPage, channelId!);
+      final messagesRaw = await MessagesAPI.getMessages(nextPage, channelId!);
       List<types.Message> messages = [];
       for (int i = 0; i < messagesRaw.length; i++) {
         dynamic message = messagesRaw[i];
@@ -377,15 +377,16 @@ class _PrivateMessage extends State<PrivateMessage> {
         );
         _addMessage(textMessage); // Run addMessage function
         if (channelId != null) {
-          await postMessage(
+          await MessagesAPI.postMessage(
                   channelId!, message.text, null, widget.user?["fcm_token"])
               .then((value) => {sending = false});
         } else {
           List<String> participants = [widget.currentUser];
-          Map<String, dynamic> channel = await postChannel(participants);
+          Map<String, dynamic> channel =
+              await MessagesAPI.postChannel(participants);
           channelId = channel["_id"];
           if (channelId != null) {
-            await postMessage(
+            await MessagesAPI.postMessage(
                     channelId!, message.text, null, widget.user?["fcm_token"])
                 .then((value) => {sending = false});
           }

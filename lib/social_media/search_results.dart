@@ -127,7 +127,7 @@ class _SearchResultsList extends State<SearchResultsList> {
     commonLogger.v("searching users ${widget.query}");
 
     // Call the searchUsers function with the query and handle the returned value
-    searchUsers(widget.query).then((value) => mounted
+    SocialAPI.searchUsers(widget.query).then((value) => mounted
         ? setState(
             () {
               commonLogger.d("eeeeeeeeeeeeeeeeeeeee $value");

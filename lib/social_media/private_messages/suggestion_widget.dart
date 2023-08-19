@@ -29,7 +29,7 @@ class SuggestionListWidget extends StatefulWidget {
 class _SuggestionListWidget extends State<SuggestionListWidget> {
   Map<String, dynamic>? user;
   void handlePress() async {
-    Map<String, dynamic> targetUser = await getUser(widget.id);
+    Map<String, dynamic> targetUser = await SocialAPI.getUser(widget.id);
     sendUser(targetUser);
   }
 
@@ -50,7 +50,7 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
   @override
   Widget build(BuildContext context) {
     if (user == null) {
-      getUser(widget.id).then((value) => mounted
+      SocialAPI.getUser(widget.id).then((value) => mounted
           ? setState(() {
               user = value;
             })

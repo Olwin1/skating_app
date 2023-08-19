@@ -128,9 +128,9 @@ class _PostsListViewState extends State<PostsListView> {
 
   @override
   void initState() {
-    getUserId().then((userId) {
+    MessagesAPI.getUserId().then((userId) {
       if (userId != null) {
-        getUser(userId).then((user) {
+        SocialAPI.getUser(userId).then((user) {
           // if (user["fcm_tokens"] == null) {
           FirebaseMessaging.instance.getToken().then(
               (fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
@@ -156,7 +156,7 @@ class _PostsListViewState extends State<PostsListView> {
     try {
       commonLogger.v("Fetching page");
       // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
-      final page = await getPosts(seenPosts);
+      final page = await SocialAPI.getPosts(seenPosts);
       // _pagingController.refresh();
 
       // Loops through each item in the page and adds its ID to the `seenPosts` list

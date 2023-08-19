@@ -1,12 +1,9 @@
 import 'dart:async';
 
-import 'package:patinka/api/token.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../common_logger.dart';
 import 'config.dart';
-
-SecureStorage storage = SecureStorage();
 
 // Creates a class for a WebSocketConnection
 class WebSocketConnection {

@@ -27,7 +27,7 @@ class _FollowButtonState extends State<FollowButton> {
     // Runs once when the widget is inserted into the widget tree
     if (widget.user != "0") {
       // Calls `doesFollow` function to check if the user is being followed
-      doesFollow(widget.user).then((value) => {
+      ConnectionsAPI.doesFollow(widget.user).then((value) => {
             // Logs the response from `doesFollow`
             commonLogger.v("User does follow: ${value.toString()}"),
             // If the user is already followed, update `type` to "following" or "requested"
@@ -49,7 +49,7 @@ class _FollowButtonState extends State<FollowButton> {
     if (widget.user != "0") {
       if (type == "follow") {
         // Calls `followUser` function to follow/unfollow the user
-        followUser(widget.user).then((value) => {
+        ConnectionsAPI.followUser(widget.user).then((value) => {
               // Logs the response from `followUser`
               commonLogger.v("Follow successful: $value"),
               // If follow request is successful, update `type` to "requested"
@@ -62,7 +62,7 @@ class _FollowButtonState extends State<FollowButton> {
                 }
             });
       } else {
-        unfollowUser(widget.user).then((value) => {
+        ConnectionsAPI.unfollowUser(widget.user).then((value) => {
               // Logs the response from `followUser`
               commonLogger.v("Unfollow success $value"),
               // If follow request is successful, update `type` to "requested"

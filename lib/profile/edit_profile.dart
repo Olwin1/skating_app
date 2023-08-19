@@ -66,7 +66,7 @@ class _EditProfile extends State<EditProfile> {
         );
       },
     );
-    await setDescription(aboutMeController.text);
+    await SocialAPI.setDescription(aboutMeController.text);
 
     // Pop the dialog
     if (mounted) {

@@ -69,7 +69,7 @@ class _Comments extends State<Comments> {
         sendButtonMethod: () {
           if (commentController.text.isNotEmpty) {
             // Call the postComment function with the current post and the comment text
-            postComment(widget.post, commentController.text);
+            SocialAPI.postComment(widget.post, commentController.text);
 
             // Clear the comment controller and update the UI with the new comment
             mounted
@@ -150,7 +150,7 @@ class _CommentsListViewState extends State<CommentsListView> {
     try {
       // Fetch the page of comments using the getComments() function
       final page = [
-        ...await getComments(
+        ...await SocialAPI.getComments(
           widget.post,
           pageKey,
         ),

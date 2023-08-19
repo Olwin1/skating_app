@@ -105,7 +105,7 @@ class _Profile extends State<Profile> {
   String? avatar;
   @override
   void initState() {
-    getUser(widget.userId).then((value) => {
+    SocialAPI.getUser(widget.userId).then((value) => {
           if (mounted)
             {
               setState(() {
@@ -369,7 +369,7 @@ Widget _createGridTileWidget(Map<String, dynamic> post,
                       child: Column(children: [
                         TextButton(
                           onPressed: () async {
-                            await delPost(post["_id"]);
+                            await SocialAPI.delPost(post["_id"]);
                             refreshPage();
                             popNavigator();
                           },
@@ -480,7 +480,7 @@ class _UserPostsListState extends State<UserPostsList> {
   Future<void> _fetchPage(int pageKey) async {
     try {
       // Fetch the next page of posts from the user's account
-      final page = await getUserPosts(widget.user?["_id"], pageKey);
+      final page = await SocialAPI.getUserPosts(widget.user?["_id"], pageKey);
 
       // Determine if this is the last page of posts
       final isLastPage = page.length < _pageSize;
@@ -547,7 +547,7 @@ class ConnectionLists extends StatelessWidget {
   Widget build(BuildContext context) {
     String? self = "";
     if (user != null) {
-      getUserId().then((value) => self = value);
+      MessagesAPI.getUserId().then((value) => self = value);
     }
     return Expanded(
         child: Container(

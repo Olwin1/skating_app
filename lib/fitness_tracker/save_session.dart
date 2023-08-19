@@ -63,7 +63,7 @@ class _SaveSession extends State<SaveSession> {
     void sendInfo() {
       try {
         // Call createSession function with necessary parameters
-        createSession(
+        SessionAPI.createSession(
             nameController.text, // Name of the session
             descriptionController.text, // Description of the session
             [], // Empty array of images

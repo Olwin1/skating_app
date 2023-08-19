@@ -2,40 +2,48 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:patinka/api/type_casts.dart';
+import 'package:http/http.dart' as http;
+
+enum Resp { stringResponse, listResponse, listStringResponse }
 
 class ResponseHandler {
   static Map<String, dynamic> handleResponse(Response response) {
-    if (response.statusCode == 200) {
-      // Checking if the response status code is 200
-      return TypeCasts.stringToJson(response.body);
-    } else {
-      // If the response status code is not 200
-      throw Exception(
-          "Request Unsuccessful: ${response.reasonPhrase}"); // Throwing an exception with an error message
-    }
+    return TypeCasts.stringToJson(response.body);
   }
 
   static List<Map<String, dynamic>> handleListResponse(Response response) {
-    if (response.statusCode == 200) {
-      // Checking if the response status code is 200
-      return TypeCasts.stringArrayToJsonArray(response.body);
-    } else {
-      // If the response status code is not 200
-      throw Exception(
-          "Request Unsuccessful: ${response.reasonPhrase}"); // Throwing an exception with an error message
-    }
+    return TypeCasts.stringArrayToJsonArray(response.body);
   }
 
   static List<String> handleListStringResponse(Response response) {
-    if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
-      return data.map((element) => element.toString()).toList();
+    List<dynamic> data = json.decode(response.body);
+    return data.map((element) => element.toString()).toList();
+  }
+}
 
-      // Decoding the response body and converting it into a List of Map objects
-    } else {
-      // If the HTTP response status code is not 200,
-      // then an exception is thrown with the response reason phrase.
-      throw Exception("Request Unsuccessful: ${response.reasonPhrase}");
+// Function to handle HTTP request errors
+void _handleError(dynamic error) {
+  throw Exception("Error during request: $error");
+}
+
+// Function to handle successful HTTP responses
+dynamic handleResponse(http.Response response, Resp resp) {
+  if (response.statusCode == 200) {
+    switch (resp) {
+      case Resp.stringResponse:
+        {
+          return ResponseHandler.handleResponse(response);
+        }
+      case Resp.listResponse:
+        {
+          return ResponseHandler.handleListResponse(response);
+        }
+      case Resp.listStringResponse:
+        {
+          return ResponseHandler.handleListStringResponse(response);
+        }
     }
+  } else {
+    _handleError("Received status code ${response.statusCode}");
   }
 }

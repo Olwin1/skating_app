@@ -6,16 +6,13 @@ import 'package:http/http.dart';
 import 'package:mime/mime.dart';
 
 import '../common_logger.dart';
-import 'token.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
 import 'package:http_parser/http_parser.dart';
 
 // Exporting functions from the messages.dart file
-export 'package:patinka/api/image.dart' show uploadFile;
+export 'package:patinka/api/image.dart';
 
-// Creating an instance of SecureStorage class
-SecureStorage storage = SecureStorage();
 Future<Uint8List> compressImage(Uint8List image) async {
   var result = await FlutterImageCompress.compressWithList(
     image,

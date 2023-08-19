@@ -37,7 +37,7 @@ class _PostWidget extends State<PostWidget> {
         try {
           waiting = true;
           // Call the unlikePost function with the post ID
-          unlikePost(widget.post["_id"]).then((value) => {
+          SocialAPI.unlikePost(widget.post["_id"]).then((value) => {
                 likedState!
                     ? mounted
                         ? setState(
@@ -58,7 +58,7 @@ class _PostWidget extends State<PostWidget> {
         try {
           waiting = true;
           // Call the likePost function with the post ID
-          likePost(widget.post["_id"]).then((value) => {
+          SocialAPI.likePost(widget.post["_id"]).then((value) => {
                 !likedState!
                     ? mounted
                         ? setState(
@@ -302,7 +302,7 @@ class Avatar extends StatefulWidget {
 class _Avatar extends State<Avatar> {
   @override
   void initState() {
-    getUser(widget.user).then((userCache) => {
+    SocialAPI.getUser(widget.user).then((userCache) => {
           if (mounted)
             {
               setState(() =>
@@ -384,7 +384,7 @@ class _CaptionWrapper extends State<CaptionWrapper> {
   String? username;
   @override
   void initState() {
-    getUser(widget.post["author"]).then((user) => mounted
+    SocialAPI.getUser(widget.post["author"]).then((user) => mounted
         ? setState(
             () => username = user["username"],
           )

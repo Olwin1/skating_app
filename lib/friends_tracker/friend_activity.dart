@@ -58,8 +58,8 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
   @override
   void initState() {
     super.initState();
-    // Call the getUser function to retrieve user information and update the state
-    getUser(widget.session["author"]).then((value) => mounted
+    // Call the SocialAPI.getUser function to retrieve user information and update the state
+    SocialAPI.getUser(widget.session["author"]).then((value) => mounted
         ? setState(() {
             userCache = value;
             avatar = value["avatar"];

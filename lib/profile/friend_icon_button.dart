@@ -24,22 +24,23 @@ class _FriendIconButtonState extends State<FriendIconButton> {
     if (!loading) {
       loading = true;
       if (friend == "maybeIncoming") {
-        friendUserRequest(widget.user!["_id"], true).then((value) => {
-              // Logs the response from `followUser`
-              commonLogger.v("Friend accept success $value"),
-              // If follow request is successful, update `type` to "requested"
-              mounted ? setState(() => friend = "yes") : null,
-              loading = false
-            });
+        ConnectionsAPI.friendUserRequest(widget.user!["_id"], true)
+            .then((value) => {
+                  // Logs the response from `followUser`
+                  commonLogger.v("Friend accept success $value"),
+                  // If follow request is successful, update `type` to "requested"
+                  mounted ? setState(() => friend = "yes") : null,
+                  loading = false
+                });
       } else if (friend != "no" && friend != "self") {
-        unfriendUser(widget.user!["_id"]).then((value) => {
+        ConnectionsAPI.unfriendUser(widget.user!["_id"]).then((value) => {
               // Logs the response from `followUser`
               commonLogger.v("Unfriend success $value"),
               // If follow request is successful, update `type` to "requested"
               mounted ? setState(() => friend = "no") : null, loading = false
             });
       } else if (friend != "self") {
-        friendUser(widget.user!["_id"]).then((value) => {
+        ConnectionsAPI.friendUser(widget.user!["_id"]).then((value) => {
               // Logs the response from `followUser`
               commonLogger.v("Friend success $value"),
               // If follow request is successful, update `type` to "requested"
@@ -97,13 +98,13 @@ class _FriendIconButtonState extends State<FriendIconButton> {
     if (!changed && widget.user != null) {
       if (widget.user != null) {
         commonLogger.w("USer is availd");
-        getUserId().then((value) {
+        MessagesAPI.getUserId().then((value) {
           if (value == widget.user!["_id"]) {
             setState(() {
               friend = "self";
             });
           } else {
-            doesFriend(widget.user!["_id"]).then((value) => {
+            ConnectionsAPI.doesFriend(widget.user!["_id"]).then((value) => {
                   commonLogger.i(value),
                   setState(
                     () => value[0]

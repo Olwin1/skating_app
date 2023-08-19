@@ -39,13 +39,13 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       commonLogger.d("Selecting ${widget.type}");
       if (widget.type == "followers") {
         commonLogger.d("followers selected");
-        page = await getUserFollowers(pageKey, widget.user);
+        page = await SocialAPI.getUserFollowers(pageKey, widget.user);
       } else if (widget.type == "following") {
         commonLogger.d("following selected");
-        page = await getUserFollowing(pageKey, widget.user);
+        page = await SocialAPI.getUserFollowing(pageKey, widget.user);
       } else if (widget.type == "friends") {
         commonLogger.d("friends selected");
-        page = await getUserFriends(pageKey, widget.user);
+        page = await SocialAPI.getUserFriends(pageKey, widget.user);
       } else {
         commonLogger.d("nothing selected");
         page = [];

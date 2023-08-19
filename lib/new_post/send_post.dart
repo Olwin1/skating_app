@@ -82,7 +82,7 @@ class _SendPost extends State<SendPost> {
         sendImage().then((value) => {
               // When "sendImage" completes successfully, call "postPost"
               // with the text from "descriptionController" and the returned value
-              postPost(descriptionController.text, value!)
+              SocialAPI.postPost(descriptionController.text, value!)
                   // Wait for "postPost" to complete successfully
                   .then((value) => {
                         // When "postPost" completes successfully, close the current screen

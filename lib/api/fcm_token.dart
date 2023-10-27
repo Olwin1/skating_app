@@ -19,6 +19,9 @@ Future<Map<String, dynamic>?> updateToken(String fcmToken) async {
       headers: await Config.getDefaultHeadersAuth,
       body: {'fcm_token': fcmToken},
     );
+    if (response.statusCode != 200) {
+      return null;
+    }
 
     return ResponseHandler.handleResponse(response);
   } catch (e) {

@@ -229,10 +229,10 @@ class _ChannelsListViewState extends State<ChannelsListView> {
         title.add(item['participants'][0]);
 
         // Extract the channel ID and add it to the 'channel' list
-        channel.add(item['_id']);
+        channel.add(item['channel_id']);
 
         // Add the channel ID to the 'newChannels' list
-        newChannels.add(item['_id']);
+        newChannels.add(item['channel_id']);
 
         // Add the channel ID and its creation date to the 'channelsData' map
         channelsData.addAll({item["_id"]: item["creation_date"]});
@@ -278,7 +278,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
                 index: index,
                 channel: channel[index],
                 desc:
-                    "Last Message: ${timeago.format(DateTime.parse(channelsData[item['_id']]))}",
+                    "Last Message: ${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
                 currentUser: widget.currentUser), //item id
           ),
         )

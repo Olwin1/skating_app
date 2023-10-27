@@ -37,7 +37,7 @@ class _PostWidget extends State<PostWidget> {
         try {
           waiting = true;
           // Call the unlikePost function with the post ID
-          SocialAPI.unlikePost(widget.post["_id"]).then((value) => {
+          SocialAPI.unlikePost(widget.post["post_id"]).then((value) => {
                 likedState!
                     ? mounted
                         ? setState(
@@ -58,7 +58,7 @@ class _PostWidget extends State<PostWidget> {
         try {
           waiting = true;
           // Call the likePost function with the post ID
-          SocialAPI.likePost(widget.post["_id"]).then((value) => {
+          SocialAPI.likePost(widget.post["post_id"]).then((value) => {
                 !likedState!
                     ? mounted
                         ? setState(
@@ -92,7 +92,7 @@ class _PostWidget extends State<PostWidget> {
     commonLogger.v("Building ${Config.uri}/image/${widget.post['image']}");
     String comments = (widget.post['comment_count'] ?? 0).toString();
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      widget.post["initial_influencer"]
+      false //widget.post["initial_influencer"]
           ? Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
@@ -237,8 +237,8 @@ class _PostWidget extends State<PostWidget> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       Comments(
-                                                          post: widget
-                                                              .post["_id"]))),
+                                                          post: widget.post[
+                                                              "post_id"]))),
                                   icon: Icon(
                                     Icons.comment,
                                     color: unselected,
@@ -277,7 +277,7 @@ class _PostWidget extends State<PostWidget> {
                         const Spacer(
                           flex: 1,
                         ),
-                        Flexible(child: Avatar(user: widget.post["author"])),
+                        Flexible(child: Avatar(user: widget.post["author_id"])),
                       ]),
                 ),
               ),
@@ -384,7 +384,7 @@ class _CaptionWrapper extends State<CaptionWrapper> {
   String? username;
   @override
   void initState() {
-    SocialAPI.getUser(widget.post["author"]).then((user) => mounted
+    SocialAPI.getUser(widget.post["author_id"]).then((user) => mounted
         ? setState(
             () => username = user["username"],
           )

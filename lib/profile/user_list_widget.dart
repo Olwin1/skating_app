@@ -30,7 +30,7 @@ class _UserListWidget extends State<UserListWidget> {
         context,
         MaterialPageRoute(
             builder: (context) => Profile(
-                  userId: user?["_id"],
+                  userId: user?["user_id"],
                 )));
   }
 

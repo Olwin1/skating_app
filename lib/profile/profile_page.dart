@@ -480,7 +480,8 @@ class _UserPostsListState extends State<UserPostsList> {
   Future<void> _fetchPage(int pageKey) async {
     try {
       // Fetch the next page of posts from the user's account
-      final page = await SocialAPI.getUserPosts(widget.user?["_id"], pageKey);
+      final page =
+          await SocialAPI.getUserPosts(widget.user?["user_id"], pageKey);
 
       // Determine if this is the last page of posts
       final isLastPage = page.length < _pageSize;
@@ -563,7 +564,7 @@ class ConnectionLists extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => FriendsList(
-                                user: user?["_id"] != self ? user : null,
+                                user: user?["user_id"] != self ? user : null,
                               ))),
                   child: Column(children: [
                     Text((user?["friends_count"] ?? 0).toString(),
@@ -581,7 +582,7 @@ class ConnectionLists extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => Lists(
                                 index: 0,
-                                user: user?["_id"] != self ? user : null,
+                                user: user?["user_id"] != self ? user : null,
                               ))),
                   child: Column(children: [
                     Text((user?["followers_count"] ?? 0).toString(),

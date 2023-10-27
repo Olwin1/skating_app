@@ -156,13 +156,13 @@ class _PostsListViewState extends State<PostsListView> {
     try {
       commonLogger.v("Fetching page");
       // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
-      final page = await SocialAPI.getPosts(seenPosts);
+      final page = await SocialAPI.getPosts(pageKey);
       // _pagingController.refresh();
 
       // Loops through each item in the page and adds its ID to the `seenPosts` list
       for (int i = 0; i < page.length; i++) {
         Map<String, dynamic> item = page[i];
-        seenPosts.add(item['_id']);
+        seenPosts.add(item['post_id']);
         commonLogger.d("Seen posts: $seenPosts");
       }
 
@@ -173,8 +173,9 @@ class _PostsListViewState extends State<PostsListView> {
         // If the page is the last page, call `appendLastPage` to add it to the list of items
         _pagingController.appendLastPage(page);
       } else {
+        final nextPageKey = pageKey += 1;
         // If the page is not the last page, call `appendPage` to add the newly loaded items to the list of items
-        _pagingController.appendPage(page, 0);
+        _pagingController.appendPage(page, nextPageKey);
       }
     } catch (error) {
       // If an error occurs, sets the error state of the PagingController

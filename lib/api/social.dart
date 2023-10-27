@@ -101,9 +101,9 @@ class SocialAPI {
   }
 
 // Get a list of posts, excluding those with IDs in the "seen" list
-  static Future<List<Map<String, dynamic>>> getPosts(List<String> seen) async {
-    String seenPosts = jsonEncode(seen);
-    if (seen.isEmpty) {
+  static Future<List<Map<String, dynamic>>> getPosts(int pageKey) async {
+    //String seenPosts = jsonEncode(seen);
+    if (pageKey == 0) {
       String? localData = await NetworkManager.instance
           .getLocalData(name: "posts", type: CacheTypes.list);
 
@@ -122,13 +122,13 @@ class SocialAPI {
       var response = await http.post(
         _postsUrl,
         headers: await Config.getDefaultHeadersAuth,
-        body: {'seen': seenPosts},
+        body: {'page': pageKey.toString()},
       );
       List<Map<String, dynamic>> data =
           ResponseHandler.handleListResponse(response);
-      if (seen.isEmpty) {
-        NetworkManager.instance
-            .saveData(name: "posts", type: CacheTypes.list, data: data);
+      if (pageKey == 0) {
+        // NetworkManager.instance
+        //     .saveData(name: "posts", type: CacheTypes.list, data: data);
       }
       // If the response status code is 200 OK, parse and return the response body as a Map
       return data;
@@ -437,8 +437,8 @@ class SocialAPI {
       );
       List<Map<String, dynamic>> data =
           ResponseHandler.handleListResponse(response);
-      await NetworkManager.instance.saveData(
-          name: "user-posts-$userId", type: CacheTypes.list, data: data);
+      // await NetworkManager.instance.saveData(
+      //     name: "user-posts-$userId", type: CacheTypes.list, data: data);
 
       return data;
     } catch (e) {
@@ -453,7 +453,7 @@ class SocialAPI {
     // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
 
     try {
-      String userId = user?['_id'] ?? await storage.getId();
+      String userId = user?['user_id'] ?? await storage.getId();
       String? localData = await NetworkManager.instance
           .getLocalData(name: "user-following-$userId", type: CacheTypes.list);
 
@@ -470,7 +470,7 @@ class SocialAPI {
             'Bearer ${await storage.getToken()}', // Including the authorization token
         'page': page.toString(),
       };
-      if (user?["_id"] != null) {
+      if (user?["user_id"] != null) {
         headers['user'] = user!["_id"];
       }
       var response = await http.get(
@@ -493,7 +493,7 @@ class SocialAPI {
   static Future<List<Map<String, dynamic>>> getUserFollowers(
       int page, Map<String, dynamic>? user) async {
     // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
-    String userId = user?['_id'] ?? await storage.getId();
+    String userId = user?['user_id'] ?? await storage.getId();
 
     String? localData = await NetworkManager.instance
         .getLocalData(name: "user-followers-$userId", type: CacheTypes.list);
@@ -513,7 +513,7 @@ class SocialAPI {
             'Bearer ${await storage.getToken()}', // Including the authorization token
         'page': page.toString(),
       };
-      if (user?["_id"] != null) {
+      if (user?["user_id"] != null) {
         headers['user'] = user!["_id"];
       }
       var response = await http.get(
@@ -536,7 +536,7 @@ class SocialAPI {
   static Future<List<Map<String, dynamic>>> getUserFriends(
       int page, Map<String, dynamic>? user) async {
     // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
-    String userId = user?['_id'] ?? await storage.getId();
+    String userId = user?['user_id'] ?? await storage.getId();
 
     String? localData = await NetworkManager.instance
         .getLocalData(name: "user-friends-$userId", type: CacheTypes.list);
@@ -556,7 +556,7 @@ class SocialAPI {
             'Bearer ${await storage.getToken()}', // Including the authorization token
         'page': page.toString(),
       };
-      if (user?["_id"] != null) {
+      if (user?["user_id"] != null) {
         headers['user'] = user!["_id"];
       }
       var response = await http.get(

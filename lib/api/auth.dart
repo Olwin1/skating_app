@@ -46,7 +46,7 @@ Future<String> signup(String username, String password, String email) async {
   );
 
   // If the response is successful, return the response body
-  if (response.statusCode == 200) {
+  if (response.statusCode == 201) {
     return response.body;
   } else {
     // If the response is not successful, throw an exception with the reason phrase

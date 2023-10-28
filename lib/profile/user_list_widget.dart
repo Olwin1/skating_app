@@ -2,11 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/profile/profile_page.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
-
 import '../api/config.dart';
-import '../api/social.dart';
 import '../swatch.dart';
 
 // UserListWidget class creates a stateful widget that displays a list of users

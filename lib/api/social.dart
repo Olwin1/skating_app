@@ -1,26 +1,11 @@
+// Import necessary dependencies and files
 import 'package:email_validator/email_validator.dart';
 import 'package:patinka/api/response_handler.dart';
 import 'package:patinka/api/type_casts.dart';
 import 'package:patinka/caching/manager.dart';
 import 'package:patinka/common_logger.dart';
-
-// Import necessary dependencies and files
 import 'package:http/http.dart' as http;
 import 'config.dart';
-import 'dart:convert';
-
-/*
-{
-    "description": "user3-postt",
-    "like_users": [],
-    "comments": [],
-    "author": "64209a87a90fe2b82d180c08",
-    "image": "6425752bbbbf84c6d9fdb98d",
-    "date": "2023-04-11T15:25:13.000Z",
-    "_id": "64357bd9cd6ed284e9946471",
-    "__v": 0
-}
-*/
 
 class SocialAPI {
   static final Uri _postUrl = Uri.parse('${Config.uri}/post/post');

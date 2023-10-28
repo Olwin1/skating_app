@@ -3,7 +3,6 @@ import 'package:patinka/api/response_handler.dart';
 import 'package:patinka/caching/manager.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
-import 'dart:convert';
 import '../common_logger.dart';
 
 // Define a class called 'ConnectionsAPI'

@@ -12,10 +12,10 @@ import '../swatch.dart';
 // UserListWidget class creates a stateful widget that displays a list of users
 class UserListWidget extends StatefulWidget {
   // Constructor for UserListWidget
-  const UserListWidget({Key? key, required this.id}) : super(key: key);
+  const UserListWidget({Key? key, required this.user}) : super(key: key);
 
   // Title for the widget
-  final String id;
+  final Map<String, dynamic> user;
 
   // Creates the state for the UserListWidget
   @override
@@ -24,29 +24,17 @@ class UserListWidget extends StatefulWidget {
 
 // _UserListWidget class is the state of the UserListWidget
 class _UserListWidget extends State<UserListWidget> {
-  Map<String, dynamic>? user;
   void handlePress() {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => Profile(
-                  userId: user?["user_id"],
-                )));
+            builder: (context) =>
+                Profile(userId: widget.user["user_id"], user: widget.user)));
   }
-
-  String? avatar;
 
   // Builds the widget
   @override
   Widget build(BuildContext context) {
-    if (user == null) {
-      SocialAPI.getUser(widget.id).then((value) => mounted
-          ? setState(() {
-              user = value;
-              avatar = value["avatar"];
-            })
-          : null);
-    }
     // Returns a row with a CircleAvatar, a text widget, and a TextButton
     return GestureDetector(
         onTap: () => handlePress(),
@@ -63,42 +51,33 @@ class _UserListWidget extends State<UserListWidget> {
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                  child: avatar == null
-                      ? Shimmer.fromColors(
-                          baseColor: shimmer["base"]!,
-                          highlightColor: shimmer["highlight"]!,
-                          child: CircleAvatar(
-                            // Create a circular avatar icon
-                            radius: 26, // Set radius to 36
-                            backgroundColor: swatch[900],
-                          ))
-                      : avatar != "default"
-                          ? CachedNetworkImage(
-                              imageUrl:
-                                  '${Config.uri}/image/thumbnail/${user!["avatar"]}',
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                height: 52,
-                                width: 52,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape
-                                      .circle, // Set the shape of the container to a circle
-                                  image: DecorationImage(
-                                      image: imageProvider, fit: BoxFit.cover),
-                                ),
-                              ),
-                            )
-                          : CircleAvatar(
-                              foregroundImage:
-                                  const AssetImage("assets/icons/hand.png"),
-                              // Create a circular avatar icon
-                              radius: 26, // Set radius to 36
-                              backgroundColor: swatch[900],
+                  child: widget.user["avatar"] != null
+                      ? CachedNetworkImage(
+                          imageUrl:
+                              '${Config.uri}/image/thumbnail/${widget.user["avatar"]}',
+                          imageBuilder: (context, imageProvider) => Container(
+                            height: 52,
+                            width: 52,
+                            decoration: BoxDecoration(
+                              shape: BoxShape
+                                  .circle, // Set the shape of the container to a circle
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
                             ),
+                          ),
+                        )
+                      : CircleAvatar(
+                          foregroundImage:
+                              const AssetImage("assets/icons/hand.png"),
+                          // Create a circular avatar icon
+                          radius: 26, // Set radius to 36
+                          backgroundColor: swatch[900],
+                        ),
                 ),
                 // Text widget with the text "username"
                 Text(
-                  user?["username"] ?? AppLocalizations.of(context)!.username,
+                  widget.user["username"] ??
+                      AppLocalizations.of(context)!.username,
                   style: TextStyle(color: swatch[701]),
                 ),
                 const Spacer(

@@ -54,11 +54,12 @@ class ProfilePage extends StatelessWidget {
 
 // Creates a ProfilePage widget
 class Profile extends StatefulWidget {
-  const Profile({Key? key, required this.userId})
+  const Profile({Key? key, required this.userId, this.user})
       : super(
             key:
                 key); // Take 2 arguments: optional key and required title of the post
   final String userId;
+  final Map<String, dynamic>? user;
 
   @override
   // Create state for the widget
@@ -105,20 +106,25 @@ class _Profile extends State<Profile> {
   String? avatar;
   @override
   void initState() {
-    SocialAPI.getUser(widget.userId).then((value) => {
-          if (mounted)
-            {
-              setState(() {
-                user = value;
-                avatar = value["avatar"];
-              })
-            }
-        });
+    if (widget.user == null) {
+      SocialAPI.getUser(widget.userId).then((value) => {
+            if (mounted)
+              {
+                setState(() {
+                  user = value;
+                  avatar = value["avatar"];
+                })
+              }
+          });
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.user != null) {
+      user = widget.user;
+    }
     return Scaffold(
         appBar: AppBar(
           // Create appBar widget
@@ -369,7 +375,7 @@ Widget _createGridTileWidget(Map<String, dynamic> post,
                       child: Column(children: [
                         TextButton(
                           onPressed: () async {
-                            await SocialAPI.delPost(post["_id"]);
+                            await SocialAPI.delPost(post["post_id"]);
                             refreshPage();
                             popNavigator();
                           },

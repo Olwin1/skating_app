@@ -159,7 +159,7 @@ class ConnectionsAPI {
   }
 
   // Define a static method to check if the user follows another user
-  static Future<List<bool>> doesFollow(String user) async {
+  static Future<Map<String, dynamic>> doesFollow(String user) async {
     try {
       // Send a GET request to the follow check URL with user information
       var response = await http.get(_doesFollowUrl, headers: {
@@ -171,16 +171,10 @@ class ConnectionsAPI {
       // Check the response status code
       if (response.statusCode == 200) {
         commonLogger.v("Response: 200 Does Follow User");
-
-        // Parse the response body and return the result
-        List<bool> result = List<bool>.from(jsonDecode(response.body));
-        return result;
-      } else if (response.statusCode == 404) {
-        return [false];
-      } else {
-        // Throw an exception if the follow check is unsuccessful
-        throw Exception("Follow check Unsuccessful: ${response.reasonPhrase}");
+        return handleResponse(response, Resp.stringResponse);
       }
+      // Throw an exception if the follow check is unsuccessful
+      throw Exception("Follow check Unsuccessful: ${response.reasonPhrase}");
     } catch (e) {
       // Throw an exception if there's an error during the follow check process
       throw Exception("Error during follow check: $e");
@@ -188,7 +182,7 @@ class ConnectionsAPI {
   }
 
   // Define a static method to check if the user is friends with another user
-  static Future<List<bool>> doesFriend(String user) async {
+  static Future<Map<String, dynamic>> doesFriend(String user) async {
     try {
       // Send a GET request to the friend check URL with user information
       var response = await http.get(_doesFriendUrl, headers: {
@@ -202,23 +196,15 @@ class ConnectionsAPI {
         commonLogger.v("Response: 200 Does Friend User");
 
         // Parse the response body and return the result
-        List<dynamic>? result = jsonDecode(response.body);
-
-        if (result == null) {
-          return [false];
-        }
-
-        return [
-          result[0],
-          result.length > 1 ? result[1] : false,
-          result.length > 2 ? result[2] : false
-        ];
-      } else if (response.statusCode == 404) {
-        return [false];
-      } else {
-        // Throw an exception if the friend check is unsuccessful
-        throw Exception("Friend check Unsuccessful: ${response.reasonPhrase}");
+        return handleResponse(response, Resp.stringResponse);
+        // } else if (response.statusCode == 404) {
+        //   return [false];
+        // }
+        // else {
+        //   // Throw an exception if the friend check is unsuccessful
+        // }
       }
+      throw Exception("Friend check Unsuccessful: ${response.reasonPhrase}");
     } catch (e) {
       // Throw an exception if there's an error during the friend check process
       throw Exception("Error during friend check: $e");

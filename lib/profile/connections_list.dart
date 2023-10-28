@@ -53,19 +53,13 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
       if (!mounted) return;
-      List<Map<String, dynamic>> usersToDisplay = [];
-      for (int i = 0; i < page.length; i++) {
-        if (!(page[i]["requested"] == true)) {
-          usersToDisplay.add(page[i]);
-        }
-      }
       if (isLastPage) {
         // If this is the last page, append it to the list of pages
-        _pagingController.appendLastPage(usersToDisplay);
+        _pagingController.appendLastPage(page);
       } else {
         // If this is not the last page, append it to the list of pages and request the next page
         final nextPageKey = pageKey += 1;
-        _pagingController.appendPage(usersToDisplay, nextPageKey);
+        _pagingController.appendPage(page, nextPageKey);
       }
     } catch (error) {
       // If there's an error fetching the page, set the error on the controller
@@ -80,7 +74,7 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
         // Use the Comment widget to build each item in the list view
-        itemBuilder: (context, item, index) => UserListWidget(id: item["user"]),
+        itemBuilder: (context, item, index) => UserListWidget(user: item),
         noItemsFoundIndicatorBuilder: (context) =>
             const ListError(title: "No Follower", body: ""),
       ),

@@ -16,35 +16,40 @@ class FriendIconButton extends StatefulWidget {
   State<FriendIconButton> createState() => _FriendIconButtonState();
 }
 
+enum FriendState { yes, requestedOutgoing, requestedIncoming, no, self }
+
 class _FriendIconButtonState extends State<FriendIconButton> {
   bool loading = false;
   bool changed = false;
-  String friend = "no"; // can be no, yes, maybe
+  FriendState friend = FriendState.no; // can be no, yes, maybe
   void _handlePressed() {
     if (!loading) {
       loading = true;
-      if (friend == "maybeIncoming") {
-        ConnectionsAPI.friendUserRequest(widget.user!["_id"], true)
+      if (friend == FriendState.requestedIncoming) {
+        ConnectionsAPI.friendUserRequest(widget.user!["user_id"], true)
             .then((value) => {
                   // Logs the response from `followUser`
                   commonLogger.v("Friend accept success $value"),
                   // If follow request is successful, update `type` to "requested"
-                  mounted ? setState(() => friend = "yes") : null,
+                  mounted ? setState(() => friend = FriendState.yes) : null,
                   loading = false
                 });
-      } else if (friend != "no" && friend != "self") {
-        ConnectionsAPI.unfriendUser(widget.user!["_id"]).then((value) => {
+      } else if (friend != FriendState.no && friend != FriendState.self) {
+        ConnectionsAPI.unfriendUser(widget.user!["user_id"]).then((value) => {
               // Logs the response from `followUser`
               commonLogger.v("Unfriend success $value"),
               // If follow request is successful, update `type` to "requested"
-              mounted ? setState(() => friend = "no") : null, loading = false
+              mounted ? setState(() => friend = FriendState.no) : null,
+              loading = false
             });
-      } else if (friend != "self") {
-        ConnectionsAPI.friendUser(widget.user!["_id"]).then((value) => {
+      } else if (friend != FriendState.self) {
+        ConnectionsAPI.friendUser(widget.user!["user_id"]).then((value) => {
               // Logs the response from `followUser`
               commonLogger.v("Friend success $value"),
               // If follow request is successful, update `type` to "requested"
-              mounted ? setState(() => friend = "maybeOutgoing") : null,
+              mounted
+                  ? setState(() => friend = FriendState.requestedOutgoing)
+                  : null,
               loading = false
             });
       }
@@ -53,7 +58,7 @@ class _FriendIconButtonState extends State<FriendIconButton> {
 
   Widget getIcon() {
     switch (friend) {
-      case "no":
+      case FriendState.no:
         return SvgPicture.asset(
           "assets/icons/profile/add_friend.svg",
           fit: BoxFit.fitHeight,
@@ -61,7 +66,7 @@ class _FriendIconButtonState extends State<FriendIconButton> {
           alignment: Alignment.centerLeft,
           colorFilter: ColorFilter.mode(swatch[501]!, BlendMode.srcIn),
         );
-      case "yes":
+      case FriendState.yes:
         return SvgPicture.asset(
           "assets/icons/profile/friends.svg",
           fit: BoxFit.fitHeight,
@@ -70,9 +75,9 @@ class _FriendIconButtonState extends State<FriendIconButton> {
           colorFilter: const ColorFilter.mode(
               Color.fromARGB(255, 116, 0, 81), BlendMode.srcIn),
         );
-      case "self":
+      case FriendState.self:
         return const SizedBox.shrink();
-      case "maybeOutgoing":
+      case FriendState.requestedOutgoing:
         return SvgPicture.asset(
           "assets/icons/profile/add_friend.svg",
           fit: BoxFit.fitHeight,
@@ -80,7 +85,7 @@ class _FriendIconButtonState extends State<FriendIconButton> {
           alignment: Alignment.centerLeft,
           colorFilter: ColorFilter.mode(swatch[600]!, BlendMode.srcIn),
         );
-      case "maybeIncoming":
+      case FriendState.requestedIncoming:
         return SvgPicture.asset(
           "assets/icons/profile/add_friend.svg",
           fit: BoxFit.fitHeight,
@@ -99,22 +104,24 @@ class _FriendIconButtonState extends State<FriendIconButton> {
       if (widget.user != null) {
         commonLogger.w("USer is availd");
         MessagesAPI.getUserId().then((value) {
-          if (value == widget.user!["_id"]) {
+          if (value == widget.user!["user_id"]) {
             setState(() {
-              friend = "self";
+              friend = FriendState.self;
             });
           } else {
-            ConnectionsAPI.doesFriend(widget.user!["_id"]).then((value) => {
+            FriendState val = FriendState.no;
+            ConnectionsAPI.doesFriend(widget.user!["user_id"]).then((value) => {
                   commonLogger.i(value),
-                  setState(
-                    () => value[0]
-                        ? value[1]
-                            ? value[2]
-                                ? friend = "maybeOutgoing"
-                                : friend = "maybeIncoming"
-                            : friend = "yes"
-                        : null,
-                  ),
+                  if (!value["friends"])
+                    {
+                      if (value["requestedOutgoing"] != null)
+                        {val = FriendState.requestedOutgoing}
+                      else if (value["requestedIncoming"] != null)
+                        {val = FriendState.requestedIncoming}
+                    }
+                  else
+                    {val = FriendState.yes},
+                  setState(() => friend = val),
                   commonLogger.w(value)
                 });
           }

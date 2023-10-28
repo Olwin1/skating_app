@@ -18,26 +18,30 @@ class FollowButton extends StatefulWidget {
   State<FollowButton> createState() => _FollowButtonState();
 }
 
+enum FollowState { follow, following, requested }
+
 class _FollowButtonState extends State<FollowButton> {
   // Initializes the default `type` to "follow"
-  String type = "follow";
+  FollowState type = FollowState.follow;
 
   @override
   void initState() {
     // Runs once when the widget is inserted into the widget tree
     if (widget.user != "0") {
+      FollowState val = FollowState.follow;
       // Calls `doesFollow` function to check if the user is being followed
       ConnectionsAPI.doesFollow(widget.user).then((value) => {
             // Logs the response from `doesFollow`
             commonLogger.v("User does follow: ${value.toString()}"),
             // If the user is already followed, update `type` to "following" or "requested"
-            if (value[0])
+            if (!value["following"])
               {
-                mounted
-                    ? setState(() =>
-                        type = value[1] == false ? "following" : "requested")
-                    : null
+                if (value["requested"]) {val = FollowState.requested}
               }
+            else
+              {val = FollowState.following},
+
+            mounted ? setState(() => type = val) : null
           });
     }
     // Calls the parent `initState` method
@@ -47,18 +51,18 @@ class _FollowButtonState extends State<FollowButton> {
   // Function to handle button press
   void handlePressed() {
     if (widget.user != "0") {
-      if (type == "follow") {
+      if (type == FollowState.follow) {
         // Calls `followUser` function to follow/unfollow the user
         ConnectionsAPI.followUser(widget.user).then((value) => {
               // Logs the response from `followUser`
               commonLogger.v("Follow successful: $value"),
               // If follow request is successful, update `type` to "requested"
               if (value["requested"] == true)
-                {mounted ? setState(() => type = "requested") : null}
+                {mounted ? setState(() => type = FollowState.requested) : null}
               else
                 {
                   // If the user is being followed, update `type` to "following"
-                  mounted ? setState(() => type = "following") : null
+                  mounted ? setState(() => type = FollowState.following) : null
                 }
             });
       } else {
@@ -66,7 +70,7 @@ class _FollowButtonState extends State<FollowButton> {
               // Logs the response from `followUser`
               commonLogger.v("Unfollow success $value"),
               // If follow request is successful, update `type` to "requested"
-              mounted ? setState(() => type = "follow") : null
+              mounted ? setState(() => type = FollowState.follow) : null
             });
       }
     } else {
@@ -95,9 +99,9 @@ class _FollowButtonState extends State<FollowButton> {
             // Conditionally displays different text based on the value of `type`
             child: widget.user != "0"
                 ? Text(
-                    type == "follow"
+                    type == FollowState.follow
                         ? AppLocalizations.of(context)!.follow
-                        : type == "requested"
+                        : type == FollowState.requested
                             ? AppLocalizations.of(context)!.requested
                             : AppLocalizations.of(context)!.following,
                     style: TextStyle(color: swatch[401]))

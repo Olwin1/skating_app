@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
-
-import '../../api/social.dart';
 import '../../swatch.dart';
 import '../../api/config.dart';
 import 'private_message.dart';
@@ -13,11 +11,11 @@ import 'private_message.dart';
 class SuggestionListWidget extends StatefulWidget {
   // Constructor for SuggestionListWidget
   const SuggestionListWidget(
-      {Key? key, required this.id, required this.callback})
+      {Key? key, required this.user, required this.callback})
       : super(key: key);
 
   // Title for the widget
-  final String id;
+  final Map<String, dynamic> user;
   final Function callback;
 
   // Creates the state for the SuggestionListWidget
@@ -27,13 +25,13 @@ class SuggestionListWidget extends StatefulWidget {
 
 // _SuggestionListWidget class is the state of the SuggestionListWidget
 class _SuggestionListWidget extends State<SuggestionListWidget> {
-  Map<String, dynamic>? user;
   void handlePress() async {
-    Map<String, dynamic> targetUser = await SocialAPI.getUser(widget.id);
-    sendUser(targetUser);
+    String currentUser = await storage.getId() ?? "";
+
+    sendUser(currentUser);
   }
 
-  void sendUser(Map<String, dynamic> targetUser) {
+  void sendUser(String currentUser) {
     Navigator.push(
         // When button pressed
         context,
@@ -41,21 +39,15 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
             builder: (context) => PrivateMessage(
                   // Add private message page to top of navigation stack
                   index: 1,
-                  user: targetUser, currentUser: user!["_id"],
+                  user: widget.user,
                   callback: widget.callback,
+                  currentUser: currentUser,
                 )));
   }
 
   // Builds the widget
   @override
   Widget build(BuildContext context) {
-    if (user == null) {
-      SocialAPI.getUser(widget.id).then((value) => mounted
-          ? setState(() {
-              user = value;
-            })
-          : null);
-    }
     // Returns a row with a CircleAvatar, a text widget, and a TextButton
     return GestureDetector(
         onTap: () => handlePress(),
@@ -72,7 +64,7 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                  child: user?["avatar"] == null
+                  child: widget.user["avatar"] == null
                       ? Shimmer.fromColors(
                           baseColor: shimmer["base"]!,
                           highlightColor: shimmer["highlight"]!,
@@ -81,10 +73,10 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
                             radius: 26, // Set radius to 36
                             backgroundColor: swatch[900],
                           ))
-                      : user?["avatar"] != "default"
+                      : widget.user["avatar"] != "default"
                           ? CachedNetworkImage(
                               imageUrl:
-                                  '${Config.uri}/image/thumbnail/${user!["avatar"]}',
+                                  '${Config.uri}/image/thumbnail/${widget.user["avatar"]}',
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 height: 52,
@@ -107,7 +99,8 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
                 ),
                 // Text widget with the text "username"
                 Text(
-                  user?["username"] ?? AppLocalizations.of(context)!.username,
+                  widget.user["username"] ??
+                      AppLocalizations.of(context)!.username,
                   style: TextStyle(color: swatch[701]),
                 ),
                 const Spacer(

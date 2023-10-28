@@ -158,7 +158,7 @@ class MessagesAPI {
   }
 
   // Method to retrieve user suggestions
-  static Future<List<String>> getSuggestions(int page) async {
+  static Future<List<Map<String, dynamic>>> getSuggestions(int page) async {
     try {
       // Send GET request to retrieve user suggestions
       var response = await http.get(_suggestionsUrl, headers: {
@@ -168,7 +168,7 @@ class MessagesAPI {
       });
 
       // Handle the response using a custom response handler and return the result
-      return handleResponse(response, Resp.listStringResponse);
+      return handleResponse(response, Resp.listResponse);
     } catch (e) {
       throw Exception("Error during post: $e");
     }

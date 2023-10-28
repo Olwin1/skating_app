@@ -11,6 +11,7 @@ import 'package:patinka/common_logger.dart';
 import 'package:uuid/uuid.dart';
 import '../../api/config.dart';
 import '../../api/messages.dart';
+import '../../api/social.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../swatch.dart';
@@ -53,9 +54,12 @@ class _PrivateMessage extends State<PrivateMessage> {
   // Initialize a stream subscription
   late StreamSubscription subscription;
   TextEditingController controller = TextEditingController();
-
+  types.User? user;
   @override
   void initState() {
+    if (user == null) {
+      getUser(null).then((value) => user = value);
+    }
     channelId = widget.channel;
     super.initState();
     // Load initial messages
@@ -115,15 +119,19 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   List<types.User> users = [];
-  types.User getUser(String userId, String username) {
+  Future<types.User> getUser(String? id) async {
+    String userId = id ?? widget.currentUser;
     for (var i = 0; i < users.length; i++) {
       if (users[i].id == userId) {
         commonLogger.d(users[i]);
         return users[i];
       }
     }
-    commonLogger.d("created");
-    var newUser = types.User(id: userId, firstName: username);
+    Map<String, dynamic> user = await SocialAPI.getUser(userId);
+    types.User newUser = types.User(
+        id: userId,
+        firstName: user["username"],
+        imageUrl: "${Config.uri}/image/${user["avatar"]}");
     users.add(newUser);
     return newUser;
   }
@@ -135,11 +143,11 @@ class _PrivateMessage extends State<PrivateMessage> {
       commonLogger.d("ITS A MATCH!");
       // Add the new message to the beginning of the list
       mounted
-          ? setState(() {
+          ? setState(() async {
               _messages.insert(
                   0,
                   types.TextMessage(
-                    author: getUser(data["sender"], "ss"),
+                    author: await getUser(data["sender"]),
                     createdAt: DateTime.now().millisecondsSinceEpoch,
                     id: const Uuid().v1(),
                     text: data["content"],
@@ -162,7 +170,7 @@ class _PrivateMessage extends State<PrivateMessage> {
         dynamic message = messagesRaw[i];
         messages.add(types.TextMessage(
           // Create new message
-          author: getUser(message["sender"], "ss"), // Set author of message
+          author: await getUser(message["sender"]), // Set author of message
           createdAt: DateTime.parse(message["date_sent"])
               .millisecondsSinceEpoch, // Get time
           id: message["_id"], // Generate random debug user id
@@ -189,7 +197,7 @@ class _PrivateMessage extends State<PrivateMessage> {
         dynamic message = messagesRaw[i];
         messages.add(types.TextMessage(
           // Create new message
-          author: getUser(message["sender"], "ss"), // Set author of message
+          author: await getUser(message["sender"]), // Set author of message
           createdAt: DateTime.now().millisecondsSinceEpoch, // Get time
           id: message["_id"], // Generate random debug user id
           text: message["content"], // Set message content
@@ -321,8 +329,7 @@ class _PrivateMessage extends State<PrivateMessage> {
                       onMessageTap: (context, p1) {
                         commonLogger.d("eeeeeadss  ${p1.author.id}");
                       },
-                      user: getUser(
-                          widget.currentUser, "s"), // Set user to user id
+                      user: user!, // Set user to user id
                       theme: DefaultChatTheme(
                           primaryColor: swatch[301]!,
                           sentMessageBodyTextStyle: TextStyle(
@@ -370,7 +377,7 @@ class _PrivateMessage extends State<PrivateMessage> {
         // Define handleSendPressed function
         final textMessage = types.TextMessage(
           // Create new message
-          author: getUser(widget.currentUser, "s"), // Set author of message
+          author: await getUser(widget.currentUser), // Set author of message
           createdAt: DateTime.now().millisecondsSinceEpoch, // Get time
           id: const Uuid().v1(), // Generate random debug user id
           text: message.text, // Set message content

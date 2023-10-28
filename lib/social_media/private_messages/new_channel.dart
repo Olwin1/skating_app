@@ -53,7 +53,7 @@ class _NewChannelListViewState extends State<NewChannelListView> {
   static const _pageSize = 20;
 
   // The controller that manages pagination
-  final PagingController<int, String> _pagingController =
+  final PagingController<int, Map<String, dynamic>> _pagingController =
       PagingController(firstPageKey: 0);
 
   @override
@@ -67,7 +67,7 @@ class _NewChannelListViewState extends State<NewChannelListView> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      List<String> page;
+      List<Map<String, dynamic>> page;
       page = await MessagesAPI.getSuggestions(pageKey);
       // Fetch the page of comments using the getComments() function
       // Determine if this is the last page
@@ -91,12 +91,12 @@ class _NewChannelListViewState extends State<NewChannelListView> {
   @override
   Widget build(BuildContext context) {
     // Build a paginated list view of comments using the PagedListView widget
-    return PagedListView<int, String>(
+    return PagedListView<int, Map<String, dynamic>>(
       pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<String>(
+      builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
           // Use the Comment widget to build each item in the list view
           itemBuilder: (context, item, index) => SuggestionListWidget(
-                id: item,
+                user: item,
                 callback: widget.callback,
               ),
           noItemsFoundIndicatorBuilder: (context) =>

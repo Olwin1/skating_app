@@ -471,7 +471,7 @@ class SocialAPI {
         'page': page.toString(),
       };
       if (user?["user_id"] != null) {
-        headers['user'] = user!["_id"];
+        headers['user'] = user!["user_id"];
       }
       var response = await http.get(
           // Creating a variable 'response' and making a post request to the specified URL
@@ -514,7 +514,7 @@ class SocialAPI {
         'page': page.toString(),
       };
       if (user?["user_id"] != null) {
-        headers['user'] = user!["_id"];
+        headers['user'] = user!["user_id"];
       }
       var response = await http.get(
           // Creating a variable 'response' and making a post request to the specified URL
@@ -557,7 +557,7 @@ class SocialAPI {
         'page': page.toString(),
       };
       if (user?["user_id"] != null) {
-        headers['user'] = user!["_id"];
+        headers['user'] = user!["user_id"];
       }
       var response = await http.get(
           // Creating a variable 'response' and making a post request to the specified URL

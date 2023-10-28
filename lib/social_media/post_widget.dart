@@ -306,7 +306,7 @@ class _Avatar extends State<Avatar> {
           if (mounted)
             {
               setState(() =>
-                  {image = userCache["avatar"], profile = userCache["_id"]})
+                  {image = userCache["avatar"], profile = userCache["user_id"]})
             }
         });
     super.initState();

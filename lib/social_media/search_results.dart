@@ -165,7 +165,7 @@ class Results extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ProfilePage(
-                              userId: results[index]["_id"],
+                              userId: results[index]["user_id"],
                               navbar: false,
                             ))),
                 child: Row(

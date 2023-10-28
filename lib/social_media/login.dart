@@ -128,7 +128,8 @@ class _Login extends State<Login> {
               await login(usernameController.text, passwordController.text);
           // If login is successful, save the user's token to local storage
           await storage.setToken(res);
-          SocialAPI.getUser("0").then((value) => storage.setId(value["_id"]));
+          SocialAPI.getUser("0")
+              .then((value) => storage.setId(value["user_id"]));
           // Load the home screen
           loadHome();
           commonLogger.d("Result: $res");

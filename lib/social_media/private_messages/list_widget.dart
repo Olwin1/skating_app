@@ -10,14 +10,12 @@ class ListWidget extends StatefulWidget {
   // Create HomePage Class
   const ListWidget(
       {Key? key,
-      required this.userId,
       required this.index,
       required this.channel,
       required this.desc,
       required this.currentUser})
       : super(key: key); // Take 2 arguments optional key and title of post
   final int index; // Define title argument
-  final String userId; // Define title argument
   final String channel; // Define title argument
   final String desc; // Define title argument
   final String currentUser;
@@ -31,7 +29,7 @@ class _ListWidget extends State<ListWidget> {
   String? avatar;
   @override
   void initState() {
-    SocialAPI.getUser(widget.userId).then((value) => {
+    SocialAPI.getUser(widget.currentUser).then((value) => {
           mounted
               ? setState(
                   () {

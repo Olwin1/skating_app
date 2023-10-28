@@ -277,7 +277,6 @@ class _ChannelsListViewState extends State<ChannelsListView> {
             firstPageProgressIndicatorBuilder: (context) => _loadingSkeleton(),
 
             itemBuilder: (context, item, index) => ListWidget(
-                userId: title[index],
                 index: index,
                 channel: channel[index],
                 desc:

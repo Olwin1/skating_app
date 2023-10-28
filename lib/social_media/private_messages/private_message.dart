@@ -203,7 +203,7 @@ class _PrivateMessage extends State<PrivateMessage> {
           // Create new message
           author: await getUser(message["sender"]), // Set author of message
           createdAt: DateTime.now().millisecondsSinceEpoch, // Get time
-          id: message["_id"], // Generate random debug user id
+          id: message["message_id"], // Generate random debug user id
           text: message["content"], // Set message content
         ));
       }
@@ -395,7 +395,7 @@ class _PrivateMessage extends State<PrivateMessage> {
           List<String> participants = [widget.currentUser];
           Map<String, dynamic> channel =
               await MessagesAPI.postChannel(participants);
-          channelId = channel["_id"];
+          channelId = channel["channel_id"];
           if (channelId != null) {
             await MessagesAPI.postMessage(
                     channelId!, message.text, null, widget.user?["fcm_token"])

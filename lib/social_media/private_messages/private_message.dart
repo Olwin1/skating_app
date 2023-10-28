@@ -51,6 +51,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   int _page = 0;
   // Set a loading flag to show/hide loading indicator
   bool loading = false;
+  bool userFound = false;
   // Initialize a stream subscription
   late StreamSubscription subscription;
   TextEditingController controller = TextEditingController();
@@ -58,7 +59,10 @@ class _PrivateMessage extends State<PrivateMessage> {
   @override
   void initState() {
     if (user == null) {
-      getUser(null).then((value) => user = value);
+      getUser(null)
+          .then((value) => {user = value, setState(() => userFound = true)});
+    } else {
+      setState(() => userFound = true);
     }
     channelId = widget.channel;
     super.initState();
@@ -173,7 +177,7 @@ class _PrivateMessage extends State<PrivateMessage> {
           author: await getUser(message["sender"]), // Set author of message
           createdAt: DateTime.parse(message["date_sent"])
               .millisecondsSinceEpoch, // Get time
-          id: message["_id"], // Generate random debug user id
+          id: message["message_id"], // Generate random debug user id
           text: message["content"], // Set message content
         ));
       }
@@ -231,7 +235,7 @@ class _PrivateMessage extends State<PrivateMessage> {
               centerTitle: false, // Align title to left
               title: Row(children: [
                 //Create title as row
-                widget.user == null || widget.user?["avatar"] == null
+                widget.user == null || widget.user!["avatar"] == null
                     // If there is no cached user information or avatar image, use a default image
                     ? Shimmer.fromColors(
                         baseColor: shimmer["base"]!,
@@ -310,7 +314,7 @@ class _PrivateMessage extends State<PrivateMessage> {
                           Colors.black.withOpacity(0.5), BlendMode.srcOver)),
                 ),
               ),
-              loading
+              loading || !userFound
                   ? _messagesSkeleton()
                   : Chat(
                       inputOptions: InputOptions(

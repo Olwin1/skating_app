@@ -26,7 +26,7 @@ class SuggestionListWidget extends StatefulWidget {
 // _SuggestionListWidget class is the state of the SuggestionListWidget
 class _SuggestionListWidget extends State<SuggestionListWidget> {
   void handlePress() async {
-    String currentUser = await storage.getId() ?? "";
+    String currentUser = widget.user["user_id"];
 
     sendUser(currentUser);
   }

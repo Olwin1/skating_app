@@ -213,54 +213,57 @@ class _ChannelsListViewState extends State<ChannelsListView> {
 
 // Fetches the data for the given pageKey and appends it to the list of items
   Future<void> _fetchPage(int pageKey) async {
-    try {
+    //try {
 // Loads the next page of channels
-      final page = await MessagesAPI.getChannels(
-        pageKey,
-      );
+    final page = await MessagesAPI.getChannels(
+      pageKey,
+    );
 // Create an empty list to hold new channel items
-      var newChannels = [];
+    var newChannels = [];
 
 // Loop through each item on the page
-      for (int i = 0; i < page.length; i++) {
-        Map<String, dynamic> item = page[i];
+    for (int i = 0; i < page.length; i++) {
+      Map<String, dynamic> item = page[i];
 
-        // Extract the participant name and add it to the 'title' list
-        title.add(item['participants'][0]);
+      // Extract the participant name and add it to the 'title' list
+      title.add(item['channel_id']);
 
-        // Extract the channel ID and add it to the 'channel' list
-        channel.add(item['channel_id']);
+      // Extract the channel ID and add it to the 'channel' list
+      channel.add(item['channel_id']);
 
-        // Add the channel ID to the 'newChannels' list
-        newChannels.add(item['channel_id']);
+      // Add the channel ID to the 'newChannels' list
+      newChannels.add(item['channel_id']);
 
-        // Add the channel ID and its creation date to the 'channelsData' map
-        channelsData.addAll({item["_id"]: item["creation_date"]});
-      }
+      // Add the channel ID and its creation date to the 'channelsData' map
+      channelsData.addAll({
+        item["message_channels"]["channel_id"]: item["message_channels"]
+            ["creation_date"]
+      });
+    }
 
 // Join the newly loaded channels using websockets
-      getIt<WebSocketConnection>()
-          .socket
-          .emit("joinChannel", newChannels.toString());
+    getIt<WebSocketConnection>()
+        .socket
+        .emit("joinChannel", newChannels.toString());
 
 // Determine if the loaded page is the last page
-      final isLastPage = page.length < _pageSize;
-      if (!mounted) return;
+    final isLastPage = page.length < _pageSize;
+    if (!mounted) return;
 // If the page is the last page, append it using appendLastPage method
-      if (isLastPage) {
-        _pagingController?.appendLastPage(page);
-      }
+    if (isLastPage) {
+      _pagingController?.appendLastPage(page);
+    }
 // If the page is not the last page, append it using appendPage method
-      else {
-        // Calculate the next page key
-        final nextPageKey = pageKey += 1;
-        _pagingController?.appendPage(page, nextPageKey);
-      }
+    else {
+      // Calculate the next page key
+      final nextPageKey = pageKey += 1;
+      _pagingController?.appendPage(page, nextPageKey);
     }
+    //}
 // Handle any errors that occur during loading
-    catch (error) {
-      _pagingController?.error = error;
-    }
+    // catch (error) {
+    //   _pagingController?.error = error;
+    // }
   }
 
   @override

@@ -112,8 +112,8 @@ class SocialAPI {
       List<Map<String, dynamic>> data =
           ResponseHandler.handleListResponse(response);
       if (pageKey == 0) {
-        // NetworkManager.instance
-        //     .saveData(name: "posts", type: CacheTypes.list, data: data);
+        NetworkManager.instance
+            .saveData(name: "posts", type: CacheTypes.list, data: data);
       }
       // If the response status code is 200 OK, parse and return the response body as a Map
       return data;
@@ -422,8 +422,8 @@ class SocialAPI {
       );
       List<Map<String, dynamic>> data =
           ResponseHandler.handleListResponse(response);
-      // await NetworkManager.instance.saveData(
-      //     name: "user-posts-$userId", type: CacheTypes.list, data: data);
+      await NetworkManager.instance.saveData(
+          name: "user-posts-$userId", type: CacheTypes.list, data: data);
 
       return data;
     } catch (e) {

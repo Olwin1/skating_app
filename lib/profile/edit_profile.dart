@@ -154,7 +154,7 @@ class _EditProfile extends State<EditProfile> {
                   Column(
                     children: [
                       // Display the avatar
-                      widget.user?["avatar_id"] == null
+                      (widget.user == null || widget.user!["avatar_id"] == null)
                           ? Shimmer.fromColors(
                               baseColor: shimmer["base"]!,
                               highlightColor: shimmer["highlight"]!,
@@ -166,7 +166,7 @@ class _EditProfile extends State<EditProfile> {
                           : widget.user?["avatar_id"] != "default"
                               ? CachedNetworkImage(
                                   imageUrl:
-                                      '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',
+                                      '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
                                     height: 72,

@@ -236,17 +236,19 @@ class _Profile extends State<Profile> {
                   style: TextStyle(color: swatch[601])),
             ),
             // Display the user's bio
-            Container(
-              margin: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                  color: const Color.fromARGB(125, 0, 0, 0),
-                  borderRadius: BorderRadius.circular(8)),
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                  textAlign: TextAlign.justify,
-                  (user?["description"] ?? "").toString(),
-                  style: TextStyle(color: swatch[801])),
-            ),
+            (user != null && user!["description"] != null)
+                ? Container(
+                    margin: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(125, 0, 0, 0),
+                        borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                        textAlign: TextAlign.justify,
+                        (user!["description"]).toString(),
+                        style: TextStyle(color: swatch[801])),
+                  )
+                : const SizedBox.shrink(),
             // Row with two text buttons
             Row(children: [
               // First text button

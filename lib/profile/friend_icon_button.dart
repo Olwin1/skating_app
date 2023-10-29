@@ -130,12 +130,15 @@ class _FriendIconButtonState extends State<FriendIconButton> {
       changed = true;
     }
     commonLogger.w(friend);
-    return Container(
-        margin: const EdgeInsets.all(4),
-        padding: const EdgeInsets.all(2),
-        decoration: const BoxDecoration(
-            color: Color.fromARGB(125, 0, 0, 0),
-            borderRadius: BorderRadius.all(Radius.circular(8))),
-        child: TextButton(onPressed: () => _handlePressed(), child: getIcon()));
+    return friend == FriendState.self
+        ? const SizedBox.shrink()
+        : Container(
+            margin: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(2),
+            decoration: const BoxDecoration(
+                color: Color.fromARGB(125, 0, 0, 0),
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            child: TextButton(
+                onPressed: () => _handlePressed(), child: getIcon()));
   }
 }

@@ -16,7 +16,7 @@ class ListWidget extends StatefulWidget {
       required this.currentUser})
       : super(key: key); // Take 2 arguments optional key and title of post
   final int index; // Define title argument
-  final String channel; // Define title argument
+  final Map<String, dynamic> channel; // Define title argument
   final String desc; // Define title argument
   final String currentUser;
 
@@ -25,25 +25,15 @@ class ListWidget extends StatefulWidget {
 }
 
 class _ListWidget extends State<ListWidget> {
-  Map<String, dynamic>? user;
-  String? avatar;
-  @override
-  void initState() {
-    SocialAPI.getUser(widget.currentUser).then((value) => {
-          mounted
-              ? setState(
-                  () {
-                    user = value;
-                    avatar = value["avatar"];
-                  },
-                )
-              : null
-        });
-    super.initState();
-  }
-
   @override // Override existing build method
   Widget build(BuildContext context) {
+    Map<String, dynamic>? user;
+    for (var participant in widget.channel["participants"]) {
+      if (participant["users"]["user_id"] != widget.currentUser) {
+        user = participant["users"];
+        break;
+      }
+    }
     return Padding(
         padding: const EdgeInsets.only(top: 8),
         child: Container(
@@ -75,7 +65,7 @@ class _ListWidget extends State<ListWidget> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Add List image to one row and buttons to another
-                user == null || avatar == null
+                user == null
                     // If there is no cached user information or avatar image, use a default image
                     ? Shimmer.fromColors(
                         baseColor: shimmer["base"]!,
@@ -87,10 +77,11 @@ class _ListWidget extends State<ListWidget> {
                         ))
                     // If there is cached user information and an avatar image, use the cached image
                     : Flexible(
-                        child: avatar != "default"
+                        child: (user["avatar_id"] != null &&
+                                user["avatar_id"] != "default")
                             ? CachedNetworkImage(
                                 imageUrl:
-                                    '${Config.uri}/image/${user!["avatar"]}',
+                                    '${Config.uri}/image/${user["avatar_id"]}',
                                 httpHeaders: const {"thumbnail": "true"},
                                 placeholder: (context, url) =>
                                     Shimmer.fromColors(

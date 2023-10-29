@@ -31,7 +31,7 @@ class PrivateMessage extends StatefulWidget {
       this.callback})
       : super(key: key);
   final int index;
-  final String? channel;
+  final Map<String, dynamic>? channel;
   final Map<String, dynamic>? user;
   final String currentUser;
   final Function? callback;
@@ -64,7 +64,7 @@ class _PrivateMessage extends State<PrivateMessage> {
     } else {
       setState(() => userFound = true);
     }
-    channelId = widget.channel;
+    channelId = widget.channel?["channel_id"];
     super.initState();
     // Load initial messages
     loadMessages();
@@ -133,9 +133,12 @@ class _PrivateMessage extends State<PrivateMessage> {
     }
     Map<String, dynamic> user = await SocialAPI.getUser(userId);
     types.User newUser = types.User(
-        id: userId,
-        firstName: user["username"],
-        imageUrl: "${Config.uri}/image/${user["avatar"]}");
+      id: userId,
+      firstName: user["username"],
+      imageUrl: user["avatar_id"] == null
+          ? null
+          : "${Config.uri}/image/${user["avatar_id"]}",
+    );
     users.add(newUser);
     return newUser;
   }
@@ -151,7 +154,7 @@ class _PrivateMessage extends State<PrivateMessage> {
               _messages.insert(
                   0,
                   types.TextMessage(
-                    author: await getUser(data["sender"]),
+                    author: await getUser(data["sender_id"]),
                     createdAt: DateTime.now().millisecondsSinceEpoch,
                     id: const Uuid().v1(),
                     text: data["content"],
@@ -174,7 +177,7 @@ class _PrivateMessage extends State<PrivateMessage> {
         dynamic message = messagesRaw[i];
         messages.add(types.TextMessage(
           // Create new message
-          author: await getUser(message["sender"]), // Set author of message
+          author: await getUser(message["sender_id"]), // Set author of message
           createdAt: DateTime.parse(message["date_sent"])
               .millisecondsSinceEpoch, // Get time
           id: message["message_id"], // Generate random debug user id
@@ -201,7 +204,7 @@ class _PrivateMessage extends State<PrivateMessage> {
         dynamic message = messagesRaw[i];
         messages.add(types.TextMessage(
           // Create new message
-          author: await getUser(message["sender"]), // Set author of message
+          author: await getUser(message["sender_id"]), // Set author of message
           createdAt: DateTime.now().millisecondsSinceEpoch, // Get time
           id: message["message_id"], // Generate random debug user id
           text: message["content"], // Set message content
@@ -235,7 +238,7 @@ class _PrivateMessage extends State<PrivateMessage> {
               centerTitle: false, // Align title to left
               title: Row(children: [
                 //Create title as row
-                widget.user == null || widget.user!["avatar"] == null
+                widget.user == null
                     // If there is no cached user information or avatar image, use a default image
                     ? Shimmer.fromColors(
                         baseColor: shimmer["base"]!,
@@ -247,12 +250,13 @@ class _PrivateMessage extends State<PrivateMessage> {
                         ))
                     // If there is cached user information and an avatar image, use the cached image
                     : //Flexible(
-                    widget.user!["avatar"] != "default"
+                    (widget.user!["avatar_id"] != null &&
+                            widget.user!["avatar_id"] != "default")
                         ? CachedNetworkImage(
                             height: 40,
                             width: 40,
                             imageUrl:
-                                '${Config.uri}/image/thumbnail/${widget.user!["avatar"]}',
+                                '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
                             placeholder: (context, url) => Shimmer.fromColors(
                                 baseColor: shimmer["base"]!,
                                 highlightColor: shimmer["highlight"]!,

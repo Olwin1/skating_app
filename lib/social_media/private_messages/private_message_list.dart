@@ -235,10 +235,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       newChannels.add(item['channel_id']);
 
       // Add the channel ID and its creation date to the 'channelsData' map
-      channelsData.addAll({
-        item["message_channels"]["channel_id"]: item["message_channels"]
-            ["creation_date"]
-      });
+      channelsData.addAll({item["channel_id"]: item["creation_date"]});
     }
 
 // Join the newly loaded channels using websockets
@@ -278,7 +275,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
 
             itemBuilder: (context, item, index) => ListWidget(
                 index: index,
-                channel: channel[index],
+                channel: item,
                 desc:
                     "Last Message: ${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
                 currentUser: widget.currentUser), //item id

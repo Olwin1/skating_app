@@ -51,7 +51,7 @@ class _UserListWidget extends State<UserListWidget> {
                   child: widget.user["avatar"] != null
                       ? CachedNetworkImage(
                           imageUrl:
-                              '${Config.uri}/image/thumbnail/${widget.user["avatar"]}',
+                              '${Config.uri}/image/thumbnail/${widget.user["avatar_id"]}',
                           imageBuilder: (context, imageProvider) => Container(
                             height: 52,
                             width: 52,

@@ -112,7 +112,7 @@ class _Profile extends State<Profile> {
               {
                 setState(() {
                   user = value;
-                  avatar = value["avatar"];
+                  avatar = value["avatar_id"];
                 })
               }
           });
@@ -197,7 +197,8 @@ class _Profile extends State<Profile> {
                                   radius: 36, // Set radius to 36
                                   backgroundColor: swatch[900],
                                 )),
-                            imageUrl: '${Config.uri}/image/${user!["avatar"]}',
+                            imageUrl:
+                                '${Config.uri}/image/${user!["avatar_id"]}',
                             imageBuilder: (context, imageProvider) => Container(
                               height: 72,
                               width: 72,

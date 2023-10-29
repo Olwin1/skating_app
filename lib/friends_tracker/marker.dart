@@ -55,7 +55,7 @@ class _CustomMarker extends State<CustomMarker> {
             ),
           ),
           // Show the user's avatar as a smaller circular image, if available
-          widget.userData["avatar"] != null
+          widget.userData["avatar_id"] != null
               ? CachedNetworkImage(
                   imageUrl:
                       '${Config.uri}/image/widget.sessionData["images"][0]',
@@ -92,7 +92,7 @@ class _CustomMarker extends State<CustomMarker> {
       );
     }
     // If there are no images in sessionData, show the user's avatar as a larger circular image, if available
-    return widget.userData["avatar"] != null
+    return widget.userData["avatar_id"] != null
         ? CachedNetworkImage(
             imageUrl: '${Config.uri}/image/${widget.sessionData["images"][0]}',
             imageBuilder: (context, imageProvider) => Container(

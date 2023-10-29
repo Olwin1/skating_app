@@ -30,11 +30,11 @@ class _Comment extends State<Comment> {
   String? avatar;
   @override
   void initState() {
-    SocialAPI.getUser(widget.comment["sender"]).then((value) => mounted
+    SocialAPI.getUser(widget.comment["sender_id"]).then((value) => mounted
         ? setState(
             () {
               user = value;
-              avatar = value["avatar"];
+              avatar = value["avatar_id"];
             },
           )
         : null);
@@ -64,7 +64,7 @@ class _Comment extends State<Comment> {
                   // Only give right of avatar padding
                   right: 8,
                 ),
-                child: user == null || avatar == null
+                child: user == null
                     // If there is no cached user information or avatar image, use a default image
                     ? Shimmer.fromColors(
                         baseColor: shimmer["base"]!,
@@ -75,10 +75,10 @@ class _Comment extends State<Comment> {
                           backgroundColor: swatch[900],
                         ))
                     // If there is cached user information and an avatar image, use the cached image
-                    : avatar != "default"
+                    : (avatar != "default" && avatar != null)
                         ? CachedNetworkImage(
                             imageUrl:
-                                '${Config.uri}/image/thumbnail/${user!["avatar"]}',
+                                '${Config.uri}/image/thumbnail/${user!["avatar_id"]}',
                             placeholder: (context, url) => Shimmer.fromColors(
                                 baseColor: shimmer["base"]!,
                                 highlightColor: shimmer["highlight"]!,
@@ -128,7 +128,8 @@ class _Comment extends State<Comment> {
                               child: SizedBox(width: 6)),
                           TextSpan(
                             text: timeago
-                                .format(DateTime.parse(widget.comment["date"]))
+                                .format(
+                                    DateTime.parse(widget.comment["timestamp"]))
                                 .toString(), //Time since sent
                             style: TextStyle(color: swatch[501]), // Set colour
                           )

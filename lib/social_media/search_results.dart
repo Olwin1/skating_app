@@ -171,7 +171,7 @@ class Results extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    results[index]["avatar"] == null
+                    results[index]["avatar_id"] == null
                         ? CircleAvatar(
                             foregroundImage:
                                 const AssetImage("assets/icons/hand.png"),
@@ -182,7 +182,7 @@ class Results extends StatelessWidget {
                         : Flexible(
                             child: CachedNetworkImage(
                                 imageUrl:
-                                    '${Config.uri}/image/thumbnail/${results[index]["avatar"]}',
+                                    '${Config.uri}/image/thumbnail/${results[index]["avatar_id"]}',
                                 placeholder: (context, url) =>
                                     Shimmer.fromColors(
                                         baseColor: shimmer["base"]!,

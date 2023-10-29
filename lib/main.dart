@@ -169,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ? SocialAPI.getUser(value).then((user) => {
                     mounted
                         ? setState(() {
-                            avatar = user["avatar"];
+                            avatar = user["avatar_id"];
                           })
                         : null
                   })

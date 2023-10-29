@@ -64,7 +64,7 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                  child: widget.user["avatar"] == null
+                  child: widget.user["avatar_id"] == null
                       ? Shimmer.fromColors(
                           baseColor: shimmer["base"]!,
                           highlightColor: shimmer["highlight"]!,
@@ -73,10 +73,10 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
                             radius: 26, // Set radius to 36
                             backgroundColor: swatch[900],
                           ))
-                      : widget.user["avatar"] != "default"
+                      : widget.user["avatar_id"] != "default"
                           ? CachedNetworkImage(
                               imageUrl:
-                                  '${Config.uri}/image/thumbnail/${widget.user["avatar"]}',
+                                  '${Config.uri}/image/thumbnail/${widget.user["avatar_id"]}',
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 height: 52,

@@ -5,6 +5,7 @@ import 'package:patinka/common_logger.dart';
 import 'package:patinka/social_media/private_messages/comment.dart';
 import 'package:patinka/swatch.dart';
 
+import '../api/config.dart';
 import '../api/social.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -14,8 +15,11 @@ class Comments extends StatefulWidget {
   final String post;
 
   // Create HomePage Class
-  const Comments({Key? key, required this.post})
+  const Comments({Key? key, required this.post, required this.user})
       : super(key: key); // Take 2 arguments optional key and title of post
+
+  final Map<String, dynamic>? user;
+
   @override
   State<Comments> createState() => _Comments(); //Create state for widget
 }
@@ -56,7 +60,10 @@ class _Comments extends State<Comments> {
       body: CommentBox(
         focusNode: focus,
         userImage: CommentBox.commentImageParser(
-          imageURLorPath: "assets/placeholders/150.png",
+          imageURLorPath: widget.user == null ||
+                  widget.user!["avatar_id"] == null
+              ? "assets/icons/hand.png"
+              : '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
         ),
         labelText: AppLocalizations.of(context)!.writeComment,
         errorText: 'Comment cannot be blank',
@@ -77,13 +84,11 @@ class _Comments extends State<Comments> {
                     newComments = [
                       ...newComments,
                       (<String, dynamic>{
-                        "_id": "newPost",
-                        "post": widget.post,
-                        "sender": "userid",
+                        "comment_id": "newPost",
+                        "post_id": widget.post,
+                        "sender_id": "userid",
                         "content": commentController.text,
-                        "like_users": [],
-                        "dislike_users": [],
-                        "date": DateTime.now().toString()
+                        "timestamp": DateTime.now().toString()
                       })
                     ];
                   })

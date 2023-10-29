@@ -12,10 +12,12 @@ import '../api/config.dart';
 
 class PostWidget extends StatefulWidget {
   // Create HomePage Class
-  const PostWidget({Key? key, required this.post, required this.index})
+  const PostWidget(
+      {Key? key, required this.post, required this.index, required this.user})
       : super(key: key); // Take 2 arguments optional key and title of post
   final dynamic post; // Define title argument
   final int index; // Define title argument
+  final Map<String, dynamic>? user;
   @override
   State<PostWidget> createState() => _PostWidget(); //Create state for widget
 }
@@ -237,8 +239,9 @@ class _PostWidget extends State<PostWidget> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       Comments(
-                                                          post: widget.post[
-                                                              "post_id"]))),
+                                                          post: widget
+                                                              .post["post_id"],
+                                                          user: widget.user))),
                                   icon: Icon(
                                     Icons.comment,
                                     color: unselected,
@@ -305,8 +308,10 @@ class _Avatar extends State<Avatar> {
     SocialAPI.getUser(widget.user).then((userCache) => {
           if (mounted)
             {
-              setState(() =>
-                  {image = userCache["avatar"], profile = userCache["user_id"]})
+              setState(() => {
+                    image = userCache["avatar_id"],
+                    profile = userCache["user_id"]
+                  })
             }
         });
     super.initState();

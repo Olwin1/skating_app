@@ -125,24 +125,20 @@ class _PostsListViewState extends State<PostsListView> {
   final PagingController<int, Object> _pagingController =
       PagingController(firstPageKey: 0);
   List<String> seenPosts = [];
+  Map<String, dynamic>? user;
 
   @override
   void initState() {
     MessagesAPI.getUserId().then((userId) {
       if (userId != null) {
-        SocialAPI.getUser(userId).then((user) {
-          // if (user["fcm_tokens"] == null) {
-          FirebaseMessaging.instance.getToken().then(
-              (fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
-          //}
-          //   if (user["fcm_tokens"] == null) {
-          //     FirebaseMessaging.instance.getToken().then(
-          //         (fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
-
-          // }
+        SocialAPI.getUser(userId).then((userA) {
+          user = userA;
         });
       }
     });
+    FirebaseMessaging.instance
+        .getToken()
+        .then((fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
 
     // addPageRequestListener is called whenever the user scrolls near the end of the list
     _pagingController.addPageRequestListener((pageKey) {
@@ -229,7 +225,7 @@ class _PostsListViewState extends State<PostsListView> {
                 itemBuilder: (context, item, index) => SizedBox(
                     width: size,
                     height: size,
-                    child: PostWidget(post: item, index: index))),
+                    child: PostWidget(post: item, index: index, user: user))),
             padding: const EdgeInsets.all(
                 8), // Add padding to list so doesn't overflow to sides of screen
           )

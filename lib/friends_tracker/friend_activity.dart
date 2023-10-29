@@ -59,10 +59,10 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
   void initState() {
     super.initState();
     // Call the SocialAPI.getUser function to retrieve user information and update the state
-    SocialAPI.getUser(widget.session["author"]).then((value) => mounted
+    SocialAPI.getUser(widget.session["author_id"]).then((value) => mounted
         ? setState(() {
             userCache = value;
-            avatar = value["avatar"];
+            avatar = value["avatar_id"];
           })
         : null);
   }
@@ -87,7 +87,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
             // If there is cached user information and an avatar image, use the cached image
             : avatar != "default"
                 ? CachedNetworkImage(
-                    imageUrl: '${Config.uri}/image/${userCache!["avatar"]}',
+                    imageUrl: '${Config.uri}/image/${userCache!["avatar_id"]}',
                     imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
                         shape: BoxShape

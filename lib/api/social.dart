@@ -380,8 +380,8 @@ class SocialAPI {
         },
       );
       Map<String, dynamic> data = ResponseHandler.handleResponse(response);
-      if (data["avatar"] == null) {
-        data["avatar"] = "default";
+      if (data["avatar_id"] == null) {
+        data["avatar_id"] = "default";
       }
       await NetworkManager.instance
           .saveData(name: id, type: CacheTypes.user, data: data);

@@ -576,7 +576,7 @@ class ConnectionLists extends StatelessWidget {
                                 user: user?["user_id"] != self ? user : null,
                               ))),
                   child: Column(children: [
-                    Text((user?["friends_count"] ?? 0).toString(),
+                    Text((user?["friends"] ?? 0).toString(),
                         style: TextStyle(color: swatch[601])),
                     Text(AppLocalizations.of(context)!.friends,
                         style: TextStyle(color: swatch[701]))
@@ -594,7 +594,7 @@ class ConnectionLists extends StatelessWidget {
                                 user: user?["user_id"] != self ? user : null,
                               ))),
                   child: Column(children: [
-                    Text((user?["followers_count"] ?? 0).toString(),
+                    Text((user?["followers"] ?? 0).toString(),
                         style: TextStyle(color: swatch[601])),
                     Text(AppLocalizations.of(context)!.followers,
                         style: TextStyle(color: swatch[701]))
@@ -609,7 +609,7 @@ class ConnectionLists extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => const Lists(index: 1))),
                   child: Column(children: [
-                    Text((user?["following_count"] ?? 0).toString(),
+                    Text((user?["following"] ?? 0).toString(),
                         style: TextStyle(color: swatch[601])),
                     Text(AppLocalizations.of(context)!.following,
                         style: TextStyle(color: swatch[701]))

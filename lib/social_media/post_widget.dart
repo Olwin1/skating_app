@@ -91,10 +91,10 @@ class _PostWidget extends State<PostWidget> {
 
   @override // Override existing build method
   Widget build(BuildContext context) {
-    commonLogger.v("Building ${Config.uri}/image/${widget.post['image']}");
-    String comments = (widget.post['comment_count'] ?? 0).toString();
+    commonLogger.v("Building ${widget.post['liked']}");
+    String comments = widget.post['comment_count'] ?? "0";
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      false //widget.post["initial_influencer"]
+      false //widget.post["influencer"]
           ? Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
@@ -200,7 +200,8 @@ class _PostWidget extends State<PostWidget> {
                                   size: 32.0,
                                 );
                               },
-                              likeCount: widget.post['like_count'],
+                              likeCount:
+                                  int.parse(widget.post['total_likes'] ?? "0"),
                               countBuilder:
                                   (int? count, bool isLiked, String text) {
                                 var color = isLiked ? selected : unselected;

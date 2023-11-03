@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
+import '../../misc/default_profile.dart';
 import '../../swatch.dart';
 import '../../api/config.dart';
 import 'private_message.dart';
@@ -89,13 +90,7 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
                                 ),
                               ),
                             )
-                          : CircleAvatar(
-                              foregroundImage:
-                                  const AssetImage("assets/icons/hand.png"),
-                              // Create a circular avatar icon
-                              radius: 26, // Set radius to 36
-                              backgroundColor: swatch[900],
-                            ),
+                          : const DefaultProfile(radius: 26),
                 ),
                 // Text widget with the text "username"
                 Text(

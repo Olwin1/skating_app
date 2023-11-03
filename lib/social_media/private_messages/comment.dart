@@ -7,6 +7,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import '../../api/config.dart';
 import '../../api/social.dart';
+import '../../misc/default_profile.dart';
 import '../../swatch.dart';
 
 class Comment extends StatefulWidget {
@@ -98,13 +99,7 @@ class _Comment extends State<Comment> {
                                         fit: BoxFit.cover),
                                   ),
                                 ))
-                        : CircleAvatar(
-                            foregroundImage:
-                                const AssetImage("assets/icons/hand.png"),
-                            // Create a circular avatar icon
-                            radius: 25, // Set radius to 36
-                            backgroundColor: swatch[900],
-                          )),
+                        : const DefaultProfile(radius: 25)),
             Expanded(
                 // Expanded Widget Wrapper
                 flex: 2,

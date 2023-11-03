@@ -14,6 +14,7 @@ import 'api/social.dart';
 import 'common_logger.dart';
 import 'firebase_options.dart';
 import 'local_notification.dart';
+import 'misc/default_profile.dart';
 import 'swatch.dart';
 import 'tab_navigator.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
@@ -230,16 +231,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         shape: BoxShape
                             .circle, // Set the shape of the container to a circle
                         image: DecorationImage(
-                            image: imageProvider, fit: BoxFit.fill),
+                            image: imageProvider, fit: BoxFit.contain),
                       ),
                     ),
                   )
-                : CircleAvatar(
-                    foregroundImage: const AssetImage("assets/icons/hand.png"),
-                    // Create a circular avatar icon
-                    radius: 36, // Set radius to 36
-                    backgroundColor: swatch[900],
-                  ),
+                : const DefaultProfile(radius: 36),
       ), // Create Profile Button Object
     ]);
   }

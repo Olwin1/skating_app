@@ -5,6 +5,7 @@ import 'package:patinka/api/social.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/profile/profile_page.dart';
 import '../api/config.dart';
+import '../misc/default_profile.dart';
 import '../swatch.dart';
 
 bool entering = false;
@@ -172,13 +173,7 @@ class Results extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     results[index]["avatar_id"] == null
-                        ? CircleAvatar(
-                            foregroundImage:
-                                const AssetImage("assets/icons/hand.png"),
-                            // Create a circular avatar icon
-                            radius: 36, // Set radius to 36
-                            backgroundColor: swatch[900],
-                          )
+                        ? const DefaultProfile(radius: 36)
                         : Flexible(
                             child: CachedNetworkImage(
                                 imageUrl:

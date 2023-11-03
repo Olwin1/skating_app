@@ -14,6 +14,7 @@ import '../../api/messages.dart';
 import '../../api/social.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../misc/default_profile.dart';
 import '../../swatch.dart';
 
 // Initialize GetIt for dependency injection
@@ -273,13 +274,7 @@ class _PrivateMessage extends State<PrivateMessage> {
                                         image: imageProvider, fit: BoxFit.fill),
                                   ),
                                 ))
-                        : CircleAvatar(
-                            foregroundImage:
-                                const AssetImage("assets/icons/hand.png"),
-                            // Create a circular avatar icon
-                            radius: 20, // Set radius to 36
-                            backgroundColor: swatch[900],
-                          ),
+                        : const DefaultProfile(radius: 20),
                 //),
                 //Flexible(
                 //flex: 6,

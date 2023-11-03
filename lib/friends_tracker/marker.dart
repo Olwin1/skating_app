@@ -4,6 +4,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/config.dart';
 import 'package:patinka/common_logger.dart';
 
+import '../misc/default_profile.dart';
 import '../swatch.dart';
 
 class CustomMarker extends StatefulWidget {
@@ -79,15 +80,7 @@ class _CustomMarker extends State<CustomMarker> {
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 )
               // If the user doesn't have an avatar, show a default placeholder image
-              : CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  child: SizedBox(
-                    width: 32,
-                    height: 32,
-                    child: ClipOval(
-                      child: Image.asset("assets/icons/hand.png"),
-                    ),
-                  ))
+              : const DefaultProfile(radius: 16)
         ],
       );
     }

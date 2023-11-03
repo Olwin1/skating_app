@@ -19,6 +19,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../components/list_error.dart';
 import '../current_tab.dart';
+import '../misc/default_profile.dart';
 import '../swatch.dart';
 
 // Define item type for popup menu
@@ -206,18 +207,12 @@ class _Profile extends State<Profile> {
                                 shape: BoxShape
                                     .circle, // Set the shape of the container to a circle
                                 image: DecorationImage(
-                                    image: imageProvider, fit: BoxFit.cover),
+                                    image: imageProvider, fit: BoxFit.contain),
                               ),
                             ),
                             httpHeaders: const {"thumbnail": "true"},
                           )
-                        : CircleAvatar(
-                            foregroundImage:
-                                const AssetImage("assets/icons/hand.png"),
-                            // Create a circular avatar icon
-                            radius: 36, // Set radius to 36
-                            backgroundColor: swatch[900],
-                          ),
+                        : const DefaultProfile(radius: 36),
               ),
               // Column to display the number of friends
 

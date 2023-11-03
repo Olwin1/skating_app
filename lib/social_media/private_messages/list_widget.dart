@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../api/config.dart';
+import '../../misc/default_profile.dart';
 import '../../swatch.dart';
 import 'private_message.dart';
 
@@ -101,13 +102,7 @@ class _ListWidget extends State<ListWidget> {
                                             fit: BoxFit.contain),
                                       ),
                                     ))
-                            : CircleAvatar(
-                                foregroundImage:
-                                    const AssetImage("assets/icons/hand.png"),
-                                // Create a circular avatar icon
-                                radius: 36, // Set radius to 36
-                                backgroundColor: swatch[900],
-                              ),
+                            : const DefaultProfile(radius: 36),
                       ),
                 const Padding(
                     padding: EdgeInsets.only(

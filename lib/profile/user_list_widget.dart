@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/profile/profile_page.dart';
 import 'package:patinka/common_logger.dart';
 import '../api/config.dart';
+import '../misc/default_profile.dart';
 import '../swatch.dart';
 
 // UserListWidget class creates a stateful widget that displays a list of users
@@ -63,13 +64,7 @@ class _UserListWidget extends State<UserListWidget> {
                             ),
                           ),
                         )
-                      : CircleAvatar(
-                          foregroundImage:
-                              const AssetImage("assets/icons/hand.png"),
-                          // Create a circular avatar icon
-                          radius: 26, // Set radius to 36
-                          backgroundColor: swatch[900],
-                        ),
+                      : const DefaultProfile(radius: 26),
                 ),
                 // Text widget with the text "username"
                 Text(

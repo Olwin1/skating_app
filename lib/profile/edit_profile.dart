@@ -11,6 +11,7 @@ import 'package:patinka/profile/upload_avatar.dart';
 import 'package:patinka/swatch.dart';
 
 import '../api/config.dart';
+import '../misc/default_profile.dart';
 
 // Define the EditProfile widget which extends StatefulWidget
 class EditProfile extends StatefulWidget {
@@ -180,13 +181,7 @@ class _EditProfile extends State<EditProfile> {
                                     ),
                                   ),
                                 )
-                              : CircleAvatar(
-                                  foregroundImage:
-                                      const AssetImage("assets/icons/hand.png"),
-                                  // Create a circular avatar icon
-                                  radius: 36, // Set radius to 36
-                                  backgroundColor: swatch[900],
-                                ),
+                              : const DefaultProfile(radius: 36),
                       // Display the edit picture button
                       TextButton(
                           onPressed: () =>

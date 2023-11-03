@@ -367,10 +367,18 @@ class _Avatar extends State<Avatar> {
                           ),
                         ))
                 : CircleAvatar(
-                    foregroundImage: const AssetImage("assets/icons/hand.png"),
                     // Create a circular avatar icon
                     radius: 36, // Set radius to 36
                     backgroundColor: swatch[900],
+                    child: SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: ClipOval(
+                          child: Image.asset(
+                            "assets/icons/hand.png",
+                            fit: BoxFit.contain,
+                          ),
+                        )),
                   ));
   }
 }

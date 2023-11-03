@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:patinka/misc/default_profile.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/config.dart';
 import 'package:patinka/common_logger.dart';
@@ -97,12 +98,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
                       ),
                     ),
                   )
-                : CircleAvatar(
-                    foregroundImage: const AssetImage("assets/icons/hand.png"),
-                    // Create a circular avatar icon
-                    radius: 32, // Set radius to 36
-                    backgroundColor: swatch[900],
-                  ),
+                : const DefaultProfile(radius: 32),
       ),
       // Display the username of the user whose information is cached
       Text(userCache != null ? userCache!["username"] : "Username")

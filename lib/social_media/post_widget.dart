@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
+import 'package:patinka/misc/default_profile.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/social.dart';
 import 'package:patinka/common_logger.dart';
@@ -343,7 +344,7 @@ class _Avatar extends State<Avatar> {
                 highlightColor: shimmer["highlight"]!,
                 child: CircleAvatar(
                   // Create a circular avatar icon
-                  radius: 36, // Set radius to 36
+                  radius: 26, // Set radius to 36
                   backgroundColor: swatch[900],
                 ))
             // If there is cached user information and an avatar image, use the cached image
@@ -355,7 +356,7 @@ class _Avatar extends State<Avatar> {
                         highlightColor: shimmer["highlight"]!,
                         child: CircleAvatar(
                           // Create a circular avatar icon
-                          radius: 36, // Set radius to 36
+                          radius: 26, // Set radius to 36
                           backgroundColor: swatch[900],
                         )),
                     imageBuilder: (context, imageProvider) => Container(
@@ -366,20 +367,7 @@ class _Avatar extends State<Avatar> {
                                 image: imageProvider, fit: BoxFit.cover),
                           ),
                         ))
-                : CircleAvatar(
-                    // Create a circular avatar icon
-                    radius: 36, // Set radius to 36
-                    backgroundColor: swatch[900],
-                    child: SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: ClipOval(
-                          child: Image.asset(
-                            "assets/icons/hand.png",
-                            fit: BoxFit.contain,
-                          ),
-                        )),
-                  ));
+                : const DefaultProfile(radius: 26));
   }
 }
 

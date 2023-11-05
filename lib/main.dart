@@ -5,6 +5,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/services.dart';
 //import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+import 'package:patinka/login/login.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/websocket.dart';
 import 'package:patinka/api/token.dart';
@@ -108,7 +109,7 @@ class _MyAppState extends State<MyApp> {
       ),
       home: loggedIn
           ? StateManagement(setLoggedIn: setLoggedIn, loggedIn: loggedIn)
-          : Login(setLoggedIn: setLoggedIn, loggedIn: loggedIn),
+          : LoginPage(), //Login(setLoggedIn: setLoggedIn, loggedIn: loggedIn),
     );
   }
 }

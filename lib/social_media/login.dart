@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_template/flutter_login_template.dart';
@@ -34,7 +36,7 @@ class Login extends StatefulWidget {
 // Define the state object for the login screen
 class _Login extends State<Login> {
   // Define some styles to customize the appearance of the login template
-  static const color = Colors.black;
+  static const color = Colors.transparent;
   LoginTemplateStyle style = LoginTemplateStyle(
     textFieldHintTextStyle: const TextStyle(),
     textFieldErrorTextStyle: const TextStyle(),
@@ -319,7 +321,23 @@ class _Login extends State<Login> {
               ),
       ),
       body: SingleChildScrollView(
-        child: body,
+        child: Stack(children: [
+          ImageFiltered(
+            imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+            child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image:
+                          const AssetImage("assets/backgrounds/graffiti.png"),
+                      fit: BoxFit.cover,
+                      alignment: Alignment.bottomLeft,
+                      colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+                ),
+                padding: const EdgeInsets.all(16)),
+          ),
+          body
+        ]),
       ),
     );
   }

@@ -300,6 +300,7 @@ class _MyHomePageState extends State<MyHomePage> {
             return isFirstRouteInCurrentTab;
           },
           child: Scaffold(
+            extendBody: true,
             bottomNavigationBar: StyleProvider(
               style: Style(),
               child: ConvexAppBar(
@@ -318,9 +319,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   commonLogger.v("Setting the current page: $i")
                 }, // When a button is pressed... output to console
                 style: TabStyle
-                    .fixedCircle, // Set the navbar style to have the circle stay at the centre
-                backgroundColor: swatch[51],
-                activeColor: swatch[401],
+                    .react, // Set the navbar style to have the circle stay at the centre
+                backgroundColor: Color(0x66000000), //swatch[51],
+                activeColor: Color(0x667fea82),
+                shadowColor: Colors.green,
                 //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
                 height: 55,
               ),

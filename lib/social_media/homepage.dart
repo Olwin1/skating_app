@@ -24,6 +24,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         extendBodyBehindAppBar: true,
+        extendBody: true,
         appBar: AppBar(
           elevation: 0,
           backgroundColor: const Color(0x66000000),

@@ -39,19 +39,19 @@ class SignupComponent extends StatelessWidget {
             ),
             PageButton(
               left: 87,
-              top: 296,
+              top: 396,
               label: "Sign In",
               callback: () => callback(PageType.login),
             ),
             PageButton(
               right: 60,
-              top: 296,
+              top: 396,
               label: "Forgot Password",
               callback: () => callback(PageType.forgotPassword),
             ),
-            const MainButton(top: 365, label: "Sign In"),
+            const MainButton(top: 465, label: "Sign In"),
             Positioned(
-                top: 432,
+                top: 532,
                 left: 59,
                 child: Container(
                   height: 0.5,

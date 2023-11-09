@@ -56,14 +56,10 @@ class _LoginPage extends State<LoginPage> {
           ),
           const Positioned(top: 290, right: 0, bottom: 0, child: LayerOne()),
           const Positioned(top: 318, right: 0, bottom: 28, child: LayerTwo()),
-          Positioned(
-              top: 320,
-              right: 0,
-              bottom: 48,
-              child: LayerThree(
-                callback: switchPage,
-                page: currentPage,
-              )),
+          LayerThree(
+            callback: switchPage,
+            page: currentPage,
+          ),
         ],
       )
     ]));

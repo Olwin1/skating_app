@@ -12,37 +12,30 @@ class ForgotComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 584,
+        height: 484,
         width: MediaQuery.of(context).size.width,
         child: Stack(
           children: <Widget>[
             InputSection(
               left: 59,
-              top: 99,
+              top: 169,
               label: "Email",
               hint: "Enter your email",
-              controller: TextEditingController(),
-            ),
-            InputSection(
-              left: 59,
-              top: 199,
-              label: "Password",
-              hint: "Enter your password",
               controller: TextEditingController(),
             ),
             PageButton(
               left: 87,
               top: 296,
-              label: "Signup",
-              callback: () => callback(PageType.signup),
+              label: "Sign In",
+              callback: () => callback(PageType.login),
             ),
             PageButton(
               right: 60,
               top: 296,
-              label: "Sign In",
-              callback: () => callback(PageType.login),
+              label: "Signup",
+              callback: () => callback(PageType.signup),
             ),
-            const MainButton(top: 365, label: "Sign In"),
+            const MainButton(top: 365, label: "Reset Password"),
             Positioned(
                 top: 432,
                 left: 59,

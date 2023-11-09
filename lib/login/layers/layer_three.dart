@@ -18,16 +18,19 @@ class LayerThree extends StatelessWidget {
     Widget activeComponent = LoginComponent(
       callback: callback,
     );
+    double top = 320;
     switch (page) {
       case PageType.signup:
         activeComponent = SignupComponent(
           callback: callback,
         );
+        top = 270;
         break;
       case PageType.forgotPassword:
         activeComponent = ForgotComponent(
           callback: callback,
         );
+        top = 290;
         break;
       case PageType.verificationCode:
         activeComponent = VerifyComponent(
@@ -38,6 +41,8 @@ class LayerThree extends StatelessWidget {
         break;
     }
 
-    return activeComponent;
+    return Stack(children: [
+      Positioned(top: top, right: 0, bottom: 48, child: activeComponent)
+    ]);
   }
 }

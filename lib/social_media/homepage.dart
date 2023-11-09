@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
@@ -22,9 +23,13 @@ class HomePage extends StatelessWidget {
   @override // Override the existing widget build method
   Widget build(BuildContext context) {
     return Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
-          //systemOverlayStyle:
-          //    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+          elevation: 0,
+          backgroundColor: const Color(0x66000000),
+          foregroundColor: Colors.transparent,
+          systemOverlayStyle:
+              const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
 
           //title: const Text("Home"),
           actions: [
@@ -198,38 +203,48 @@ class _PostsListViewState extends State<PostsListView> {
       size = 1080;
     }
     commonLogger.i("resif");
-    return RefreshIndicator(
+    return Stack(children: [
+      Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: const AssetImage("assets/backgrounds/graffiti.png"),
+              fit: BoxFit.cover,
+              alignment: Alignment.bottomLeft,
+              colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+        ),
+      ),
+      RefreshIndicator(
+        edgeOffset: 94,
         onRefresh: () => refreshPage(),
-        child: Stack(children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: const AssetImage("assets/backgrounds/graffiti.png"),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.bottomLeft,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-            ),
-          ),
-          PagedListView<int, Object>(
-            cacheExtent: 1024,
-            pagingController: _pagingController,
-            scrollController: widget.scrollController,
-            // builderDelegate is responsible for creating the actual widgets to be displayed
-            builderDelegate: PagedChildBuilderDelegate<Object>(
-                firstPageProgressIndicatorBuilder: (context) => _loadSkeleton(),
-                noItemsFoundIndicatorBuilder: (context) => ListError(
-                    title: AppLocalizations.of(context)!.noPostsFound,
-                    body: AppLocalizations.of(context)!.makeFriends),
-                // itemBuilder is called for each item in the list to create a widget for that item
-                itemBuilder: (context, item, index) => SizedBox(
-                    width: size,
-                    height: size,
-                    child: PostWidget(post: item, index: index, user: user))),
-            padding: const EdgeInsets.all(
-                8), // Add padding to list so doesn't overflow to sides of screen
-          )
-        ]));
+        child: PagedListView<int, Object>(
+          cacheExtent: 1024,
+          pagingController: _pagingController,
+          scrollController: widget.scrollController,
+          // builderDelegate is responsible for creating the actual widgets to be displayed
+          builderDelegate: PagedChildBuilderDelegate<Object>(
+              firstPageProgressIndicatorBuilder: (context) => _loadSkeleton(),
+              noItemsFoundIndicatorBuilder: (context) => ListError(
+                  title: AppLocalizations.of(context)!.noPostsFound,
+                  body: AppLocalizations.of(context)!.makeFriends),
+              // itemBuilder is called for each item in the list to create a widget for that item
+              itemBuilder: (context, item, index) => index == 0
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 106),
+                      child: SizedBox(
+                          width: size,
+                          height: size,
+                          child:
+                              PostWidget(post: item, index: index, user: user)))
+                  : SizedBox(
+                      width: size,
+                      height: size,
+                      child: PostWidget(post: item, index: index, user: user))),
+          padding: const EdgeInsets.all(
+              8), // Add padding to list so doesn't overflow to sides of screen
+        ),
+      )
+    ]);
   }
 
   @override

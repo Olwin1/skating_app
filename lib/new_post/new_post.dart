@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:photo_gallery/photo_gallery.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -157,8 +158,17 @@ class _NewPostPage extends State<NewPostPage> {
   // Build the UI for the NewPost widget
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text("New Post"),
+        elevation: 0,
+        backgroundColor: const Color(0x66000000),
+        foregroundColor: Colors.transparent,
+        systemOverlayStyle:
+            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+        title: Text(
+          "New Post",
+          style: TextStyle(color: swatch[701]),
+        ),
         actions: [
           IconButton(
               onPressed: () => _selectedImage != null
@@ -210,7 +220,7 @@ class _NewPostPage extends State<NewPostPage> {
                         return SizedBox(
                             height: MediaQuery.of(context).size.height -
                                 MediaQuery.of(context).size.width -
-                                188,
+                                204,
                             child: PhotosGridView(
                               update: _update,
                             ));

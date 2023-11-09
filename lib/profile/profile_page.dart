@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_overlay/flutter_overlay.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
@@ -127,11 +128,21 @@ class _Profile extends State<Profile> {
       user = widget.user;
     }
     return Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
+          elevation: 0,
+          backgroundColor: const Color(0x66000000),
+          foregroundColor: Colors.transparent,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          ),
           // Create appBar widget
           title: user?["username"] != null
               ? Text(
-                  user?["username"] ?? AppLocalizations.of(context)!.username)
+                  user?["username"] ?? AppLocalizations.of(context)!.username,
+                  style: TextStyle(color: swatch[801]),
+                )
               : Shimmer.fromColors(
                   baseColor: shimmer["base"]!,
                   highlightColor: shimmer["highlight"]!,

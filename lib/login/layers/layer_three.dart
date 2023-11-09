@@ -41,8 +41,31 @@ class LayerThree extends StatelessWidget {
         break;
     }
 
-    return Stack(children: [
-      Positioned(top: top, right: 0, bottom: 48, child: activeComponent)
-    ]);
+    return Stack(
+      children: [
+        Positioned(
+          top: top,
+          right: 0,
+          bottom: 48,
+          child: AnimatedSwitcher(
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              // Use both SlideTransition and FadeTransition
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(1.0, 0.0), // Slide from the right
+                  end: const Offset(0.0, 0.05),
+                ).animate(animation),
+                child: FadeTransition(
+                  opacity: animation,
+                  child: child,
+                ),
+              );
+            },
+            duration: const Duration(seconds: 1),
+            child: activeComponent,
+          ),
+        ),
+      ],
+    );
   }
 }

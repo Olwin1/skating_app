@@ -43,9 +43,13 @@ Future<void> main() async {
 
   //FirebaseMessaging.instance.deleteToken();
 
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: swatch[200], // transparent status bar
-  ));
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor:
+          Colors.transparent, //swatch[200], // transparent status bar
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.transparent));
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   // Initialize the FlutterMapTileCaching package for caching map tiles
   await FlutterMapTileCaching.initialise(debugMode: true);

@@ -8,6 +8,9 @@ import 'mainbutton.dart';
 class SignupComponent extends StatelessWidget {
   const SignupComponent({super.key, required this.callback});
   final Function callback;
+  void handleSignup() {
+    print("signuphandle");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +52,11 @@ class SignupComponent extends StatelessWidget {
               label: "Forgot Password",
               callback: () => callback(PageType.forgotPassword),
             ),
-            const MainButton(top: 465, label: "Sign In"),
+            MainButton(
+              top: 465,
+              label: "Sign In",
+              callback: handleSignup,
+            ),
             Positioned(
                 top: 532,
                 left: 59,

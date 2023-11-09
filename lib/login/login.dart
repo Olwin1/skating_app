@@ -9,7 +9,10 @@ import './layers/layer_three.dart';
 import './layers/layer_two.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final bool loggedIn;
+  final dynamic setLoggedIn;
+  const LoginPage({Key? key, required this.loggedIn, this.setLoggedIn})
+      : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPage();
@@ -57,6 +60,8 @@ class _LoginPage extends State<LoginPage> {
           const Positioned(top: 290, right: 0, bottom: 0, child: LayerOne()),
           const Positioned(top: 318, right: 0, bottom: 28, child: LayerTwo()),
           LayerThree(
+            loggedIn: widget.loggedIn,
+            setLoggedIn: widget.setLoggedIn,
             callback: switchPage,
             page: currentPage,
           ),

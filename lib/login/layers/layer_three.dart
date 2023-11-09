@@ -10,13 +10,22 @@ class LayerThree extends StatelessWidget {
   final Function
       callback; // A function to be called when the image has been edited and confirmed.
   final PageType page;
+  final bool loggedIn;
+  final dynamic setLoggedIn;
 
-  const LayerThree({super.key, required this.callback, required this.page});
+  const LayerThree(
+      {super.key,
+      required this.callback,
+      required this.page,
+      required this.loggedIn,
+      this.setLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     Widget activeComponent = LoginComponent(
       callback: callback,
+      loggedIn: loggedIn,
+      setLoggedIn: setLoggedIn,
     );
     double top = 320;
     switch (page) {

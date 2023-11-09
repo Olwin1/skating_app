@@ -109,7 +109,10 @@ class _MyAppState extends State<MyApp> {
       ),
       home: loggedIn
           ? StateManagement(setLoggedIn: setLoggedIn, loggedIn: loggedIn)
-          : LoginPage(), //Login(setLoggedIn: setLoggedIn, loggedIn: loggedIn),
+          : LoginPage(
+              setLoggedIn: setLoggedIn,
+              loggedIn:
+                  loggedIn), //Login(setLoggedIn: setLoggedIn, loggedIn: loggedIn),
     );
   }
 }

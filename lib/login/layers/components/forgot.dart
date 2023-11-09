@@ -9,6 +9,10 @@ class ForgotComponent extends StatelessWidget {
   const ForgotComponent({super.key, required this.callback});
   final Function callback;
 
+  void handleForgot() {
+    print("foorgoithandle");
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -35,7 +39,11 @@ class ForgotComponent extends StatelessWidget {
               label: "Signup",
               callback: () => callback(PageType.signup),
             ),
-            const MainButton(top: 365, label: "Reset Password"),
+            MainButton(
+              top: 365,
+              label: "Reset Password",
+              callback: handleForgot,
+            ),
             Positioned(
                 top: 432,
                 left: 59,

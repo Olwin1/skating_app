@@ -60,7 +60,10 @@ class _LoginPage extends State<LoginPage> {
               top: 320,
               right: 0,
               bottom: 48,
-              child: LayerThree(callback: switchPage)),
+              child: LayerThree(
+                callback: switchPage,
+                page: currentPage,
+              )),
         ],
       )
     ]));

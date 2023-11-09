@@ -74,6 +74,7 @@ class _LoginComponent extends State<LoginComponent> {
               label: "Password",
               hint: "Enter your password",
               controller: passwordController,
+              hidden: true,
             ),
             errorText
                 ? const Positioned(

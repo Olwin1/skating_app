@@ -31,20 +31,33 @@ class _SearchBar extends State<SearchBarr> {
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
           hintText: AppLocalizations.of(context)!.search,
+          hintStyle: const TextStyle(color: Color(0x77ffffff)),
           isDense: true,
           isCollapsed: true,
           filled: true,
-          fillColor: swatch[601],
+          fillColor: const Color(0x66000000),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32),
+            borderSide: BorderSide(
+              color: Colors.green.shade900, // Change the border color to green
+              width: 1, // You can adjust the border width
+              style: BorderStyle.solid,
+              // Remove strokeAlign, as it's not a valid property for BorderSide
+            ),
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32),
-            borderSide: const BorderSide(
-              width: 0,
-              style: BorderStyle.none,
+            borderSide: BorderSide(
+              color: Colors.green.shade900, // Change the border color to green
+              width: 1, // You can adjust the border width
+              style: BorderStyle.solid,
+              // Remove strokeAlign, as it's not a valid property for BorderSide
             ),
           ),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         ),
+        style: TextStyle(color: swatch[901]),
         onSubmitted: (value) {
           Navigator.push(
               context,

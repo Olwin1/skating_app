@@ -319,10 +319,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   commonLogger.v("Setting the current page: $i")
                 }, // When a button is pressed... output to console
                 style: TabStyle
-                    .react, // Set the navbar style to have the circle stay at the centre
-                backgroundColor: Color(0x66000000), //swatch[51],
-                activeColor: Color(0x667fea82),
+                    .fixedCircle, // Set the navbar style to have the circle stay at the centre
+                backgroundColor: const Color(0x66000000), //swatch[51],
+                activeColor:
+                    Color.fromARGB(51, 31, 175, 31), //const Color(0x667fea82),
                 shadowColor: Colors.green,
+                color: Color.fromARGB(51, 0, 23, 0),
                 //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
                 height: 55,
               ),

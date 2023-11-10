@@ -129,16 +129,9 @@ class _FitnessTracker extends State<FitnessTracker> {
     }
     // create an instance of the User class and passing it an id of '1'
     return Scaffold(
+        backgroundColor: Colors.transparent,
         // Scaffold widget, which is the basic layout element in Flutter
         body: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: const AssetImage("assets/backgrounds/graffiti.png"),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-            ),
             // Padding widget to add padding around the edges of the screen
             padding: const EdgeInsets.all(32),
             child: Column(

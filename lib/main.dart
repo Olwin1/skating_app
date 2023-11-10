@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -300,47 +302,60 @@ class _MyHomePageState extends State<MyHomePage> {
             return isFirstRouteInCurrentTab;
           },
           child: Scaffold(
-            extendBody: true,
-            bottomNavigationBar: StyleProvider(
-              style: Style(),
-              child: ConvexAppBar(
-                //Define Navbar Object
-                items: tabItems(), //Set navbar items to the tabitems
-                initialActiveIndex:
-                    currentPage.tab, // Set initial selection to main page
-                onTap: (int i) => {
-                  //When a navbar button is pressed set the current tab to the tabitem that was pressed
-                  mounted
-                      ? setState(() {
-                          //  _currentTab = i;
-                          currentPage.set(i);
-                        })
-                      : null,
-                  commonLogger.v("Setting the current page: $i")
-                }, // When a button is pressed... output to console
-                style: TabStyle
-                    .fixedCircle, // Set the navbar style to have the circle stay at the centre
-                backgroundColor: const Color(0x66000000), //swatch[51],
-                activeColor:
-                    Color.fromARGB(51, 31, 175, 31), //const Color(0x667fea82),
-                shadowColor: Colors.green,
-                color: Color.fromARGB(51, 0, 23, 0),
-                //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
-                height: 55,
+              extendBody: true,
+              bottomNavigationBar: StyleProvider(
+                style: Style(),
+                child: ConvexAppBar(
+                  //Define Navbar Object
+                  items: tabItems(), //Set navbar items to the tabitems
+                  initialActiveIndex:
+                      currentPage.tab, // Set initial selection to main page
+                  onTap: (int i) => {
+                    //When a navbar button is pressed set the current tab to the tabitem that was pressed
+                    mounted
+                        ? setState(() {
+                            //  _currentTab = i;
+                            currentPage.set(i);
+                          })
+                        : null,
+                    commonLogger.v("Setting the current page: $i")
+                  }, // When a button is pressed... output to console
+                  style: TabStyle
+                      .fixedCircle, // Set the navbar style to have the circle stay at the centre
+                  backgroundColor: const Color(0x66000000), //swatch[51],
+                  activeColor: Color.fromARGB(
+                      51, 31, 175, 31), //const Color(0x667fea82),
+                  shadowColor: Colors.green,
+                  color: Color.fromARGB(51, 0, 23, 0),
+                  //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
+                  height: 55,
+                ),
               ),
-            ),
-            body: Stack(
-              children: [
-                // Create a navigator stack for each item
-                _buildOffstageNavigator(currentPage, 0),
-                _buildOffstageNavigator(currentPage, 1),
-                _buildOffstageNavigator(currentPage, 2),
-                _buildOffstageNavigator(currentPage, 3),
-                _buildOffstageNavigator(currentPage, 4)
-              ],
-            ),
-            // This trailing comma makes auto-formatting nicer for build methods.
-          ));
+              body: Stack(
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: const AssetImage(
+                                "assets/backgrounds/graffiti.png"),
+                            fit: BoxFit.cover,
+                            alignment: Alignment.center,
+                            colorFilter: ColorFilter.mode(
+                                Colors.black.withOpacity(0.4),
+                                BlendMode.srcOver)),
+                      ),
+                      padding: const EdgeInsets.all(16)),
+                  // Create a navigator stack for each item
+                  _buildOffstageNavigator(currentPage, 0),
+                  _buildOffstageNavigator(currentPage, 1),
+                  _buildOffstageNavigator(currentPage, 2),
+                  _buildOffstageNavigator(currentPage, 3),
+                  _buildOffstageNavigator(currentPage, 4),
+                ],
+              )
+
+              // This trailing comma makes auto-formatting nicer for build methods.
+              ));
     }); //);
   }
 

@@ -158,6 +158,7 @@ class _NewPostPage extends State<NewPostPage> {
   // Build the UI for the NewPost widget
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         elevation: 0,
@@ -191,14 +192,6 @@ class _NewPostPage extends State<NewPostPage> {
             )
           : Container(
               padding: const EdgeInsets.only(top: 8),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: const AssetImage("assets/backgrounds/graffiti.png"),
-                    fit: BoxFit.cover,
-                    alignment: Alignment.bottomLeft,
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-              ),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

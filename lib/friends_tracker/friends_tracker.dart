@@ -116,6 +116,7 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
 
     //bool isPortrait = true;
     return Scaffold(
+        backgroundColor: Colors.transparent,
         // Scaffold widget, which is the basic layout element in Flutter
         body: FlutterMap(
             mapController: controller,
@@ -135,179 +136,183 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                 maxZoom: 19),
             nonRotatedChildren: [
 // Creates a FloatingSearchBar widget with specified properties
-          // FloatingSearchBar(
-          //     accentColor: swatch[400],
-          //     backdropColor: swatch[401],
-          //     backgroundColor: swatch[301],
-          //     hintStyle: TextStyle(color: swatch[400]),
-          //     queryStyle: TextStyle(color: swatch[600]),
-          //     // The text displayed as a placeholder in the search bar
-          //     hint: AppLocalizations.of(context)!.search,
+              // FloatingSearchBar(
+              //     accentColor: swatch[400],
+              //     backdropColor: swatch[401],
+              //     backgroundColor: swatch[301],
+              //     hintStyle: TextStyle(color: swatch[400]),
+              //     queryStyle: TextStyle(color: swatch[600]),
+              //     // The text displayed as a placeholder in the search bar
+              //     hint: AppLocalizations.of(context)!.search,
 
-          //     // The padding around the search bar while scrolling
-          //     scrollPadding: const EdgeInsets.only(top: 16, bottom: 40),
+              //     // The padding around the search bar while scrolling
+              //     scrollPadding: const EdgeInsets.only(top: 16, bottom: 40),
 
-          //     // The duration of the animation when the search bar transitions between opened and closed states
-          //     transitionDuration: const Duration(milliseconds: 800),
+              //     // The duration of the animation when the search bar transitions between opened and closed states
+              //     transitionDuration: const Duration(milliseconds: 800),
 
-          //     // The curve used for the animation when the search bar transitions between opened and closed states
-          //     transitionCurve: Curves.easeInOut,
+              //     // The curve used for the animation when the search bar transitions between opened and closed states
+              //     transitionCurve: Curves.easeInOut,
 
-          //     // The physics used for scrolling the search bar
-          //     physics: const BouncingScrollPhysics(),
+              //     // The physics used for scrolling the search bar
+              //     physics: const BouncingScrollPhysics(),
 
-          //     // The alignment of the search bar along the x-axis
-          //     axisAlignment: 0.0, //isPortrait ? 0.0 : -1.0,
+              //     // The alignment of the search bar along the x-axis
+              //     axisAlignment: 0.0, //isPortrait ? 0.0 : -1.0,
 
-          //     // The alignment of the search bar along the x-axis when it's in an open state
-          //     openAxisAlignment: 0.0,
+              //     // The alignment of the search bar along the x-axis when it's in an open state
+              //     openAxisAlignment: 0.0,
 
-          //     // The width of the search bar
-          //     width: 600, //isPortrait ? 600 : 500,
+              //     // The width of the search bar
+              //     width: 600, //isPortrait ? 600 : 500,
 
-          //     // The delay in milliseconds before the onQueryChanged function is called
-          //     debounceDelay: const Duration(milliseconds: 500),
+              //     // The delay in milliseconds before the onQueryChanged function is called
+              //     debounceDelay: const Duration(milliseconds: 500),
 
-          //     // A function that's called when the search query changes
-          //     onQueryChanged: (query) {
-          //       // Call your model, bloc, controller here.
-          //     },
+              //     // A function that's called when the search query changes
+              //     onQueryChanged: (query) {
+              //       // Call your model, bloc, controller here.
+              //     },
 
-          //     // The custom transition to be used for animating between opened and closed states
-          //     transition: CircularFloatingSearchBarTransition(),
-          //     onFocusChanged: (e) => {
-          //           updateSearchOpened(e),
-          //           commonLogger.v("Focus changed $e")
-          //         }, // Hide user list
+              //     // The custom transition to be used for animating between opened and closed states
+              //     transition: CircularFloatingSearchBarTransition(),
+              //     onFocusChanged: (e) => {
+              //           updateSearchOpened(e),
+              //           commonLogger.v("Focus changed $e")
+              //         }, // Hide user list
 
-          //     // An array of FloatingSearchBarAction widgets that provide actions within the search bar
-          //     actions: [
-          //       FloatingSearchBarAction(
-          //         showIfOpened: false,
-          //         child: CircularButton(
-          //           icon: const Icon(Icons.place),
-          //           onPressed: () {},
-          //         ),
-          //       ),
-          //       FloatingSearchBarAction.searchToClear(
-          //         showIfClosed: false,
-          //       ),
-          //     ],
+              //     // An array of FloatingSearchBarAction widgets that provide actions within the search bar
+              //     actions: [
+              //       FloatingSearchBarAction(
+              //         showIfOpened: false,
+              //         child: CircularButton(
+              //           icon: const Icon(Icons.place),
+              //           onPressed: () {},
+              //         ),
+              //       ),
+              //       FloatingSearchBarAction.searchToClear(
+              //         showIfClosed: false,
+              //       ),
+              //     ],
 
-          //     // A function that returns a widget that's displayed within the search bar
-          //     builder: (context, transition) {
-          //       return ClipRRect(
-          //         borderRadius: BorderRadius.circular(8),
-          //         child: Material(
-          //           color: Colors.white,
-          //           elevation: 4.0,
-          //           child: Column(
-          //             mainAxisSize: MainAxisSize.min,
-          //             children: Colors.accents.map((color) {
-          //               return Container(height: 100, color: color);
-          //             }).toList(),
-          //           ),
-          //         ),
-          //       );
-          //     }),
-          AnimatedSwitcher(
-              duration: const Duration(
-                  milliseconds:
-                      800), // Gradually fade back in when visible toggled
-              switchOutCurve: const Interval(0.999, 1),
-              child: searchOpened
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 72),
-                      child: FriendActivity(
-                          searchOpened: searchOpened, sessions: newSessions),
-                    )
-                  : Container()),
+              //     // A function that returns a widget that's displayed within the search bar
+              //     builder: (context, transition) {
+              //       return ClipRRect(
+              //         borderRadius: BorderRadius.circular(8),
+              //         child: Material(
+              //           color: Colors.white,
+              //           elevation: 4.0,
+              //           child: Column(
+              //             mainAxisSize: MainAxisSize.min,
+              //             children: Colors.accents.map((color) {
+              //               return Container(height: 100, color: color);
+              //             }).toList(),
+              //           ),
+              //         ),
+              //       );
+              //     }),
+              AnimatedSwitcher(
+                  duration: const Duration(
+                      milliseconds:
+                          800), // Gradually fade back in when visible toggled
+                  switchOutCurve: const Interval(0.999, 1),
+                  child: searchOpened
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 72),
+                          child: FriendActivity(
+                              searchOpened: searchOpened,
+                              sessions: newSessions),
+                        )
+                      : Container()),
 
-          // Default Attribution
-          AttributionWidget.defaultWidget(
-            source: 'OpenStreetMap',
-            onSourceTapped: null,
-          ),
-          Positioned(
-            // Position the widget to the bottom-right corner with a margin of 20 pixels.
-            right: 20,
-            bottom: 20,
-            child: FloatingActionButton(
-              // Triggered when the button is pressed.
-              onPressed: () {
-                // Update the widget state.
-                mounted
-                    ? setState(() => {
-                          // Toggle the boolean value of the `active` variable.
-                          active = !active,
-                          // Set the `_followOnLocationUpdate` variable to either always or once based on the `active` variable.
-                          _followOnLocationUpdate = active
-                              ? FollowOnLocationUpdate.always
-                              : FollowOnLocationUpdate.once,
-                        })
-                    : null;
-                // If the `active` variable is true, add the zoom level (18) to the `_followCurrentLocationStreamController`.
-                // If the `active` variable is false, do nothing.
-                active ? _followCurrentLocationStreamController.add(18) : null;
-              },
-              child: const Icon(
-                // Show the 'my location' icon on the button.
-                Icons.my_location,
-                // Set the color of the icon to white.
-                color: Colors.white,
+              // Default Attribution
+              AttributionWidget.defaultWidget(
+                source: 'OpenStreetMap',
+                onSourceTapped: null,
               ),
-            ),
-          ),
-        ],
-            children: [
-          TileLayer(
-            // Map source -- use OpenStreetMaps
-            tileProvider: FMTC
-                .instance('mapCache')
-                .getTileProvider(), // For caching tiles to improve responsiveness
-            maxZoom: 19,
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.skatingapp.map', // Package Name
-          ),
-          MarkerClusterLayerWidget(
-            // Define the options for the MarkerClusterLayer.
-            options: MarkerClusterLayerOptions(
-              // The maximum radius of a cluster.
-              maxClusterRadius: 45,
-              // The size of the marker icon for each cluster.
-              size: const Size(40, 40),
-              // The position of the anchor point for each marker icon.
-              anchor: AnchorPos.align(AnchorAlign.center),
-              // Options for fitting the map to the bounds of the markers.
-              fitBoundsOptions: const FitBoundsOptions(
-                // The padding to apply around the bounds of the markers.
-                padding: EdgeInsets.all(50),
-                // The maximum zoom level to use when fitting the map bounds.
-                maxZoom: 15,
-              ),
-              // The list of markers to cluster.
-              markers: friends,
-              // The builder function for creating the marker icon for each cluster.
-              builder: (context, markers) {
-                return Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.blue),
-                  child: Center(
-                    child: Text(
-                      markers.length.toString(),
-                      style: const TextStyle(color: Colors.white),
-                    ),
+              Positioned(
+                // Position the widget to the bottom-right corner with a margin of 20 pixels.
+                right: 20,
+                bottom: 20,
+                child: FloatingActionButton(
+                  // Triggered when the button is pressed.
+                  onPressed: () {
+                    // Update the widget state.
+                    mounted
+                        ? setState(() => {
+                              // Toggle the boolean value of the `active` variable.
+                              active = !active,
+                              // Set the `_followOnLocationUpdate` variable to either always or once based on the `active` variable.
+                              _followOnLocationUpdate = active
+                                  ? FollowOnLocationUpdate.always
+                                  : FollowOnLocationUpdate.once,
+                            })
+                        : null;
+                    // If the `active` variable is true, add the zoom level (18) to the `_followCurrentLocationStreamController`.
+                    // If the `active` variable is false, do nothing.
+                    active
+                        ? _followCurrentLocationStreamController.add(18)
+                        : null;
+                  },
+                  child: const Icon(
+                    // Show the 'my location' icon on the button.
+                    Icons.my_location,
+                    // Set the color of the icon to white.
+                    color: Colors.white,
                   ),
-                );
-              },
-            ),
-          ),
-          CurrentLocationLayer(
-            followCurrentLocationStream:
-                _followCurrentLocationStreamController.stream,
-            followOnLocationUpdate: _followOnLocationUpdate,
-          ),
-        ]));
+                ),
+              ),
+            ],
+            children: [
+              TileLayer(
+                backgroundColor: Colors.transparent,
+                // Map source -- use OpenStreetMaps
+                tileProvider: FMTC
+                    .instance('mapCache')
+                    .getTileProvider(), // For caching tiles to improve responsiveness
+                maxZoom: 19,
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.skatingapp.map', // Package Name
+              ),
+              MarkerClusterLayerWidget(
+                // Define the options for the MarkerClusterLayer.
+                options: MarkerClusterLayerOptions(
+                  // The maximum radius of a cluster.
+                  maxClusterRadius: 45,
+                  // The size of the marker icon for each cluster.
+                  size: const Size(40, 40),
+                  // The position of the anchor point for each marker icon.
+                  anchor: AnchorPos.align(AnchorAlign.center),
+                  // Options for fitting the map to the bounds of the markers.
+                  fitBoundsOptions: const FitBoundsOptions(
+                    // The padding to apply around the bounds of the markers.
+                    padding: EdgeInsets.all(50),
+                    // The maximum zoom level to use when fitting the map bounds.
+                    maxZoom: 15,
+                  ),
+                  // The list of markers to cluster.
+                  markers: friends,
+                  // The builder function for creating the marker icon for each cluster.
+                  builder: (context, markers) {
+                    return Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.blue),
+                      child: Center(
+                        child: Text(
+                          markers.length.toString(),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              CurrentLocationLayer(
+                followCurrentLocationStream:
+                    _followCurrentLocationStreamController.stream,
+                followOnLocationUpdate: _followOnLocationUpdate,
+              ),
+            ]));
   }
 }

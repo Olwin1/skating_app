@@ -128,163 +128,152 @@ class _Profile extends State<Profile> {
       user = widget.user;
     }
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: const Color(0x66000000),
-          foregroundColor: Colors.transparent,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-          ),
-          // Create appBar widget
-          title: user?["username"] != null
-              ? Text(
-                  user?["username"] ?? AppLocalizations.of(context)!.username,
-                  style: TextStyle(color: swatch[801]),
-                )
-              : Shimmer.fromColors(
-                  baseColor: shimmer["base"]!,
-                  highlightColor: shimmer["highlight"]!,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 100,
-                          height: 24.0,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  )), // Set title
-          actions: widget.userId == "0"
-              ? [
-                  // Define icon buttons
-                  OptionsMenu(
-                    user: user,
-                  )
-                ]
-              : null,
+      backgroundColor: const Color(0x33000000),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color(0x66000000),
+        foregroundColor: Colors.transparent,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
         ),
-        // Basic list layout element
-        body: Stack(children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: const AssetImage("assets/backgrounds/graffiti.png"),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.bottomLeft,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-            ),
-          ),
-          ListView(shrinkWrap: true, children: [
-            // Row to display the number of friends, followers, and following
-            Row(children: [
-              // Circle avatar
-              Padding(
-                padding: const EdgeInsets.all(8), // Add padding
-                child: avatar == null
-                    ? Shimmer.fromColors(
+        // Create appBar widget
+        title: user?["username"] != null
+            ? Text(
+                user?["username"] ?? AppLocalizations.of(context)!.username,
+                style: TextStyle(color: swatch[801]),
+              )
+            : Shimmer.fromColors(
+                baseColor: shimmer["base"]!,
+                highlightColor: shimmer["highlight"]!,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 24.0,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                )), // Set title
+        actions: widget.userId == "0"
+            ? [
+                // Define icon buttons
+                OptionsMenu(
+                  user: user,
+                )
+              ]
+            : null,
+      ),
+      // Basic list layout element
+      body: ListView(shrinkWrap: true, children: [
+        // Row to display the number of friends, followers, and following
+        Row(children: [
+          // Circle avatar
+          Padding(
+            padding: const EdgeInsets.all(8), // Add padding
+            child: avatar == null
+                ? Shimmer.fromColors(
+                    baseColor: shimmer["base"]!,
+                    highlightColor: shimmer["highlight"]!,
+                    child: Shimmer.fromColors(
                         baseColor: shimmer["base"]!,
                         highlightColor: shimmer["highlight"]!,
-                        child: Shimmer.fromColors(
+                        child: CircleAvatar(
+                          // Create a circular avatar icon
+                          radius: 36, // Set radius to 36
+                          backgroundColor: swatch[900],
+                        )))
+                : avatar != "default"
+                    ? CachedNetworkImage(
+                        placeholder: (context, url) => Shimmer.fromColors(
                             baseColor: shimmer["base"]!,
                             highlightColor: shimmer["highlight"]!,
                             child: CircleAvatar(
                               // Create a circular avatar icon
                               radius: 36, // Set radius to 36
                               backgroundColor: swatch[900],
-                            )))
-                    : avatar != "default"
-                        ? CachedNetworkImage(
-                            placeholder: (context, url) => Shimmer.fromColors(
-                                baseColor: shimmer["base"]!,
-                                highlightColor: shimmer["highlight"]!,
-                                child: CircleAvatar(
-                                  // Create a circular avatar icon
-                                  radius: 36, // Set radius to 36
-                                  backgroundColor: swatch[900],
-                                )),
-                            imageUrl:
-                                '${Config.uri}/image/${user!["avatar_id"]}',
-                            imageBuilder: (context, imageProvider) => Container(
-                              height: 72,
-                              width: 72,
-                              decoration: BoxDecoration(
-                                shape: BoxShape
-                                    .circle, // Set the shape of the container to a circle
-                                image: DecorationImage(
-                                    image: imageProvider, fit: BoxFit.contain),
-                              ),
-                            ),
-                            httpHeaders: const {"thumbnail": "true"},
-                          )
-                        : const DefaultProfile(radius: 36),
-              ),
-              // Column to display the number of friends
+                            )),
+                        imageUrl: '${Config.uri}/image/${user!["avatar_id"]}',
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: 72,
+                          width: 72,
+                          decoration: BoxDecoration(
+                            shape: BoxShape
+                                .circle, // Set the shape of the container to a circle
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.contain),
+                          ),
+                        ),
+                        httpHeaders: const {"thumbnail": "true"},
+                      )
+                    : const DefaultProfile(radius: 36),
+          ),
+          // Column to display the number of friends
 
-              ConnectionLists(
-                user: user,
-              ),
-            ]),
-            // Display the user's name
-            Container(
-              margin: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                  color: const Color.fromARGB(125, 0, 0, 0),
-                  borderRadius: BorderRadius.circular(8)),
-              padding: const EdgeInsets.all(8),
-              child: Text(user?["username"] ?? "",
-                  style: TextStyle(color: swatch[601])),
-            ),
-            // Display the user's bio
-            (user != null && user!["description"] != null)
-                ? Container(
-                    margin: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(125, 0, 0, 0),
-                        borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                        textAlign: TextAlign.justify,
-                        (user!["description"]).toString(),
-                        style: TextStyle(color: swatch[801])),
-                  )
-                : const SizedBox.shrink(),
-            // Row with two text buttons
-            Row(children: [
-              // First text button
-              Expanded(
-                  // Expand button to empty space
-                  child: FollowButton(
-                user: widget.userId,
-                userObj: user,
-              )), // Button text
-              // Second text button
-              Expanded(
-                  child: Container(
+          ConnectionLists(
+            user: user,
+          ),
+        ]),
+        // Display the user's name
+        Container(
+          margin: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+              color: const Color.fromARGB(125, 0, 0, 0),
+              borderRadius: BorderRadius.circular(8)),
+          padding: const EdgeInsets.all(8),
+          child: Text(user?["username"] ?? "",
+              style: TextStyle(color: swatch[601])),
+        ),
+        // Display the user's bio
+        (user != null && user!["description"] != null)
+            ? Container(
                 margin: const EdgeInsets.all(4),
-                padding: const EdgeInsets.all(2),
-                decoration: const BoxDecoration(
-                    color: Color.fromARGB(125, 0, 0, 0),
-                    borderRadius: BorderRadius.all(Radius.circular(8))),
-                child: TextButton(
-                    // Expand button to empty space
-                    onPressed: () => commonLogger.i(
-                        "pressed"), // Prints "pressed" when button is pressed
-                    child: Text(AppLocalizations.of(context)!.shareProfile,
-                        style: TextStyle(color: swatch[401]))),
-              )), // Button text
-              FriendIconButton(user: user)
-            ]),
-            // Expanded grid view with images
-            UserPostsList(user: user, imageViewerController: _show)
-          ]),
-        ]));
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(125, 0, 0, 0),
+                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                    textAlign: TextAlign.justify,
+                    (user!["description"]).toString(),
+                    style: TextStyle(color: swatch[801])),
+              )
+            : const SizedBox.shrink(),
+        // Row with two text buttons
+        Row(children: [
+          // First text button
+          Expanded(
+              // Expand button to empty space
+              child: FollowButton(
+            user: widget.userId,
+            userObj: user,
+          )), // Button text
+          // Second text button
+          Expanded(
+              child: Container(
+            margin: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(2),
+            decoration: const BoxDecoration(
+                color: Color.fromARGB(125, 0, 0, 0),
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            child: TextButton(
+                // Expand button to empty space
+                onPressed: () => commonLogger
+                    .i("pressed"), // Prints "pressed" when button is pressed
+                child: Text(AppLocalizations.of(context)!.shareProfile,
+                    style: TextStyle(color: swatch[401]))),
+          )), // Button text
+          FriendIconButton(user: user)
+        ]),
+        // Expanded grid view with images
+        UserPostsList(user: user, imageViewerController: _show)
+      ]),
+    );
   }
 }
 

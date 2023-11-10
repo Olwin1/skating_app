@@ -23,6 +23,7 @@ class HomePage extends StatelessWidget {
   @override // Override the existing widget build method
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
         appBar: AppBar(
@@ -205,16 +206,16 @@ class _PostsListViewState extends State<PostsListView> {
     }
     commonLogger.i("resif");
     return Stack(children: [
-      Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: const AssetImage("assets/backgrounds/graffiti.png"),
-              fit: BoxFit.cover,
-              alignment: Alignment.bottomLeft,
-              colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-        ),
-      ),
+      // Container(
+      //   decoration: BoxDecoration(
+      //     image: DecorationImage(
+      //         image: const AssetImage("assets/backgrounds/graffiti.png"),
+      //         fit: BoxFit.cover,
+      //         alignment: Alignment.bottomLeft,
+      //         colorFilter: ColorFilter.mode(
+      //             Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+      //   ),
+      // ),
       RefreshIndicator(
         edgeOffset: 94,
         onRefresh: () => refreshPage(),

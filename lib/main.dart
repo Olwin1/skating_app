@@ -321,7 +321,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TabStyle
                       .fixedCircle, // Set the navbar style to have the circle stay at the centre
                   backgroundColor:
-                      const Color.fromARGB(185, 1, 28, 3), //swatch[51],
+                      const Color.fromARGB(184, 32, 49, 33), //swatch[51],
                   activeColor: const Color.fromARGB(
                       51, 31, 175, 31), //const Color(0x667fea82),
                   shadowColor: Colors.green,

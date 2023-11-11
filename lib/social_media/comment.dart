@@ -5,10 +5,10 @@ import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../api/config.dart';
-import '../../api/social.dart';
-import '../../misc/default_profile.dart';
-import '../../swatch.dart';
+import '../api/config.dart';
+import '../api/social.dart';
+import '../misc/default_profile.dart';
+import '../swatch.dart';
 
 class Comment extends StatefulWidget {
   final Map<String, dynamic> comment;

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:patinka/common_logger.dart';
-import 'package:patinka/social_media/private_messages/comment.dart';
+import 'package:patinka/social_media/comment.dart';
 import 'package:patinka/swatch.dart';
 
 import '../api/config.dart';
@@ -47,7 +47,7 @@ class _Comments extends State<Comments> {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: AppBar(

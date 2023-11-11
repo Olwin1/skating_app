@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:patinka/social_media/private_messages/new_channel.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:uuid/uuid.dart';
+import '../../api/config.dart';
 import '../../api/websocket.dart';
 import '../../components/list_error.dart';
 import '../../swatch.dart';
@@ -52,10 +54,23 @@ class _PrivateMessageList extends State<PrivateMessageList> {
     commonLogger.w("REBUILGING PAGe");
     return Scaffold(
         //Create a scaffold
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: true,
+        extendBody: true,
         appBar: AppBar(
+          iconTheme: IconThemeData(color: swatch[701]),
+          elevation: 8,
+          shadowColor: Colors.green.shade900,
+          backgroundColor: Config.appbarColour,
+          foregroundColor: Colors.transparent,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          ),
           title: Text(AppLocalizations.of(context)!.channels,
               style: TextStyle(
-                color: swatch[700],
+                color: swatch[701],
               )),
           actions: [
             IconButton(

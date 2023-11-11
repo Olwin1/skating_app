@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:patinka/api/image.dart';
 import 'package:patinka/api/social.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/swatch.dart';
 
+import '../api/config.dart';
 import '../current_tab.dart';
 
 // Define a widget for sending a post with an image
@@ -98,9 +100,21 @@ class _SendPost extends State<SendPost> {
 
     // Return the scaffold with the app bar and body
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      extendBody: true,
       resizeToAvoidBottomInset:
           false, // Disables automatic resizing of the screen when the keyboard is opened.
       appBar: AppBar(
+        iconTheme: IconThemeData(color: swatch[701]),
+        elevation: 8,
+        shadowColor: Colors.green.shade900,
+        backgroundColor: Config.appbarColour,
+        foregroundColor: Colors.transparent,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+        ),
         // Top bar of the page.
         leadingWidth: 48, // Adjusts the width of the leading widget.
         centerTitle: false, // Aligns the title to the left.
@@ -108,8 +122,10 @@ class _SendPost extends State<SendPost> {
           title: AppLocalizations.of(context)!
               .createPost, // Sets the title of the app bar.
           color: const Color(0xFFDDDDDD), // Sets the color of the title.
-          child: Text(AppLocalizations.of(context)!
-              .createPost), // The actual text of the title.
+          child: Text(
+            AppLocalizations.of(context)!.createPost,
+            style: TextStyle(color: swatch[701]),
+          ), // The actual text of the title.
         ),
         actions: [
           TextButton(
@@ -133,7 +149,8 @@ class _SendPost extends State<SendPost> {
               colorFilter: ColorFilter.mode(
                   Colors.black.withOpacity(0.5), BlendMode.srcOver)),
         ),
-        padding: const EdgeInsets.all(48), // Adds padding to the entire body.
+        padding: const EdgeInsets.symmetric(
+            vertical: 128, horizontal: 48), // Adds padding to the entire body.
         child: Column(
           crossAxisAlignment:
               CrossAxisAlignment.start, // Aligns the children to the left.

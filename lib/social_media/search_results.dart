@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/social.dart';
 import 'package:patinka/common_logger.dart';
@@ -35,7 +36,20 @@ class _SearchResults extends State<SearchResults> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: swatch[701]),
+        elevation: 8,
+        shadowColor: Colors.green.shade900,
+        backgroundColor: Config.appbarColour,
+        foregroundColor: Colors.transparent,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+        ),
         title: Container(
           padding: const EdgeInsets.all(8),
           child: TextField(

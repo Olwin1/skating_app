@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/profile/followers_list.dart';
 import 'package:patinka/profile/following_list.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../api/config.dart';
 import '../swatch.dart';
 
 // Lists widget
@@ -26,13 +28,25 @@ class _Lists extends State<Lists> {
   Widget build(BuildContext context) {
     commonLogger.v("Selected item position: $_selectedItemPosition");
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: AppBar(
-          backgroundColor: swatch[700],
+          iconTheme: IconThemeData(color: swatch[701]),
+          elevation: 8,
+          shadowColor: Colors.green.shade900,
+          backgroundColor: Config.appbarColour,
+          foregroundColor: Colors.transparent,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          ),
           // Setting the bottom of the AppBar
           flexibleSpace: PreferredSize(
             preferredSize: const Size.fromHeight(48.0),
             child: SnakeNavigationBar.color(
-              backgroundColor: swatch[700],
+              backgroundColor: Colors.transparent,
               // Setting the color of the SnakeView
               snakeViewColor: swatch[701],
               // Setting the color of the selected item

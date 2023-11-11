@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/social.dart';
@@ -127,9 +128,25 @@ class _EditProfile extends State<EditProfile> {
     return WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
+            backgroundColor: Colors.transparent,
+            resizeToAvoidBottomInset: false,
+            extendBodyBehindAppBar: true,
+            extendBody: true,
             // Define an app bar with a title "Edit Profile"
             appBar: AppBar(
-              title: Text(AppLocalizations.of(context)!.editProfile),
+              iconTheme: IconThemeData(color: swatch[701]),
+              elevation: 8,
+              shadowColor: Colors.green.shade900,
+              backgroundColor: Config.appbarColour,
+              foregroundColor: Colors.transparent,
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
+              ),
+              title: Text(
+                AppLocalizations.of(context)!.editProfile,
+                style: TextStyle(color: swatch[701]),
+              ),
             ),
             // Define the body of the Scaffold
             body: Stack(children: [

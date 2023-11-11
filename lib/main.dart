@@ -100,6 +100,7 @@ class _MyAppState extends State<MyApp> {
       title: 'Skating App',
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      themeMode: ThemeMode.dark,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -323,10 +324,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TabStyle
                       .fixedCircle, // Set the navbar style to have the circle stay at the centre
                   backgroundColor: const Color(0x66000000), //swatch[51],
-                  activeColor: Color.fromARGB(
+                  activeColor: const Color.fromARGB(
                       51, 31, 175, 31), //const Color(0x667fea82),
                   shadowColor: Colors.green,
-                  color: Color.fromARGB(51, 0, 23, 0),
+                  color: const Color.fromARGB(51, 0, 23, 0),
                   //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
                   height: 55,
                 ),

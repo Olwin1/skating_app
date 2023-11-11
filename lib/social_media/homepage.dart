@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:patinka/api/config.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/social_media/private_messages/private_message_list.dart';
@@ -27,11 +28,14 @@ class HomePage extends StatelessWidget {
         extendBodyBehindAppBar: true,
         extendBody: true,
         appBar: AppBar(
-          elevation: 0,
-          backgroundColor: const Color(0x66000000),
+          elevation: 8,
+          shadowColor: Colors.green.shade900,
+          backgroundColor: Config.appbarColour,
           foregroundColor: Colors.transparent,
-          systemOverlayStyle:
-              const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          ),
 
           //title: const Text("Home"),
           actions: [

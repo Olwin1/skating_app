@@ -13,6 +13,7 @@ import 'package:patinka/new_post/send_post.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import '../api/config.dart';
 import '../current_tab.dart';
 import '../swatch.dart';
 
@@ -161,11 +162,15 @@ class _NewPostPage extends State<NewPostPage> {
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: const Color(0x66000000),
+        iconTheme: IconThemeData(color: swatch[701]),
+        elevation: 8,
+        shadowColor: Colors.green.shade900,
+        backgroundColor: Config.appbarColour,
         foregroundColor: Colors.transparent,
-        systemOverlayStyle:
-            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+        ),
         title: Text(
           "New Post",
           style: TextStyle(color: swatch[701]),

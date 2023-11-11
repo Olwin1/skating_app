@@ -2,10 +2,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/swatch.dart';
+import '../api/config.dart';
 import 'check_permission.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -38,13 +40,29 @@ class _SpeedometerPage extends State<SpeedometerPage> {
     }
     // Return a Scaffold with an AppBar and a KdGaugeView widget
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: swatch[701]),
+        elevation: 8,
+        shadowColor: Colors.green.shade900,
+        backgroundColor: Config.appbarColour,
+        foregroundColor: Colors.transparent,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+        ),
         leadingWidth: 48,
         centerTitle: false,
         title: Title(
           title: AppLocalizations.of(context)!.speedometer,
           color: const Color(0xFFDDDDDD),
-          child: Text(AppLocalizations.of(context)!.speedometer),
+          child: Text(
+            AppLocalizations.of(context)!.speedometer,
+            style: TextStyle(color: swatch[701]),
+          ),
         ),
       ),
       body: Container(

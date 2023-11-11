@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 
@@ -24,4 +25,5 @@ class Config {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Bearer ${await storage.getToken()}',
       };
+  static Color appbarColour = const Color(0x66000000);
 }

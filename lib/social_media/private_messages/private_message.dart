@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get_it/get_it.dart';
@@ -233,7 +234,19 @@ class _PrivateMessage extends State<PrivateMessage> {
     return WillPopScope(
         onWillPop: () => _onWillPop(),
         child: Scaffold(
+            backgroundColor: Colors.transparent,
+            extendBodyBehindAppBar: true,
+            extendBody: true,
             appBar: AppBar(
+              iconTheme: IconThemeData(color: swatch[701]),
+              elevation: 8,
+              shadowColor: Colors.green.shade900,
+              backgroundColor: Config.appbarColour,
+              foregroundColor: Colors.transparent,
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
+              ),
               // Create appBar
               leadingWidth: 48, // Remove extra leading space
               centerTitle: false, // Align title to left
@@ -290,12 +303,12 @@ class _PrivateMessage extends State<PrivateMessage> {
                           //Username Text
                           widget.user?["username"] ??
                               AppLocalizations.of(context)!.username,
-                          style: TextStyle(fontSize: 16, color: swatch[700]),
+                          style: TextStyle(fontSize: 16, color: swatch[701]),
                         ),
                         Text(
                           // Last active text
                           AppLocalizations.of(context)!.activityOnline,
-                          style: TextStyle(fontSize: 12, color: swatch[600]),
+                          style: TextStyle(fontSize: 12, color: swatch[601]),
                         )
                       ],
                     )) //),
@@ -350,11 +363,12 @@ class _PrivateMessage extends State<PrivateMessage> {
                               fontWeight: FontWeight.w800,
                               height: 1.333),
                           inputMargin: const EdgeInsets.only(
-                              left: 8,
-                              right: 8,
-                              bottom: 8), // Add margins to text input
-                          inputBorderRadius: const BorderRadius.all(
-                              Radius.circular(
+                              left: 0,
+                              right: 0,
+                              bottom: 0), // Add margins to text input
+                          inputPadding: const EdgeInsets.all(16),
+                          inputBorderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(
                                   24))), // Make input rounded corners
                       onEndReached: () => _loadMoreMessages(),
                     ),

@@ -1,5 +1,6 @@
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/social_media/private_messages/comment.dart';
@@ -45,7 +46,20 @@ class _Comments extends State<Comments> {
     focus = FocusNode();
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: swatch[701]),
+        elevation: 8,
+        shadowColor: Colors.green.shade900,
+        backgroundColor: Config.appbarColour,
+        foregroundColor: Colors.transparent,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+        ),
         leadingWidth: 48,
         centerTitle: false,
         title: Title(
@@ -204,11 +218,19 @@ class _CommentsListViewState extends State<CommentsListView> {
           noItemsFoundIndicatorBuilder: (context) => ListError(
               title: AppLocalizations.of(context)!.noCommentsFound, body: ""),
           // Use the Comment widget to build each item in the list view
-          itemBuilder: (context, item, index) => Comment(
-            index: index,
-            focus: widget.focus,
-            comment: item,
-          ),
+          itemBuilder: (context, item, index) => index == 0
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Comment(
+                    index: index,
+                    focus: widget.focus,
+                    comment: item,
+                  ))
+              : Comment(
+                  index: index,
+                  focus: widget.focus,
+                  comment: item,
+                ),
         ),
       )
     ]);

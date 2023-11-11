@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:http/http.dart';
 import 'package:photo_gallery/photo_gallery.dart';
@@ -13,6 +14,7 @@ import 'package:patinka/new_post/avatar_interact.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import '../api/config.dart';
 import '../api/image.dart';
 import '../swatch.dart';
 
@@ -172,8 +174,24 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
   // Build the UI for the NewPost widget
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: AppBar(
-        title: const Text("New Avatar"),
+        iconTheme: IconThemeData(color: swatch[701]),
+        elevation: 8,
+        shadowColor: Colors.green.shade900,
+        backgroundColor: Config.appbarColour,
+        foregroundColor: Colors.transparent,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+        ),
+        title: Text(
+          "New Avatar",
+          style: TextStyle(color: swatch[701]),
+        ),
         actions: [
           IconButton(
               onPressed: () => _selectedImage != null
@@ -223,7 +241,7 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
                         return SizedBox(
                             height: MediaQuery.of(context).size.height -
                                 MediaQuery.of(context).size.width -
-                                140,
+                                150,
                             child: PhotosGridView(
                               update: _update,
                             ));

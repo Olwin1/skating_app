@@ -131,8 +131,10 @@ class _Profile extends State<Profile> {
       backgroundColor: const Color(0x33000000),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: const Color(0x66000000),
+        iconTheme: IconThemeData(color: swatch[701]),
+        elevation: 8,
+        shadowColor: Colors.green.shade900,
+        backgroundColor: Config.appbarColour,
         foregroundColor: Colors.transparent,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,

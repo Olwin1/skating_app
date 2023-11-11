@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:patinka/api/messages.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/social_media/private_messages/suggestion_widget.dart';
+import '../../api/config.dart';
 import '../../components/list_error.dart';
+import '../../swatch.dart';
 
 class NewChannelPage extends StatefulWidget {
   const NewChannelPage({super.key, required this.callback});
@@ -19,8 +22,24 @@ class _NewChannelPageState extends State<NewChannelPage> {
   Widget build(BuildContext context) {
     // Build a paginated list view of comments using the PagedListView widget
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: AppBar(
-        title: const Text("Compose Message"),
+        iconTheme: IconThemeData(color: swatch[701]),
+        elevation: 8,
+        shadowColor: Colors.green.shade900,
+        backgroundColor: Config.appbarColour,
+        foregroundColor: Colors.transparent,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+        ),
+        title: Text(
+          "Compose Message",
+          style: TextStyle(color: swatch[701]),
+        ),
       ),
       body: Container(
           decoration: BoxDecoration(

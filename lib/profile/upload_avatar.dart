@@ -83,7 +83,7 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
 
 // This function prompts the user to grant permission to access the device's photo gallery.
   Future<bool> _promptPermissionSetting() async {
-    commonLogger.v("Prompting image permissions");
+    commonLogger.t("Prompting image permissions");
     // Check if the device is iOS and both the storage and photos permissions have been granted,
     // or if the device is Android and the storage permission has been granted.
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -158,7 +158,7 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
   }
 
   void callback(image) {
-    commonLogger.v("Navigating to send post page");
+    commonLogger.t("Navigating to send post page");
 
     selectedImage = image;
     sendInfo(image);

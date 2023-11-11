@@ -169,7 +169,7 @@ class ConnectionsAPI {
 
       // Check the response status code
       if (response.statusCode == 200) {
-        commonLogger.v("Response: 200 Does Follow User");
+        commonLogger.t("Response: 200 Does Follow User");
         return handleResponse(response, Resp.stringResponse);
       }
       // Throw an exception if the follow check is unsuccessful
@@ -192,7 +192,7 @@ class ConnectionsAPI {
 
       // Check the response status code
       if (response.statusCode == 200) {
-        commonLogger.v("Response: 200 Does Friend User");
+        commonLogger.t("Response: 200 Does Friend User");
 
         // Parse the response body and return the result
         return handleResponse(response, Resp.stringResponse);

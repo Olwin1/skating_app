@@ -92,7 +92,7 @@ class _PostWidget extends State<PostWidget> {
 
   @override // Override existing build method
   Widget build(BuildContext context) {
-    commonLogger.v("Building ${widget.post['liked']}");
+    commonLogger.t("Building ${widget.post['liked']}");
     String comments = widget.post['comment_count'] ?? "0";
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       false //widget.post["influencer"]

@@ -25,7 +25,7 @@ class WebSocketConnection {
   // Method to connect to the WebSocket
   void _connect() async {
     try {
-      commonLogger.v("Connecting to websocket"); // logs to console
+      commonLogger.t("Connecting to websocket"); // logs to console
       // Creates an io.Socket instance with the given configuration
       socket = io.io(
           Config.uri,
@@ -48,7 +48,7 @@ class WebSocketConnection {
       });
       // Adds a listener for the 'disconnect' event
       socket.onDisconnect((_) =>
-          commonLogger.v("Disconnecting from socket")); // logs to console
+          commonLogger.t("Disconnecting from socket")); // logs to console
     } catch (e) {
       commonLogger
           .e('Error connecting to WebSocket: $e'); // logs any errors to console

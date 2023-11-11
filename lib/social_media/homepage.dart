@@ -161,7 +161,7 @@ class _PostsListViewState extends State<PostsListView> {
 // Fetches the data for the given pageKey and appends it to the list of items
   Future<void> _fetchPage(int pageKey) async {
     try {
-      commonLogger.v("Fetching page");
+      commonLogger.t("Fetching page");
       // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
       final page = await SocialAPI.getPosts(pageKey);
       // _pagingController.refresh();

@@ -112,7 +112,7 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
   @override
   Widget build(BuildContext context) {
     // create an instance of the User class and passing it an id of '1'
-    commonLogger.v("Building Map");
+    commonLogger.t("Building Map");
 
     //bool isPortrait = true;
     return Scaffold(
@@ -178,7 +178,7 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
               //     transition: CircularFloatingSearchBarTransition(),
               //     onFocusChanged: (e) => {
               //           updateSearchOpened(e),
-              //           commonLogger.v("Focus changed $e")
+              //           commonLogger.t("Focus changed $e")
               //         }, // Hide user list
 
               //     // An array of FloatingSearchBarAction widgets that provide actions within the search bar
@@ -226,10 +226,10 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                       : Container()),
 
               // Default Attribution
-              AttributionWidget.defaultWidget(
-                source: 'OpenStreetMap',
-                onSourceTapped: null,
-              ),
+              // AttributionWidget.defaultWidget(
+              //   source: 'OpenStreetMap',
+              //   onSourceTapped: null,
+              // ),
               Positioned(
                 // Position the widget to the bottom-right corner with a margin of 20 pixels.
                 right: 20,

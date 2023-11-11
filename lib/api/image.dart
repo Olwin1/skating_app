@@ -20,7 +20,7 @@ Future<Uint8List> compressImage(Uint8List image) async {
     minWidth: 1080,
     quality: 96,
   );
-  commonLogger.v("Image Successfully Compressed: ${image.length}");
+  commonLogger.t("Image Successfully Compressed: ${image.length}");
 
   return result;
 }
@@ -58,7 +58,7 @@ Future<StreamedResponse?> uploadFile(Uint8List image) async {
     StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       // If the server returns a 200 status code, print a success message to the console
-      commonLogger.v("Response: 200 Image Upload");
+      commonLogger.t("Response: 200 Image Upload");
 
       return response;
     } else {

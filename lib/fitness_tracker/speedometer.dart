@@ -100,7 +100,7 @@ class _SpeedometerPage extends State<SpeedometerPage> {
 
   @override
   void dispose() {
-    commonLogger.v("Disposing Speedometer");
+    commonLogger.t("Disposing Speedometer");
     stream?.cancel();
     super.dispose();
   }

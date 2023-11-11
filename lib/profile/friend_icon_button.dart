@@ -29,7 +29,7 @@ class _FriendIconButtonState extends State<FriendIconButton> {
         ConnectionsAPI.friendUserRequest(widget.user!["user_id"], true)
             .then((value) => {
                   // Logs the response from `followUser`
-                  commonLogger.v("Friend accept success $value"),
+                  commonLogger.t("Friend accept success $value"),
                   // If follow request is successful, update `type` to "requested"
                   mounted ? setState(() => friend = FriendState.yes) : null,
                   loading = false
@@ -37,7 +37,7 @@ class _FriendIconButtonState extends State<FriendIconButton> {
       } else if (friend != FriendState.no && friend != FriendState.self) {
         ConnectionsAPI.unfriendUser(widget.user!["user_id"]).then((value) => {
               // Logs the response from `followUser`
-              commonLogger.v("Unfriend success $value"),
+              commonLogger.t("Unfriend success $value"),
               // If follow request is successful, update `type` to "requested"
               mounted ? setState(() => friend = FriendState.no) : null,
               loading = false
@@ -45,7 +45,7 @@ class _FriendIconButtonState extends State<FriendIconButton> {
       } else if (friend != FriendState.self) {
         ConnectionsAPI.friendUser(widget.user!["user_id"]).then((value) => {
               // Logs the response from `followUser`
-              commonLogger.v("Friend success $value"),
+              commonLogger.t("Friend success $value"),
               // If follow request is successful, update `type` to "requested"
               mounted
                   ? setState(() => friend = FriendState.requestedOutgoing)

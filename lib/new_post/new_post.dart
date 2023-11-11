@@ -111,7 +111,7 @@ class _NewPostPage extends State<NewPostPage> {
 
 // This function prompts the user to grant permission to access the device's photo gallery.
   Future<bool> _promptPermissionSetting() async {
-    commonLogger.v("Prompting image permissions");
+    commonLogger.t("Prompting image permissions");
     // Check if the device is iOS and both the storage and photos permissions have been granted,
     // or if the device is Android and the storage permission has been granted.
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -136,7 +136,7 @@ class _NewPostPage extends State<NewPostPage> {
   }
 
   void callback(image) {
-    commonLogger.v("Navigating to send post page");
+    commonLogger.t("Navigating to send post page");
 
     selectedImage = image;
     Navigator.of(context, rootNavigator: true).push(

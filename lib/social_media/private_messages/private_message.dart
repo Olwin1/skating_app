@@ -198,7 +198,7 @@ class _PrivateMessage extends State<PrivateMessage> {
 
   Future<void> _loadMoreMessages() async {
     if (channelId != null) {
-      commonLogger.v("Loading more messages");
+      commonLogger.t("Loading more messages");
       final nextPage = _page + 1;
       final messagesRaw = await MessagesAPI.getMessages(nextPage, channelId!);
       List<types.Message> messages = [];

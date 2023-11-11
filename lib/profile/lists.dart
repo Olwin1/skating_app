@@ -26,7 +26,7 @@ class _Lists extends State<Lists> {
 
   @override
   Widget build(BuildContext context) {
-    commonLogger.v("Selected item position: $_selectedItemPosition");
+    commonLogger.t("Selected item position: $_selectedItemPosition");
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,

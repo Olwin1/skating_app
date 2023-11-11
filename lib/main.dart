@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -317,7 +316,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             currentPage.set(i);
                           })
                         : null,
-                    commonLogger.v("Setting the current page: $i")
+                    commonLogger.t("Setting the current page: $i")
                   }, // When a button is pressed... output to console
                   style: TabStyle
                       .fixedCircle, // Set the navbar style to have the circle stay at the centre

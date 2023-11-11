@@ -86,7 +86,7 @@ class _DistanceTravelled extends State<DistanceTravelled> {
       );
     }
     stream?.cancel().then(
-          (value) => {stream = null, commonLogger.v("Cancelling stream")},
+          (value) => {stream = null, commonLogger.t("Cancelling stream")},
         );
     previousPosition = null;
     return Text("0 Km", style: TextStyle(color: swatch[401]));

@@ -156,7 +156,7 @@ class _SearchResultsList extends State<SearchResultsList> {
     entering = true;
 
     // Print the search query
-    commonLogger.v("searching users ${widget.query}");
+    commonLogger.t("searching users ${widget.query}");
 
     // Call the searchUsers function with the query and handle the returned value
     SocialAPI.searchUsers(widget.query).then((value) => mounted

@@ -86,7 +86,7 @@ class _EditProfile extends State<EditProfile> {
           true, // Ensure the picker is displayed within the safe area of the screen
       onSelect: (Country country) {
         // Callback function when a country is selected
-        commonLogger.v('Select country: ${country.displayName}');
+        commonLogger.t('Select country: ${country.displayName}');
         countryController.text = country.name;
       },
       countryListTheme: CountryListThemeData(

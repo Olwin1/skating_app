@@ -75,7 +75,7 @@ class _Profile extends State<Profile> {
       context,
       child: _dialog(),
     ).then((value) {
-      commonLogger.v('Recieved value: $value');
+      commonLogger.t('Recieved value: $value');
     });
   }
 

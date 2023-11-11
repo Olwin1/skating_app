@@ -293,7 +293,11 @@ class _OptionsMenuState extends State<OptionsMenu> {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<SampleItem>(
-      color: swatch[500],
+      color: const Color(0x66000000),
+      icon: Icon(
+        Icons.more_vert,
+        color: swatch[601],
+      ),
       // Offset to set the position of the menu relative to the button
       offset: const Offset(0, 64),
       // Callback function that will be called when a menu item is selected

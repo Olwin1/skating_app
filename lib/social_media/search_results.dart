@@ -8,6 +8,7 @@ import 'package:patinka/profile/profile_page.dart';
 import '../api/config.dart';
 import '../misc/default_profile.dart';
 import '../swatch.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 bool entering = false;
 
@@ -58,20 +59,36 @@ class _SearchResults extends State<SearchResults> {
             maxLines: 1,
             textAlignVertical: TextAlignVertical.center,
             decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.search,
+              hintStyle: const TextStyle(color: Color(0x77ffffff)),
               isDense: true,
               isCollapsed: true,
               filled: true,
-              fillColor: swatch[601], // Fill color for the text field
+              fillColor: const Color(0x66000000),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(32),
+                borderSide: BorderSide(
+                  color:
+                      Colors.green.shade900, // Change the border color to green
+                  width: 1, // You can adjust the border width
+                  style: BorderStyle.solid,
+                  // Remove strokeAlign, as it's not a valid property for BorderSide
+                ),
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(32),
-                borderSide: const BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
+                borderSide: BorderSide(
+                  color:
+                      Colors.green.shade900, // Change the border color to green
+                  width: 1, // You can adjust the border width
+                  style: BorderStyle.solid,
+                  // Remove strokeAlign, as it's not a valid property for BorderSide
                 ),
               ),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             ),
+            style: TextStyle(color: swatch[901]),
             onSubmitted: (value) {
               entering = false; // Set entering flag to false
               mounted
@@ -187,7 +204,7 @@ class Results extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     results[index]["avatar_id"] == null
-                        ? const DefaultProfile(radius: 36)
+                        ? const DefaultProfile(radius: 24)
                         : Flexible(
                             child: CachedNetworkImage(
                                 imageUrl:
@@ -197,7 +214,7 @@ class Results extends StatelessWidget {
                                         baseColor: shimmer["base"]!,
                                         highlightColor: shimmer["highlight"]!,
                                         child: CircleAvatar(
-                                          radius: 36,
+                                          radius: 24,
                                           backgroundColor: swatch[900],
                                         )),
                                 imageBuilder: (context, imageProvider) =>

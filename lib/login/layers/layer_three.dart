@@ -3,7 +3,6 @@ import 'package:patinka/login/layers/components/forgot.dart';
 import 'package:patinka/login/layers/components/login.dart';
 import 'package:patinka/login/layers/components/signup.dart';
 import 'package:patinka/login/layers/components/verify.dart';
-import '../config.dart';
 import '../page_type.dart';
 
 class LayerThree extends StatelessWidget {

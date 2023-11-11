@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../config.dart';
-import '../../page_type.dart';
 
 class PageButton extends StatelessWidget {
   const PageButton(

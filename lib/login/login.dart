@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:patinka/login/config.dart';
 import 'package:patinka/login/page_type.dart';
-import 'package:patinka/swatch.dart';
 import './layers/layer_one.dart';
 import './layers/layer_three.dart';
 import './layers/layer_two.dart';

@@ -74,7 +74,7 @@ class _Settings extends State<Settings> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 126),
+            padding: const EdgeInsets.only(top: 126),
             child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),

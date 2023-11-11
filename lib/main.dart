@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,7 +10,6 @@ import 'package:patinka/login/login.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/websocket.dart';
 import 'package:patinka/api/token.dart';
-import 'package:patinka/social_media/login.dart';
 import 'api/config.dart';
 import 'api/social.dart';
 import 'common_logger.dart';

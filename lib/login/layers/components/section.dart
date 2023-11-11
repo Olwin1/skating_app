@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:patinka/swatch.dart';
 import '../../config.dart';
-import '../../page_type.dart';
 
 class InputSection extends StatelessWidget {
   const InputSection(

@@ -37,6 +37,7 @@ class SocialAPI {
   static final Uri _userDescriptionUrl =
       Uri.parse('${Config.uri}/user/description');
   static final Uri _userAvatarUrl = Uri.parse('${Config.uri}/user/avatar');
+  static final Uri _savedPostsUrl = Uri.parse('${Config.uri}/post/saved');
 
 // Define a function to authenticate user credentials and return a token
   static Future<Map<String, dynamic>> postPost(
@@ -645,6 +646,46 @@ class SocialAPI {
       // Handling the error
       throw Exception(
           "Error during post: $e"); // Throwing an exception with an error message
+    }
+  }
+
+// Get a list of saved posts
+  static Future<List<Map<String, dynamic>>> getSavedPosts(int pageKey) async {
+    if (pageKey == 0) {
+      String? localData = await NetworkManager.instance
+          .getLocalData(name: "saved-posts", type: CacheTypes.list);
+
+      if (localData != null) {
+        List<Map<String, dynamic>> cachedPosts =
+            TypeCasts.stringArrayToJsonArray(localData);
+        return cachedPosts;
+      }
+      commonLogger.d(localData);
+      commonLogger.d("localData");
+    }
+    // Define the URL for the HTTP request
+
+    try {
+      // Make a POST request to the specified URL with headers and parameters
+      var response = await http.get(
+        _savedPostsUrl,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Bearer ${await storage.getToken()}',
+          'page': pageKey.toString()
+        },
+      );
+      List<Map<String, dynamic>> data =
+          ResponseHandler.handleListResponse(response);
+      if (pageKey == 0) {
+        NetworkManager.instance
+            .saveData(name: "saved-posts", type: CacheTypes.list, data: data);
+      }
+      // If the response status code is 200 OK, parse and return the response body as a Map
+      return data;
+    } catch (e) {
+      // If there's an error, throw an exception with the error message
+      throw Exception("Error during saved posts: $e");
     }
   }
 }

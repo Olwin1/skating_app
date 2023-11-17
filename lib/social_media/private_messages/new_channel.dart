@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:patinka/api/messages.dart';
 import 'package:patinka/common_logger.dart';
+import 'package:patinka/misc/navbar_provider.dart';
 import 'package:patinka/social_media/private_messages/suggestion_widget.dart';
+import 'package:provider/provider.dart';
 import '../../api/config.dart';
 import '../../components/list_error.dart';
 import '../../swatch.dart';
@@ -20,6 +22,8 @@ class NewChannelPage extends StatefulWidget {
 class _NewChannelPageState extends State<NewChannelPage> {
   @override
   Widget build(BuildContext context) {
+    Provider.of<BottomBarVisibilityProvider>(context, listen: true)
+        .hide(); // Hide The Navbar
     // Build a paginated list view of comments using the PagedListView widget
     return Scaffold(
       backgroundColor: Colors.transparent,

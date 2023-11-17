@@ -77,7 +77,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
           actions: [
             IconButton(
                 onPressed: () =>
-                    Navigator.of(context, rootNavigator: true).push(
+                    Navigator.of(context, rootNavigator: false).push(
                         // Send to signal info page
                         MaterialPageRoute(
                             builder: (context) => NewChannelPage(

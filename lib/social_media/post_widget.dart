@@ -241,17 +241,13 @@ class _PostWidget extends State<PostWidget> {
                                     // Create Comment Button
                                     onPressed: () =>
                                         // RootNavigator hides navbar
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .push(
-                                                // Send to comments page
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Comments(
-                                                            post: widget.post[
-                                                                "post_id"],
-                                                            user:
-                                                                widget.user))),
+                                        Navigator.of(context).push(
+                                            // Send to comments page
+                                            MaterialPageRoute(
+                                                builder: (context) => Comments(
+                                                    post:
+                                                        widget.post["post_id"],
+                                                    user: widget.user))),
                                     icon: Icon(
                                       Icons.comment,
                                       color: unselected,

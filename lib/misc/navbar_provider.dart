@@ -6,14 +6,20 @@ class BottomBarVisibilityProvider extends ChangeNotifier {
   void show() {
     if (!isVisible) {
       isVisible = true;
-      notifyListeners();
+      // Using Future to schedule the notification after the build phase
+      Future.microtask(() {
+        notifyListeners();
+      });
     }
   }
 
   void hide() {
     if (isVisible) {
       isVisible = false;
-      notifyListeners();
+      // Using Future to schedule the notification after the build phase
+      Future.microtask(() {
+        notifyListeners();
+      });
     }
   }
 }

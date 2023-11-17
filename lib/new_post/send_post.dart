@@ -5,7 +5,9 @@ import 'package:patinka/api/image.dart';
 import 'package:patinka/api/social.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/common_logger.dart';
+import 'package:patinka/misc/navbar_provider.dart';
 import 'package:patinka/swatch.dart';
+import 'package:provider/provider.dart';
 
 import '../api/config.dart';
 import '../current_tab.dart';
@@ -34,6 +36,8 @@ class _SendPost extends State<SendPost> {
   // Override the existing build method to create the widget UI
   @override
   Widget build(BuildContext context) {
+    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+        .hide(); // Hide The Navbar
     // Define a function to send the post information
     Future<String?> sendImage() async {
       try {
@@ -96,101 +100,108 @@ class _SendPost extends State<SendPost> {
     }
 
     // Return the scaffold with the app bar and body
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      extendBodyBehindAppBar: true,
-      extendBody: true,
-      resizeToAvoidBottomInset:
-          false, // Disables automatic resizing of the screen when the keyboard is opened.
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: swatch[701]),
-        elevation: 8,
-        shadowColor: Colors.green.shade900,
-        backgroundColor: Config.appbarColour,
-        foregroundColor: Colors.transparent,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-        ),
-        // Top bar of the page.
-        leadingWidth: 48, // Adjusts the width of the leading widget.
-        centerTitle: false, // Aligns the title to the left.
-        title: Title(
-          title: AppLocalizations.of(context)!
-              .createPost, // Sets the title of the app bar.
-          color: const Color(0xFFDDDDDD), // Sets the color of the title.
-          child: Text(
-            AppLocalizations.of(context)!.createPost,
-            style: TextStyle(color: swatch[701]),
-          ), // The actual text of the title.
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => sendInfo(),
-              child: Text(
-                AppLocalizations.of(context)!.send,
-                style: TextStyle(
-                    color: swatch[901],
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    letterSpacing: 0.3),
-              )) // A button to send the post.
-        ],
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: const AssetImage("assets/backgrounds/graffiti.png"),
-              fit: BoxFit.cover,
-              alignment: Alignment.bottomLeft,
-              colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-        ),
-        padding: const EdgeInsets.symmetric(
-            vertical: 128, horizontal: 48), // Adds padding to the entire body.
-        child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Aligns the children to the left.
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: const Color(
-                    0xaa000000), // Sets the background color of the container.
-              ),
-              margin: const EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      AppLocalizations.of(context)!.postDescription,
-                      style: TextStyle(color: swatch[601]),
-                    ),
-                  ),
-                  TextField(
-                    controller: descriptionController,
-                    maxLines: 5,
-                    maxLength: 150,
-                    // Remove default padding
-                    decoration: InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: swatch[200]!),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: swatch[401]!),
-                      ),
-                    ),
-                    cursorColor: swatch[601],
-                    style: TextStyle(color: swatch[601]),
-                  ),
-                ],
-              ),
+    return WillPopScope(
+        onWillPop: () async {
+          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+              .show(); // Show The Navbar
+          return true;
+        },
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          extendBodyBehindAppBar: true,
+          extendBody: true,
+          resizeToAvoidBottomInset:
+              false, // Disables automatic resizing of the screen when the keyboard is opened.
+          appBar: AppBar(
+            iconTheme: IconThemeData(color: swatch[701]),
+            elevation: 8,
+            shadowColor: Colors.green.shade900,
+            backgroundColor: Config.appbarColour,
+            foregroundColor: Colors.transparent,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
             ),
-            Image.memory(widget.image)
-          ],
-        ),
-      ),
-    );
+            // Top bar of the page.
+            leadingWidth: 48, // Adjusts the width of the leading widget.
+            centerTitle: false, // Aligns the title to the left.
+            title: Title(
+              title: AppLocalizations.of(context)!
+                  .createPost, // Sets the title of the app bar.
+              color: const Color(0xFFDDDDDD), // Sets the color of the title.
+              child: Text(
+                AppLocalizations.of(context)!.createPost,
+                style: TextStyle(color: swatch[701]),
+              ), // The actual text of the title.
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () => sendInfo(),
+                  child: Text(
+                    AppLocalizations.of(context)!.send,
+                    style: TextStyle(
+                        color: swatch[901],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        letterSpacing: 0.3),
+                  )) // A button to send the post.
+            ],
+          ),
+          body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: const AssetImage("assets/backgrounds/graffiti.png"),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.bottomLeft,
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+            ),
+            padding: const EdgeInsets.symmetric(
+                vertical: 128,
+                horizontal: 48), // Adds padding to the entire body.
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start, // Aligns the children to the left.
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: const Color(
+                        0xaa000000), // Sets the background color of the container.
+                  ),
+                  margin: const EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          AppLocalizations.of(context)!.postDescription,
+                          style: TextStyle(color: swatch[601]),
+                        ),
+                      ),
+                      TextField(
+                        controller: descriptionController,
+                        maxLines: 5,
+                        maxLength: 150,
+                        // Remove default padding
+                        decoration: InputDecoration(
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: swatch[200]!),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: swatch[401]!),
+                          ),
+                        ),
+                        cursorColor: swatch[601],
+                        style: TextStyle(color: swatch[601]),
+                      ),
+                    ],
+                  ),
+                ),
+                Image.memory(widget.image)
+              ],
+            ),
+          ),
+        ));
   }
 }

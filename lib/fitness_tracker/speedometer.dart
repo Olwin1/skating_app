@@ -6,7 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:patinka/common_logger.dart';
+import 'package:patinka/misc/navbar_provider.dart';
 import 'package:patinka/swatch.dart';
+import 'package:provider/provider.dart';
 import '../api/config.dart';
 import 'check_permission.dart';
 
@@ -27,6 +29,8 @@ class _SpeedometerPage extends State<SpeedometerPage> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+        .hide(); // Hide The Navbar
     // Check if location permission is granted and listen to position updates
     try {
       hasLocationPermission().then((value) => {
@@ -39,63 +43,74 @@ class _SpeedometerPage extends State<SpeedometerPage> {
       commonLogger.e("Speedometer Error: $e");
     }
     // Return a Scaffold with an AppBar and a KdGaugeView widget
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      resizeToAvoidBottomInset: false,
-      extendBodyBehindAppBar: true,
-      extendBody: true,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: swatch[701]),
-        elevation: 8,
-        shadowColor: Colors.green.shade900,
-        backgroundColor: Config.appbarColour,
-        foregroundColor: Colors.transparent,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-        ),
-        leadingWidth: 48,
-        centerTitle: false,
-        title: Title(
-          title: AppLocalizations.of(context)!.speedometer,
-          color: const Color(0xFFDDDDDD),
-          child: Text(
-            AppLocalizations.of(context)!.speedometer,
-            style: TextStyle(color: swatch[701]),
+    return WillPopScope(
+        onWillPop: () async {
+          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+              .show(); // Show The Navbar
+          return true;
+        },
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          resizeToAvoidBottomInset: false,
+          extendBodyBehindAppBar: true,
+          extendBody: true,
+          appBar: AppBar(
+            iconTheme: IconThemeData(color: swatch[701]),
+            elevation: 8,
+            shadowColor: Colors.green.shade900,
+            backgroundColor: Config.appbarColour,
+            foregroundColor: Colors.transparent,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+            ),
+            leadingWidth: 48,
+            centerTitle: false,
+            title: Title(
+              title: AppLocalizations.of(context)!.speedometer,
+              color: const Color(0xFFDDDDDD),
+              child: Text(
+                AppLocalizations.of(context)!.speedometer,
+                style: TextStyle(color: swatch[701]),
+              ),
+            ),
           ),
-        ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: const AssetImage("assets/backgrounds/graffiti.png"),
-              fit: BoxFit.cover,
-              alignment: Alignment.topLeft,
-              colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-        ),
-        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
-        child: KdGaugeView(
-          //baseGaugeColor: Colors.black87,
-          speedTextStyle: TextStyle(
-              color: swatch[401], fontSize: 60, fontWeight: FontWeight.bold),
-          unitOfMeasurementTextStyle: TextStyle(
-              color: swatch[301], fontSize: 30, fontWeight: FontWeight.w600),
-          key: key,
-          minSpeed: 0,
-          maxSpeed: 30,
-          speed: 0,
-          animate: true,
-          unitOfMeasurement: "Km/h",
-          fractionDigits: 2,
-          activeGaugeColor: swatch[401]!, //Color.fromARGB(255, 197, 213, 26),
-          subDivisionCircleColors: const Color.fromARGB(255, 13, 141, 13),
-          divisionCircleColors: const Color.fromARGB(255, 13, 141, 13),
-          inactiveGaugeColor: Colors.lightBlue,
-          //activeGaugeGradientColor: activeGradient,
-        ),
-      ),
-    );
+          body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: const AssetImage("assets/backgrounds/graffiti.png"),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topLeft,
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+            ),
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
+            child: KdGaugeView(
+              //baseGaugeColor: Colors.black87,
+              speedTextStyle: TextStyle(
+                  color: swatch[401],
+                  fontSize: 60,
+                  fontWeight: FontWeight.bold),
+              unitOfMeasurementTextStyle: TextStyle(
+                  color: swatch[301],
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600),
+              key: key,
+              minSpeed: 0,
+              maxSpeed: 30,
+              speed: 0,
+              animate: true,
+              unitOfMeasurement: "Km/h",
+              fractionDigits: 2,
+              activeGaugeColor:
+                  swatch[401]!, //Color.fromARGB(255, 197, 213, 26),
+              subDivisionCircleColors: const Color.fromARGB(255, 13, 141, 13),
+              divisionCircleColors: const Color.fromARGB(255, 13, 141, 13),
+              inactiveGaugeColor: Colors.lightBlue,
+              //activeGaugeGradientColor: activeGradient,
+            ),
+          ),
+        ));
   }
 
   @override

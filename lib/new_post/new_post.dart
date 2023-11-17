@@ -139,7 +139,7 @@ class _NewPostPage extends State<NewPostPage> {
     commonLogger.t("Navigating to send post page");
 
     selectedImage = image;
-    Navigator.of(context, rootNavigator: true).push(
+    Navigator.of(context).push(
         // Root navigator hides navbar
         // Send to Save Session page
         MaterialPageRoute(

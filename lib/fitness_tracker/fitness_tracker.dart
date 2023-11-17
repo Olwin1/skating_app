@@ -263,13 +263,12 @@ class _FitnessTracker extends State<FitnessTracker> {
                       Padding(
                         padding: const EdgeInsets.only(top: 16),
                         child: TextButton(
-                          onPressed: () =>
-                              Navigator.of(context, rootNavigator: true).push(
-                                  // Root navigator hides navbar
-                                  // Send to speedometer page
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SpeedometerPage())),
+                          onPressed: () => Navigator.of(context).push(
+                              // Root navigator hides navbar
+                              // Send to speedometer page
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SpeedometerPage())),
                           child: Text(
                             AppLocalizations.of(context)!.speedometer,
                             style: TextStyle(color: swatch[201], fontSize: 15),
@@ -293,7 +292,7 @@ class _FitnessTracker extends State<FitnessTracker> {
                         : null,
                     if (!active && initialPosition != null)
                       {
-                        Navigator.of(context, rootNavigator: true).push(
+                        Navigator.of(context).push(
                             // Root navigator hides navbar
                             // Send to Save Session page
                             MaterialPageRoute(

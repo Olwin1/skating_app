@@ -6,7 +6,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:patinka/api/session.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/common_logger.dart';
+import 'package:patinka/misc/navbar_provider.dart';
 import 'package:patinka/swatch.dart';
+import 'package:provider/provider.dart';
 
 import '../api/config.dart';
 
@@ -64,6 +66,8 @@ class _SaveSession extends State<SaveSession> {
 
   @override // Override existing build method
   Widget build(BuildContext context) {
+    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+        .hide(); // Hide The Navbar
 // This function is used to create a session and send information to the server
     void sendInfo() {
       try {
@@ -93,228 +97,243 @@ class _SaveSession extends State<SaveSession> {
       }
     }
 
-    return Scaffold(
-        backgroundColor: Colors.transparent,
-        resizeToAvoidBottomInset: false,
-        extendBodyBehindAppBar: true,
-        extendBody: true,
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: swatch[701]),
-          elevation: 8,
-          shadowColor: Colors.green.shade900,
-          backgroundColor: Config.appbarColour,
-          foregroundColor: Colors.transparent,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-          ),
-          // Create appBar
-          leadingWidth: 48, // Remove extra leading space
-          centerTitle: false, // Align title to left
-          title: Title(
-            title: AppLocalizations.of(context)!
-                .saveSession, //Set title to Save Session
-            color: const Color(0xFFDDDDDD),
-            child: Text(
-              AppLocalizations.of(context)!.saveSession,
-              style: TextStyle(color: swatch[701]),
-            ),
-          ),
-        ),
-        body: Stack(children: [
-          Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: const AssetImage("assets/backgrounds/graffiti.png"),
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.4), BlendMode.srcOver)),
+    return WillPopScope(
+        onWillPop: () async {
+          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+              .show(); // Show The Navbar
+          return true;
+        },
+        child: Scaffold(
+            backgroundColor: Colors.transparent,
+            resizeToAvoidBottomInset: false,
+            extendBodyBehindAppBar: true,
+            extendBody: true,
+            appBar: AppBar(
+              iconTheme: IconThemeData(color: swatch[701]),
+              elevation: 8,
+              shadowColor: Colors.green.shade900,
+              backgroundColor: Config.appbarColour,
+              foregroundColor: Colors.transparent,
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
               ),
-              padding: const EdgeInsets.all(16)),
-          Container(
-              padding: const EdgeInsets.all(48),
-              child: ListView(
-                // crossAxisAlignment:
-                //     CrossAxisAlignment.start, // Left align children
-                // Split layout into individual rows
-                children: [
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center, // Center Children
-                    // Top 2 elements
+              // Create appBar
+              leadingWidth: 48, // Remove extra leading space
+              centerTitle: false, // Align title to left
+              title: Title(
+                title: AppLocalizations.of(context)!
+                    .saveSession, //Set title to Save Session
+                color: const Color(0xFFDDDDDD),
+                child: Text(
+                  AppLocalizations.of(context)!.saveSession,
+                  style: TextStyle(color: swatch[701]),
+                ),
+              ),
+            ),
+            body: Stack(children: [
+              Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image:
+                            const AssetImage("assets/backgrounds/graffiti.png"),
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center,
+                        colorFilter: ColorFilter.mode(
+                            Colors.black.withOpacity(0.4), BlendMode.srcOver)),
+                  ),
+                  padding: const EdgeInsets.all(16)),
+              Container(
+                  padding: const EdgeInsets.all(48),
+                  child: ListView(
+                    // crossAxisAlignment:
+                    //     CrossAxisAlignment.start, // Left align children
+                    // Split layout into individual rows
                     children: [
-                      Flexible(
-                        flex: 16,
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.center, // Center Children
+                        // Top 2 elements
+                        children: [
+                          Flexible(
+                            flex: 16,
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                  color: Color.fromARGB(125, 0, 0, 0),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              // Distance Traveled Box
+                              margin: const EdgeInsets.all(8),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .distanceTraveled,
+                                    style: TextStyle(color: swatch[401]),
+                                    overflow: TextOverflow.fade,
+                                    softWrap: false,
+                                  ), // Title
+                                  Text(
+                                      "${(widget.distance / 1000).toStringAsFixed(2)}km",
+                                      style: TextStyle(
+                                          color: swatch[601])) // Value
+                                ],
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          Flexible(
+                              flex: 16,
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: const BoxDecoration(
+                                    color: Color.fromARGB(125, 0, 0, 0),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
+                                // Session Duration Box
+                                margin: const EdgeInsets.all(8),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .sessionDuration,
+                                      style: TextStyle(color: swatch[401]),
+                                      overflow: TextOverflow.fade,
+                                      softWrap: false,
+                                    ), // Title
+
+                                    Text(
+                                        widget.endTime
+                                            .difference(widget.startTime)
+                                            .toString()
+                                            .substring(0, 8),
+                                        style: TextStyle(
+                                            color: swatch[601])) // Value
+                                  ],
+                                ),
+                              ))
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: const BoxDecoration(
+                            color: Color.fromARGB(125, 0, 0, 0),
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        child: Column(
+                          children: [
+                            Text(AppLocalizations.of(context)!.sessionName,
+                                style: TextStyle(color: swatch[401])),
+                            TextField(
+                              maxLength: 100,
+                              decoration: InputDecoration(
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: swatch[200]!),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: swatch[401]!),
+                                ),
+                              ),
+                              cursorColor: swatch[601],
+                              style: TextStyle(color: swatch[601]),
+                              controller: nameController,
+                              autofocus: true,
+                            ),
+                          ],
+                        ),
+                      ), // Session Name Infobox
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: const BoxDecoration(
+                            color: Color.fromARGB(125, 0, 0, 0),
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        child: Column(
+                          children: [
+                            Text(
+                                AppLocalizations.of(context)!
+                                    .sessionDescription,
+                                style: TextStyle(color: swatch[401])),
+                            TextField(
+                              decoration: InputDecoration(
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: swatch[200]!),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: swatch[401]!),
+                                ),
+                              ),
+                              cursorColor: swatch[601],
+                              style: TextStyle(color: swatch[601]),
+                              maxLines: 4,
+                              minLines: 4,
+                              maxLength: 350,
+                              controller: descriptionController,
+                              autofocus: true,
+                            ),
+                          ],
+                        ),
+                      ), // Session Description Infobox
+                      const Spacer(), // Add small gap
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                            color: Color.fromARGB(125, 0, 0, 0),
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        child: TextButton(
+                            onPressed: () => commonLogger.i("Add photos"),
+                            child:
+                                Text(AppLocalizations.of(context)!.addPhotos)),
+                      ), // Add Photos Infobox
+                      Container(
+                          margin: const EdgeInsets.symmetric(
+                            // Add margin
+                            vertical: 16,
+                          ),
                           decoration: const BoxDecoration(
                               color: Color.fromARGB(125, 0, 0, 0),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8))),
-                          // Distance Traveled Box
-                          margin: const EdgeInsets.all(8),
                           child: Column(
                             children: [
-                              Text(
-                                AppLocalizations.of(context)!.distanceTraveled,
-                                style: TextStyle(color: swatch[401]),
-                                overflow: TextOverflow.fade,
-                                softWrap: false,
-                              ), // Title
-                              Text(
-                                  "${(widget.distance / 1000).toStringAsFixed(2)}km",
-                                  style: TextStyle(color: swatch[601])) // Value
+                              Text(AppLocalizations.of(context)!.sessionType,
+                                  style: TextStyle(color: swatch[401])),
+                              SessionType(
+                                callback: setType,
+                              )
                             ],
+                          )), // Session Type Infobox
+                      Container(
+                          margin: const EdgeInsets.symmetric(
+                            // Add margin
+                            vertical: 16,
                           ),
-                        ),
-                      ),
-                      const Spacer(),
-                      Flexible(
-                          flex: 16,
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                                color: Color.fromARGB(125, 0, 0, 0),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            // Session Duration Box
-                            margin: const EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context)!.sessionDuration,
-                                  style: TextStyle(color: swatch[401]),
-                                  overflow: TextOverflow.fade,
-                                  softWrap: false,
-                                ), // Title
-
-                                Text(
-                                    widget.endTime
-                                        .difference(widget.startTime)
-                                        .toString()
-                                        .substring(0, 8),
-                                    style:
-                                        TextStyle(color: swatch[601])) // Value
-                              ],
-                            ),
-                          ))
+                          decoration: const BoxDecoration(
+                              color: Color.fromARGB(125, 0, 0, 0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8))),
+                          child: Column(
+                            children: [
+                              Text(AppLocalizations.of(context)!.shareOptions,
+                                  style: TextStyle(color: swatch[401])),
+                              ShareOptions(
+                                callback: setOptions,
+                              )
+                            ],
+                          )), // Share to Infobox
+                      const Spacer(
+                        flex: 2,
+                      ), // Vertically centre Widget with remaining space
+                      TextButton(
+                        onPressed: () => sendInfo(),
+                        child: Text(AppLocalizations.of(context)!.saveSession,
+                            style: TextStyle(color: swatch[701])),
+                      ), // Save Session Infobox
+                      const Spacer(
+                        flex: 2,
+                      )
                     ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: const BoxDecoration(
-                        color: Color.fromARGB(125, 0, 0, 0),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Column(
-                      children: [
-                        Text(AppLocalizations.of(context)!.sessionName,
-                            style: TextStyle(color: swatch[401])),
-                        TextField(
-                          maxLength: 100,
-                          decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: swatch[200]!),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: swatch[401]!),
-                            ),
-                          ),
-                          cursorColor: swatch[601],
-                          style: TextStyle(color: swatch[601]),
-                          controller: nameController,
-                          autofocus: true,
-                        ),
-                      ],
-                    ),
-                  ), // Session Name Infobox
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: const BoxDecoration(
-                        color: Color.fromARGB(125, 0, 0, 0),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Column(
-                      children: [
-                        Text(AppLocalizations.of(context)!.sessionDescription,
-                            style: TextStyle(color: swatch[401])),
-                        TextField(
-                          decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: swatch[200]!),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: swatch[401]!),
-                            ),
-                          ),
-                          cursorColor: swatch[601],
-                          style: TextStyle(color: swatch[601]),
-                          maxLines: 4,
-                          minLines: 4,
-                          maxLength: 350,
-                          controller: descriptionController,
-                          autofocus: true,
-                        ),
-                      ],
-                    ),
-                  ), // Session Description Infobox
-                  const Spacer(), // Add small gap
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                        color: Color.fromARGB(125, 0, 0, 0),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: TextButton(
-                        onPressed: () => commonLogger.i("Add photos"),
-                        child: Text(AppLocalizations.of(context)!.addPhotos)),
-                  ), // Add Photos Infobox
-                  Container(
-                      margin: const EdgeInsets.symmetric(
-                        // Add margin
-                        vertical: 16,
-                      ),
-                      decoration: const BoxDecoration(
-                          color: Color.fromARGB(125, 0, 0, 0),
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: Column(
-                        children: [
-                          Text(AppLocalizations.of(context)!.sessionType,
-                              style: TextStyle(color: swatch[401])),
-                          SessionType(
-                            callback: setType,
-                          )
-                        ],
-                      )), // Session Type Infobox
-                  Container(
-                      margin: const EdgeInsets.symmetric(
-                        // Add margin
-                        vertical: 16,
-                      ),
-                      decoration: const BoxDecoration(
-                          color: Color.fromARGB(125, 0, 0, 0),
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: Column(
-                        children: [
-                          Text(AppLocalizations.of(context)!.shareOptions,
-                              style: TextStyle(color: swatch[401])),
-                          ShareOptions(
-                            callback: setOptions,
-                          )
-                        ],
-                      )), // Share to Infobox
-                  const Spacer(
-                    flex: 2,
-                  ), // Vertically centre Widget with remaining space
-                  TextButton(
-                    onPressed: () => sendInfo(),
-                    child: Text(AppLocalizations.of(context)!.saveSession,
-                        style: TextStyle(color: swatch[701])),
-                  ), // Save Session Infobox
-                  const Spacer(
-                    flex: 2,
-                  )
-                ],
-              ))
-        ]));
+                  ))
+            ])));
   }
 }
 

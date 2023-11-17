@@ -22,44 +22,50 @@ class NewChannelPage extends StatefulWidget {
 class _NewChannelPageState extends State<NewChannelPage> {
   @override
   Widget build(BuildContext context) {
-    Provider.of<BottomBarVisibilityProvider>(context, listen: true)
+    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
         .hide(); // Hide The Navbar
     // Build a paginated list view of comments using the PagedListView widget
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      resizeToAvoidBottomInset: false,
-      extendBodyBehindAppBar: true,
-      extendBody: true,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: swatch[701]),
-        elevation: 8,
-        shadowColor: Colors.green.shade900,
-        backgroundColor: Config.appbarColour,
-        foregroundColor: Colors.transparent,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-        ),
-        title: Text(
-          "Compose Message",
-          style: TextStyle(color: swatch[701]),
-        ),
-      ),
-      body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: const AssetImage("assets/backgrounds/graffiti.png"),
-                fit: BoxFit.cover,
-                alignment: Alignment.bottomRight,
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+    return WillPopScope(
+        onWillPop: () async {
+          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+              .show(); // Show The Navbar
+          return true;
+        },
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          resizeToAvoidBottomInset: false,
+          extendBodyBehindAppBar: true,
+          extendBody: true,
+          appBar: AppBar(
+            iconTheme: IconThemeData(color: swatch[701]),
+            elevation: 8,
+            shadowColor: Colors.green.shade900,
+            backgroundColor: Config.appbarColour,
+            foregroundColor: Colors.transparent,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+            ),
+            title: Text(
+              "Compose Message",
+              style: TextStyle(color: swatch[701]),
+            ),
           ),
-          padding:
-              const EdgeInsets.all(0), // Add padding so doesn't touch edges
-          child: NewChannelListView(
-            callback: widget.callback,
-          )),
-    );
+          body: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: const AssetImage("assets/backgrounds/graffiti.png"),
+                    fit: BoxFit.cover,
+                    alignment: Alignment.bottomRight,
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.5), BlendMode.srcOver)),
+              ),
+              padding:
+                  const EdgeInsets.all(0), // Add padding so doesn't touch edges
+              child: NewChannelListView(
+                callback: widget.callback,
+              )),
+        ));
   }
 }
 

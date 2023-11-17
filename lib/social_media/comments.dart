@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:patinka/common_logger.dart';
+import 'package:patinka/misc/navbar_provider.dart';
 import 'package:patinka/social_media/comment.dart';
 import 'package:patinka/swatch.dart';
+import 'package:provider/provider.dart';
 
 import '../api/config.dart';
 import '../api/social.dart';
@@ -44,85 +46,93 @@ class _Comments extends State<Comments> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+        .hide(); // Hide The Navbar
     // Create a new focus node every time the widget is built
     focus = FocusNode();
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      resizeToAvoidBottomInset: true,
-      extendBodyBehindAppBar: true,
-      extendBody: true,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: swatch[701]),
-        elevation: 8,
-        shadowColor: Colors.green.shade900,
-        backgroundColor: Config.appbarColour,
-        foregroundColor: Colors.transparent,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-        ),
-        leadingWidth: 48,
-        centerTitle: false,
-        title: Title(
-          title: AppLocalizations.of(context)!.commentsTitle,
-          color: const Color(0xFFDDDDDD),
-          child: Text(
-            AppLocalizations.of(context)!.commentsTitle,
-            style: TextStyle(color: swatch[601]),
-          ),
-        ),
-      ),
-      body: CommentBox(
-        focusNode: focus,
-        userImage: CommentBox.commentImageParser(
-          imageURLorPath: widget.user == null ||
-                  widget.user!["avatar_id"] == null
-              ? "assets/icons/hand.png"
-              : '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
-        ),
-        labelText: AppLocalizations.of(context)!.writeComment,
-        errorText: 'Comment cannot be blank',
-        withBorder: false,
-
-        // Pass the comment controller to the CommentBox widget
-        commentController: commentController,
-
-        // Define the function to execute when the send button is pressed
-        sendButtonMethod: () {
-          if (commentController.text.isNotEmpty) {
-            // Call the postComment function with the current post and the comment text
-            SocialAPI.postComment(widget.post, commentController.text);
-
-            // Clear the comment controller and update the UI with the new comment
-            mounted
-                ? setState(() {
-                    newComments = [
-                      ...newComments,
-                      (<String, dynamic>{
-                        "comment_id": "newPost",
-                        "post_id": widget.post,
-                        "sender_id": "userid",
-                        "content": commentController.text,
-                        "timestamp": DateTime.now().toString()
-                      })
-                    ];
-                  })
-                : null;
-            commentController.clear();
-          }
+    return WillPopScope(
+        onWillPop: () async {
+          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+              .show(); // Show The Navbar
+          return true;
         },
-        backgroundColor: swatch[50],
-        textColor: swatch[801],
-        sendWidget: Icon(Icons.send_sharp, size: 30, color: swatch[801]),
-        child: CommentsListView(
-          // Pass the current post, focus node, and new comments to the CommentsListView widget
-          post: widget.post,
-          focus: focus,
-          newComments: newComments,
-        ),
-      ),
-    );
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          resizeToAvoidBottomInset: true,
+          extendBodyBehindAppBar: true,
+          extendBody: true,
+          appBar: AppBar(
+            iconTheme: IconThemeData(color: swatch[701]),
+            elevation: 8,
+            shadowColor: Colors.green.shade900,
+            backgroundColor: Config.appbarColour,
+            foregroundColor: Colors.transparent,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+            ),
+            leadingWidth: 48,
+            centerTitle: false,
+            title: Title(
+              title: AppLocalizations.of(context)!.commentsTitle,
+              color: const Color(0xFFDDDDDD),
+              child: Text(
+                AppLocalizations.of(context)!.commentsTitle,
+                style: TextStyle(color: swatch[601]),
+              ),
+            ),
+          ),
+          body: CommentBox(
+            focusNode: focus,
+            userImage: CommentBox.commentImageParser(
+              imageURLorPath: widget.user == null ||
+                      widget.user!["avatar_id"] == null
+                  ? "assets/icons/hand.png"
+                  : '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
+            ),
+            labelText: AppLocalizations.of(context)!.writeComment,
+            errorText: 'Comment cannot be blank',
+            withBorder: false,
+
+            // Pass the comment controller to the CommentBox widget
+            commentController: commentController,
+
+            // Define the function to execute when the send button is pressed
+            sendButtonMethod: () {
+              if (commentController.text.isNotEmpty) {
+                // Call the postComment function with the current post and the comment text
+                SocialAPI.postComment(widget.post, commentController.text);
+
+                // Clear the comment controller and update the UI with the new comment
+                mounted
+                    ? setState(() {
+                        newComments = [
+                          ...newComments,
+                          (<String, dynamic>{
+                            "comment_id": "newPost",
+                            "post_id": widget.post,
+                            "sender_id": "userid",
+                            "content": commentController.text,
+                            "timestamp": DateTime.now().toString()
+                          })
+                        ];
+                      })
+                    : null;
+                commentController.clear();
+              }
+            },
+            backgroundColor: swatch[50],
+            textColor: swatch[801],
+            sendWidget: Icon(Icons.send_sharp, size: 30, color: swatch[801]),
+            child: CommentsListView(
+              // Pass the current post, focus node, and new comments to the CommentsListView widget
+              post: widget.post,
+              focus: focus,
+              newComments: newComments,
+            ),
+          ),
+        ));
   }
 
   @override

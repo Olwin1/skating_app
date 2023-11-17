@@ -76,14 +76,8 @@ class _SpeedometerPage extends State<SpeedometerPage> {
             ),
           ),
           body: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: const AssetImage("assets/backgrounds/graffiti.png"),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.topLeft,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-            ),
+            decoration:
+                const BoxDecoration(color: Color.fromARGB(158, 0, 0, 0)),
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
             child: KdGaugeView(
               //baseGaugeColor: Colors.black87,

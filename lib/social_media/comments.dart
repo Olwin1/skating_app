@@ -213,39 +213,27 @@ class _CommentsListViewState extends State<CommentsListView> {
     }
 
     // Build a paginated list view of comments using the PagedListView widget
-    return Stack(children: [
-      Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: const AssetImage("assets/backgrounds/graffiti.png"),
-              fit: BoxFit.cover,
-              alignment: Alignment.bottomRight,
-              colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-        ),
-      ),
-      PagedListView<int, Map<String, dynamic>>(
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-          noItemsFoundIndicatorBuilder: (context) => ListError(
-              title: AppLocalizations.of(context)!.noCommentsFound, body: ""),
-          // Use the Comment widget to build each item in the list view
-          itemBuilder: (context, item, index) => index == 0
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: Comment(
-                    index: index,
-                    focus: widget.focus,
-                    comment: item,
-                  ))
-              : Comment(
+    return PagedListView<int, Map<String, dynamic>>(
+      pagingController: _pagingController,
+      builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+        noItemsFoundIndicatorBuilder: (context) => ListError(
+            title: AppLocalizations.of(context)!.noCommentsFound, body: ""),
+        // Use the Comment widget to build each item in the list view
+        itemBuilder: (context, item, index) => index == 0
+            ? Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Comment(
                   index: index,
                   focus: widget.focus,
                   comment: item,
-                ),
-        ),
-      )
-    ]);
+                ))
+            : Comment(
+                index: index,
+                focus: widget.focus,
+                comment: item,
+              ),
+      ),
+    );
   }
 
   @override

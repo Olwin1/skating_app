@@ -52,14 +52,7 @@ class _NewChannelPageState extends State<NewChannelPage> {
             ),
           ),
           body: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: const AssetImage("assets/backgrounds/graffiti.png"),
-                    fit: BoxFit.cover,
-                    alignment: Alignment.bottomRight,
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-              ),
+              decoration: const BoxDecoration(color: Color(0x58000000)),
               padding:
                   const EdgeInsets.all(0), // Add padding so doesn't touch edges
               child: NewChannelListView(

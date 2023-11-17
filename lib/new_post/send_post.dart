@@ -148,14 +148,7 @@ class _SendPost extends State<SendPost> {
             ],
           ),
           body: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: const AssetImage("assets/backgrounds/graffiti.png"),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.bottomLeft,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-            ),
+            decoration: const BoxDecoration(color: Color(0x58000000)),
             padding: const EdgeInsets.symmetric(
                 vertical: 128,
                 horizontal: 48), // Adds padding to the entire body.

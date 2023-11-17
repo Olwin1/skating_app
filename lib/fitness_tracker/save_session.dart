@@ -133,15 +133,7 @@ class _SaveSession extends State<SaveSession> {
             ),
             body: Stack(children: [
               Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image:
-                            const AssetImage("assets/backgrounds/graffiti.png"),
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                        colorFilter: ColorFilter.mode(
-                            Colors.black.withOpacity(0.4), BlendMode.srcOver)),
-                  ),
+                  decoration: const BoxDecoration(color: Color(0x58000000)),
                   padding: const EdgeInsets.all(16)),
               Container(
                   padding: const EdgeInsets.all(48),

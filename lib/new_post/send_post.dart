@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -13,8 +12,7 @@ import '../current_tab.dart';
 
 // Define a widget for sending a post with an image
 class SendPost extends StatefulWidget {
-  const SendPost({Key? key, required this.image, required this.currentPage})
-      : super(key: key);
+  const SendPost({super.key, required this.image, required this.currentPage});
   final Uint8List image;
   final CurrentPage currentPage;
 

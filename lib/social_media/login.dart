@@ -23,8 +23,7 @@ SecureStorage storage = SecureStorage();
 // Create a StatefulWidget for the login screen
 class Login extends StatefulWidget {
   // Take two arguments: a key and the title of the page
-  const Login({Key? key, required this.loggedIn, this.setLoggedIn})
-      : super(key: key);
+  const Login({super.key, required this.loggedIn, this.setLoggedIn});
   final bool loggedIn;
   final dynamic setLoggedIn;
 

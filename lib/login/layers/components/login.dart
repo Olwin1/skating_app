@@ -11,11 +11,10 @@ import 'mainbutton.dart';
 
 class LoginComponent extends StatefulWidget {
   const LoginComponent(
-      {Key? key,
+      {super.key,
       required this.loggedIn,
       this.setLoggedIn,
-      required this.callback})
-      : super(key: key);
+      required this.callback});
   final bool loggedIn;
   final dynamic setLoggedIn;
   final Function callback;

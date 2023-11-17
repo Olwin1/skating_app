@@ -14,8 +14,10 @@ import '../api/config.dart';
 class PostWidget extends StatefulWidget {
   // Create HomePage Class
   const PostWidget(
-      {Key? key, required this.post, required this.index, required this.user})
-      : super(key: key); // Take 2 arguments optional key and title of post
+      {super.key,
+      required this.post,
+      required this.index,
+      required this.user}); // Take 2 arguments optional key and title of post
   final dynamic post; // Define title argument
   final int index; // Define title argument
   final Map<String, dynamic>? user;
@@ -305,8 +307,9 @@ class _PostWidget extends State<PostWidget> {
 
 class Avatar extends StatefulWidget {
   // Create HomePage Class
-  const Avatar({Key? key, required this.user})
-      : super(key: key); // Take 2 arguments optional key and title of post
+  const Avatar(
+      {super.key,
+      required this.user}); // Take 2 arguments optional key and title of post
   final String user; // Define title argument
   @override
   State<Avatar> createState() => _Avatar(); //Create state for widget
@@ -381,8 +384,9 @@ class _Avatar extends State<Avatar> {
 
 class CaptionWrapper extends StatefulWidget {
   // Create HomePage Class
-  const CaptionWrapper({Key? key, required this.post})
-      : super(key: key); // Take 2 arguments optional key and title of post
+  const CaptionWrapper(
+      {super.key,
+      required this.post}); // Take 2 arguments optional key and title of post
   final Map<String, dynamic> post; // Define title argument
   @override
   State<CaptionWrapper> createState() =>

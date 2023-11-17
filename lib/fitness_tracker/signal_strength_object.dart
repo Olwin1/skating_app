@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class SignalStrengthObject extends StatefulWidget {
   // Create HomePage Class
   const SignalStrengthObject(
-      {Key? key, required this.title, required this.body})
-      : super(key: key); // Take optional key
+      {super.key,
+      required this.title,
+      required this.body}); // Take optional key
   final String title; // Take title and body arguments as strings
   final String body;
 

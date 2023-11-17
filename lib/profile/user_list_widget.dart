@@ -10,7 +10,7 @@ import '../swatch.dart';
 // UserListWidget class creates a stateful widget that displays a list of users
 class UserListWidget extends StatefulWidget {
   // Constructor for UserListWidget
-  const UserListWidget({Key? key, required this.user}) : super(key: key);
+  const UserListWidget({super.key, required this.user});
 
   // Title for the widget
   final Map<String, dynamic> user;

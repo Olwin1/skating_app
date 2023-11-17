@@ -31,7 +31,7 @@ class SunsetTime extends StatelessWidget {
 }
 
 class SunsetTimeWidget extends StatefulWidget {
-  const SunsetTimeWidget({Key? key}) : super(key: key);
+  const SunsetTimeWidget({super.key});
   @override
   State<SunsetTimeWidget> createState() =>
       _SunsetTimeWidget(); //Create state for widget
@@ -96,7 +96,7 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
 }
 
 class FitnessTracker extends StatefulWidget {
-  const FitnessTracker({Key? key}) : super(key: key);
+  const FitnessTracker({super.key});
   @override
   State<FitnessTracker> createState() =>
       _FitnessTracker(); //Create state for widget

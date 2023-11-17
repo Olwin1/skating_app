@@ -25,13 +25,12 @@ GetIt getIt = GetIt.instance;
 class PrivateMessage extends StatefulWidget {
   // Constructor takes an index and a channel as arguments
   const PrivateMessage(
-      {Key? key,
+      {super.key,
       required this.index,
       this.channel,
       this.user,
       required this.currentUser,
-      this.callback})
-      : super(key: key);
+      this.callback});
   final int index;
   final Map<String, dynamic>? channel;
   final Map<String, dynamic>? user;

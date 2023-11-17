@@ -11,7 +11,7 @@ import '../swatch.dart';
 
 // Lists widget
 class Lists extends StatefulWidget {
-  const Lists({Key? key, required this.index, this.user}) : super(key: key);
+  const Lists({super.key, required this.index, this.user});
 
   final int index;
   final Map<String, dynamic>? user;

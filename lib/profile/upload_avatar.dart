@@ -22,7 +22,7 @@ import '../swatch.dart';
 List<Album>? _albums; // A nullable list of Album objects.
 
 class ChangeAvatarPage extends StatefulWidget {
-  const ChangeAvatarPage({Key? key}) : super(key: key);
+  const ChangeAvatarPage({super.key});
 
   @override
   // Create the state for the NewPost widget

@@ -15,11 +15,10 @@ class Comment extends StatefulWidget {
 
   // Create HomePage Class
   const Comment(
-      {Key? key,
+      {super.key,
       required this.index,
       required this.focus,
-      required this.comment})
-      : super(key: key); // Take 2 arguments optional key and title of post
+      required this.comment}); // Take 2 arguments optional key and title of post
   final int index; // Define title argument
   final FocusNode focus; // Define focus argument
   @override

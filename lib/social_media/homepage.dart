@@ -18,7 +18,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatelessWidget {
   // Create HomePage Class
-  HomePage({Key? key}) : super(key: key);
+  HomePage({super.key});
   final _scrollController = ScrollController();
 
   @override // Override the existing widget build method

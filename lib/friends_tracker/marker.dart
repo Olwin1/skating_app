@@ -10,8 +10,9 @@ import '../swatch.dart';
 class CustomMarker extends StatefulWidget {
   // Create FriendActivity widget
   const CustomMarker(
-      {Key? key, required this.userData, required this.sessionData})
-      : super(key: key); // Take 2 arguments optional key and title of post
+      {super.key,
+      required this.userData,
+      required this.sessionData}); // Take 2 arguments optional key and title of post
   final Map<String, dynamic> userData;
   final Map<String, dynamic> sessionData;
 

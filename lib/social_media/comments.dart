@@ -16,8 +16,10 @@ class Comments extends StatefulWidget {
   final String post;
 
   // Create HomePage Class
-  const Comments({Key? key, required this.post, required this.user})
-      : super(key: key); // Take 2 arguments optional key and title of post
+  const Comments(
+      {super.key,
+      required this.post,
+      required this.user}); // Take 2 arguments optional key and title of post
 
   final Map<String, dynamic>? user;
 

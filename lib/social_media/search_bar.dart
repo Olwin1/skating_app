@@ -5,8 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchBarr extends StatefulWidget {
   // Create HomePage Class
-  const SearchBarr({Key? key})
-      : super(key: key); // Take 2 arguments optional key and title of post
+  const SearchBarr(
+      {super.key}); // Take 2 arguments optional key and title of post
   @override
   State<SearchBarr> createState() => _SearchBar(); //Create state for widget
 }

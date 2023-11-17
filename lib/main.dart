@@ -130,10 +130,10 @@ class StateManagement extends StatelessWidget {
 
   // Constructor for this widget that initializes its properties
   const StateManagement({
-    Key? key,
+    super.key,
     required this.loggedIn,
     required this.setLoggedIn,
-  }) : super(key: key);
+  });
 
   // Build method of this widget that returns a ChangeNotifierProvider widget
   // with a CurrentPage object as the notifier and a child MyHomePage widget.

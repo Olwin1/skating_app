@@ -14,7 +14,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Define a StatefulWidget for the Speedometer page
 class SpeedometerPage extends StatefulWidget {
-  const SpeedometerPage({Key? key}) : super(key: key);
+  const SpeedometerPage({super.key});
   @override
   State<SpeedometerPage> createState() => _SpeedometerPage();
 }

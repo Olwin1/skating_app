@@ -12,8 +12,7 @@ Position? previousPosition; // Initializing previous position as null
 
 class DistanceTravelled extends StatefulWidget {
   const DistanceTravelled(
-      {Key? key, required this.active, required this.callback})
-      : super(key: key);
+      {super.key, required this.active, required this.callback});
   final bool active;
   final Function callback;
   @override
@@ -104,8 +103,7 @@ class _DistanceTravelled extends State<DistanceTravelled> {
 class DistanceTravelledText extends StatefulWidget {
   final double totalDistance;
 
-  const DistanceTravelledText({Key? key, required this.totalDistance})
-      : super(key: key);
+  const DistanceTravelledText({super.key, required this.totalDistance});
   @override
   State<DistanceTravelledText> createState() =>
       _DistanceTravelledText(); //Creating state for the widget

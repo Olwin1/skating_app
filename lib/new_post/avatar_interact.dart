@@ -15,11 +15,11 @@ class AvatarInteract extends StatefulWidget {
 
   // Constructor for the EditPost widget.
   const AvatarInteract({
-    Key? key, // A key to identify this widget.
+    super.key, // A key to identify this widget.
     required this.selectedImage, // The ID of the selected image.
     required this.selected, // Whether this widget is currently selected.
     required this.callback, // The function to call when editing is complete.
-  }) : super(key: key);
+  });
 
   // The ID of the selected image.
   final String selectedImage;

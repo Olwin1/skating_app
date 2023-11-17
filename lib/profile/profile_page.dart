@@ -56,10 +56,10 @@ class ProfilePage extends StatelessWidget {
 
 // Creates a ProfilePage widget
 class Profile extends StatefulWidget {
-  const Profile({Key? key, required this.userId, this.user})
-      : super(
-            key:
-                key); // Take 2 arguments: optional key and required title of the post
+  const Profile(
+      {super.key,
+      required this.userId,
+      this.user}); // Take 2 arguments: optional key and required title of the post
   final String userId;
   final Map<String, dynamic>? user;
 

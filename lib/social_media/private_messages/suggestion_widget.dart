@@ -12,8 +12,7 @@ import 'private_message.dart';
 class SuggestionListWidget extends StatefulWidget {
   // Constructor for SuggestionListWidget
   const SuggestionListWidget(
-      {Key? key, required this.user, required this.callback})
-      : super(key: key);
+      {super.key, required this.user, required this.callback});
 
   // Title for the widget
   final Map<String, dynamic> user;

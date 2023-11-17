@@ -10,8 +10,7 @@ import './layers/layer_two.dart';
 class LoginPage extends StatefulWidget {
   final bool loggedIn;
   final dynamic setLoggedIn;
-  const LoginPage({Key? key, required this.loggedIn, this.setLoggedIn})
-      : super(key: key);
+  const LoginPage({super.key, required this.loggedIn, this.setLoggedIn});
 
   @override
   State<LoginPage> createState() => _LoginPage();
@@ -151,7 +150,7 @@ class TextMorphingAnimationState extends State<TextMorphingAnimation> {
 
 class TextMorphingAnimation extends StatefulWidget {
   final PageType page;
-  const TextMorphingAnimation({Key? key, required this.page}) : super(key: key);
+  const TextMorphingAnimation({super.key, required this.page});
 
   @override
   TextMorphingAnimationState createState() => TextMorphingAnimationState();

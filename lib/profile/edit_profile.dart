@@ -18,7 +18,7 @@ import '../misc/default_profile.dart';
 class EditProfile extends StatefulWidget {
   final Map<String, dynamic>? user;
 
-  const EditProfile({Key? key, required this.user}) : super(key: key);
+  const EditProfile({super.key, required this.user});
   // title is a required parameter
 
   @override

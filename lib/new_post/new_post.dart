@@ -43,7 +43,7 @@ class NewPost extends StatelessWidget {
 
 class NewPostPage extends StatefulWidget {
   final CurrentPage currentPage;
-  const NewPostPage({Key? key, required this.currentPage}) : super(key: key);
+  const NewPostPage({super.key, required this.currentPage});
 
   @override
   // Create the state for the NewPost widget

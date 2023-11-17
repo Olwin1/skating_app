@@ -3,8 +3,8 @@ import 'signal_strength_object.dart';
 
 class SignalStrengthInfo extends StatefulWidget {
   // Create HomePage Class
-  const SignalStrengthInfo({Key? key})
-      : super(key: key); // Take 2 arguments optional key and title of post
+  const SignalStrengthInfo(
+      {super.key}); // Take 2 arguments optional key and title of post
   @override
   State<SignalStrengthInfo> createState() =>
       _SignalStrengthInfo(); //Create state for widget

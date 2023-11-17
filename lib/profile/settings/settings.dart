@@ -16,7 +16,7 @@ SecureStorage storage = SecureStorage();
 
 // Settings widget
 class Settings extends StatefulWidget {
-  const Settings({Key? key, required this.user}) : super(key: key);
+  const Settings({super.key, required this.user});
   final Map<String, dynamic>? user;
   @override
   State<Settings> createState() => _Settings();

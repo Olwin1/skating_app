@@ -12,8 +12,9 @@ class FriendActivity extends StatefulWidget {
   final List<Map<String, dynamic>> sessions;
   // Create FriendActivity widget
   const FriendActivity(
-      {Key? key, required this.searchOpened, required this.sessions})
-      : super(key: key); // Take 2 arguments optional key and title of post
+      {super.key,
+      required this.searchOpened,
+      required this.sessions}); // Take 2 arguments optional key and title of post
   final bool searchOpened;
   @override
   State<FriendActivity> createState() =>
@@ -44,8 +45,9 @@ class FriendActivityProfile extends StatefulWidget {
   final Map<String, dynamic> session;
 
   // Create FriendActivity widget
-  const FriendActivityProfile({Key? key, required this.session})
-      : super(key: key); // Take 2 arguments optional key and title of post
+  const FriendActivityProfile(
+      {super.key,
+      required this.session}); // Take 2 arguments optional key and title of post
   @override
   State<FriendActivityProfile> createState() =>
       _FriendActivityProfile(); //Create state for widget

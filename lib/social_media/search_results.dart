@@ -15,7 +15,7 @@ bool entering = false;
 class SearchResults extends StatefulWidget {
   final String query;
 
-  const SearchResults({Key? key, required this.query}) : super(key: key);
+  const SearchResults({super.key, required this.query});
   @override
   State<SearchResults> createState() => _SearchResults();
 }
@@ -129,7 +129,7 @@ class _SearchResults extends State<SearchResults> {
 class SearchResultsList extends StatefulWidget {
   final String query;
 
-  const SearchResultsList({Key? key, required this.query}) : super(key: key);
+  const SearchResultsList({super.key, required this.query});
 
   @override
   State<SearchResultsList> createState() => _SearchResultsList();

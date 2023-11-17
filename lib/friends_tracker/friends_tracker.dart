@@ -45,8 +45,8 @@ class FriendsTracker extends StatelessWidget {
 
 class FriendsTrackerPage extends StatefulWidget {
   // Create FriendActivity widget
-  const FriendsTrackerPage({Key? key})
-      : super(key: key); // Take 2 arguments optional key and title of post
+  const FriendsTrackerPage(
+      {super.key}); // Take 2 arguments optional key and title of post
 
   @override
   State<FriendsTrackerPage> createState() =>

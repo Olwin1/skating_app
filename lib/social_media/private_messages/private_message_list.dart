@@ -22,8 +22,10 @@ GetIt getIt = GetIt.instance;
 
 class PrivateMessageList extends StatefulWidget {
   // Create HomePage Class
-  const PrivateMessageList({Key? key, required this.user, required this.index})
-      : super(key: key); // Take 2 arguments optional key and title of post
+  const PrivateMessageList(
+      {super.key,
+      required this.user,
+      required this.index}); // Take 2 arguments optional key and title of post
   final String user; // Define title argument
   final int index; // Define title argument
   @override

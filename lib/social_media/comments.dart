@@ -58,7 +58,7 @@ class _Comments extends State<Comments> {
           return true;
         },
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: const Color(0x66000000),
           resizeToAvoidBottomInset: true,
           extendBodyBehindAppBar: true,
           extendBody: true,

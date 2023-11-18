@@ -44,7 +44,7 @@ class _Settings extends State<Settings> {
         // AppBar widget for the title of the screen
         appBar: AppBar(
           iconTheme: IconThemeData(color: swatch[701]),
-          elevation: 8,
+          elevation: 0,
           shadowColor: Colors.green.shade900,
           backgroundColor: Config.appbarColour,
           foregroundColor: Colors.transparent,
@@ -60,16 +60,22 @@ class _Settings extends State<Settings> {
         ),
         // Using the SettingsList widget from the settings_ui package
         body: Stack(children: [
-          ImageFiltered(
-            imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: const AssetImage("assets/backgrounds/graffiti.png"),
-                    fit: BoxFit.cover,
-                    alignment: Alignment.bottomLeft,
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.5), BlendMode.color)),
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 1,
+                sigmaY: 1,
+              ),
+              child: ColorFiltered(
+                colorFilter: const ColorFilter.mode(
+                  Color.fromARGB(
+                      57, 54, 56, 43), // Set the desired color for the filter
+                  BlendMode.overlay, // Set the desired blend mode
+                ),
+                child: Container(
+                  color: Colors.transparent,
+                ),
               ),
             ),
           ),

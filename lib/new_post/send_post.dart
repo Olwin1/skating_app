@@ -114,7 +114,7 @@ class _SendPost extends State<SendPost> {
               false, // Disables automatic resizing of the screen when the keyboard is opened.
           appBar: AppBar(
             iconTheme: IconThemeData(color: swatch[701]),
-            elevation: 8,
+            elevation: 0,
             shadowColor: Colors.green.shade900,
             backgroundColor: Config.appbarColour,
             foregroundColor: Colors.transparent,

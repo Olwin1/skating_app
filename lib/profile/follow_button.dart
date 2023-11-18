@@ -76,11 +76,24 @@ class _FollowButtonState extends State<FollowButton> {
     } else {
       // If the user is editing their profile, navigate to the `EditProfile` screen
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => EditProfile(
-                    user: widget.userObj,
-                  )));
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => EditProfile(
+            user: widget.userObj,
+          ),
+          opaque: false,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = 0.0;
+            const end = 1.0;
+            var tween = Tween(begin: begin, end: end);
+            var fadeAnimation = tween.animate(animation);
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: child,
+            );
+          },
+        ),
+      );
     }
   }
 

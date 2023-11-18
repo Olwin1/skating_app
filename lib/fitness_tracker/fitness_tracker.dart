@@ -264,11 +264,26 @@ class _FitnessTracker extends State<FitnessTracker> {
                         padding: const EdgeInsets.only(top: 16),
                         child: TextButton(
                           onPressed: () => Navigator.of(context).push(
-                              // Root navigator hides navbar
-                              // Send to speedometer page
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SpeedometerPage())),
+                            // Root navigator hides navbar
+                            // Send to speedometer page
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const SpeedometerPage(),
+                              opaque: false,
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                const begin = 0.0;
+                                const end = 1.0;
+                                var tween = Tween(begin: begin, end: end);
+                                var fadeAnimation = tween.animate(animation);
+                                return FadeTransition(
+                                  opacity: fadeAnimation,
+                                  child: child,
+                                );
+                              },
+                            ),
+                          ),
                           child: Text(
                             AppLocalizations.of(context)!.speedometer,
                             style: TextStyle(color: swatch[201], fontSize: 15),

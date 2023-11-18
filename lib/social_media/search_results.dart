@@ -37,13 +37,13 @@ class _SearchResults extends State<SearchResults> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0x84000000),
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: AppBar(
         iconTheme: IconThemeData(color: swatch[701]),
-        elevation: 8,
+        elevation: 0,
         shadowColor: Colors.green.shade900,
         backgroundColor: Config.appbarColour,
         foregroundColor: Colors.transparent,
@@ -102,19 +102,6 @@ class _SearchResults extends State<SearchResults> {
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: const AssetImage(
-                "assets/backgrounds/graffiti.png"), // Set background image for the container
-            fit: BoxFit.cover,
-            alignment: Alignment.bottomLeft,
-            colorFilter: ColorFilter.mode(
-              Colors.black
-                  .withOpacity(0.5), // Apply opacity to the background image
-              BlendMode.srcOver,
-            ),
-          ),
-        ),
         child: currentQuery == null
             ? const SizedBox
                 .shrink() // If the current query is null, display an empty SizedBox

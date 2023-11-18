@@ -242,12 +242,29 @@ class _PostWidget extends State<PostWidget> {
                                     onPressed: () =>
                                         // RootNavigator hides navbar
                                         Navigator.of(context).push(
-                                            // Send to comments page
-                                            MaterialPageRoute(
-                                                builder: (context) => Comments(
-                                                    post:
-                                                        widget.post["post_id"],
-                                                    user: widget.user))),
+                                      // Send to comments page
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            Comments(
+                                                post: widget.post["post_id"],
+                                                user: widget.user),
+                                        opaque: false,
+                                        transitionsBuilder: (context, animation,
+                                            secondaryAnimation, child) {
+                                          const begin = 0.0;
+                                          const end = 1.0;
+                                          var tween =
+                                              Tween(begin: begin, end: end);
+                                          var fadeAnimation =
+                                              tween.animate(animation);
+                                          return FadeTransition(
+                                            opacity: fadeAnimation,
+                                            child: child,
+                                          );
+                                        },
+                                      ),
+                                    ),
                                     icon: Icon(
                                       Icons.comment,
                                       color: unselected,

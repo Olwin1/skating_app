@@ -38,7 +38,7 @@ class _NewChannelPageState extends State<NewChannelPage> {
           extendBody: true,
           appBar: AppBar(
             iconTheme: IconThemeData(color: swatch[701]),
-            elevation: 8,
+            elevation: 0,
             shadowColor: Colors.green.shade900,
             backgroundColor: Config.appbarColour,
             foregroundColor: Colors.transparent,
@@ -52,7 +52,7 @@ class _NewChannelPageState extends State<NewChannelPage> {
             ),
           ),
           body: Container(
-              decoration: const BoxDecoration(color: Color(0x58000000)),
+              decoration: const BoxDecoration(color: Color(0x38000000)),
               padding:
                   const EdgeInsets.all(0), // Add padding so doesn't touch edges
               child: NewChannelListView(

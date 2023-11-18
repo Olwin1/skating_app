@@ -60,9 +60,24 @@ class _SearchBar extends State<SearchBarr> {
         style: TextStyle(color: swatch[901]),
         onSubmitted: (value) {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SearchResults(query: controller.text)));
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  SearchResults(query: controller.text),
+              opaque: false,
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                const begin = 0.0;
+                const end = 1.0;
+                var tween = Tween(begin: begin, end: end);
+                var fadeAnimation = tween.animate(animation);
+                return FadeTransition(
+                  opacity: fadeAnimation,
+                  child: child,
+                );
+              },
+            ),
+          );
         },
       ),
     ));

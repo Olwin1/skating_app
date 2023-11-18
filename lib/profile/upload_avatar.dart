@@ -12,8 +12,6 @@ import 'package:patinka/common_logger.dart';
 import 'package:patinka/new_post/avatar_interact.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-
-import '../api/config.dart';
 import '../api/image.dart';
 import '../swatch.dart';
 
@@ -173,15 +171,15 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
   // Build the UI for the NewPost widget
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0x24000000),
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: AppBar(
         iconTheme: IconThemeData(color: swatch[701]),
-        elevation: 8,
+        elevation: 0,
         shadowColor: Colors.green.shade900,
-        backgroundColor: Config.appbarColour,
+        backgroundColor: const Color(0xa4000000),
         foregroundColor: Colors.transparent,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -213,14 +211,6 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
             )
           : Container(
               padding: const EdgeInsets.only(top: 8),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: const AssetImage("assets/backgrounds/graffiti.png"),
-                    fit: BoxFit.cover,
-                    alignment: Alignment.bottomLeft,
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-              ),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

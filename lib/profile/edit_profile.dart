@@ -135,9 +135,9 @@ class _EditProfile extends State<EditProfile> {
             // Define an app bar with a title "Edit Profile"
             appBar: AppBar(
               iconTheme: IconThemeData(color: swatch[701]),
-              elevation: 8,
+              elevation: 0,
               shadowColor: Colors.green.shade900,
-              backgroundColor: Config.appbarColour,
+              backgroundColor: const Color(0x24000000),
               foregroundColor: Colors.transparent,
               systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,
@@ -149,21 +149,18 @@ class _EditProfile extends State<EditProfile> {
               ),
             ),
             // Define the body of the Scaffold
-            body: Stack(children: [
-              ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: const AssetImage(
-                              "assets/backgrounds/graffiti.png"),
-                          fit: BoxFit.cover,
-                          alignment: Alignment.bottomLeft,
-                          colorFilter: ColorFilter.mode(
-                              Colors.black.withOpacity(0.5),
-                              BlendMode.srcOver)),
-                    ),
-                    padding: const EdgeInsets.all(16)),
+            body: Stack(fit: StackFit.expand, children: [
+              Container(
+                color: Colors.black
+                    .withOpacity(0.5), // Adjust the opacity as needed
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                      sigmaX: 1,
+                      sigmaY: 1), // Adjust the sigma values for more/less blur
+                  child: Container(
+                    color: Colors.transparent, // Use a transparent color
+                  ),
+                ),
               ),
               Container(
                 padding: const EdgeInsets.all(16),
@@ -203,11 +200,27 @@ class _EditProfile extends State<EditProfile> {
                       TextButton(
                           onPressed: () =>
                               Navigator.of(context, rootNavigator: true).push(
-                                  // Root navigator hides navbar
-                                  // Send to Save Session page
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ChangeAvatarPage())),
+                                // Root navigator hides navbar
+                                // Send to Save Session page
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      const ChangeAvatarPage(),
+                                  opaque: false,
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    const begin = 0.0;
+                                    const end = 1.0;
+                                    var tween = Tween(begin: begin, end: end);
+                                    var fadeAnimation =
+                                        tween.animate(animation);
+                                    return FadeTransition(
+                                      opacity: fadeAnimation,
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              ),
                           child:
                               Text(AppLocalizations.of(context)!.editPicture))
                     ],

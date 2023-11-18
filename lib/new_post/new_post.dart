@@ -140,13 +140,26 @@ class _NewPostPage extends State<NewPostPage> {
 
     selectedImage = image;
     Navigator.of(context).push(
-        // Root navigator hides navbar
-        // Send to Save Session page
-        MaterialPageRoute(
-            builder: (context) => SendPost(
-                  image: selectedImage!,
-                  currentPage: widget.currentPage,
-                )));
+      // Root navigator hides navbar
+      // Send to Send Post page
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => SendPost(
+          image: selectedImage!,
+          currentPage: widget.currentPage,
+        ),
+        opaque: false,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = 0.0;
+          const end = 1.0;
+          var tween = Tween(begin: begin, end: end);
+          var fadeAnimation = tween.animate(animation);
+          return FadeTransition(
+            opacity: fadeAnimation,
+            child: child,
+          );
+        },
+      ),
+    );
     mounted
         ? setState(() {
             selected = false;

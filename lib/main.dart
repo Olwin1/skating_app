@@ -173,7 +173,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   int selectedpage = 0;
   String? avatar;
   @override
@@ -307,46 +307,69 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Scaffold(
               extendBody: true,
               bottomNavigationBar: Consumer<BottomBarVisibilityProvider>(
-                builder: (context, bottomBarVisibilityProvider, child) =>
-                    AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  child: bottomBarVisibilityProvider.isVisible
-                      ? Wrap(
-                          children: [
-                            StyleProvider(
-                              style: Style(),
-                              child: ConvexAppBar(
-                                //Define Navbar Object
-                                items:
-                                    tabItems(), //Set navbar items to the tabitems
-                                initialActiveIndex: currentPage
-                                    .tab, // Set initial selection to main page
-                                onTap: (int i) => {
-                                  //When a navbar button is pressed set the current tab to the tabitem that was pressed
-                                  mounted
-                                      ? setState(() {
-                                          //  _currentTab = i;
-                                          currentPage.set(i);
-                                        })
-                                      : null,
-                                  commonLogger.t("Setting the current page: $i")
-                                }, // When a button is pressed... output to console
-                                style: TabStyle
-                                    .fixedCircle, // Set the navbar style to have the circle stay at the centre
-                                backgroundColor: const Color.fromARGB(
-                                    184, 32, 49, 33), //swatch[51],
-                                activeColor: const Color.fromARGB(
-                                    51, 31, 175, 31), //const Color(0x667fea82),
-                                shadowColor: Colors.green,
-                                color: const Color.fromARGB(51, 0, 23, 0),
-                                //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
-                                height: 55,
-                              ),
-                            ),
-                          ],
-                        )
-                      : const Wrap(),
-                ),
+                builder: (context, bottomBarVisibilityProvider, child) {
+                  return AnimatedBuilder(
+                    animation: bottomBarVisibilityProvider.animationController,
+                    builder: (context, child) {
+                      final translateY = Tween<double>(
+                        begin:
+                            bottomBarVisibilityProvider.isVisible ? 0.0 : 1.0,
+                        end: bottomBarVisibilityProvider.isVisible ? 1.0 : 0.0,
+                      )
+                          .animate(
+                              bottomBarVisibilityProvider.animationController)
+                          .value;
+
+                      return Transform.translate(
+                        offset: Offset(0.0,
+                            translateY * 85.0), // Adjust the height as needed
+                        child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            child: !bottomBarVisibilityProvider.isVisible
+                                ? const Wrap() // Hide the widget when visible
+                                : Wrap(
+                                    children: [
+                                      StyleProvider(
+                                        style: Style(),
+                                        child: ConvexAppBar(
+                                          //Define Navbar Object
+                                          items:
+                                              tabItems(), //Set navbar items to the tabitems
+                                          initialActiveIndex: currentPage
+                                              .tab, // Set initial selection to main page
+                                          onTap: (int i) => {
+                                            //When a navbar button is pressed set the current tab to the tabitem that was pressed
+                                            mounted
+                                                ? setState(() {
+                                                    //  _currentTab = i;
+                                                    currentPage.set(i);
+                                                  })
+                                                : null,
+                                            commonLogger.t(
+                                                "Setting the current page: $i")
+                                          }, // When a button is pressed... output to console
+                                          style: TabStyle
+                                              .fixedCircle, // Set the navbar style to have the circle stay at the centre
+                                          backgroundColor: const Color.fromARGB(
+                                              184, 32, 49, 33), //swatch[51],
+                                          activeColor: const Color.fromARGB(
+                                              51,
+                                              31,
+                                              175,
+                                              31), //const Color(0x667fea82),
+                                          shadowColor: Colors.green,
+                                          color: const Color.fromARGB(
+                                              51, 0, 23, 0),
+                                          //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
+                                          height: 55,
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                      );
+                    },
+                  );
+                },
               ),
               body: Stack(
                 children: [

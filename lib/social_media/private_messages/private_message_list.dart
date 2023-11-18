@@ -286,7 +286,6 @@ class _ChannelsListViewState extends State<ChannelsListView> {
           {"last": true}
         ]);
       }
-      _pagingController?.appendLastPage(page);
     }
 // If the page is not the last page, append it using appendPage method
     else {

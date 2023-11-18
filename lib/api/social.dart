@@ -597,7 +597,10 @@ class SocialAPI {
           body: {
             'email': email,
           });
-
+      if (response.statusCode == 200) {
+        NetworkManager.instance.deleteLocalData(
+            name: "user-email-verified", type: CacheTypes.verified);
+      }
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
       // Handling the error

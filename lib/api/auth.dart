@@ -1,5 +1,6 @@
 // Import necessary dependencies and files
 import 'package:http/http.dart' as http;
+import 'package:patinka/caching/manager.dart';
 import 'config.dart';
 import 'dart:convert';
 
@@ -22,6 +23,10 @@ Future<String> login(String username, String password) async {
     // If the response is successful, extract the token from the response body and return it
     if (response.statusCode == 200) {
       Map<String, dynamic> y = json.decode(response.body);
+      NetworkManager.instance.saveData(
+          name: "user-email-verified",
+          type: CacheTypes.verified,
+          data: y["verified"]);
       return y["token"];
     } else {
       // If the response is not successful, throw an exception with the reason phrase

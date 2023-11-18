@@ -213,16 +213,6 @@ class _PostsListViewState extends State<PostsListView> {
     }
     commonLogger.i("resif");
     return Stack(children: [
-      // Container(
-      //   decoration: BoxDecoration(
-      //     image: DecorationImage(
-      //         image: const AssetImage("assets/backgrounds/graffiti.png"),
-      //         fit: BoxFit.cover,
-      //         alignment: Alignment.bottomLeft,
-      //         colorFilter: ColorFilter.mode(
-      //             Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-      //   ),
-      // ),
       RefreshIndicator(
         edgeOffset: 94,
         onRefresh: () => refreshPage(),

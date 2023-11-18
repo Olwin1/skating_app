@@ -15,7 +15,7 @@ class FriendsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0x34000000),
         resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
         extendBody: true,
@@ -33,18 +33,9 @@ class FriendsList extends StatelessWidget {
               "Friends",
               style: TextStyle(color: swatch[701]),
             )),
-        body: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: const AssetImage("assets/backgrounds/graffiti.png"),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.topRight,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-            ),
-            child: ConnectionsListView(
-              type: "friends",
-              user: user,
-            )));
+        body: ConnectionsListView(
+          type: "friends",
+          user: user,
+        ));
   }
 }

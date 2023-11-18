@@ -314,17 +314,6 @@ class _PrivateMessage extends State<PrivateMessage> {
               ]),
             ),
             body: Stack(children: [
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image:
-                          const AssetImage("assets/backgrounds/graffiti.png"),
-                      fit: BoxFit.cover,
-                      alignment: Alignment.bottomLeft,
-                      colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.5), BlendMode.srcOver)),
-                ),
-              ),
               loading || !userFound
                   ? _messagesSkeleton()
                   : Chat(

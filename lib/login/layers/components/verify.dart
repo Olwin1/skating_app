@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:patinka/common_logger.dart';
 import 'package:patinka/login/layers/components/pagebutton.dart';
 import 'package:patinka/login/layers/components/section.dart';
 import '../../config.dart';
@@ -9,7 +10,7 @@ class VerifyComponent extends StatelessWidget {
   const VerifyComponent({super.key, required this.callback});
   final Function callback;
   void handleVerify() {
-    print("verifyhandle");
+    commonLogger.d("Handle Verify");
   }
 
   @override

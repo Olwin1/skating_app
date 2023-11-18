@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:patinka/common_logger.dart';
 import 'package:patinka/login/config.dart';
 import 'package:patinka/login/page_type.dart';
 import './layers/layer_one.dart';
@@ -29,7 +30,7 @@ class _LoginPage extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(currentPage.toString());
+    commonLogger.d(currentPage.toString());
 
     return Scaffold(
         body: Stack(children: [

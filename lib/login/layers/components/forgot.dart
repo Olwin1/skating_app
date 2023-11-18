@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:patinka/common_logger.dart';
 import 'package:patinka/login/layers/components/pagebutton.dart';
 import 'package:patinka/login/layers/components/section.dart';
 import '../../config.dart';
@@ -10,7 +11,7 @@ class ForgotComponent extends StatelessWidget {
   final Function callback;
 
   void handleForgot() {
-    print("foorgoithandle");
+    commonLogger.d("Handle Forgot");
   }
 
   @override

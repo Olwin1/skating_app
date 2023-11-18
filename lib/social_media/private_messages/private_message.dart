@@ -6,8 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get_it/get_it.dart';
-import 'package:patinka/misc/navbar_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/websocket.dart';
 import 'package:patinka/common_logger.dart';

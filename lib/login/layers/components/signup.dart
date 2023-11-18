@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:patinka/api/auth.dart';
-import 'package:patinka/api/config.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/login/layers/components/pagebutton.dart';
 import 'package:patinka/login/layers/components/section.dart';

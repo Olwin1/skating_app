@@ -209,20 +209,11 @@ class _NewPostPage extends State<NewPostPage> {
                               selectedImage: _selectedImage!,
                               callback: callback,
                             )),
-                    const Spacer(),
-                    // A layout builder that displays a grid of images from the photo gallery
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        // Determines the width and height of each grid item based on the constraints
-                        return SizedBox(
-                            height: MediaQuery.of(context).size.height -
-                                MediaQuery.of(context).size.width -
-                                204,
-                            child: PhotosGridView(
-                              update: _update,
-                            ));
-                      },
-                    ),
+                    Expanded(
+                        flex: 6,
+                        child: PhotosGridView(
+                          update: _update,
+                        ))
                   ])),
     );
   }
@@ -255,6 +246,16 @@ class _PhotosGridViewState extends State<PhotosGridView> {
   // Fetches the data for the given pageKey and appends it to the list of items
   Future<void> _fetchPage(int pageKey) async {
     try {
+      Medium padderItem = Medium.fromJson(const {
+        "id": "0",
+        "filename": "a",
+        "title": "a",
+        "width": 1,
+        "height": 1,
+        "size": 1,
+        "orientation": 1,
+        "mimeType": "image/jpeg"
+      });
       if (_albums != null) {
         // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
         final page = await _albums![0].listMedia(
@@ -266,7 +267,8 @@ class _PhotosGridViewState extends State<PhotosGridView> {
         if (!mounted) return;
         if (isLastPage) {
           // appendLastPage is called if there are no more items to load
-          _pagingController.appendLastPage(newItems);
+          _pagingController.appendLastPage(
+              [...newItems, padderItem, padderItem, padderItem, padderItem]);
         } else {
           // appendPage is called to add the newly loaded items to the list of items
           final nextPageKey = pageKey + newItems.length;
@@ -291,26 +293,36 @@ class _PhotosGridViewState extends State<PhotosGridView> {
         ),
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Medium>(
-          itemBuilder: (context, item, index) => GestureDetector(
-              onTap: () => widget.update(
-                  // Updates the selected image when an image is tapped
-                  item.id),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5.0),
-                child: Container(
-                  color: shimmer["base"],
-                  child: FadeInImage(
-                    fit: BoxFit.cover,
-                    placeholder: MemoryImage(kTransparentImage),
-                    // Uses the ThumbnailProvider to display the grid image
-                    image: ThumbnailProvider(
-                      mediumId: item.id,
-                      mediumType: item.mediumType,
-                      highQuality: false,
+          itemBuilder: (context, item, index) => item.id == "0" &&
+                  item.filename == "a" &&
+                  item.title == "a" &&
+                  item.width == 1 &&
+                  item.height == 1 &&
+                  item.size == 1 &&
+                  item.orientation == 1
+              ? const SizedBox(
+                  height: 72,
+                )
+              : GestureDetector(
+                  onTap: () => widget.update(
+                      // Updates the selected image when an image is tapped
+                      item.id),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5.0),
+                    child: Container(
+                      color: shimmer["base"],
+                      child: FadeInImage(
+                        fit: BoxFit.cover,
+                        placeholder: MemoryImage(kTransparentImage),
+                        // Uses the ThumbnailProvider to display the grid image
+                        image: ThumbnailProvider(
+                          mediumId: item.id,
+                          mediumType: item.mediumType,
+                          highQuality: false,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              )),
+                  )),
         ),
       );
 

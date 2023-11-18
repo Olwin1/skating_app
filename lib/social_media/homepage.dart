@@ -178,7 +178,10 @@ class _PostsListViewState extends State<PostsListView> {
       if (!mounted) return;
       if (isLastPage) {
         // If the page is the last page, call `appendLastPage` to add it to the list of items
-        _pagingController.appendLastPage(page);
+        _pagingController.appendLastPage([
+          ...page,
+          {"last": true}
+        ]);
       } else {
         final nextPageKey = pageKey += 1;
         // If the page is not the last page, call `appendPage` to add the newly loaded items to the list of items
@@ -234,18 +237,24 @@ class _PostsListViewState extends State<PostsListView> {
                   title: AppLocalizations.of(context)!.noPostsFound,
                   body: AppLocalizations.of(context)!.makeFriends),
               // itemBuilder is called for each item in the list to create a widget for that item
-              itemBuilder: (context, item, index) => index == 0
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 106),
-                      child: SizedBox(
-                          width: size,
-                          height: size,
-                          child:
-                              PostWidget(post: item, index: index, user: user)))
-                  : SizedBox(
-                      width: size,
-                      height: size,
-                      child: PostWidget(post: item, index: index, user: user))),
+              itemBuilder: (context, dynamic item, index) =>
+                  item["last"] == true
+                      ? const SizedBox(
+                          height: 72,
+                        )
+                      : index == 0
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 106),
+                              child: SizedBox(
+                                  width: size,
+                                  height: size,
+                                  child: PostWidget(
+                                      post: item, index: index, user: user)))
+                          : SizedBox(
+                              width: size,
+                              height: size,
+                              child: PostWidget(
+                                  post: item, index: index, user: user))),
           padding: const EdgeInsets.all(
               8), // Add padding to list so doesn't overflow to sides of screen
         ),

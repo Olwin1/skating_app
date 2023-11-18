@@ -91,6 +91,7 @@ class _EditPost extends State<EditPost> {
 // This provides padding that avoids any
 // intrusive display areas, such as notches, camera holes, or device margins.
     return SafeArea(
+      bottom: false,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -98,7 +99,7 @@ class _EditPost extends State<EditPost> {
             // If _imageToCrop is not null, then the Cropper widget is displayed;
             // otherwise, a pink ColoredBox is displayed.
             SizedBox(
-              height: 380,
+              height: MediaQuery.of(context).size.width,
               child: _imageToCrop != null
                   ? Cropper(
                       cropperKey: _cropperKey,
@@ -117,12 +118,9 @@ class _EditPost extends State<EditPost> {
                     )
                   : const ColoredBox(color: Colors.pink),
             ),
-            // A SizedBox with fixed height that creates space between the
-            // image cropper widget and the next widget.
-            const SizedBox(height: 16),
-            // Another SizedBox with fixed height that creates space between
-            // the previous widget and the bottom of the screen.
-            const SizedBox(height: 16),
+            const SizedBox(
+              height: 16,
+            )
           ],
         ),
       ),

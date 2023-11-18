@@ -178,10 +178,16 @@ class _PostsListViewState extends State<PostsListView> {
       if (!mounted) return;
       if (isLastPage) {
         // If the page is the last page, call `appendLastPage` to add it to the list of items
-        _pagingController.appendLastPage([
-          ...page,
-          {"last": true}
-        ]);
+        if ((_pagingController.itemList == null ||
+                _pagingController.itemList!.isEmpty) &&
+            page.isEmpty) {
+          _pagingController.appendLastPage(page);
+        } else {
+          _pagingController.appendLastPage([
+            ...page,
+            {"last": true}
+          ]);
+        }
       } else {
         final nextPageKey = pageKey += 1;
         // If the page is not the last page, call `appendPage` to add the newly loaded items to the list of items

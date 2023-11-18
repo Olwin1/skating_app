@@ -275,6 +275,17 @@ class _ChannelsListViewState extends State<ChannelsListView> {
     if (!mounted) return;
 // If the page is the last page, append it using appendLastPage method
     if (isLastPage) {
+      if ((_pagingController == null ||
+              _pagingController!.itemList == null ||
+              _pagingController!.itemList!.isEmpty) &&
+          page.isEmpty) {
+        _pagingController?.appendLastPage(page);
+      } else {
+        _pagingController?.appendLastPage([
+          ...page,
+          {"last": true}
+        ]);
+      }
       _pagingController?.appendLastPage(page);
     }
 // If the page is not the last page, append it using appendPage method
@@ -300,12 +311,16 @@ class _ChannelsListViewState extends State<ChannelsListView> {
                 body: AppLocalizations.of(context)!.makeFriends),
             firstPageProgressIndicatorBuilder: (context) => _loadingSkeleton(),
 
-            itemBuilder: (context, item, index) => ListWidget(
-                index: index,
-                channel: item,
-                desc:
-                    "Last Message: ${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
-                currentUser: widget.currentUser), //item id
+            itemBuilder: (context, item, index) => item["last"] == true
+                ? const SizedBox(
+                    height: 72,
+                  )
+                : ListWidget(
+                    index: index,
+                    channel: item,
+                    desc:
+                        "Last Message: ${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
+                    currentUser: widget.currentUser), //item id
           ),
         )
       : const SizedBox.shrink();

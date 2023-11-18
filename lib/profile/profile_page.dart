@@ -528,6 +528,19 @@ class _UserPostsListState extends State<UserPostsList> {
 
       if (isLastPage && mounted) {
         // If this is the last page of posts, append it to the PagingController as the final page
+        if ((_pagingController.itemList == null ||
+                _pagingController.itemList!.isEmpty) &&
+            page.isEmpty) {
+          _pagingController.appendLastPage(page);
+        } else {
+          _pagingController.appendLastPage([
+            ...page,
+            {"last": true},
+            {"last": true},
+            {"last": true},
+            {"last": true}
+          ]);
+        }
         _pagingController.appendLastPage(page);
       } else if (mounted) {
         // If there are more pages of posts, append the current page to the PagingController
@@ -561,8 +574,12 @@ class _UserPostsListState extends State<UserPostsList> {
               noItemsFoundIndicatorBuilder: (context) => ListError(
                   title: AppLocalizations.of(context)!.noPostsFound, body: ""),
               // Specify how to build each grid tile
-              itemBuilder: (context, item, index) => _createGridTileWidget(
-                  item, widget.imageViewerController, refreshPage),
+              itemBuilder: (context, item, index) => item["last"] == true
+                  ? const SizedBox(
+                      height: 72,
+                    )
+                  : _createGridTileWidget(
+                      item, widget.imageViewerController, refreshPage),
             ),
           )
         : const SizedBox.shrink();

@@ -224,8 +224,6 @@ class _PrivateMessage extends State<PrivateMessage> {
 
   @override // Override existing build method
   Widget build(BuildContext context) {
-    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-        .hide(); // Hide The Navbar
     ChatL10n locale;
     switch (AppLocalizations.of(context)!.localeName) {
       case "pl":
@@ -426,8 +424,6 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   Future<bool> _onWillPop() async {
-    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-        .show(); // Show The Navbar
     // Pop the dialog
     if (mounted && widget.channel == null) {
       Navigator.of(context).pop();

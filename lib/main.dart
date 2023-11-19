@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,8 +26,8 @@ import './misc/navbar_provider.dart';
 import './friends_tracker/caching/map_cache.dart'
     if (dart.library.io) './friends_tracker/caching/map_cache_mobile.dart'
     if (dart.library.html) './friends_tracker/caching/map_cache_web.dart';
+import './window_manager/window_manager.dart';
 import 'package:patinka/firebase/init_firebase.dart';
-
 // AndroidNotificationChannel channel = const AndroidNotificationChannel(
 //   'ChannelId', // id
 //   'ChannelId', // title
@@ -42,6 +43,7 @@ Future<void> main() async {
 
   await initialiseFirebase();
 
+  await initialiseWindowManager();
   //FirebaseMessaging.instance.deleteToken();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(

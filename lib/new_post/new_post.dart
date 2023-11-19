@@ -115,18 +115,20 @@ class _NewPostPage extends State<NewPostPage> {
     // Check if the device is iOS and both the storage and photos permissions have been granted,
     // or if the device is Android and the storage permission has been granted.
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    if (Platform.isIOS &&
-            await Permission.storage.request().isGranted &&
-            await Permission.photos.request().isGranted ||
-        Platform.isAndroid &&
-            androidInfo.version.sdkInt < 33 &&
-            await Permission.storage.request().isGranted ||
-        Platform.isAndroid &&
-            androidInfo.version.sdkInt >= 33 &&
-            await Permission.photos.request().isGranted) {
-      await Permission.videos.request();
-      commonLogger.d("Permissions are true");
+    if (Platform.isAndroid || Platform.isIOS) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      if (Platform.isIOS &&
+              await Permission.storage.request().isGranted &&
+              await Permission.photos.request().isGranted ||
+          Platform.isAndroid &&
+              androidInfo.version.sdkInt < 33 &&
+              await Permission.storage.request().isGranted ||
+          Platform.isAndroid &&
+              androidInfo.version.sdkInt >= 33 &&
+              await Permission.photos.request().isGranted) {
+        await Permission.videos.request();
+        commonLogger.d("Permissions are true");
+      }
 
       return true; // Return true if the permissions have been granted.
     }

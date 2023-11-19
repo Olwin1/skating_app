@@ -14,8 +14,6 @@ import 'package:patinka/api/token.dart';
 import 'api/config.dart';
 import 'api/social.dart';
 import 'common_logger.dart';
-import 'firebase_options.dart';
-import 'local_notification.dart';
 import 'misc/default_profile.dart';
 import 'swatch.dart';
 import 'tab_navigator.dart';
@@ -27,6 +25,7 @@ import './misc/navbar_provider.dart';
 import './friends_tracker/caching/map_cache.dart'
     if (dart.library.io) './friends_tracker/caching/map_cache_mobile.dart'
     if (dart.library.html) './friends_tracker/caching/map_cache_web.dart';
+import 'package:patinka/firebase/init_firebase.dart';
 
 // AndroidNotificationChannel channel = const AndroidNotificationChannel(
 //   'ChannelId', // id
@@ -41,9 +40,7 @@ Future<void> main() async {
   // Ensure that the Flutter widgets are initialized
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  ).then((value) => NotificationManager.instance.initialize());
+  await initialiseFirebase();
 
   //FirebaseMessaging.instance.deleteToken();
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -149,9 +151,11 @@ class _PostsListViewState extends State<PostsListView> {
         });
       }
     });
-    FirebaseMessaging.instance
-        .getToken()
-        .then((fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
+    if (!(Platform.isWindows || Platform.isLinux)) {
+      FirebaseMessaging.instance
+          .getToken()
+          .then((fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
+    }
 
     // addPageRequestListener is called whenever the user scrolls near the end of the list
     _pagingController.addPageRequestListener((pageKey) {

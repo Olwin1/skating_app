@@ -50,6 +50,7 @@ class DefaultFirebaseOptions {
     projectId: 'patinka-657',
     authDomain: 'patinka-657.firebaseapp.com',
     storageBucket: 'patinka-657.appspot.com',
+    measurementId: 'G-LS2XXJGN4K',
   );
 
   static const FirebaseOptions android = FirebaseOptions(

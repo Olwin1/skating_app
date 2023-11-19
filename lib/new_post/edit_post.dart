@@ -98,26 +98,36 @@ class _EditPost extends State<EditPost> {
             // A SizedBox with a fixed height that contains the image cropper widget.
             // If _imageToCrop is not null, then the Cropper widget is displayed;
             // otherwise, a pink ColoredBox is displayed.
-            SizedBox(
-              height: MediaQuery.of(context).size.width,
-              child: _imageToCrop != null
-                  ? Cropper(
-                      cropperKey: _cropperKey,
-                      overlayType: _overlayType,
-                      rotationTurns: _rotationTurns,
-                      image: Image.memory(_imageToCrop!),
-                      onScaleStart: (details) {
-                        // todo: define started action.
-                      },
-                      onScaleUpdate: (details) {
-                        // todo: define updated action.
-                      },
-                      onScaleEnd: (details) {
-                        // todo: define ended action.
-                      },
-                    )
-                  : const ColoredBox(color: Colors.pink),
-            ),
+            OrientationBuilder(builder: (context, orientation) {
+              return SizedBox(
+                width: orientation == Orientation.portrait
+                    ? MediaQuery.of(context).size.height * 0.4
+                    : MediaQuery.of(context).size.height,
+                height: orientation == Orientation.portrait
+                    ? MediaQuery.of(context).size.height * 0.4
+                    : MediaQuery.of(context)
+                        .size
+                        .height, // Adjust the height as needed
+                child: _imageToCrop != null
+                    ? Cropper(
+                        backgroundColor: Colors.transparent,
+                        cropperKey: _cropperKey,
+                        overlayType: _overlayType,
+                        rotationTurns: _rotationTurns,
+                        image: Image.memory(_imageToCrop!),
+                        onScaleStart: (details) {
+                          // todo: define started action.
+                        },
+                        onScaleUpdate: (details) {
+                          // todo: define updated action.
+                        },
+                        onScaleEnd: (details) {
+                          // todo: define ended action.
+                        },
+                      )
+                    : const ColoredBox(color: Colors.pink),
+              );
+            }),
             const SizedBox(
               height: 16,
             )

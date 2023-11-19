@@ -215,13 +215,13 @@ class _NewPostPage extends State<NewPostPage> {
                     // A container that displays the selected image
                     _selectedImage == null
                         ? const SizedBox.shrink()
-                        : SizedBox(
-                            width: MediaQuery.of(context).size.width,
+                        : Center(
                             child: EditPost(
                               selected: selected,
                               selectedImage: _selectedImage!,
                               callback: callback,
-                            )),
+                            ),
+                          ),
                     Expanded(
                         flex: 6,
                         child: PhotosGridView(

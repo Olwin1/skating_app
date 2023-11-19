@@ -25,11 +25,13 @@ class _NewChannelPageState extends State<NewChannelPage> {
     Provider.of<BottomBarVisibilityProvider>(context, listen: false)
         .hide(); // Hide The Navbar
     // Build a paginated list view of comments using the PagedListView widget
-    return WillPopScope(
-        onWillPop: () async {
-          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-              .show(); // Show The Navbar
-          return true;
+    return PopScope(
+        canPop: true,
+        onPopInvoked: (bool didPop) {
+          if (didPop) {
+            Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+                .show(); // Show The Navbar
+          }
         },
         child: Scaffold(
           backgroundColor: Colors.transparent,

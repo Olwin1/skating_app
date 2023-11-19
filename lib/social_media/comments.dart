@@ -51,11 +51,13 @@ class _Comments extends State<Comments> {
     // Create a new focus node every time the widget is built
     focus = FocusNode();
 
-    return WillPopScope(
-        onWillPop: () async {
-          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-              .show(); // Show The Navbar
-          return true;
+    return PopScope(
+        canPop: true,
+        onPopInvoked: (bool didPop) {
+          if (didPop) {
+            Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+                .show(); // Show The Navbar
+          }
         },
         child: Scaffold(
           backgroundColor: const Color(0x66000000),

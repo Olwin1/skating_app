@@ -43,11 +43,13 @@ class _SpeedometerPage extends State<SpeedometerPage> {
       commonLogger.e("Speedometer Error: $e");
     }
     // Return a Scaffold with an AppBar and a KdGaugeView widget
-    return WillPopScope(
-        onWillPop: () async {
-          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-              .show(); // Show The Navbar
-          return true;
+    return PopScope(
+        canPop: true,
+        onPopInvoked: (bool didPop) {
+          if (didPop) {
+            Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+                .show(); // Show The Navbar
+          }
         },
         child: Scaffold(
           backgroundColor: Colors.transparent,

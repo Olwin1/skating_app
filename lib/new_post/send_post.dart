@@ -100,11 +100,13 @@ class _SendPost extends State<SendPost> {
     }
 
     // Return the scaffold with the app bar and body
-    return WillPopScope(
-        onWillPop: () async {
-          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-              .show(); // Show The Navbar
-          return true;
+    return PopScope(
+        canPop: true,
+        onPopInvoked: (bool didPop) {
+          if (didPop) {
+            Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+                .show(); // Show The Navbar
+          }
         },
         child: Scaffold(
           backgroundColor: Colors.transparent,

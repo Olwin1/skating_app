@@ -67,6 +67,8 @@ class HomePage extends StatelessWidget {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
+                        settings:
+                            const RouteSettings(name: "/PrivateMessageList"),
                         builder: (context) => const PrivateMessageList(
                               user: "user",
                               index: 1,

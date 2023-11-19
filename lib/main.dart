@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -274,6 +276,25 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     }
   }
 
+  Future<bool> handlePop(CurrentPage currentPage) async {
+    final isFirstRouteInCurrentTab =
+        !await _navigatorKeys[currentPage.tab.toString()]!
+            .currentState!
+            .maybePop();
+
+    if (isFirstRouteInCurrentTab) {
+      // if not on the 'main' tab
+      if (currentPage.tab != 0) {
+        // select 'main' tab
+        _selectTab(currentPage, tabItems()[0], "0");
+        // back button handled by app
+        return false;
+      }
+    }
+    // let system handle back button if on the first route
+    return isFirstRouteInCurrentTab;
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -287,23 +308,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return Consumer<CurrentPage>(builder: (context, currentPage, child) {
       return WillPopScope(
           // Handle user swiping back inside application
-          onWillPop: () async {
-            final isFirstRouteInCurrentTab =
-                !await _navigatorKeys[currentPage.tab.toString()]!
-                    .currentState!
-                    .maybePop();
-            if (isFirstRouteInCurrentTab) {
-              // if not on the 'main' tab
-              if (currentPage.tab != 0) {
-                // select 'main' tab
-                _selectTab(currentPage, tabItems()[0], "0");
-                // back button handled by app
-                return false;
-              }
-            }
-            // let system handle back button if on the first route
-            return isFirstRouteInCurrentTab;
-          },
+          onWillPop: () => handlePop(currentPage),
           child: Scaffold(
               extendBody: true,
               bottomNavigationBar: Consumer<BottomBarVisibilityProvider>(

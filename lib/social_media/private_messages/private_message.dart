@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -230,8 +231,9 @@ class _PrivateMessage extends State<PrivateMessage> {
       default:
         locale = const ChatL10nEn();
     }
-    return WillPopScope(
-        onWillPop: () => _onWillPop(),
+    return PopScope(
+        canPop: true,
+        onPopInvoked: (bool hasPopped) => _onWillPop(hasPopped),
         child: Scaffold(
             backgroundColor: Colors.transparent,
             extendBodyBehindAppBar: true,
@@ -421,11 +423,13 @@ class _PrivateMessage extends State<PrivateMessage> {
     }
   }
 
-  Future<bool> _onWillPop() async {
+  Future<bool> _onWillPop(bool hasPopped) async {
     // Pop the dialog
     if (mounted && widget.channel == null) {
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context)
+            .popUntil(ModalRoute.withName('/PrivateMessageList'));
+      });
     }
     // Return 'true' to allow the user to navigate back
     return true;

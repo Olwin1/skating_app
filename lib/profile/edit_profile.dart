@@ -46,36 +46,39 @@ class _EditProfile extends State<EditProfile> {
     super.initState();
   }
 
-  Future<bool> _onWillPop() async {
-    if (aboutMeController.text == widget.user?["description"]) {
+  Future<bool> _onWillPop(bool didPop) async {
+    if (didPop) {
+      if (aboutMeController.text == widget.user?["description"]) {
+        return true;
+      }
+      showDialog(
+        useRootNavigator: false,
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: swatch[800],
+            title: Text(
+              'Processing',
+              style: TextStyle(color: swatch[701]),
+            ),
+            content: Text(
+              'Please wait...',
+              style: TextStyle(color: swatch[901]),
+            ),
+          );
+        },
+      );
+      await SocialAPI.setDescription(aboutMeController.text);
+
+      // Pop the dialog
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+      // Return 'true' to allow the user to navigate back
       return true;
     }
-    showDialog(
-      useRootNavigator: false,
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: swatch[800],
-          title: Text(
-            'Processing',
-            style: TextStyle(color: swatch[701]),
-          ),
-          content: Text(
-            'Please wait...',
-            style: TextStyle(color: swatch[901]),
-          ),
-        );
-      },
-    );
-    await SocialAPI.setDescription(aboutMeController.text);
-
-    // Pop the dialog
-    if (mounted) {
-      Navigator.of(context).pop();
-    }
-    // Return 'true' to allow the user to navigate back
-    return true;
+    return false;
   }
 
   void showCountries() {
@@ -125,8 +128,9 @@ class _EditProfile extends State<EditProfile> {
   @override
   // Build the UI for the EditProfile widget
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: _onWillPop,
+    return PopScope(
+        canPop: true,
+        onPopInvoked: (bool didPop) => _onWillPop(didPop),
         child: Scaffold(
             backgroundColor: Colors.transparent,
             resizeToAvoidBottomInset: false,

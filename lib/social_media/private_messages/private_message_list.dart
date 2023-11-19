@@ -58,11 +58,13 @@ class _PrivateMessageList extends State<PrivateMessageList> {
     Provider.of<BottomBarVisibilityProvider>(context, listen: false)
         .hide(); // Hide The Navbar
     commonLogger.w("REBUILGING PAGe");
-    return WillPopScope(
-        onWillPop: () async {
-          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-              .show();
-          return true;
+    return PopScope(
+        canPop: true,
+        onPopInvoked: (bool didPop) {
+          if (didPop) {
+            Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+                .show(); // Show The Navbar
+          }
         },
         child: Scaffold(
             //Create a scaffold

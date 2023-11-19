@@ -193,7 +193,7 @@ class _SendPost extends State<SendPost> {
                     ],
                   ),
                 ),
-                Image.memory(widget.image)
+                Expanded(child: Center(child: Image.memory(widget.image)))
               ],
             ),
           ),

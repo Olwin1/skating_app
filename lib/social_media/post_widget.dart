@@ -165,8 +165,10 @@ class _PostWidget extends State<PostWidget> {
                     ),
                   ), // Set child to post image
                 ),
-                Expanded(
-                  flex: 1, // Make 2x Bigger than sibling
+                SizedBox(
+                  width: 72,
+                  height: double.maxFinite,
+                  //flex: 1, // Make 2x Bigger than sibling
                   child: Container(
                     // Make container widget to use BoxDecoration
                     decoration: BoxDecoration(

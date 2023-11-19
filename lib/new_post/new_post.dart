@@ -285,8 +285,14 @@ class _PhotosGridViewState extends State<PhotosGridView> {
               newItems.isEmpty) {
             _pagingController.appendLastPage(newItems);
           } else {
-            _pagingController.appendLastPage(
-                [...newItems, padderItem, padderItem, padderItem, padderItem]);
+            int rem = 5 -
+                ((_pagingController.itemList?.length ?? 0) + newItems.length) %
+                    4;
+            List<Medium> spacers = [];
+            for (int i = 0; i < rem; i++) {
+              spacers.add(padderItem);
+            }
+            _pagingController.appendLastPage([...newItems, ...spacers]);
           }
         } else {
           // appendPage is called to add the newly loaded items to the list of items

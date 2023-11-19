@@ -533,15 +533,14 @@ class _UserPostsListState extends State<UserPostsList> {
             page.isEmpty) {
           _pagingController.appendLastPage(page);
         } else {
-          _pagingController.appendLastPage([
-            ...page,
-            {"last": true},
-            {"last": true},
-            {"last": true},
-            {"last": true}
-          ]);
+          int rem =
+              4 - ((_pagingController.itemList?.length ?? 0) + page.length) % 3;
+          List<Map<String, dynamic>> spacers = [];
+          for (int i = 0; i < rem; i++) {
+            spacers.add({"last": true});
+          }
+          _pagingController.appendLastPage([...page, ...spacers]);
         }
-        _pagingController.appendLastPage(page);
       } else if (mounted) {
         // If there are more pages of posts, append the current page to the PagingController
         // and specify the key for the next page

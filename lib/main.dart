@@ -19,12 +19,14 @@ import 'local_notification.dart';
 import 'misc/default_profile.dart';
 import 'swatch.dart';
 import 'tab_navigator.dart';
-import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'current_tab.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import './misc/navbar_provider.dart';
+import './friends_tracker/caching/map_cache.dart'
+    if (dart.library.io) './friends_tracker/caching/map_cache_mobile.dart'
+    if (dart.library.html) './friends_tracker/caching/map_cache_web.dart';
 
 // AndroidNotificationChannel channel = const AndroidNotificationChannel(
 //   'ChannelId', // id
@@ -52,13 +54,8 @@ Future<void> main() async {
       statusBarBrightness: Brightness.light,
       systemNavigationBarColor: Colors.transparent));
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-
   // Initialize the FlutterMapTileCaching package for caching map tiles
-  await FlutterMapTileCaching.initialise(debugMode: true);
-
-  // Create an instance of the cache manager for map tiles and register it with GetIt dependency injection
-  FMTC.instance('mapCache').manage.create();
-
+  await initialiseCache();
   // Register a singleton instance of WebSocketConnection class with GetIt dependency injection
   GetIt.I.registerSingleton<WebSocketConnection>(WebSocketConnection());
 

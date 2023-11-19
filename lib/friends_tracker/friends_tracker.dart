@@ -8,14 +8,13 @@ import 'package:patinka/friends_tracker/friend_activity.dart';
 import 'package:patinka/friends_tracker/marker.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-//import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:patinka/api/session.dart';
-//import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../api/social.dart';
 import '../current_tab.dart';
-//import '../swatch.dart';
+import './caching/map_cache.dart'
+    if (dart.library.io) './caching/map_cache_mobile.dart'
+    if (dart.library.html) './caching/map_cache_web.dart';
 
 bool searchOpened = true;
 bool active = false;
@@ -267,9 +266,8 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
               TileLayer(
                 backgroundColor: Colors.transparent,
                 // Map source -- use OpenStreetMaps
-                tileProvider: FMTC
-                    .instance('mapCache')
-                    .getTileProvider(), // For caching tiles to improve responsiveness
+                tileProvider:
+                    tileProvider, // For caching tiles to improve responsiveness
                 maxZoom: 19,
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.skatingapp.map', // Package Name

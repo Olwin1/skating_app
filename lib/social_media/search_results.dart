@@ -175,7 +175,7 @@ class Results extends StatelessWidget {
                 color: Color(0xb5000000),
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
-              height: 82,
+              height: 84,
               margin: const EdgeInsets.symmetric(horizontal: 8),
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: TextButton(

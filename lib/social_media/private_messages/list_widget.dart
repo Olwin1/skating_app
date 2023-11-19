@@ -40,7 +40,7 @@ class _ListWidget extends State<ListWidget> {
             color: Color(0xb5000000),
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
-          height: 82,
+          height: 84,
           margin: const EdgeInsets.symmetric(
               horizontal: 8), // Add padding so doesn't touch edges
           padding: const EdgeInsets.symmetric(
@@ -71,7 +71,7 @@ class _ListWidget extends State<ListWidget> {
                         highlightColor: shimmer["highlight"]!,
                         child: CircleAvatar(
                           // Create a circular avatar icon
-                          radius: 36, // Set radius to 36
+                          radius: 26, // Set radius to 36
                           backgroundColor: swatch[900],
                         ))
                     // If there is cached user information and an avatar image, use the cached image
@@ -88,7 +88,7 @@ class _ListWidget extends State<ListWidget> {
                                         highlightColor: shimmer["highlight"]!,
                                         child: CircleAvatar(
                                           // Create a circular avatar icon
-                                          radius: 36, // Set radius to 36
+                                          radius: 26, // Set radius to 36
                                           backgroundColor: swatch[900],
                                         )),
                                 imageBuilder: (context, imageProvider) =>
@@ -101,7 +101,7 @@ class _ListWidget extends State<ListWidget> {
                                             fit: BoxFit.contain),
                                       ),
                                     ))
-                            : const DefaultProfile(radius: 36),
+                            : const DefaultProfile(radius: 26),
                       ),
                 const Padding(
                     padding: EdgeInsets.only(

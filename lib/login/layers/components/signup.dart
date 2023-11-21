@@ -61,12 +61,12 @@ class _SignupComponent extends State<SignupComponent> {
               controller: usernameController,
             ),
             InputSection(
-              left: 59,
-              top: 299,
-              label: "Password",
-              hint: "Enter your password",
-              controller: passwordController,
-            ),
+                left: 59,
+                top: 299,
+                label: "Password",
+                hint: "Enter your password",
+                controller: passwordController,
+                hidden: true),
             errorText
                 ? const Positioned(
                     top: 380,

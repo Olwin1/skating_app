@@ -42,9 +42,15 @@ class InputSection extends StatelessWidget {
           child: SizedBox(
             width: 310,
             child: TextField(
+                cursorColor: swatch[801],
                 controller: controller,
                 decoration: InputDecoration(
-                  border: const UnderlineInputBorder(),
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: swatch[100]!)),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: swatch[501]!)),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: swatch[100]!, width: 1.5)),
                   hintText: hint,
                   hintStyle: TextStyle(color: hintText),
                 ),

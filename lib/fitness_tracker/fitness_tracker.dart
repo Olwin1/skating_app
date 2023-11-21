@@ -145,6 +145,7 @@ class _FitnessTracker extends State<FitnessTracker> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 32),
                     child: IconButton(
+                        color: Colors.transparent, //? Remember to remove this
                         onPressed: () =>
                             Navigator.of(context, rootNavigator: true).push(
                                 // Send to signal info page

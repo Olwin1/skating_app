@@ -113,6 +113,9 @@ class _MyAppState extends State<MyApp> {
         // is not restarted.
         primarySwatch: const MaterialColor(0xff1eb723, swatch),
         fontFamily: "OpenSans",
+        colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: const MaterialColor(0xff1eb723, swatch),
+            brightness: Brightness.dark),
       ),
       home: loggedIn
           ? StateManagement(setLoggedIn: setLoggedIn, loggedIn: loggedIn)

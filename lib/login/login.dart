@@ -34,19 +34,28 @@ class _LoginPage extends State<LoginPage> {
 
     return Scaffold(
         body: Stack(children: [
-      ImageFiltered(
-        imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-        child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: const AssetImage("assets/backgrounds/graffiti.png"),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.bottomLeft,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.4), BlendMode.srcOver)),
-            ),
-            padding: const EdgeInsets.all(16)),
-      ),
+      SingleChildScrollView(
+          child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: // TODO REPLACE THIS WITH LOWER RES VERSION OF GRAFFITI WHILE LOADING
+                          const AssetImage("assets/backgrounds/graffiti.png"),
+                      fit: BoxFit.cover,
+                      alignment: Alignment.bottomLeft,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.4),
+                        BlendMode.srcOver,
+                      ),
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                ),
+              ))),
       Stack(
         children: <Widget>[
           Positioned(

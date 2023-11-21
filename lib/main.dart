@@ -374,18 +374,27 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               ),
               body: Stack(
                 children: [
-                  Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: const AssetImage(
-                                "assets/backgrounds/graffiti.png"),
-                            fit: BoxFit.cover,
-                            alignment: Alignment.center,
-                            colorFilter: ColorFilter.mode(
-                                Colors.black.withOpacity(0.4),
-                                BlendMode.srcOver)),
-                      ),
-                      padding: const EdgeInsets.all(16)),
+                  SingleChildScrollView(
+                      clipBehavior: Clip.none,
+                      physics: const ClampingScrollPhysics(
+                          parent: NeverScrollableScrollPhysics()),
+                      child: Container(
+                          constraints: BoxConstraints(
+                              minHeight: MediaQuery.of(context).size.height,
+                              minWidth: MediaQuery.of(context).size.width),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: const AssetImage(
+                                    "assets/backgrounds/graffiti.png"),
+                                fit: BoxFit.cover,
+                                alignment: Alignment.center,
+                                colorFilter: ColorFilter.mode(
+                                    Colors.black.withOpacity(0.4),
+                                    BlendMode.srcOver)),
+                          ),
+                          padding: const EdgeInsets.all(16))),
                   // Create a navigator stack for each item
                   _buildOffstageNavigator(currentPage, 0),
                   _buildOffstageNavigator(currentPage, 1),

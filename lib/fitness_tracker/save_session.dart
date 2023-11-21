@@ -133,202 +133,218 @@ class _SaveSession extends State<SaveSession> {
                 ),
               ),
             ),
-            body: Stack(children: [
+            body: Stack(clipBehavior: Clip.none, children: [
               Container(
                   decoration: const BoxDecoration(color: Color(0x58000000)),
                   padding: const EdgeInsets.all(16)),
               Container(
                   padding: const EdgeInsets.all(48),
-                  child: ListView(
-                    // crossAxisAlignment:
-                    //     CrossAxisAlignment.start, // Left align children
-                    // Split layout into individual rows
-                    children: [
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.center, // Center Children
-                        // Top 2 elements
+                  child: SingleChildScrollView(
+                      clipBehavior: Clip.none,
+                      child: Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start, // Left align children
+                        // Split layout into individual rows
                         children: [
-                          Flexible(
-                            flex: 16,
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
+                          const SizedBox(
+                            height: 64,
+                          ),
+                          FittedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                FittedBox(
+                                  // Set a fixed width for the first container
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: const BoxDecoration(
+                                      color: Color.fromARGB(125, 0, 0, 0),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(8)),
+                                    ),
+                                    margin: const EdgeInsets.all(8),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .distanceTraveled,
+                                          style: TextStyle(color: swatch[401]),
+                                          overflow: TextOverflow.fade,
+                                          softWrap: false,
+                                        ),
+                                        Text(
+                                          "${(widget.distance / 1000).toStringAsFixed(2)}km",
+                                          style: TextStyle(color: swatch[601]),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                    width:
+                                        16), // Add some spacing between the two containers
+                                FittedBox(
+                                  // Set a fixed width for the second container
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: const BoxDecoration(
+                                      color: Color.fromARGB(125, 0, 0, 0),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(8)),
+                                    ),
+                                    margin: const EdgeInsets.all(8),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .sessionDuration,
+                                          style: TextStyle(color: swatch[401]),
+                                          overflow: TextOverflow.fade,
+                                          softWrap: false,
+                                        ),
+                                        Text(
+                                          widget.endTime
+                                              .difference(widget.startTime)
+                                              .toString()
+                                              .substring(0, 8),
+                                          style: TextStyle(color: swatch[601]),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                                color: Color.fromARGB(125, 0, 0, 0),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: Column(
+                              children: [
+                                Text(AppLocalizations.of(context)!.sessionName,
+                                    style: TextStyle(color: swatch[401])),
+                                TextField(
+                                  maxLength: 100,
+                                  decoration: InputDecoration(
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: swatch[200]!),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: swatch[401]!),
+                                    ),
+                                  ),
+                                  cursorColor: swatch[801],
+                                  style: TextStyle(color: swatch[801]),
+                                  controller: nameController,
+                                  autofocus: true,
+                                ),
+                              ],
+                            ),
+                          ), // Session Name Infobox
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                                color: Color.fromARGB(125, 0, 0, 0),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: Column(
+                              children: [
+                                Text(
+                                    AppLocalizations.of(context)!
+                                        .sessionDescription,
+                                    style: TextStyle(color: swatch[401])),
+                                TextField(
+                                  decoration: InputDecoration(
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: swatch[200]!),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: swatch[401]!),
+                                    ),
+                                  ),
+                                  cursorColor: swatch[801],
+                                  style: TextStyle(color: swatch[801]),
+                                  maxLines: 4,
+                                  minLines: 4,
+                                  maxLength: 350,
+                                  controller: descriptionController,
+                                  autofocus: true,
+                                ),
+                              ],
+                            ),
+                          ), // Session Description Infobox
+                          //const Spacer(), // Add small gap
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 16),
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                                color: Color.fromARGB(125, 0, 0, 0),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: TextButton(
+                                onPressed: () => commonLogger.i("Add photos"),
+                                child: Text(
+                                  AppLocalizations.of(context)!.addPhotos,
+                                  style: TextStyle(color: swatch[201]),
+                                )),
+                          ), // Add Photos Infobox
+                          Container(
+                              margin: const EdgeInsets.symmetric(
+                                // Add margin
+                                vertical: 16,
+                              ),
                               decoration: const BoxDecoration(
                                   color: Color.fromARGB(125, 0, 0, 0),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8))),
-                              // Distance Traveled Box
-                              margin: const EdgeInsets.all(8),
                               child: Column(
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context)!
-                                        .distanceTraveled,
-                                    style: TextStyle(color: swatch[401]),
-                                    overflow: TextOverflow.fade,
-                                    softWrap: false,
-                                  ), // Title
-                                  Text(
-                                      "${(widget.distance / 1000).toStringAsFixed(2)}km",
-                                      style: TextStyle(
-                                          color: swatch[601])) // Value
+                                      AppLocalizations.of(context)!.sessionType,
+                                      style: TextStyle(color: swatch[401])),
+                                  SessionType(
+                                    callback: setType,
+                                  )
                                 ],
+                              )), // Session Type Infobox
+                          Container(
+                              margin: const EdgeInsets.symmetric(
+                                // Add margin
+                                vertical: 16,
                               ),
-                            ),
-                          ),
-                          const Spacer(),
-                          Flexible(
-                              flex: 16,
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: const BoxDecoration(
-                                    color: Color.fromARGB(125, 0, 0, 0),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8))),
-                                // Session Duration Box
-                                margin: const EdgeInsets.all(8),
-                                child: Column(
-                                  children: [
-                                    Text(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromARGB(125, 0, 0, 0),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              child: Column(
+                                children: [
+                                  Text(
                                       AppLocalizations.of(context)!
-                                          .sessionDuration,
-                                      style: TextStyle(color: swatch[401]),
-                                      overflow: TextOverflow.fade,
-                                      softWrap: false,
-                                    ), // Title
-
-                                    Text(
-                                        widget.endTime
-                                            .difference(widget.startTime)
-                                            .toString()
-                                            .substring(0, 8),
-                                        style: TextStyle(
-                                            color: swatch[601])) // Value
-                                  ],
-                                ),
-                              ))
-                        ],
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                            color: Color.fromARGB(125, 0, 0, 0),
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                        child: Column(
-                          children: [
-                            Text(AppLocalizations.of(context)!.sessionName,
-                                style: TextStyle(color: swatch[401])),
-                            TextField(
-                              maxLength: 100,
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: swatch[200]!),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: swatch[401]!),
-                                ),
-                              ),
-                              cursorColor: swatch[801],
-                              style: TextStyle(color: swatch[801]),
-                              controller: nameController,
-                              autofocus: true,
-                            ),
-                          ],
-                        ),
-                      ), // Session Name Infobox
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                            color: Color.fromARGB(125, 0, 0, 0),
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                        child: Column(
-                          children: [
-                            Text(
-                                AppLocalizations.of(context)!
-                                    .sessionDescription,
-                                style: TextStyle(color: swatch[401])),
-                            TextField(
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: swatch[200]!),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: swatch[401]!),
-                                ),
-                              ),
-                              cursorColor: swatch[801],
-                              style: TextStyle(color: swatch[801]),
-                              maxLines: 4,
-                              minLines: 4,
-                              maxLength: 350,
-                              controller: descriptionController,
-                              autofocus: true,
-                            ),
-                          ],
-                        ),
-                      ), // Session Description Infobox
-                      const Spacer(), // Add small gap
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                            color: Color.fromARGB(125, 0, 0, 0),
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                        child: TextButton(
-                            onPressed: () => commonLogger.i("Add photos"),
+                                          .shareOptions,
+                                      style: TextStyle(color: swatch[401])),
+                                  ShareOptions(
+                                    callback: setOptions,
+                                  )
+                                ],
+                              )), // Share to Infobox
+                          const SizedBox(
+                            height: 16,
+                          ), // Vertically centre Widget with remaining space
+                          TextButton(
+                            onPressed: () => sendInfo(),
                             child: Text(
-                              AppLocalizations.of(context)!.addPhotos,
-                              style: TextStyle(color: swatch[201]),
-                            )),
-                      ), // Add Photos Infobox
-                      Container(
-                          margin: const EdgeInsets.symmetric(
-                            // Add margin
-                            vertical: 16,
-                          ),
-                          decoration: const BoxDecoration(
-                              color: Color.fromARGB(125, 0, 0, 0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                          child: Column(
-                            children: [
-                              Text(AppLocalizations.of(context)!.sessionType,
-                                  style: TextStyle(color: swatch[401])),
-                              SessionType(
-                                callback: setType,
-                              )
-                            ],
-                          )), // Session Type Infobox
-                      Container(
-                          margin: const EdgeInsets.symmetric(
-                            // Add margin
-                            vertical: 16,
-                          ),
-                          decoration: const BoxDecoration(
-                              color: Color.fromARGB(125, 0, 0, 0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                          child: Column(
-                            children: [
-                              Text(AppLocalizations.of(context)!.shareOptions,
-                                  style: TextStyle(color: swatch[401])),
-                              ShareOptions(
-                                callback: setOptions,
-                              )
-                            ],
-                          )), // Share to Infobox
-                      const Spacer(
-                        flex: 2,
-                      ), // Vertically centre Widget with remaining space
-                      TextButton(
-                        onPressed: () => sendInfo(),
-                        child: Text(AppLocalizations.of(context)!.saveSession,
-                            style: TextStyle(color: swatch[701])),
-                      ), // Save Session Infobox
-                      const Spacer(
-                        flex: 2,
-                      )
-                    ],
-                  ))
+                                AppLocalizations.of(context)!.saveSession,
+                                style: TextStyle(color: swatch[701])),
+                          ), // Save Session Infobox
+                        ],
+                      )))
             ])));
   }
 }

@@ -14,6 +14,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../components/list_error.dart';
 
+// Initialize an empty list to store new comments
+List<Map<String, dynamic>> newComments = [];
+
 class Comments extends StatefulWidget {
   final String post;
 
@@ -32,15 +35,16 @@ class Comments extends StatefulWidget {
 class _Comments extends State<Comments> {
   // Create a focus node to handle focus events
   late FocusNode focus;
+  Key commentsListKey = const Key("commentsList");
 
   // Initialize a text editing controller to handle text input
   late TextEditingController commentController = TextEditingController();
 
-  // Initialize an empty list to store new comments
-  List<Map<String, dynamic>> newComments = [];
+  String userId = "0";
 
   @override
   void initState() {
+    storage.getId().then((value) => userId = value ?? "0");
     super.initState();
   }
 
@@ -61,7 +65,7 @@ class _Comments extends State<Comments> {
         },
         child: Scaffold(
           backgroundColor: const Color(0x66000000),
-          resizeToAvoidBottomInset: true,
+          resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
           extendBody: true,
           appBar: AppBar(
@@ -109,16 +113,14 @@ class _Comments extends State<Comments> {
                 // Clear the comment controller and update the UI with the new comment
                 mounted
                     ? setState(() {
-                        newComments = [
-                          ...newComments,
-                          (<String, dynamic>{
-                            "comment_id": "newPost",
-                            "post_id": widget.post,
-                            "sender_id": "userid",
-                            "content": commentController.text,
-                            "timestamp": DateTime.now().toString()
-                          })
-                        ];
+                        commonLogger.d("Adding the post");
+                        newComments.add({
+                          "comment_id": "newPost",
+                          "post_id": widget.post,
+                          "sender_id": userId,
+                          "content": commentController.text,
+                          "timestamp": DateTime.now().toString()
+                        });
                       })
                     : null;
                 commentController.clear();
@@ -128,10 +130,10 @@ class _Comments extends State<Comments> {
             textColor: swatch[801],
             sendWidget: Icon(Icons.send_sharp, size: 30, color: swatch[801]),
             child: CommentsListView(
+              key: commentsListKey,
               // Pass the current post, focus node, and new comments to the CommentsListView widget
               post: widget.post,
               focus: focus,
-              newComments: newComments,
             ),
           ),
         ));
@@ -150,13 +152,7 @@ class CommentsListView extends StatefulWidget {
   final FocusNode focus;
   final String post;
 
-  final List<Map<String, dynamic>> newComments;
-
-  const CommentsListView(
-      {super.key,
-      required this.focus,
-      required this.post,
-      required this.newComments});
+  const CommentsListView({super.key, required this.focus, required this.post});
 
   @override
   State<CommentsListView> createState() => _CommentsListViewState();
@@ -187,7 +183,7 @@ class _CommentsListViewState extends State<CommentsListView> {
           widget.post,
           pageKey,
         ),
-        ...widget.newComments
+        ...newComments
       ];
 
       // Determine if this is the last page
@@ -209,7 +205,7 @@ class _CommentsListViewState extends State<CommentsListView> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.newComments.isNotEmpty) {
+    if (newComments.isNotEmpty) {
       // If there are new comments, refresh the list view
       _pagingController.refresh();
     }

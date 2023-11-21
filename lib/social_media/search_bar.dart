@@ -26,10 +26,21 @@ class _SearchBar extends State<SearchBarr> {
       padding: const EdgeInsets.all(8),
       child: TextField(
         controller: controller,
-        showCursor: false,
+        showCursor: true,
         maxLines: 1,
         textAlignVertical: TextAlignVertical.center,
+        cursorColor: swatch[801],
         decoration: InputDecoration(
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32),
+            borderSide: BorderSide(
+              color: Colors.green.shade900
+                  .withGreen(124), // Change the border color to green
+              width: 2, // You can adjust the border width
+              style: BorderStyle.solid,
+              // Remove strokeAlign, as it's not a valid property for BorderSide
+            ),
+          ),
           hintText: AppLocalizations.of(context)!.search,
           hintStyle: const TextStyle(color: Color(0x77ffffff)),
           isDense: true,

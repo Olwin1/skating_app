@@ -228,8 +228,8 @@ class _SaveSession extends State<SaveSession> {
                                   borderSide: BorderSide(color: swatch[401]!),
                                 ),
                               ),
-                              cursorColor: swatch[601],
-                              style: TextStyle(color: swatch[601]),
+                              cursorColor: swatch[801],
+                              style: TextStyle(color: swatch[801]),
                               controller: nameController,
                               autofocus: true,
                             ),
@@ -256,8 +256,8 @@ class _SaveSession extends State<SaveSession> {
                                   borderSide: BorderSide(color: swatch[401]!),
                                 ),
                               ),
-                              cursorColor: swatch[601],
-                              style: TextStyle(color: swatch[601]),
+                              cursorColor: swatch[801],
+                              style: TextStyle(color: swatch[801]),
                               maxLines: 4,
                               minLines: 4,
                               maxLength: 350,
@@ -275,8 +275,10 @@ class _SaveSession extends State<SaveSession> {
                             borderRadius: BorderRadius.all(Radius.circular(8))),
                         child: TextButton(
                             onPressed: () => commonLogger.i("Add photos"),
-                            child:
-                                Text(AppLocalizations.of(context)!.addPhotos)),
+                            child: Text(
+                              AppLocalizations.of(context)!.addPhotos,
+                              style: TextStyle(color: swatch[201]),
+                            )),
                       ), // Add Photos Infobox
                       Container(
                           margin: const EdgeInsets.symmetric(
@@ -350,6 +352,7 @@ class _SessionTypeState extends State<SessionType> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
+        iconEnabledColor: swatch[200],
         value: dropdownValue,
         // Icon to display at the right of the dropdown button
         icon: const Icon(Icons.arrow_downward),
@@ -410,6 +413,7 @@ class _ShareOptionsState extends State<ShareOptions> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
+      iconEnabledColor: swatch[200],
       // Set the value of the dropdown to `dropdownValueA` if `widget.id` is 1,
       // otherwise set it to `dropdownValueB`
       value: dropdownValue,

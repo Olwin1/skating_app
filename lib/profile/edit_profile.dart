@@ -225,8 +225,10 @@ class _EditProfile extends State<EditProfile> {
                                   },
                                 ),
                               ),
-                          child:
-                              Text(AppLocalizations.of(context)!.editPicture))
+                          child: Text(
+                            AppLocalizations.of(context)!.editPicture,
+                            style: TextStyle(color: swatch[100]),
+                          ))
                     ],
                   ),
                   Container(
@@ -253,6 +255,7 @@ class _EditProfile extends State<EditProfile> {
                               controller: displayNameController,
                               maxLength: 30,
                               decoration: InputDecoration(
+                                counterStyle: TextStyle(color: swatch[100]),
                                 enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: swatch[200]!),
                                 ),
@@ -260,8 +263,8 @@ class _EditProfile extends State<EditProfile> {
                                   borderSide: BorderSide(color: swatch[401]!),
                                 ),
                               ),
-                              cursorColor: swatch[601],
-                              style: TextStyle(color: swatch[601]),
+                              cursorColor: swatch[801],
+                              style: TextStyle(color: swatch[801]),
                               // Remove default padding
                             ),
                           ],
@@ -283,6 +286,7 @@ class _EditProfile extends State<EditProfile> {
                               maxLength: 30,
                               // Remove default padding
                               decoration: InputDecoration(
+                                counterStyle: TextStyle(color: swatch[100]),
                                 enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: swatch[200]!),
                                 ),
@@ -290,8 +294,8 @@ class _EditProfile extends State<EditProfile> {
                                   borderSide: BorderSide(color: swatch[401]!),
                                 ),
                               ),
-                              cursorColor: swatch[601],
-                              style: TextStyle(color: swatch[601]),
+                              cursorColor: swatch[801],
+                              style: TextStyle(color: swatch[801]),
                             ),
                           ],
                         ),
@@ -312,6 +316,7 @@ class _EditProfile extends State<EditProfile> {
                               maxLength: 56,
                               // Remove default padding
                               decoration: InputDecoration(
+                                counterText: "",
                                 enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: swatch[200]!),
                                 ),
@@ -319,9 +324,12 @@ class _EditProfile extends State<EditProfile> {
                                   borderSide: BorderSide(color: swatch[401]!),
                                 ),
                               ),
-                              cursorColor: swatch[601],
-                              style: TextStyle(color: swatch[601]),
+                              cursorColor: swatch[801],
+                              style: TextStyle(color: swatch[801]),
                             ),
+                            const SizedBox(
+                              height: 18,
+                            )
                           ],
                         ),
                         // Fifth column with about me
@@ -341,6 +349,7 @@ class _EditProfile extends State<EditProfile> {
                               maxLength: 150,
                               // Remove default padding
                               decoration: InputDecoration(
+                                counterStyle: TextStyle(color: swatch[100]),
                                 enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: swatch[200]!),
                                 ),
@@ -348,8 +357,8 @@ class _EditProfile extends State<EditProfile> {
                                   borderSide: BorderSide(color: swatch[401]!),
                                 ),
                               ),
-                              cursorColor: swatch[601],
-                              style: TextStyle(color: swatch[601]),
+                              cursorColor: swatch[801],
+                              style: TextStyle(color: swatch[801]),
                             ),
                           ],
                         )

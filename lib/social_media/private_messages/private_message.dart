@@ -391,8 +391,7 @@ class _PrivateMessage extends State<PrivateMessage> {
         );
         _addMessage(textMessage); // Run addMessage function
         if (channelId != null) {
-          await MessagesAPI.postMessage(
-                  channelId!, message.text, null, widget.user?["fcm_token"])
+          await MessagesAPI.postMessage(channelId!, message.text, null)
               .then((value) => {sending = false});
         } else {
           List<String> participants = [widget.currentUser];
@@ -400,8 +399,7 @@ class _PrivateMessage extends State<PrivateMessage> {
               await MessagesAPI.postChannel(participants);
           channelId = channel["channel_id"];
           if (channelId != null) {
-            await MessagesAPI.postMessage(
-                    channelId!, message.text, null, widget.user?["fcm_token"])
+            await MessagesAPI.postMessage(channelId!, message.text, null)
                 .then((value) => {sending = false});
           }
           if (widget.callback != null) {

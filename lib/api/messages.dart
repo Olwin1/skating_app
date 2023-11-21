@@ -43,8 +43,8 @@ class MessagesAPI {
   }
 
   // Method to send a new message
-  static Future<Object> postMessage(String channel, String content, String? img,
-      List<dynamic>? fcmToken) async {
+  static Future<Object> postMessage(
+      String channel, String content, String? img) async {
     try {
       // Send POST request to send a new message
       var response = await http.post(
@@ -54,7 +54,6 @@ class MessagesAPI {
           'channel': channel,
           'content': content,
           if (img != null) 'img': img,
-          "fcm_token": jsonEncode(fcmToken)
         },
       );
 

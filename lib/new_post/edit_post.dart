@@ -125,7 +125,7 @@ class _EditPost extends State<EditPost> {
                           // todo: define ended action.
                         },
                       )
-                    : const ColoredBox(color: Colors.pink),
+                    : const ColoredBox(color: Colors.transparent),
               );
             }),
             const SizedBox(

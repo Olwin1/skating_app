@@ -113,7 +113,7 @@ class _PostWidget extends State<PostWidget> {
       //                 fontWeight: FontWeight.bold)))
       //     : const SizedBox.shrink(),
       Expanded(
-        child: Stack(children: [
+        child: Stack(clipBehavior: Clip.none, children: [
           Container(
             margin: const EdgeInsets.only(top: 320),
             height: 60,

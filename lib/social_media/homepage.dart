@@ -229,6 +229,7 @@ class _PostsListViewState extends State<PostsListView> {
         edgeOffset: 94,
         onRefresh: () => refreshPage(),
         child: PagedListView<int, Object>(
+          clipBehavior: Clip.none,
           cacheExtent: 1024,
           pagingController: _pagingController,
           scrollController: widget.scrollController,

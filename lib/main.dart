@@ -8,10 +8,14 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/services.dart';
 //import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:patinka/api/image.dart';
+import 'package:patinka/caching/manager.dart';
 import 'package:patinka/login/login.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/websocket.dart';
 import 'package:patinka/api/token.dart';
+import 'package:verify/verify.dart';
 import 'api/config.dart';
 import 'api/social.dart';
 import 'common_logger.dart';
@@ -28,6 +32,7 @@ import './friends_tracker/caching/map_cache.dart'
     if (dart.library.html) './friends_tracker/caching/map_cache_web.dart';
 import './window_manager/window_manager.dart';
 import 'package:patinka/firebase/init_firebase.dart';
+import 'package:path/path.dart' as path;
 // AndroidNotificationChannel channel = const AndroidNotificationChannel(
 //   'ChannelId', // id
 //   'ChannelId', // title
@@ -175,10 +180,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  //Image backgroundImage = Image.file()
+  ImageProvider backgroundImage =
+      const AssetImage("assets/backgrounds/graffiti_low_res.png");
   int selectedpage = 0;
   String? avatar;
   @override
   void initState() {
+    void getImage(String filePath) {
+      getApplicationDocumentsDirectory().then((applicationDocumentsDirectory) {
+        File file = File(path
+            .join(applicationDocumentsDirectory.path, path.basename(filePath))
+            .replaceAll('"',
+                '')); // Replace all " because it breaks it for some weird reason
+        commonLogger.d(file.existsSync());
+        FileImage fileImage = FileImage(file);
+        setState(() => backgroundImage = fileImage);
+      });
+    }
+
     storage.getId().then((value) => {
           value != null
               ? SocialAPI.getUser(value).then((user) => {
@@ -192,6 +212,34 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   avatar = "default";
                 })
         });
+    NetworkManager.instance
+        .getLocalData(name: "current-background", type: CacheTypes.background)
+        .then((filePath) {
+      if (filePath != null) {
+        getImage(filePath);
+      } else {
+        MediaQueryData mediaQuery = MediaQuery.of(context);
+        final physicalPixelWidth =
+            mediaQuery.size.width * mediaQuery.devicePixelRatio;
+        final physicalPixelHeight =
+            mediaQuery.size.height * mediaQuery.devicePixelRatio;
+        downloadBackgroundImage(physicalPixelWidth, physicalPixelHeight)
+            .then((value) {
+          if (value) {
+            commonLogger.d("Downloading Value is true");
+            NetworkManager.instance
+                .getLocalData(
+                    name: "current-background", type: CacheTypes.background)
+                .then((filePath) {
+              if (filePath != null) {
+                commonLogger.d("File path aint none");
+                getImage(filePath);
+              }
+            });
+          }
+        });
+      }
+    });
     super.initState();
   }
 
@@ -304,6 +352,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     // than having to individually change instances of widgets.
 // This code returns a Consumer widget that rebuilds its child widget
 // whenever the CurrentPage object changes.
+    commonLogger.d(backgroundImage.toString());
     return Consumer<CurrentPage>(builder: (context, currentPage, child) {
       return WillPopScope(
           // Handle user swiping back inside application
@@ -389,9 +438,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           height: MediaQuery.of(context).size.height,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: const AssetImage(
-                                    "assets/backgrounds/graffiti.png"),
-                                fit: BoxFit.cover,
+                                image: backgroundImage,
+                                fit: BoxFit.contain,
                                 alignment: Alignment.center,
                                 colorFilter: ColorFilter.mode(
                                     Colors.black.withOpacity(0.4),

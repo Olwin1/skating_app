@@ -9,6 +9,8 @@ import './layers/layer_one.dart';
 import './layers/layer_three.dart';
 import './layers/layer_two.dart';
 
+enum BackgroundProgress { notDownloading, downloading, downloaded }
+
 class LoginPage extends StatefulWidget {
   final bool loggedIn;
   final dynamic setLoggedIn;
@@ -22,7 +24,7 @@ class _LoginPage extends State<LoginPage> {
   PageType previousPage = PageType.login;
   PageType currentPage = PageType.login;
   List<String> texts = ["Login"];
-  bool downloading = false;
+  BackgroundProgress backgroundProgress = BackgroundProgress.notDownloading;
 
   void switchPage(PageType page) {
     setState(() {
@@ -34,14 +36,19 @@ class _LoginPage extends State<LoginPage> {
   Widget build(BuildContext context) {
     commonLogger.d(currentPage.toString());
 
-    if (!downloading) {
+    if (backgroundProgress == BackgroundProgress.notDownloading) {
       final MediaQueryData mediaQuery = MediaQuery.of(context);
       final physicalPixelWidth =
           mediaQuery.size.width * mediaQuery.devicePixelRatio;
       final physicalPixelHeight =
           mediaQuery.size.height * mediaQuery.devicePixelRatio;
-      downloadBackgroundImage(physicalPixelWidth, physicalPixelHeight);
-      downloading = true;
+      downloadBackgroundImage(physicalPixelWidth, physicalPixelHeight)
+          .then((value) => {
+                if (value) {backgroundProgress = BackgroundProgress.downloaded}
+              });
+      if (backgroundProgress == BackgroundProgress.notDownloading) {
+        backgroundProgress = BackgroundProgress.downloading;
+      }
     }
     return Scaffold(
         body: Stack(children: [

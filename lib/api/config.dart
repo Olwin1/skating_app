@@ -7,7 +7,7 @@ import 'token.dart';
 
 SecureStorage storage = SecureStorage();
 
-enum CacheTypes { user, post, messages, list, misc, verified }
+enum CacheTypes { user, post, messages, list, misc, verified, background }
 
 class Config {
   // static String uri =

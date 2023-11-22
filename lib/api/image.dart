@@ -8,6 +8,7 @@ import 'package:http/http.dart';
 import 'package:mime/mime.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../caching/manager.dart';
 import '../common_logger.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
@@ -79,23 +80,38 @@ Future<StreamedResponse?> uploadFile(Uint8List image) async {
 
 Future<bool> downloadBackgroundImage(
     double physicalPixelWidth, double physicalPixelHeight) async {
-  try {
-    String url = '${Config.uri}/image/background/graffiti.png';
-    var response = await http.get(Uri.parse(url), headers: {
-      "width": physicalPixelWidth.toString(),
-      "height": physicalPixelHeight.toString()
-    });
-    Directory applicationDocumentsDirectory =
-        await getApplicationDocumentsDirectory();
-    File file = File(path.join(applicationDocumentsDirectory.path,
-        path.basename("/backgrounds/${url.split('/')[-1]}")));
-    //TODO Store saved image as active one
-    //TODO replace existing image with downloaded one
-    await file.writeAsBytes(response.bodyBytes);
+  //try {
+  String url = '${Config.uri}/image/background/graffiti.png';
+  String e = url.split('/').last;
+  Directory applicationDocumentsDirectory =
+      (await getApplicationDocumentsDirectory());
+  String filePath = '/backgrounds/$e';
+  File file = File(
+      path.join(applicationDocumentsDirectory.path, path.basename(filePath)));
+
+  // Check if the file already exists
+  if (await file.exists()) {
+    NetworkManager.instance.saveData(
+        name: "current-background",
+        data: filePath,
+        type: CacheTypes.background);
+    commonLogger.i("File already exists. Skipping download.");
+    // If the file already exists, you might want to return true to indicate success.
     return true;
-  } catch (e) {
-    // If an error occurs during the file download process, print an error message to the console
-    commonLogger.e("An Error Occurred during file download");
-    return false;
   }
+
+  var response = await http.get(Uri.parse(url), headers: {
+    "width": physicalPixelWidth.toString(),
+    "height": physicalPixelHeight.toString()
+  });
+
+  await file.writeAsBytes(response.bodyBytes);
+  NetworkManager.instance.saveData(
+      name: "current-background", data: filePath, type: CacheTypes.background);
+  return true;
+  //} catch (e) {
+  // If an error occurs during the file download process, print an error message to the console
+  //commonLogger.e("An Error Occurred during file download: $e");
+  //return false;
+  //}
 }

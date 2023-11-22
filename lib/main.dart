@@ -439,7 +439,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: backgroundImage,
-                                fit: BoxFit.contain,
+                                fit: BoxFit.cover,
                                 alignment: Alignment.center,
                                 colorFilter: ColorFilter.mode(
                                     Colors.black.withOpacity(0.4),

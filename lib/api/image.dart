@@ -1,15 +1,18 @@
 // Importing the required dependencies
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart';
 import 'package:mime/mime.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../common_logger.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
 import 'package:http_parser/http_parser.dart';
-
+import 'package:path/path.dart' as path;
 // Exporting functions from the messages.dart file
 export 'package:patinka/api/image.dart';
 
@@ -71,5 +74,28 @@ Future<StreamedResponse?> uploadFile(Uint8List image) async {
     // If an error occurs during the file upload process, print an error message to the console
     commonLogger.e("An Error Occurred during file upload");
     return null;
+  }
+}
+
+Future<bool> downloadBackgroundImage(
+    double physicalPixelWidth, double physicalPixelHeight) async {
+  try {
+    String url = '${Config.uri}/image/background/graffiti.png';
+    var response = await http.get(Uri.parse(url), headers: {
+      "width": physicalPixelWidth.toString(),
+      "height": physicalPixelHeight.toString()
+    });
+    Directory applicationDocumentsDirectory =
+        await getApplicationDocumentsDirectory();
+    File file = File(path.join(applicationDocumentsDirectory.path,
+        path.basename("/backgrounds/${url.split('/')[-1]}")));
+    //TODO Store saved image as active one
+    //TODO replace existing image with downloaded one
+    await file.writeAsBytes(response.bodyBytes);
+    return true;
+  } catch (e) {
+    // If an error occurs during the file download process, print an error message to the console
+    commonLogger.e("An Error Occurred during file download");
+    return false;
   }
 }

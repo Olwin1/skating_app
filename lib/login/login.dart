@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:patinka/api/image.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/login/config.dart';
 import 'package:patinka/login/page_type.dart';
@@ -21,6 +22,7 @@ class _LoginPage extends State<LoginPage> {
   PageType previousPage = PageType.login;
   PageType currentPage = PageType.login;
   List<String> texts = ["Login"];
+  bool downloading = false;
 
   void switchPage(PageType page) {
     setState(() {
@@ -32,6 +34,15 @@ class _LoginPage extends State<LoginPage> {
   Widget build(BuildContext context) {
     commonLogger.d(currentPage.toString());
 
+    if (!downloading) {
+      final MediaQueryData mediaQuery = MediaQuery.of(context);
+      final physicalPixelWidth =
+          mediaQuery.size.width * mediaQuery.devicePixelRatio;
+      final physicalPixelHeight =
+          mediaQuery.size.height * mediaQuery.devicePixelRatio;
+      downloadBackgroundImage(physicalPixelWidth, physicalPixelHeight);
+      downloading = true;
+    }
     return Scaffold(
         body: Stack(children: [
       SingleChildScrollView(
@@ -44,7 +55,8 @@ class _LoginPage extends State<LoginPage> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: // TODO REPLACE THIS WITH LOWER RES VERSION OF GRAFFITI WHILE LOADING
-                          const AssetImage("assets/backgrounds/graffiti.png"),
+                          const AssetImage(
+                              "assets/backgrounds/graffiti_low_res.png"),
                       fit: BoxFit.cover,
                       alignment: Alignment.bottomLeft,
                       colorFilter: ColorFilter.mode(

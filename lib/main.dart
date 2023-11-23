@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +14,6 @@ import 'package:patinka/login/login.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/websocket.dart';
 import 'package:patinka/api/token.dart';
-import 'package:verify/verify.dart';
 import 'api/config.dart';
 import 'api/social.dart';
 import 'common_logger.dart';

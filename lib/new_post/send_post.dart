@@ -81,6 +81,7 @@ class _SendPost extends State<SendPost> {
             );
           },
         );
+
         // Call the "sendImage" function and wait for it to complete
         sendImage().then((value) => {
               // When "sendImage" completes successfully, call "postPost"
@@ -91,7 +92,7 @@ class _SendPost extends State<SendPost> {
                         // When "postPost" completes successfully, close the current screen
                         Navigator.of(context).pop(),
                         Navigator.of(context).pop(),
-                        widget.currentPage.set(0)
+                        widget.currentPage.set(0),
                       })
             });
       } catch (e) {

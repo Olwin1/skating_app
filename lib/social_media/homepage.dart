@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:patinka/api/config.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/social_media/private_messages/private_message_list.dart';
@@ -13,6 +14,7 @@ import '../api/fcm_token.dart';
 import '../api/messages.dart';
 import '../api/social.dart';
 import '../components/list_error.dart';
+import '../misc/navbar_provider.dart';
 import '../swatch.dart';
 import 'post_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -25,6 +27,8 @@ class HomePage extends StatelessWidget {
 
   @override // Override the existing widget build method
   Widget build(BuildContext context) {
+    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+        .show(); // Show The Navbar
     return Scaffold(
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,

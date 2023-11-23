@@ -397,7 +397,7 @@ class _PrivateMessage extends State<PrivateMessage> {
           List<String> participants = [widget.currentUser];
           Map<String, dynamic> channel =
               await MessagesAPI.postChannel(participants);
-          channelId = channel["channel_id"];
+          channelId = channel["channel"]["channel_id"];
           if (channelId != null) {
             await MessagesAPI.postMessage(channelId!, message.text, null)
                 .then((value) => {sending = false});

@@ -314,6 +314,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
   }
 
   void refreshPage() {
+    commonLogger.d("refres");
     _pagingController?.refresh();
   }
 

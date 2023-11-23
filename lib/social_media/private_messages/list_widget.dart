@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:patinka/api/messages.dart';
-import 'package:patinka/api/social.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../api/config.dart';
 import '../../misc/default_profile.dart';
@@ -21,7 +20,7 @@ class ListWidget extends StatefulWidget {
   final Map<String, dynamic> channel; // Define title argument
   final String desc; // Define title argument
   final String currentUser;
-  final Function refreshPage;
+  final VoidCallback refreshPage;
 
   @override
   State<ListWidget> createState() => _ListWidget(); //Create state for widget
@@ -71,6 +70,7 @@ class _ListWidget extends State<ListWidget> {
                             TextButton(
                               onPressed: () async {
                                 await MessagesAPI.delChannel(
+                                    // TODO fix page not refreshing
                                     widget.channel["channel_id"]);
                                 widget.refreshPage();
                                 popNavigator();

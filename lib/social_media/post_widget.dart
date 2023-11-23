@@ -305,7 +305,9 @@ class _PostWidget extends State<PostWidget> {
                           const Spacer(
                             flex: 1,
                           ),
-                          Flexible(
+                          SizedBox(
+                              width: 72,
+                              height: 72,
                               child: Avatar(user: widget.post["author_id"])),
                         ]),
                   ),

@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:patinka/api/messages.dart';
+import 'package:patinka/api/social.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../api/config.dart';
 import '../../misc/default_profile.dart';
@@ -13,11 +15,13 @@ class ListWidget extends StatefulWidget {
       required this.index,
       required this.channel,
       required this.desc,
-      required this.currentUser}); // Take 2 arguments optional key and title of post
+      required this.currentUser,
+      required this.refreshPage}); // Take 2 arguments optional key and title of post
   final int index; // Define title argument
   final Map<String, dynamic> channel; // Define title argument
   final String desc; // Define title argument
   final String currentUser;
+  final Function refreshPage;
 
   @override
   State<ListWidget> createState() => _ListWidget(); //Create state for widget
@@ -33,6 +37,10 @@ class _ListWidget extends State<ListWidget> {
         break;
       }
     }
+    void popNavigator() {
+      Navigator.of(context).pop();
+    }
+
     return Padding(
         padding: const EdgeInsets.only(top: 8),
         child: Container(
@@ -46,6 +54,45 @@ class _ListWidget extends State<ListWidget> {
           padding: const EdgeInsets.symmetric(
               vertical: 8), // Add padding so doesn't touch edges
           child: TextButton(
+            onLongPress: () async {
+              await showDialog(
+                useRootNavigator: false,
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                      backgroundColor: swatch[800],
+                      title: Text(
+                        'Are you sure you want to delete this channel?',
+                        style: TextStyle(color: swatch[701]),
+                      ),
+                      content: SizedBox(
+                          height: 96,
+                          child: Column(children: [
+                            TextButton(
+                              onPressed: () async {
+                                await MessagesAPI.delChannel(
+                                    widget.channel["channel_id"]);
+                                widget.refreshPage();
+                                popNavigator();
+                              },
+                              child: Text(
+                                'Delete',
+                                style: TextStyle(color: swatch[901]),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                popNavigator();
+                              },
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(color: swatch[901]),
+                              ),
+                            )
+                          ])));
+                },
+              );
+            },
             // Make list widget clickable
             onPressed: () => {
               Navigator.push(

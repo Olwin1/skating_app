@@ -313,6 +313,10 @@ class _ChannelsListViewState extends State<ChannelsListView> {
     // }
   }
 
+  void refreshPage() {
+    _pagingController?.refresh();
+  }
+
   @override
   Widget build(BuildContext context) => _pagingController != null
       ? PagedListView<int, Map<String, dynamic>>(
@@ -332,7 +336,8 @@ class _ChannelsListViewState extends State<ChannelsListView> {
                     channel: item,
                     desc:
                         "Last Message: ${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
-                    currentUser: widget.currentUser), //item id
+                    currentUser: widget.currentUser,
+                    refreshPage: refreshPage), //item id
           ),
         )
       : const SizedBox.shrink();

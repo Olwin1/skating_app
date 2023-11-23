@@ -172,4 +172,31 @@ class MessagesAPI {
       throw Exception("Error during post: $e");
     }
   }
+
+  static Future<Map<String, dynamic>> delChannel(String channel) async {
+    // Define the URL for the HTTP request
+
+    try {
+      // Make a DELETE request to the specified URL with headers and parameters
+      var response = await http.delete(
+        _channelUrl,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization':
+              'Bearer ${await storage.getToken()}', // Include authentication token in the header
+          'channel': channel,
+        },
+      );
+      String? id = await storage.getId();
+      if (id != null) {
+        await NetworkManager.instance
+            .deleteLocalData(name: "channels", type: CacheTypes.list);
+      }
+
+      return handleResponse(response, Resp.stringResponse);
+    } catch (e) {
+      // If there's an error, throw an exception with the error message
+      throw Exception("Error during channel del: $e");
+    }
+  }
 }

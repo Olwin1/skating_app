@@ -393,60 +393,58 @@ Widget _createGridTileWidget(Map<String, dynamic> post,
     }
 
     return GestureDetector(
-        onLongPress: () async {
-          await showDialog(
-            useRootNavigator: false,
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                  backgroundColor: swatch[800],
-                  title: Text(
-                    'Are you sure you want to delete this post?',
-                    style: TextStyle(color: swatch[701]),
-                  ),
-                  content: SizedBox(
-                      height: 96,
-                      child: Column(children: [
-                        TextButton(
-                          onPressed: () async {
-                            await SocialAPI.delPost(post["post_id"]);
-                            refreshPage();
-                            popNavigator();
-                          },
-                          child: Text(
-                            'Delete',
-                            style: TextStyle(color: swatch[901]),
-                          ),
+      onLongPress: () async {
+        await showDialog(
+          useRootNavigator: false,
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                backgroundColor: swatch[800],
+                title: Text(
+                  'Are you sure you want to delete this post?',
+                  style: TextStyle(color: swatch[701]),
+                ),
+                content: SizedBox(
+                    height: 96,
+                    child: Column(children: [
+                      TextButton(
+                        onPressed: () async {
+                          await SocialAPI.delPost(post["post_id"]);
+                          refreshPage();
+                          popNavigator();
+                        },
+                        child: Text(
+                          'Delete',
+                          style: TextStyle(color: swatch[901]),
                         ),
-                        TextButton(
-                          onPressed: () async {
-                            popNavigator();
-                          },
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(color: swatch[901]),
-                          ),
-                        )
-                      ])));
-            },
-          );
-        },
-        //onLongPressEnd: (details) => _popupDialog?.remove(),
-        child: GestureDetector(
-          onTap: () => {currentImage = post["image"], imageViewerController()},
-          child: CachedNetworkImage(
-            imageUrl: '${Config.uri}/image/thumbnail/${post["image"]}',
-            fit: BoxFit.cover,
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(
-                    8), // Set the shape of the container to a circle
-                image:
-                    DecorationImage(image: imageProvider, fit: BoxFit.contain),
-              ),
-            ),
-          ), // Display the image from the URL
-        ));
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          popNavigator();
+                        },
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(color: swatch[901]),
+                        ),
+                      )
+                    ])));
+          },
+        );
+      },
+      //onLongPressEnd: (details) => _popupDialog?.remove(),
+      onTap: () => {currentImage = post["image"], imageViewerController()},
+      child: CachedNetworkImage(
+        imageUrl: '${Config.uri}/image/thumbnail/${post["image"]}',
+        fit: BoxFit.cover,
+        imageBuilder: (context, imageProvider) => Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(
+                8), // Set the shape of the container to a circle
+            image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
+          ),
+        ),
+      ), // Display the image from the URL
+    );
   });
 }
 

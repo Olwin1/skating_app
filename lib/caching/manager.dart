@@ -46,7 +46,7 @@ class NetworkManager {
       {required String name, required CacheTypes type}) async {
     try {
       if (fileManager != null) {
-        fileManager!.removeUserRequestSingleCache("cached-$type-$name");
+        await fileManager!.removeUserRequestSingleCache("cached-$type-$name");
         return true;
       }
     } catch (e) {
@@ -58,7 +58,7 @@ class NetworkManager {
   Future<bool> deleteAllLocalData() async {
     try {
       if (fileManager != null) {
-        fileManager!.removeUserRequestCache("cached");
+        await fileManager!.removeUserRequestCache("cached");
         return true;
       }
     } catch (e) {

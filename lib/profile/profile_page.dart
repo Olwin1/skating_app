@@ -90,7 +90,6 @@ class _Profile extends State<Profile> {
               padding: const EdgeInsets.all(4),
               child: CachedNetworkImage(
                 imageUrl: '${Config.uri}/image/$currentImage',
-                //fit: BoxFit.cover,
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(

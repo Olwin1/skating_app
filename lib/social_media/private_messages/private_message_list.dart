@@ -57,12 +57,6 @@ class _PrivateMessageList extends State<PrivateMessageList> {
   final PagingController<int, Map<String, dynamic>> _pagingController =
       PagingController(firstPageKey: 0);
 
-  // Method to refresh the private message list
-  void refreshList() {
-    commonLogger.d("Refresh list");
-    _pagingController.refresh();
-  }
-
   @override
   Widget build(BuildContext context) {
     // Hide the bottom navigation bar
@@ -104,7 +98,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
                       NewChannelPage(
-                    callback: refreshList,
+                    callback: _pagingController.refresh,
                   ),
                   opaque: false,
                   transitionsBuilder:
@@ -137,7 +131,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
                     : ChannelsListView(
                         currentUser: currentUser!,
                         pagingController: _pagingController,
-                      ),
+                        refreshList: _pagingController.refresh),
               ),
             ],
           ),
@@ -213,14 +207,15 @@ Widget _loadingSkeleton() {
 
 // Widget for the list of channels
 class ChannelsListView extends StatefulWidget {
-  const ChannelsListView({
-    super.key,
-    required this.currentUser,
-    required this.pagingController,
-  });
+  const ChannelsListView(
+      {super.key,
+      required this.currentUser,
+      required this.pagingController,
+      required this.refreshList});
 
   final String currentUser;
   final PagingController<int, Map<String, dynamic>> pagingController;
+  final VoidCallback refreshList;
 
   @override
   State<ChannelsListView> createState() => _ChannelsListViewState();
@@ -257,6 +252,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
+      commonLogger.d("Fwtching Page");
       final page = await MessagesAPI.getChannels(
         pageKey,
       );
@@ -299,11 +295,6 @@ class _ChannelsListViewState extends State<ChannelsListView> {
     }
   }
 
-  void refreshPage() {
-    commonLogger.d("Refresh Page");
-    _pagingController?.refresh();
-  }
-
   @override
   Widget build(BuildContext context) => _pagingController != null
       ? PagedListView<int, Map<String, dynamic>>(
@@ -324,7 +315,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
                     desc:
                         "Last Message: ${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
                     currentUser: widget.currentUser,
-                    refreshPage: refreshPage),
+                    refreshPage: widget.refreshList),
           ),
         )
       : const SizedBox.shrink();

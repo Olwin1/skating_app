@@ -38,6 +38,8 @@ class _Comments extends State<Comments> {
   Key commentsListKey = const Key("commentsList");
   late TextEditingController commentController = TextEditingController();
   String userId = "0";
+  final PagingController<int, Map<String, dynamic>> _pagingController =
+      PagingController(firstPageKey: 0);
 
   @override
   void initState() {
@@ -84,21 +86,9 @@ class _Comments extends State<Comments> {
           sendButtonMethod: () {
             // Post a comment when the send button is pressed
             if (commentController.text.isNotEmpty) {
-              SocialAPI.postComment(widget.post, commentController.text);
+              SocialAPI.postComment(widget.post, commentController.text)
+                  .then((value) => _pagingController.refresh());
 
-              // Update the UI with the new comment
-              mounted
-                  ? setState(() {
-                      commonLogger.d("Adding the post");
-                      newComments.add({
-                        "comment_id": "newPost",
-                        "post_id": widget.post,
-                        "sender_id": userId,
-                        "content": commentController.text,
-                        "timestamp": DateTime.now().toString()
-                      });
-                    })
-                  : null;
               commentController.clear();
             }
           },
@@ -106,10 +96,10 @@ class _Comments extends State<Comments> {
           textColor: swatch[801],
           sendWidget: Icon(Icons.send_sharp, size: 30, color: swatch[801]),
           child: CommentsListView(
-            key: commentsListKey,
-            post: widget.post,
-            focus: focus,
-          ),
+              key: commentsListKey,
+              post: widget.post,
+              focus: focus,
+              pagingController: _pagingController),
         ),
       ),
     );
@@ -153,12 +143,13 @@ class _Comments extends State<Comments> {
 class CommentsListView extends StatefulWidget {
   final FocusNode focus;
   final String post;
+  final PagingController<int, Map<String, dynamic>> pagingController;
 
-  const CommentsListView({
-    super.key,
-    required this.focus,
-    required this.post,
-  });
+  const CommentsListView(
+      {super.key,
+      required this.focus,
+      required this.post,
+      required this.pagingController});
 
   @override
   State<CommentsListView> createState() => _CommentsListViewState();
@@ -166,13 +157,11 @@ class CommentsListView extends StatefulWidget {
 
 class _CommentsListViewState extends State<CommentsListView> {
   static const _pageSize = 20; // Number of items per page
-  final PagingController<int, Map<String, dynamic>> _pagingController =
-      PagingController(firstPageKey: 0);
 
   @override
   void initState() {
     // Add a listener for page requests, and call _fetchPage() when a page is requested
-    _pagingController.addPageRequestListener((pageKey) {
+    widget.pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
     super.initState();
@@ -191,15 +180,15 @@ class _CommentsListViewState extends State<CommentsListView> {
       if (!mounted) return;
       if (isLastPage) {
         // If this is the last page, append it to the list of pages
-        _pagingController.appendLastPage(page);
+        widget.pagingController.appendLastPage(page);
       } else {
         // If this is not the last page, append it to the list of pages and request the next page
         final nextPageKey = pageKey += 1;
-        _pagingController.appendPage(page, nextPageKey);
+        widget.pagingController.appendPage(page, nextPageKey);
       }
     } catch (error) {
       // If there's an error fetching the page, set the error on the controller
-      _pagingController.error = error;
+      widget.pagingController.error = error;
     }
   }
 
@@ -207,12 +196,12 @@ class _CommentsListViewState extends State<CommentsListView> {
   Widget build(BuildContext context) {
     if (newComments.isNotEmpty) {
       // If there are new comments, refresh the list view
-      _pagingController.refresh();
+      widget.pagingController.refresh();
     }
 
     // Build a paginated list view of comments using the PagedListView widget
     return PagedListView<int, Map<String, dynamic>>(
-      pagingController: _pagingController,
+      pagingController: widget.pagingController,
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
         noItemsFoundIndicatorBuilder: (context) => ListError(
             title: AppLocalizations.of(context)!.noCommentsFound, body: ""),
@@ -225,7 +214,7 @@ class _CommentsListViewState extends State<CommentsListView> {
   void dispose() {
     try {
       // Dispose the controller when the widget is disposed
-      _pagingController.dispose();
+      widget.pagingController.dispose();
     } catch (e) {
       commonLogger.e("An error has occurred: $e");
     }

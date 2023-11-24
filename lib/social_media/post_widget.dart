@@ -10,6 +10,7 @@ import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
 import 'comments.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../api/config.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class PostWidget extends StatefulWidget {
   // Create HomePage Class
@@ -433,6 +434,7 @@ class _CaptionWrapper extends State<CaptionWrapper> {
       child: Caption(
           username: username,
           description: widget.post["description"],
+          timestamp: DateTime.parse(widget.post["timestamp"]),
           collapsed: collapsed),
     );
   }
@@ -442,12 +444,18 @@ class Caption extends StatelessWidget {
   final String? username;
   final String? description;
   final bool collapsed;
+  final DateTime timestamp;
 
   const Caption(
-      {super.key, this.username, this.description, required this.collapsed});
+      {super.key,
+      this.username,
+      this.description,
+      required this.collapsed,
+      required this.timestamp});
 
   @override // Override existing build method
   Widget build(BuildContext context) {
+    String timeAgo = timeago.format(timestamp);
     if (username == null || description == null) {
       return Container(
         padding: const EdgeInsets.all(8),
@@ -479,15 +487,23 @@ class Caption extends StatelessWidget {
                 alignment: PlaceholderAlignment.baseline,
                 baseline: TextBaseline.alphabetic,
                 child: SizedBox(width: 6)),
-            // Flexible(
-
-            //   child:
+            TextSpan(
+              text: timeAgo,
+              style: TextStyle(
+                  color: swatch[801],
+                  fontSize: 14,
+                  fontStyle: FontStyle.italic),
+            ),
+            const WidgetSpan(
+                alignment: PlaceholderAlignment.baseline,
+                baseline: TextBaseline.alphabetic,
+                child: SizedBox(width: 6)),
             TextSpan(
               text: description,
               style: TextStyle(color: swatch[801], fontSize: 15),
 
               //),
-            )
+            ),
           ])),
     ));
   }

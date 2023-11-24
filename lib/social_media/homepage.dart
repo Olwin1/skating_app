@@ -30,64 +30,73 @@ class HomePage extends StatelessWidget {
     // Show the Navbar
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).show();
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      extendBodyBehindAppBar: true,
-      extendBody: true,
-      appBar: AppBar(
-        // App Bar Configuration
-        elevation: 8,
-        shadowColor: Colors.green.shade900,
-        backgroundColor: Config.appbarColour,
-        foregroundColor: Colors.transparent,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-        ),
-        actions: [
-          // App Bar Actions
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: TextButton(
-              onPressed: () {
-                // Scroll to top when image pressed
-                _scrollController.animateTo(0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.fastOutSlowIn);
-              },
-              child: SvgPicture.asset(
-                "assets/icons/patinka.svg",
-                fit: BoxFit.fitHeight,
-                width: 130,
-                alignment: Alignment.centerLeft,
-                colorFilter: const ColorFilter.mode(
-                    Color.fromARGB(255, 116, 0, 81), BlendMode.srcIn),
-              ),
-            ),
+    return Stack(children: [
+      Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBodyBehindAppBar: true,
+        extendBody: true,
+        appBar: AppBar(
+          // App Bar Configuration
+          elevation: 8,
+          shadowColor: Colors.green.shade900,
+          backgroundColor: Config.appbarColour,
+          foregroundColor: Colors.transparent,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
           ),
-          const SearchBarr(),
-          // Navigate to Private Message List
-          TextButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                settings: const RouteSettings(name: "/PrivateMessageList"),
-                builder: (context) => const PrivateMessageList(
-                  user: "user",
-                  index: 1,
+          actions: [
+            // App Bar Actions
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: TextButton(
+                onPressed: () {
+                  // Scroll to top when image pressed
+                  _scrollController.animateTo(0,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.fastOutSlowIn);
+                },
+                child: SvgPicture.asset(
+                  "assets/icons/patinka.svg",
+                  fit: BoxFit.fitHeight,
+                  width: 130,
+                  alignment: Alignment.centerLeft,
+                  colorFilter: const ColorFilter.mode(
+                      Color.fromARGB(255, 116, 0, 81), BlendMode.srcIn),
                 ),
               ),
             ),
-            child: Image.asset("assets/icons/message.png"),
+            const SearchBarr(),
+            // Navigate to Private Message List
+            TextButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  settings: const RouteSettings(name: "/PrivateMessageList"),
+                  builder: (context) => const PrivateMessageList(
+                    user: "user",
+                    index: 1,
+                  ),
+                ),
+              ),
+              child: Image.asset("assets/icons/message.png"),
+            ),
+          ],
+        ),
+        body: Center(
+          child: PostsListView(
+            scrollController: _scrollController,
           ),
-        ],
-      ),
-      body: Center(
-        child: PostsListView(
-          scrollController: _scrollController,
         ),
       ),
-    );
+      const Positioned(
+          top: 35,
+          left: 45,
+          child: Text(
+            "This is an Alpha much is non-functional",
+            style: TextStyle(color: Colors.amber),
+          ))
+    ]);
   }
 }
 

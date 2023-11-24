@@ -135,6 +135,82 @@ class OverlaySettings {
       },
     );
   }
+
+  void features(BuildContext context) {
+    showDialog(
+      useRootNavigator: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color.fromARGB(200, 0, 0, 0),
+          title: Text(
+            'Planned Upcoming features',
+            style: TextStyle(color: swatch[701]),
+          ),
+          content: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: const Color.fromARGB(200, 0, 0, 0),
+            ),
+            height: 300,
+            width: 250,
+            key: const Key("2"),
+            child: ListView(padding: const EdgeInsets.all(8), children: const [
+              Text(
+                  "Friends tracker - search for places, people, and recent sessions"),
+              SizedBox(height: 8),
+              Text("Friends tracker - Nearby skateparks"),
+              SizedBox(height: 8),
+              Text("Friends tracker - Nearby areas suitable for skating"),
+              SizedBox(height: 8),
+              Text("Messaging - Image sending in messages"),
+              SizedBox(height: 8),
+              Text("Messaging - Image link embedding in messages"),
+              SizedBox(height: 8),
+              Text(
+                  "Localisation - Add support for localisation across whole of app"),
+              SizedBox(height: 8),
+              Text(
+                  "Fitness tracker - Make speedometer default to use accelerometer before using GPS"),
+              SizedBox(height: 8),
+              Text(
+                  "Fitness Tracker - Make sunset time tappable to change to sunrise time the next day"),
+              SizedBox(height: 8),
+              Text(
+                  "Fitness Tracker - Make avg session duration & avg speed functional"),
+              SizedBox(height: 8),
+              Text("Profile Page - Add more post controls on profile page"),
+              SizedBox(height: 8),
+              Text(
+                  "Style - Make background customisable though a selectable list of styalised backgrounds."),
+              SizedBox(height: 8),
+              Text("Errors - Add more helpful error messages"),
+              SizedBox(height: 8),
+              Text(
+                  "Security - Make server less trusting and check things more"),
+              SizedBox(height: 8),
+              Text(
+                  "Posts - Videos - Add support for short videos (but not like shorts)"),
+              SizedBox(height: 8),
+              Text("Save posts - Make posts save-able"),
+              SizedBox(height: 8),
+              Text("Comments - Improve post comments"),
+              SizedBox(height: 8),
+              Text("Bug - Fix default avatar on navbar on login"),
+              SizedBox(height: 8),
+              Text("Bug - Fix cache not updating on data change"),
+              SizedBox(height: 8),
+              Text("Port to web"),
+              SizedBox(height: 8),
+              Text("Port to windows"),
+              SizedBox(height: 8),
+              Text("Port to iOS? -- Far Future")
+            ]),
+          ),
+        );
+      },
+    );
+  }
 }
 
 class SelectThemeWidget extends StatefulWidget {

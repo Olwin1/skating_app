@@ -281,12 +281,3 @@ class _PostsListViewState extends State<PostsListView> {
     super.dispose();
   }
 }
-
-/*
-Nearby skateparks
-gen areas
-scout hut opposite
-
-
-
-*/

@@ -117,6 +117,18 @@ class _Settings extends State<Settings> {
                   sections: [
                     // Section for security-related settings
                     SettingsSection(
+                      title: const Text("Alpha"),
+                      tiles: <SettingsTile>[
+                        // Navigation tile for email settings
+                        SettingsTile.navigation(
+                          leading: const Icon(Icons.next_plan_outlined),
+                          title: const Text("Planned Features"),
+                          onPressed: (e) => {overlaySettings.features(context)},
+                        ),
+                      ],
+                    ),
+                    // Section for security-related settings
+                    SettingsSection(
                       title: Text(AppLocalizations.of(context)!.security),
                       tiles: <SettingsTile>[
                         // Navigation tile for email settings

@@ -237,6 +237,11 @@ class _Settings extends State<Settings> {
                                   AppLocalizations.of(context)!.contactSupport),
                             ),
                             SettingsTile.navigation(
+                              // Icon, title, and switch for the tile
+                              leading: const Icon(Icons.bug_report),
+                              title: const Text("Report a bug"),
+                            ),
+                            SettingsTile.navigation(
                               leading: const Icon(Icons.info),
                               title:
                                   Text(AppLocalizations.of(context)!.aboutApp),

@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:patinka/misc/navbar_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:patinka/profile/settings/settings_overlays.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -35,198 +37,217 @@ class _Settings extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+        .hide(); // Hide The Navbar
     // Building the UI of the Settings widget
-    return Scaffold(
-        backgroundColor: Colors.transparent,
-        resizeToAvoidBottomInset: false,
-        extendBodyBehindAppBar: true,
-        extendBody: true,
-        // AppBar widget for the title of the screen
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: swatch[701]),
-          elevation: 0,
-          shadowColor: Colors.green.shade900,
-          backgroundColor: Config.appbarColour,
-          foregroundColor: Colors.transparent,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-          ),
-          // Setting the title of the AppBar
-          title: Text(
-            AppLocalizations.of(context)!.settings,
-            style: TextStyle(color: swatch[701]),
-          ),
-        ),
-        // Using the SettingsList widget from the settings_ui package
-        body: Stack(children: [
-          Container(
-            color: Colors.black.withOpacity(0.5),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 1,
-                sigmaY: 1,
+    return PopScope(
+        onPopInvoked: (popped) {
+          if (popped) {
+            Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+                .show();
+          }
+        },
+        child: Scaffold(
+            backgroundColor: Colors.transparent,
+            resizeToAvoidBottomInset: false,
+            extendBodyBehindAppBar: true,
+            extendBody: true,
+            // AppBar widget for the title of the screen
+            appBar: AppBar(
+              iconTheme: IconThemeData(color: swatch[701]),
+              elevation: 0,
+              shadowColor: Colors.green.shade900,
+              backgroundColor: Config.appbarColour,
+              foregroundColor: Colors.transparent,
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
               ),
-              child: ColorFiltered(
-                colorFilter: const ColorFilter.mode(
-                  Color.fromARGB(
-                      57, 54, 56, 43), // Set the desired color for the filter
-                  BlendMode.overlay, // Set the desired blend mode
-                ),
-                child: Container(
-                  color: Colors.transparent,
-                ),
+              // Setting the title of the AppBar
+              title: Text(
+                AppLocalizations.of(context)!.settings,
+                style: TextStyle(color: swatch[701]),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 126),
-            child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(125, 0, 0, 0),
+            // Using the SettingsList widget from the settings_ui package
+            body: Stack(children: [
+              Container(
+                color: Colors.black.withOpacity(0.5),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: 1,
+                    sigmaY: 1,
+                  ),
+                  child: ColorFiltered(
+                    colorFilter: const ColorFilter.mode(
+                      Color.fromARGB(57, 54, 56,
+                          43), // Set the desired color for the filter
+                      BlendMode.overlay, // Set the desired blend mode
+                    ),
+                    child: Container(
+                      color: Colors.transparent,
+                    ),
+                  ),
                 ),
-                margin: const EdgeInsets.all(8),
-                child: SettingsList(
-                  lightTheme: defaultTheme,
-                  darkTheme: defaultTheme,
-                  sections: [
-                    // Adding a SettingsSection to group related tiles together
-                    SettingsSection(
-                      title: Text(AppLocalizations.of(context)!.security),
-                      // Adding the tiles to the section
-                      tiles: <SettingsTile>[
-                        // Navigation tile with an email icon, title, and value
-                        SettingsTile.navigation(
-                          leading: const Icon(Icons.mail),
-                          title: Text(AppLocalizations.of(context)!.email),
-                          value: Text(
-                              widget.user?["email"] ?? "default@example.com"),
-                        ),
-                        // Navigation tile with a language icon, title, and value
-                        SettingsTile.navigation(
-                          leading: const Icon(Icons.password),
-                          title: Text(AppLocalizations.of(context)!.password),
-                          value: const Text('••••••••'),
-                          onPressed: (e) => overlaySettings.password(context),
-                        ),
-                        // Switch tile for toggling push notifications
-                        SettingsTile.switchTile(
-                          activeSwitchColor: swatch[401],
-                          // Callback function for when the toggle is switched
-                          onToggle: (value) {},
-                          // Initial value for the toggle
-                          initialValue: true,
-                          // Icon, title, and switch for the tile
-                          leading: const Icon(Icons.fingerprint),
-                          title: Text(AppLocalizations.of(context)!.biometrics),
-                        ),
-                        SettingsTile.navigation(
-                          leading: const Icon(Icons.logout),
-                          title: Text(AppLocalizations.of(context)!.logout),
-                          onPressed: (e) => {
-                            // Remove stored tokens and restart app
-                            storage
-                                .logout()
-                                .then((value) => Phoenix.rebirth(context))
-                          },
-                        ),
-                      ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 126, bottom: 8),
+                child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: const Color.fromARGB(125, 0, 0, 0),
                     ),
-                    SettingsSection(
-                      title: Text(AppLocalizations.of(context)!.notifications),
-                      // Adding the tiles to the section
-                      tiles: <SettingsTile>[
-                        // Switch tile for toggling push notifications
-                        SettingsTile.switchTile(
-                          activeSwitchColor: swatch[401],
-                          // Callback function for when the toggle is switched
-                          onToggle: (value) {},
-                          // Initial value for the toggle
-                          initialValue: true,
-                          // Icon, title, and switch for the tile
-                          leading: const Icon(Icons.notifications),
-                          title: Text(
-                              AppLocalizations.of(context)!.pushNotifications),
+                    margin: const EdgeInsets.all(8),
+                    child: SettingsList(
+                      lightTheme: defaultTheme,
+                      darkTheme: defaultTheme,
+                      sections: [
+                        // Adding a SettingsSection to group related tiles together
+                        SettingsSection(
+                          title: Text(AppLocalizations.of(context)!.security),
+                          // Adding the tiles to the section
+                          tiles: <SettingsTile>[
+                            // Navigation tile with an email icon, title, and value
+                            SettingsTile.navigation(
+                              leading: const Icon(Icons.mail),
+                              title: Text(AppLocalizations.of(context)!.email),
+                              value: Text(widget.user?["email"] ??
+                                  "default@example.com"),
+                            ),
+                            // Navigation tile with a language icon, title, and value
+                            SettingsTile.navigation(
+                              leading: const Icon(Icons.password),
+                              title:
+                                  Text(AppLocalizations.of(context)!.password),
+                              value: const Text('••••••••'),
+                              onPressed: (e) =>
+                                  overlaySettings.password(context),
+                            ),
+                            // Switch tile for toggling push notifications
+                            SettingsTile.switchTile(
+                              activeSwitchColor: swatch[401],
+                              // Callback function for when the toggle is switched
+                              onToggle: (value) {},
+                              // Initial value for the toggle
+                              initialValue: true,
+                              // Icon, title, and switch for the tile
+                              leading: const Icon(Icons.fingerprint),
+                              title: Text(
+                                  AppLocalizations.of(context)!.biometrics),
+                            ),
+                            SettingsTile.navigation(
+                              leading: const Icon(Icons.logout),
+                              title: Text(AppLocalizations.of(context)!.logout),
+                              onPressed: (e) => {
+                                // Remove stored tokens and restart app
+                                storage
+                                    .logout()
+                                    .then((value) => Phoenix.rebirth(context))
+                              },
+                            ),
+                          ],
                         ),
-                        SettingsTile.switchTile(
-                          activeSwitchColor: swatch[401],
-                          // Callback function for when the toggle is switched
-                          onToggle: (value) {},
-                          // Initial value for the toggle
-                          initialValue: true,
-                          // Icon, title, and switch for the tile
-                          leading: const Icon(Icons.mail_lock),
-                          title: const Text('Email Notifications'),
-                        ),
-                      ],
-                    ),
-                    SettingsSection(
-                      title: Text(AppLocalizations.of(context)!.accessibility),
-                      // Adding the tiles to the section
-                      tiles: <SettingsTile>[
-                        SettingsTile.navigation(
-                          leading: const Icon(Icons.language),
-                          title: Text(AppLocalizations.of(context)!.language),
-                          value: const Text('English'),
-                          onPressed: (e) => overlaySettings.languages(context),
-                        ),
-                        // Switch tile for toggling push notifications
-                        SettingsTile.switchTile(
-                          activeSwitchColor: swatch[401],
-                          // Callback function for when the toggle is switched
-                          onToggle: (value) {},
-                          // Initial value for the toggle
-                          initialValue: true,
-                          // Icon, title, and switch for the tile
-                          leading: const Icon(Icons.text_decrease),
-                          title: Text(AppLocalizations.of(context)!.largeText),
-                        ),
-                        SettingsTile.switchTile(
-                          activeSwitchColor: swatch[401],
-                          // Callback function for when the toggle is switched
-                          onToggle: (value) {},
-                          // Initial value for the toggle
-                          initialValue: true,
-                          // Icon, title, and switch for the tile
-                          leading: const Icon(Icons.font_download),
+                        SettingsSection(
                           title:
-                              Text(AppLocalizations.of(context)!.dyslexiaFont),
+                              Text(AppLocalizations.of(context)!.notifications),
+                          // Adding the tiles to the section
+                          tiles: <SettingsTile>[
+                            // Switch tile for toggling push notifications
+                            SettingsTile.switchTile(
+                              activeSwitchColor: swatch[401],
+                              // Callback function for when the toggle is switched
+                              onToggle: (value) {},
+                              // Initial value for the toggle
+                              initialValue: true,
+                              // Icon, title, and switch for the tile
+                              leading: const Icon(Icons.notifications),
+                              title: Text(AppLocalizations.of(context)!
+                                  .pushNotifications),
+                            ),
+                            SettingsTile.switchTile(
+                              activeSwitchColor: swatch[401],
+                              // Callback function for when the toggle is switched
+                              onToggle: (value) {},
+                              // Initial value for the toggle
+                              initialValue: true,
+                              // Icon, title, and switch for the tile
+                              leading: const Icon(Icons.mail_lock),
+                              title: const Text('Email Notifications'),
+                            ),
+                          ],
                         ),
-                        SettingsTile.navigation(
-                          leading: const Icon(Icons.theater_comedy),
-                          title: Text(AppLocalizations.of(context)!.theme),
-                          value: const Text('Default'),
-                          onPressed: (e) => overlaySettings.theme(context),
+                        SettingsSection(
+                          title:
+                              Text(AppLocalizations.of(context)!.accessibility),
+                          // Adding the tiles to the section
+                          tiles: <SettingsTile>[
+                            SettingsTile.navigation(
+                              leading: const Icon(Icons.language),
+                              title:
+                                  Text(AppLocalizations.of(context)!.language),
+                              value: const Text('English'),
+                              onPressed: (e) =>
+                                  overlaySettings.languages(context),
+                            ),
+                            // Switch tile for toggling push notifications
+                            SettingsTile.switchTile(
+                              activeSwitchColor: swatch[401],
+                              // Callback function for when the toggle is switched
+                              onToggle: (value) {},
+                              // Initial value for the toggle
+                              initialValue: true,
+                              // Icon, title, and switch for the tile
+                              leading: const Icon(Icons.text_decrease),
+                              title:
+                                  Text(AppLocalizations.of(context)!.largeText),
+                            ),
+                            SettingsTile.switchTile(
+                              activeSwitchColor: swatch[401],
+                              // Callback function for when the toggle is switched
+                              onToggle: (value) {},
+                              // Initial value for the toggle
+                              initialValue: true,
+                              // Icon, title, and switch for the tile
+                              leading: const Icon(Icons.font_download),
+                              title: Text(
+                                  AppLocalizations.of(context)!.dyslexiaFont),
+                            ),
+                            SettingsTile.navigation(
+                              leading: const Icon(Icons.theater_comedy),
+                              title: Text(AppLocalizations.of(context)!.theme),
+                              value: const Text('Default'),
+                              onPressed: (e) => overlaySettings.theme(context),
+                            ),
+                          ],
+                        ),
+                        SettingsSection(
+                          title:
+                              Text(AppLocalizations.of(context)!.helpSupport),
+                          // Adding the tiles to the section
+                          tiles: <SettingsTile>[
+                            SettingsTile.navigation(
+                              leading: const Icon(Icons.format_quote),
+                              title: Text(AppLocalizations.of(context)!.faq),
+                            ),
+                            // Switch tile for toggling push notifications
+                            SettingsTile.navigation(
+                              // Icon, title, and switch for the tile
+                              leading: const Icon(Icons.support),
+                              title: Text(
+                                  AppLocalizations.of(context)!.contactSupport),
+                            ),
+                            SettingsTile.navigation(
+                              leading: const Icon(Icons.info),
+                              title:
+                                  Text(AppLocalizations.of(context)!.aboutApp),
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                    SettingsSection(
-                      title: Text(AppLocalizations.of(context)!.helpSupport),
-                      // Adding the tiles to the section
-                      tiles: <SettingsTile>[
-                        SettingsTile.navigation(
-                          leading: const Icon(Icons.format_quote),
-                          title: Text(AppLocalizations.of(context)!.faq),
-                        ),
-                        // Switch tile for toggling push notifications
-                        SettingsTile.navigation(
-                          // Icon, title, and switch for the tile
-                          leading: const Icon(Icons.support),
-                          title: Text(
-                              AppLocalizations.of(context)!.contactSupport),
-                        ),
-                        SettingsTile.navigation(
-                          leading: const Icon(Icons.info),
-                          title: Text(AppLocalizations.of(context)!.aboutApp),
-                        ),
-                      ],
-                    ),
-                  ],
-                )),
-          ),
+                    )),
+              ),
 
 // The specific behavior of the `outsidePressed()` function and the `OverlaySettings` widget cannot be determined from this code snippet alone
-        ]));
+            ])));
   }
 }

@@ -11,7 +11,7 @@ import 'package:patinka/common_logger.dart';
 import 'package:patinka/profile/edit_profile.dart';
 import 'package:patinka/profile/follow_button.dart';
 import 'package:patinka/profile/friend_icon_button.dart';
-import 'package:patinka/profile/friends_lisrs.dart';
+import 'package:patinka/profile/friends_list.dart';
 import 'package:patinka/profile/lists.dart';
 import 'package:patinka/profile/settings/settings.dart';
 

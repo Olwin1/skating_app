@@ -220,7 +220,6 @@ class _PostsListViewState extends State<PostsListView> {
     double width = MediaQuery.of(context).size.width;
     double size = height >= width ? width : height;
     if (size > 1080) {
-      commonLogger.i("larger than 1080");
       size = 1080;
     }
 

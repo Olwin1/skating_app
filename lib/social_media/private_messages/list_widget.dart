@@ -2,182 +2,193 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:patinka/api/messages.dart';
 import 'package:shimmer/shimmer.dart';
+
+// Importing external configurations and utility widgets
 import '../../api/config.dart';
 import '../../misc/default_profile.dart';
 import '../../swatch.dart';
 import 'private_message.dart';
 
+// StatefulWidget to represent a list item in the UI
 class ListWidget extends StatefulWidget {
-  // Create HomePage Class
-  const ListWidget(
-      {super.key,
-      required this.index,
-      required this.channel,
-      required this.desc,
-      required this.currentUser,
-      required this.refreshPage}); // Take 2 arguments optional key and title of post
-  final int index; // Define title argument
-  final Map<String, dynamic> channel; // Define title argument
-  final String desc; // Define title argument
+  // Constructor to initialize the widget with required properties
+  const ListWidget({
+    super.key,
+    required this.index,
+    required this.channel,
+    required this.desc,
+    required this.currentUser,
+    required this.refreshPage,
+  });
+
+  // Properties of the ListWidget
+  final int index;
+  final Map<String, dynamic> channel;
+  final String desc;
   final String currentUser;
   final VoidCallback refreshPage;
 
   @override
-  State<ListWidget> createState() => _ListWidget(); //Create state for widget
+  State<ListWidget> createState() => _ListWidget(); // Create state for widget
 }
 
+// State class for ListWidget
 class _ListWidget extends State<ListWidget> {
-  @override // Override existing build method
+  @override
   Widget build(BuildContext context) {
+    // Variable to store information about the user associated with the channel
     Map<String, dynamic>? user;
+
+    // Iterate through participants to find the user associated with the channel
     for (var participant in widget.channel["participants"]) {
       if (participant["users"]["user_id"] != widget.currentUser) {
         user = participant["users"];
         break;
       }
     }
+
+    // Function to navigate back in the widget tree
     void popNavigator() {
       Navigator.of(context).pop();
     }
 
+    // UI structure for each list item
     return Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xb5000000),
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          height: 84,
-          margin: const EdgeInsets.symmetric(
-              horizontal: 8), // Add padding so doesn't touch edges
-          padding: const EdgeInsets.symmetric(
-              vertical: 8), // Add padding so doesn't touch edges
-          child: TextButton(
-            onLongPress: () async {
-              await showDialog(
-                useRootNavigator: false,
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                      backgroundColor: swatch[800],
-                      title: Text(
-                        'Are you sure you want to delete this channel?',
-                        style: TextStyle(color: swatch[701]),
+      padding: const EdgeInsets.only(top: 8),
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xb5000000),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        height: 84,
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: TextButton(
+          onLongPress: () async {
+            // Show a confirmation dialog for channel deletion
+            await showDialog(
+              useRootNavigator: false,
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  backgroundColor: swatch[800],
+                  title: Text(
+                    'Are you sure you want to delete this channel?',
+                    style: TextStyle(color: swatch[701]),
+                  ),
+                  content: SizedBox(
+                    height: 96,
+                    child: Column(
+                      children: [
+                        TextButton(
+                          onPressed: () async {
+                            // Delete the channel, refresh the page, and close the dialog
+                            await MessagesAPI.delChannel(
+                                widget.channel["channel_id"]);
+                            widget.refreshPage();
+                            popNavigator();
+                          },
+                          child: Text(
+                            'Delete',
+                            style: TextStyle(color: swatch[901]),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // Close the dialog without deleting the channel
+                            popNavigator();
+                          },
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(color: swatch[901]),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+          onPressed: () {
+            // Navigate to PrivateMessage page when the list item is clicked
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PrivateMessage(
+                  index: 1,
+                  channel: widget.channel,
+                  user: user,
+                  currentUser: widget.currentUser,
+                ),
+              ),
+            );
+          },
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Display user avatar or default avatar if not available
+              user == null
+                  ? Shimmer.fromColors(
+                      baseColor: shimmer["base"]!,
+                      highlightColor: shimmer["highlight"]!,
+                      child: CircleAvatar(
+                        radius: 26,
+                        backgroundColor: swatch[900],
                       ),
-                      content: SizedBox(
-                          height: 96,
-                          child: Column(children: [
-                            TextButton(
-                              onPressed: () async {
-                                await MessagesAPI.delChannel(
-                                    // TODO fix page not refreshing
-                                    widget.channel["channel_id"]);
-                                widget.refreshPage();
-                                popNavigator();
-                              },
-                              child: Text(
-                                'Delete',
-                                style: TextStyle(color: swatch[901]),
+                    )
+                  : Flexible(
+                      child: (user["avatar_id"] != null &&
+                              user["avatar_id"] != "default")
+                          ? CachedNetworkImage(
+                              imageUrl:
+                                  '${Config.uri}/image/${user["avatar_id"]}',
+                              httpHeaders: const {"thumbnail": "true"},
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                baseColor: shimmer["base"]!,
+                                highlightColor: shimmer["highlight"]!,
+                                child: CircleAvatar(
+                                  radius: 26,
+                                  backgroundColor: swatch[900],
+                                ),
                               ),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                popNavigator();
-                              },
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(color: swatch[901]),
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
                               ),
                             )
-                          ])));
-                },
-              );
-            },
-            // Make list widget clickable
-            onPressed: () => {
-              Navigator.push(
-                  // When button pressed
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PrivateMessage(
-                            // Add private message page to top of navigation stack
-                            index: 1,
-                            channel: widget.channel,
-                            user: user, currentUser: widget.currentUser,
-                          ))),
-            }, //When list widget clicked
-            child: Row(
-              // Create a row
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Add List image to one row and buttons to another
-                user == null
-                    // If there is no cached user information or avatar image, use a default image
-                    ? Shimmer.fromColors(
-                        baseColor: shimmer["base"]!,
-                        highlightColor: shimmer["highlight"]!,
-                        child: CircleAvatar(
-                          // Create a circular avatar icon
-                          radius: 26, // Set radius to 36
-                          backgroundColor: swatch[900],
-                        ))
-                    // If there is cached user information and an avatar image, use the cached image
-                    : Flexible(
-                        child: (user["avatar_id"] != null &&
-                                user["avatar_id"] != "default")
-                            ? CachedNetworkImage(
-                                imageUrl:
-                                    '${Config.uri}/image/${user["avatar_id"]}',
-                                httpHeaders: const {"thumbnail": "true"},
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                        baseColor: shimmer["base"]!,
-                                        highlightColor: shimmer["highlight"]!,
-                                        child: CircleAvatar(
-                                          // Create a circular avatar icon
-                                          radius: 26, // Set radius to 36
-                                          backgroundColor: swatch[900],
-                                        )),
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape
-                                            .circle, // Set the shape of the container to a circle
-                                        image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.contain),
-                                      ),
-                                    ))
-                            : const DefaultProfile(radius: 26),
-                      ),
-                const Padding(
-                    padding: EdgeInsets.only(
-                        left: 16)), // Space between avatar and text
-                Flexible(
-                  flex: 6,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Create a column aligned to the left
-                        const Padding(
-                          //Add padding to the top to move the text down a bit
-                          padding: EdgeInsets.only(top: 10),
-                        ),
-                        Text(
-                            //Message target's Name
-                            user?["username"] ?? "Channel",
-                            style: TextStyle(
-                              color: swatch[301],
-                            )),
-                        Text(widget.desc,
-                            style: TextStyle(
-                                color: swatch[601], // Set colour to light grey
-                                height: 1.5)), // Last message sent from user
-                      ]),
+                          : const DefaultProfile(radius: 26),
+                    ),
+              const Padding(padding: EdgeInsets.only(left: 16)),
+              Flexible(
+                flex: 6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                    // Display user's name or default text for channels
+                    Text(
+                      user?["username"] ?? "Channel",
+                      style: TextStyle(color: swatch[301]),
+                    ),
+                    // Display channel description or last message sent
+                    Text(
+                      widget.desc,
+                      style: TextStyle(color: swatch[601], height: 1.5),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -1,3 +1,4 @@
+// Import necessary packages and files
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -22,195 +23,202 @@ import 'package:timeago/timeago.dart' as timeago;
 // Initialize GetIt for dependency injection
 GetIt getIt = GetIt.instance;
 
+// Define the main widget class
 class PrivateMessageList extends StatefulWidget {
-  // Create HomePage Class
-  const PrivateMessageList(
-      {super.key,
-      required this.user,
-      required this.index}); // Take 2 arguments optional key and title of post
-  final String user; // Define title argument
-  final int index; // Define title argument
+  const PrivateMessageList({
+    super.key,
+    required this.user,
+    required this.index,
+  });
+
+  final String user; // User's identifier
+  final int index; // Index for the private message list
+
   @override
-  State<PrivateMessageList> createState() =>
-      _PrivateMessageList(); //Create state for widget
+  State<PrivateMessageList> createState() => _PrivateMessageList();
 }
 
+// Define the state class for PrivateMessageList
 class _PrivateMessageList extends State<PrivateMessageList> {
-  String? currentUser;
+  String? currentUser; // Current user's identifier
 
   @override
   void initState() {
-    MessagesAPI.getUserId().then((value) => mounted
-        ? setState(() => currentUser = value ?? const Uuid().v1())
-        : null);
+    // Get the current user's identifier and set the state
+    MessagesAPI.getUserId().then(
+      (value) => mounted
+          ? setState(() => currentUser = value ?? const Uuid().v1())
+          : null,
+    );
     super.initState();
   }
 
+  // Create a paging controller for infinite scrolling
   final PagingController<int, Map<String, dynamic>> _pagingController =
       PagingController(firstPageKey: 0);
+
+  // Method to refresh the private message list
   void refreshList() {
-    commonLogger.d("REFERESHING LIST");
+    commonLogger.d("Refresh list");
     _pagingController.refresh();
   }
 
-  @override // Override existing build method
+  @override
   Widget build(BuildContext context) {
-    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-        .hide(); // Hide The Navbar
-    commonLogger.w("REBUILGING PAGe");
+    // Hide the bottom navigation bar
+    Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
+
     return PopScope(
-        canPop: true,
-        onPopInvoked: (bool didPop) {
-          if (didPop) {
-            Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-                .show(); // Show The Navbar
-          }
-        },
-        child: Scaffold(
-            //Create a scaffold
-            backgroundColor: Colors.transparent,
-            resizeToAvoidBottomInset: false,
-            extendBodyBehindAppBar: true,
-            extendBody: true,
-            appBar: AppBar(
-              iconTheme: IconThemeData(color: swatch[701]),
-              elevation: 8,
-              shadowColor: Colors.green.shade900,
-              backgroundColor: Config.appbarColour,
-              foregroundColor: Colors.transparent,
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.light,
+      canPop: true,
+      onPopInvoked: (bool didPop) {
+        // Show the bottom navigation bar when navigating back
+        if (didPop) {
+          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+              .show();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: true,
+        extendBody: true,
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: swatch[701]),
+          elevation: 8,
+          backgroundColor: Config.appbarColour,
+          foregroundColor: Colors.transparent,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          ),
+          title: Text(
+            AppLocalizations.of(context)!.channels,
+            style: TextStyle(
+              color: swatch[701],
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () => Navigator.of(context, rootNavigator: false).push(
+                // Navigate to the new channel page
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      NewChannelPage(
+                    callback: refreshList,
+                  ),
+                  opaque: false,
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    const begin = 0.0;
+                    const end = 1.0;
+                    var tween = Tween(begin: begin, end: end);
+                    var fadeAnimation = tween.animate(animation);
+                    return FadeTransition(
+                      opacity: fadeAnimation,
+                      child: child,
+                    );
+                  },
+                ),
               ),
-              title: Text(AppLocalizations.of(context)!.channels,
-                  style: TextStyle(
-                    color: swatch[701],
-                  )),
-              actions: [
-                IconButton(
-                    onPressed: () =>
-                        Navigator.of(context, rootNavigator: false).push(
-                          // Send to new channel page
-                          PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    NewChannelPage(
-                              callback: refreshList,
-                            ),
-                            opaque: false,
-                            transitionsBuilder: (context, animation,
-                                secondaryAnimation, child) {
-                              const begin = 0.0;
-                              const end = 1.0;
-                              var tween = Tween(begin: begin, end: end);
-                              var fadeAnimation = tween.animate(animation);
-                              return FadeTransition(
-                                opacity: fadeAnimation,
-                                child: child,
-                              );
-                            },
-                          ),
-                        ),
-                    icon: const Icon(Icons.add))
-              ],
-            ), // Add a basic app bar
-            body: Container(
-              decoration: const BoxDecoration(
-                color: Color(0x57000000),
+              icon: const Icon(Icons.add),
+            )
+          ],
+        ),
+        body: Container(
+          decoration: const BoxDecoration(
+            color: Color(0x57000000),
+          ),
+          padding: const EdgeInsets.all(0),
+          child: Column(
+            children: [
+              Expanded(
+                child: currentUser == null
+                    ? Container()
+                    : ChannelsListView(
+                        currentUser: currentUser!,
+                        pagingController: _pagingController,
+                      ),
               ),
-              padding:
-                  const EdgeInsets.all(0), // Add padding so doesn't touch edges
-              child: Column(
-                children: [
-                  Expanded(
-                      // Make list view expandable
-                      child: currentUser == null
-                          ? Container()
-                          : ChannelsListView(
-                              currentUser: currentUser!,
-                              pagingController: _pagingController)),
-                ],
-              ),
-            )));
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
+// Widget for the loading skeleton
 Widget _loadingSkeleton() {
   Widget child = Shimmer.fromColors(
-      baseColor: shimmer["base"]!,
-      highlightColor: shimmer["highlight"]!,
-      child: Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xb5000000),
-                borderRadius: BorderRadius.all(Radius.circular(8)),
+    baseColor: shimmer["base"]!,
+    highlightColor: shimmer["highlight"]!,
+    child: Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xb5000000),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        height: 82,
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 36,
+              backgroundColor: swatch[900],
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 16),
+            ),
+            Flexible(
+              flex: 6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 10),
+                  ),
+                  Container(
+                    width: 100,
+                    height: 24.0,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Container(
+                    width: 250,
+                    height: 24.0,
+                    color: Colors.white,
+                  ),
+                ],
               ),
-              height: 82,
-              width: double.infinity,
-              margin: const EdgeInsets.symmetric(
-                  horizontal: 8), // Add padding so doesn't touch edges
-              padding: const EdgeInsets.symmetric(
-                  vertical: 8), // Add padding so doesn't touch edges
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                // Add List image to one row and buttons to another
-                CircleAvatar(
-                  // Create a circular avatar icon
-                  radius: 36, // Set radius to 36
-                  backgroundColor: swatch[900],
-                ),
-                // If there is cached user information and an avatar image, use the cached image
-                const Padding(
-                    padding: EdgeInsets.only(
-                        left: 16)), // Space between avatar and text
-                Flexible(
-                  flex: 6,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Create a column aligned to the left
-                        const Padding(
-                          //Add padding to the top to move the text down a bit
-                          padding: EdgeInsets.only(top: 10),
-                        ),
-                        Container(
-                          width: 100,
-                          height: 24.0,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Container(
-                          width: 250,
-                          height: 24.0,
-                          color: Colors.white,
-                        ), // Last message sent from user
-                      ]),
-                ),
-              ]))));
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
   return SizedBox(
-      height: 30,
-      child: ListView(
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          child,
-          child,
-          child,
-          child,
-          child,
-          child,
-          child,
-          child,
-          child
-        ],
-      ));
+    height: 30,
+    child: ListView(
+      physics: const NeverScrollableScrollPhysics(),
+      children: List.generate(9, (index) => child),
+    ),
+  );
 }
 
+// Widget for the list of channels
 class ChannelsListView extends StatefulWidget {
-  const ChannelsListView(
-      {super.key, required this.currentUser, required this.pagingController});
+  const ChannelsListView({
+    super.key,
+    required this.currentUser,
+    required this.pagingController,
+  });
+
   final String currentUser;
   final PagingController<int, Map<String, dynamic>> pagingController;
 
@@ -218,30 +226,26 @@ class ChannelsListView extends StatefulWidget {
   State<ChannelsListView> createState() => _ChannelsListViewState();
 }
 
+// State class for ChannelsListView
 class _ChannelsListViewState extends State<ChannelsListView> {
-  static const _pageSize = 20; // Number of items to load in a single page
+  static const _pageSize = 20;
   List<String> title = [];
   List<String> channel = [];
   late StreamSubscription subscription;
   Map<String, dynamic> channelsData = <String, dynamic>{};
   PagingController<int, Map<String, dynamic>>? _pagingController;
 
-  // PagingController manages the loading of pages as the user scrolls
-
   @override
   void initState() {
     _pagingController = widget.pagingController;
-    // addPageRequestListener is called whenever the user scrolls near the end of the list
     _pagingController?.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
+
     if (getIt<WebSocketConnection>().socket.disconnected) {
-      getIt<WebSocketConnection>()
-          .socket
-          .connect(); // Connect to socket when user enters messaging pages
+      getIt<WebSocketConnection>().socket.connect();
     }
 
-    // Subscribe to the websocket stream
     subscription = getIt<WebSocketConnection>().stream.listen((data) => mounted
         ? setState(() {
             channelsData[data["channel"]] = data["content"];
@@ -251,70 +255,52 @@ class _ChannelsListViewState extends State<ChannelsListView> {
     super.initState();
   }
 
-// Fetches the data for the given pageKey and appends it to the list of items
   Future<void> _fetchPage(int pageKey) async {
-    //try {
-// Loads the next page of channels
-    final page = await MessagesAPI.getChannels(
-      pageKey,
-    );
-// Create an empty list to hold new channel items
-    var newChannels = [];
+    try {
+      final page = await MessagesAPI.getChannels(
+        pageKey,
+      );
 
-// Loop through each item on the page
-    for (int i = 0; i < page.length; i++) {
-      Map<String, dynamic> item = page[i];
+      var newChannels = [];
 
-      // Extract the participant name and add it to the 'title' list
-      title.add(item['channel_id']);
-
-      // Extract the channel ID and add it to the 'channel' list
-      channel.add(item['channel_id']);
-
-      // Add the channel ID to the 'newChannels' list
-      newChannels.add(item['channel_id']);
-
-      // Add the channel ID and its creation date to the 'channelsData' map
-      channelsData.addAll({item["channel_id"]: item["creation_date"]});
-    }
-
-// Join the newly loaded channels using websockets
-    getIt<WebSocketConnection>()
-        .socket
-        .emit("joinChannel", newChannels.toString());
-
-// Determine if the loaded page is the last page
-    final isLastPage = page.length < _pageSize;
-    if (!mounted) return;
-// If the page is the last page, append it using appendLastPage method
-    if (isLastPage) {
-      if ((_pagingController == null ||
-              _pagingController!.itemList == null ||
-              _pagingController!.itemList!.isEmpty) &&
-          page.isEmpty) {
-        _pagingController?.appendLastPage(page);
-      } else {
-        _pagingController?.appendLastPage([
-          ...page,
-          {"last": true}
-        ]);
+      for (int i = 0; i < page.length; i++) {
+        Map<String, dynamic> item = page[i];
+        title.add(item['channel_id']);
+        channel.add(item['channel_id']);
+        newChannels.add(item['channel_id']);
+        channelsData.addAll({item["channel_id"]: item["creation_date"]});
       }
+
+      getIt<WebSocketConnection>()
+          .socket
+          .emit("joinChannel", newChannels.toString());
+
+      final isLastPage = page.length < _pageSize;
+      if (!mounted) return;
+
+      if (isLastPage) {
+        if ((_pagingController == null ||
+                _pagingController!.itemList == null ||
+                _pagingController!.itemList!.isEmpty) &&
+            page.isEmpty) {
+          _pagingController?.appendLastPage(page);
+        } else {
+          _pagingController?.appendLastPage([
+            ...page,
+            {"last": true}
+          ]);
+        }
+      } else {
+        final nextPageKey = pageKey += 1;
+        _pagingController?.appendPage(page, nextPageKey);
+      }
+    } catch (error) {
+      _pagingController?.error = error;
     }
-// If the page is not the last page, append it using appendPage method
-    else {
-      // Calculate the next page key
-      final nextPageKey = pageKey += 1;
-      _pagingController?.appendPage(page, nextPageKey);
-    }
-    //}
-// Handle any errors that occur during loading
-    // catch (error) {
-    //   _pagingController?.error = error;
-    // }
   }
 
   void refreshPage() {
-    commonLogger.d("refres");
+    commonLogger.d("Refresh Page");
     _pagingController?.refresh();
   }
 
@@ -324,10 +310,10 @@ class _ChannelsListViewState extends State<ChannelsListView> {
           pagingController: _pagingController!,
           builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
             noItemsFoundIndicatorBuilder: (context) => ListError(
-                title: AppLocalizations.of(context)!.noMessagesFound,
-                body: AppLocalizations.of(context)!.makeFriends),
+              title: AppLocalizations.of(context)!.noMessagesFound,
+              body: AppLocalizations.of(context)!.makeFriends,
+            ),
             firstPageProgressIndicatorBuilder: (context) => _loadingSkeleton(),
-
             itemBuilder: (context, item, index) => item["last"] == true
                 ? const SizedBox(
                     height: 72,
@@ -338,7 +324,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
                     desc:
                         "Last Message: ${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
                     currentUser: widget.currentUser,
-                    refreshPage: refreshPage), //item id
+                    refreshPage: refreshPage),
           ),
         )
       : const SizedBox.shrink();
@@ -346,16 +332,13 @@ class _ChannelsListViewState extends State<ChannelsListView> {
   @override
   void dispose() {
     try {
-      // Disposes of the PagingController to free up resources
       _pagingController?.dispose();
-      subscription.cancel(); // Stop listening to new messages
+      subscription.cancel();
       if (getIt<WebSocketConnection>().socket.connected) {
-        getIt<WebSocketConnection>()
-            .socket
-            .disconnect(); // Disconnect from websocket when user leaves messaging pages
+        getIt<WebSocketConnection>().socket.disconnect();
       }
     } catch (e) {
-      commonLogger.e("An error has occured: $e");
+      commonLogger.e("An error has occurred: $e");
     }
     super.dispose();
   }

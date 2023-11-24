@@ -22,45 +22,46 @@ class NewChannelPage extends StatefulWidget {
 class _NewChannelPageState extends State<NewChannelPage> {
   @override
   Widget build(BuildContext context) {
-    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-        .hide(); // Hide The Navbar
-    // Build a paginated list view of comments using the PagedListView widget
+    // Hide the bottom navigation bar
+    Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
+
+    // Build the page with a paginated list view
     return PopScope(
-        canPop: true,
-        onPopInvoked: (bool didPop) {
-          if (didPop) {
-            Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-                .show(); // Show The Navbar
-          }
-        },
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          resizeToAvoidBottomInset: false,
-          extendBodyBehindAppBar: true,
-          extendBody: true,
-          appBar: AppBar(
-            iconTheme: IconThemeData(color: swatch[701]),
-            elevation: 0,
-            shadowColor: Colors.green.shade900,
-            backgroundColor: Config.appbarColour,
-            foregroundColor: Colors.transparent,
-            systemOverlayStyle: const SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.light,
-            ),
-            title: Text(
-              "Compose Message",
-              style: TextStyle(color: swatch[701]),
-            ),
+      canPop: true,
+      onPopInvoked: (bool didPop) {
+        if (didPop) {
+          // Show the bottom navigation bar when popping
+          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+              .show();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: true,
+        extendBody: true,
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: swatch[701]),
+          elevation: 0,
+          shadowColor: Colors.green.shade900,
+          backgroundColor: Config.appbarColour,
+          foregroundColor: Colors.transparent,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
           ),
-          body: Container(
-              decoration: const BoxDecoration(color: Color(0x38000000)),
-              padding:
-                  const EdgeInsets.all(0), // Add padding so doesn't touch edges
-              child: NewChannelListView(
-                callback: widget.callback,
-              )),
-        ));
+          title: Text(
+            "Compose Message",
+            style: TextStyle(color: swatch[701]),
+          ),
+        ),
+        body: Container(
+          decoration: const BoxDecoration(color: Color(0x38000000)),
+          padding: const EdgeInsets.all(0),
+          child: NewChannelListView(callback: widget.callback),
+        ),
+      ),
+    );
   }
 }
 
@@ -91,11 +92,13 @@ class _NewChannelListViewState extends State<NewChannelListView> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      List<Map<String, dynamic>> page;
-      page = await MessagesAPI.getSuggestions(pageKey);
-      // Fetch the page of comments using the getComments() function
+      // Fetch a page of suggestions from the API
+      List<Map<String, dynamic>> page =
+          await MessagesAPI.getSuggestions(pageKey);
+
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
+
       if (!mounted) return;
 
       if (isLastPage) {
@@ -114,17 +117,21 @@ class _NewChannelListViewState extends State<NewChannelListView> {
 
   @override
   Widget build(BuildContext context) {
-    // Build a paginated list view of comments using the PagedListView widget
+    // Build a paginated list view of suggestions using the PagedListView widget
     return PagedListView<int, Map<String, dynamic>>(
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-          // Use the Comment widget to build each item in the list view
-          itemBuilder: (context, item, index) => SuggestionListWidget(
-                user: item,
-                callback: widget.callback,
-              ),
-          noItemsFoundIndicatorBuilder: (context) =>
-              const ListError(title: "No suggested messages", body: "")),
+        // Use the SuggestionListWidget to build each item in the list view
+        itemBuilder: (context, item, index) => SuggestionListWidget(
+          user: item,
+          callback: widget.callback,
+        ),
+        // Display an error message when there are no suggested messages
+        noItemsFoundIndicatorBuilder: (context) => const ListError(
+          title: "No suggested messages",
+          body: "",
+        ),
+      ),
     );
   }
 

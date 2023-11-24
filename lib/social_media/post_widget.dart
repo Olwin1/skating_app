@@ -12,72 +12,64 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../api/config.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+// Widget representing a post
 class PostWidget extends StatefulWidget {
-  // Create HomePage Class
-  const PostWidget(
-      {super.key,
-      required this.post,
-      required this.index,
-      required this.user}); // Take 2 arguments optional key and title of post
-  final dynamic post; // Define title argument
-  final int index; // Define title argument
-  final Map<String, dynamic>? user;
+  const PostWidget({
+    super.key,
+    required this.post,
+    required this.index,
+    required this.user,
+  });
+
+  final dynamic post; // Post data
+  final int index; // Index of the post
+  final Map<String, dynamic>? user; // Current user data
+
   @override
-  State<PostWidget> createState() => _PostWidget(); //Create state for widget
+  State<PostWidget> createState() => _PostWidget();
 }
 
 class _PostWidget extends State<PostWidget> {
-  bool waiting = false;
-  bool? likedState;
+  bool waiting = false; // Flag for ongoing operations
+  bool? likedState; // Flag for the liked state of the post
+
   @override
   void initState() {
-    likedState = widget.post["liked"];
+    likedState = widget.post["liked"]; // Set initial liked state
     super.initState();
   }
 
+  // Handle the like button press
   Future<bool> handleLikePressed(bool isLiked) async {
-    // Check if there is no ongoing process
     if (!waiting) {
       if (isLiked) {
-        // If already liked, unlike the post
+        // Unlike the post
         try {
           waiting = true;
-          // Call the unlikePost function with the post ID
-          SocialAPI.unlikePost(widget.post["post_id"]).then((value) => {
-                likedState!
-                    ? mounted
-                        ? setState(
-                            () => likedState = false,
-                          )
-                        : null
-                    : null,
-                waiting = false
-              });
-          likedState = !isLiked;
+          await SocialAPI.unlikePost(widget.post["post_id"]);
+          if (likedState!) {
+            if (mounted) {
+              setState(() => likedState = false);
+            }
+          }
+          waiting = false;
           return !isLiked;
         } catch (e) {
-          // If an error occurs while unliking, revert the liked state back to true
           return isLiked;
         }
       } else {
-        // If not liked, like the post
+        // Like the post
         try {
           waiting = true;
-          // Call the likePost function with the post ID
-          SocialAPI.likePost(widget.post["post_id"]).then((value) => {
-                !likedState!
-                    ? mounted
-                        ? setState(
-                            () => likedState = true,
-                          )
-                        : null
-                    : null,
-                waiting = false
-              });
-          likedState = !isLiked;
+          await SocialAPI.likePost(widget.post["post_id"]);
+          if (!likedState!) {
+            if (mounted) {
+              setState(() => likedState = true);
+            }
+          }
+          waiting = false;
           return !isLiked;
         } catch (e) {
-          // If an error occurs while liking, revert the liked state back
           return isLiked;
         }
       }
@@ -85,257 +77,241 @@ class _PostWidget extends State<PostWidget> {
     return isLiked;
   }
 
+  // Handle the save button press
   Future<bool> handleSavePressed(bool isSaved) async {
-    return false;
+    return false; // Placeholder for save functionality
   }
 
+  // Colors for UI elements
   Color selected = const Color.fromARGB(255, 136, 255, 0);
   Color unselected = const Color.fromARGB(255, 31, 207, 46);
   Color secondary = const Color.fromARGB(255, 15, 95, 5);
 
-  @override // Override existing build method
+  @override
   Widget build(BuildContext context) {
+    // Log the build process
     commonLogger.t("Building ${widget.post['liked']}");
-    String comments = widget.post['comment_count'] ?? "0";
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      // false //widget.post["influencer"]
-      //     ? Container(
-      //         decoration: BoxDecoration(
-      //           borderRadius: BorderRadius.circular(8),
-      //           color: const Color(0x77000000),
-      //         ),
-      //         width: double.infinity,
-      //         margin: const EdgeInsets.symmetric(vertical: 8),
-      //         padding: const EdgeInsets.all(4),
-      //         child: Text("Suggested Posts",
-      //             style: TextStyle(
-      //                 color: swatch[401],
-      //                 fontSize: 18,
-      //                 fontWeight: FontWeight.bold)))
-      //     : const SizedBox.shrink(),
-      Expanded(
-        child: Stack(clipBehavior: Clip.none, children: [
-          Container(
-            margin: const EdgeInsets.only(top: 320),
-            height: 60,
-            color: const Color(0xcc000000),
-          ),
-          Container(
-            color: Colors.transparent,
-            //height: 314,
-            padding:
-                const EdgeInsets.all(0), // Add padding so doesn't touch edges
 
-            child: Row(
-              // Create a row
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Add Post image to one row and buttons to another
-                Expanded(
-                  flex: 5,
-                  child: ZoomOverlay(
-                    modalBarrierColor: Colors.black12, // Optional
-                    minScale: 0.5, // Optional
-                    maxScale: 3.0, // Optional
-                    animationCurve: Curves
-                        .fastOutSlowIn, // Defaults to fastOutSlowIn which mimics IOS instagram behavior
-                    animationDuration: const Duration(
-                        milliseconds:
-                            600), // Defaults to 100 Milliseconds. Recommended duration is 300 milliseconds for Curves.fastOutSlowIn
-                    twoTouchOnly: true, // Defaults to false
-                    child: CachedNetworkImage(
-                      imageUrl: "${Config.uri}/image/${widget.post['image']}",
-                      placeholder: (context, url) => Shimmer.fromColors(
-                          baseColor: shimmer["base"]!,
-                          highlightColor: shimmer["highlight"]!,
-                          child: Image.asset(
-                            "assets/placeholders/1080.png",
-                          )),
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              bottomLeft: Radius.circular(8)),
-                          image: DecorationImage(
-                              image: imageProvider, fit: BoxFit.cover),
+    // Extract comment count from post data
+    String comments = widget.post['comment_count'] ?? "0";
+
+    // Widget structure for a post
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // Container for overlay on post image
+              Container(
+                margin: const EdgeInsets.only(top: 320),
+                height: 60,
+                color: const Color(0xcc000000),
+              ),
+              Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.all(0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: ZoomOverlay(
+                        // Zoomable overlay for the post image
+                        modalBarrierColor: Colors.black12,
+                        minScale: 0.5,
+                        maxScale: 3.0,
+                        animationCurve: Curves.fastOutSlowIn,
+                        animationDuration: const Duration(milliseconds: 600),
+                        twoTouchOnly: true,
+                        child: CachedNetworkImage(
+                          // Post image loaded from the network
+                          imageUrl:
+                              "${Config.uri}/image/${widget.post['image']}",
+                          placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: shimmer["base"]!,
+                              highlightColor: shimmer["highlight"]!,
+                              child:
+                                  Image.asset("assets/placeholders/1080.png")),
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  bottomLeft: Radius.circular(8)),
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                          fit: BoxFit.contain,
                         ),
                       ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      fit: BoxFit.contain,
                     ),
-                  ), // Set child to post image
-                ),
-                SizedBox(
-                  width: 72,
-                  height: double.maxFinite,
-                  //flex: 1, // Make 2x Bigger than sibling
-                  child: Container(
-                    // Make container widget to use BoxDecoration
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          // Set background image of container to image
-                          image: const AssetImage(
-                              "assets/backgrounds/post_background.png"),
-                          fit: BoxFit.cover,
-                          colorFilter: ColorFilter.mode(
-                              Colors.black.withOpacity(0.3),
-                              BlendMode.srcOver)), // Cover whole container
-                      borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(8),
-                          bottomRight: Radius.circular(8)),
-                    ),
-                    child: Column(
-                        // Buttons below
-                        children: [
-                          Column(
-                            children: [
-                              LikeButton(
-                                isLiked: likedState ?? widget.post["liked"],
-                                onTap: (isLiked) => handleLikePressed(isLiked),
-                                padding:
-                                    const EdgeInsets.only(bottom: 0, top: 18),
-                                countPostion: CountPostion.bottom,
-                                size: 32.0,
-                                circleColor: CircleColor(
-                                    start: secondary, end: selected),
-                                bubblesColor: BubblesColor(
-                                  dotPrimaryColor: unselected,
-                                  dotSecondaryColor: secondary,
-                                ),
-                                likeBuilder: (bool isLiked) {
-                                  return Icon(
-                                    Icons.thumb_up,
-                                    color: isLiked ? selected : unselected,
-                                    size: 32.0,
-                                  );
-                                },
-                                likeCount: int.parse(
-                                    widget.post['total_likes'] ?? "0"),
-                                countBuilder:
-                                    (int? count, bool isLiked, String text) {
-                                  var color = isLiked ? selected : unselected;
-                                  Widget result;
-                                  if (count == 0) {
-                                    result = Center(
-                                        child: Text(
-                                      "Like",
-                                      style: TextStyle(
-                                          color: color,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w100),
-                                    ));
-                                  } else {
-                                    result = Center(
-                                        child: Text(
-                                      text,
-                                      style: TextStyle(
-                                          color: color,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w100),
-                                      textAlign: TextAlign.center,
-                                    ));
-                                  }
-                                  return result;
-                                },
+                    // Container for buttons and additional info
+                    SizedBox(
+                      width: 72,
+                      height: double.maxFinite,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: const AssetImage(
+                                  "assets/backgrounds/post_background.png"),
+                              fit: BoxFit.cover,
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.3),
+                                  BlendMode.srcOver)),
+                          borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(8),
+                              bottomRight: Radius.circular(8)),
+                        ),
+                        child: Column(
+                          children: [
+                            // Like button with animation
+                            LikeButton(
+                              isLiked: likedState ?? widget.post["liked"],
+                              onTap: (isLiked) => handleLikePressed(isLiked),
+                              padding:
+                                  const EdgeInsets.only(bottom: 0, top: 18),
+                              countPostion: CountPostion.bottom,
+                              size: 32.0,
+                              circleColor:
+                                  CircleColor(start: secondary, end: selected),
+                              bubblesColor: BubblesColor(
+                                dotPrimaryColor: unselected,
+                                dotSecondaryColor: secondary,
                               ),
-                              ListTile(
-                                  title: IconButton(
-                                    // Create Comment Button
-                                    onPressed: () =>
-                                        // RootNavigator hides navbar
-                                        Navigator.of(context).push(
-                                      // Send to comments page
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation,
-                                                secondaryAnimation) =>
-                                            Comments(
-                                                post: widget.post["post_id"],
-                                                user: widget.user),
-                                        opaque: false,
-                                        transitionsBuilder: (context, animation,
-                                            secondaryAnimation, child) {
-                                          const begin = 0.0;
-                                          const end = 1.0;
-                                          var tween =
-                                              Tween(begin: begin, end: end);
-                                          var fadeAnimation =
-                                              tween.animate(animation);
-                                          return FadeTransition(
-                                            opacity: fadeAnimation,
-                                            child: child,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    icon: Icon(
-                                      Icons.comment,
-                                      color: unselected,
-                                    ),
-                                    padding: const EdgeInsets.only(top: 16),
-                                    constraints: const BoxConstraints(),
-                                  ),
-                                  subtitle: Text(
-                                    comments,
+                              likeBuilder: (bool isLiked) {
+                                return Icon(
+                                  Icons.thumb_up,
+                                  color: isLiked ? selected : unselected,
+                                  size: 32.0,
+                                );
+                              },
+                              likeCount:
+                                  int.parse(widget.post['total_likes'] ?? "0"),
+                              countBuilder:
+                                  (int? count, bool isLiked, String text) {
+                                var color = isLiked ? selected : unselected;
+                                Widget result;
+                                if (count == 0) {
+                                  result = Center(
+                                      child: Text(
+                                    "Like",
+                                    style: TextStyle(
+                                        color: color,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w100),
+                                  ));
+                                } else {
+                                  result = Center(
+                                      child: Text(
+                                    text,
+                                    style: TextStyle(
+                                        color: color,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w100),
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(color: unselected),
-                                  )),
-                              LikeButton(
-                                //isLiked: likedState ?? widget.post["liked"],
-                                onTap: (isSaved) => handleSavePressed(isSaved),
-                                padding:
-                                    const EdgeInsets.only(bottom: 0, top: 18),
-                                countPostion: CountPostion.bottom,
-                                size: 28.0,
-                                circleColor: CircleColor(
-                                    start: secondary, end: selected),
-                                bubblesColor: BubblesColor(
-                                  dotPrimaryColor: unselected,
-                                  dotSecondaryColor: secondary,
+                                  ));
+                                }
+                                return result;
+                              },
+                            ),
+                            // Comment button
+                            ListTile(
+                                title: IconButton(
+                                  onPressed: () => Navigator.of(context).push(
+                                    // Navigate to comments page
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          Comments(
+                                              post: widget.post["post_id"],
+                                              user: widget.user),
+                                      opaque: false,
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        const begin = 0.0;
+                                        const end = 1.0;
+                                        var tween =
+                                            Tween(begin: begin, end: end);
+                                        var fadeAnimation =
+                                            tween.animate(animation);
+                                        return FadeTransition(
+                                          opacity: fadeAnimation,
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  icon: Icon(
+                                    Icons.comment,
+                                    color: unselected,
+                                  ),
+                                  padding: const EdgeInsets.only(top: 16),
+                                  constraints: const BoxConstraints(),
                                 ),
-                                likeBuilder: (bool isSaved) {
-                                  return Icon(
-                                    Icons.save,
-                                    color: isSaved ? selected : unselected,
-                                    size: 28.0,
-                                  );
-                                },
+                                subtitle: Text(
+                                  comments,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: unselected),
+                                )),
+                            // Save button
+                            LikeButton(
+                              onTap: (isSaved) => handleSavePressed(isSaved),
+                              padding:
+                                  const EdgeInsets.only(bottom: 0, top: 18),
+                              countPostion: CountPostion.bottom,
+                              size: 28.0,
+                              circleColor:
+                                  CircleColor(start: secondary, end: selected),
+                              bubblesColor: BubblesColor(
+                                dotPrimaryColor: unselected,
+                                dotSecondaryColor: secondary,
                               ),
-                            ],
-                          ),
-                          const Spacer(
-                            flex: 1,
-                          ),
-                          SizedBox(
-                              width: 72,
-                              height: 72,
-                              child: Avatar(user: widget.post["author_id"])),
-                        ]),
-                  ),
+                              likeBuilder: (bool isSaved) {
+                                return Icon(
+                                  Icons.save,
+                                  color: isSaved ? selected : unselected,
+                                  size: 28.0,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ]),
-      ),
-      CaptionWrapper(post: widget.post)
-    ]);
+        ),
+        // Widget for displaying post caption
+        CaptionWrapper(post: widget.post)
+      ],
+    );
   }
 }
 
+// Widget for displaying user avatar
 class Avatar extends StatefulWidget {
-  // Create HomePage Class
-  const Avatar(
-      {super.key,
-      required this.user}); // Take 2 arguments optional key and title of post
-  final String user; // Define title argument
+  const Avatar({
+    super.key,
+    required this.user,
+  });
+
+  final String user; // User ID
+
   @override
-  State<Avatar> createState() => _Avatar(); //Create state for widget
+  State<Avatar> createState() => _Avatar();
 }
 
 class _Avatar extends State<Avatar> {
   @override
   void initState() {
+    // Load user data for the given user ID
     SocialAPI.getUser(widget.user).then((userCache) => {
           if (mounted)
             {
@@ -351,32 +327,26 @@ class _Avatar extends State<Avatar> {
   String? image;
   String? profile;
 
-  @override // Override existing build method
+  @override
   Widget build(BuildContext context) {
     return TextButton(
-        onPressed: () => profile != null // If the profile is not null
+        onPressed: () => profile != null
             ? Navigator.push(
-                // Navigate to the ProfilePage with the user ID
                 context,
                 MaterialPageRoute(
                     builder: (context) => ProfilePage(
                           userId: profile!,
                           navbar: false,
                         )))
-            : commonLogger
-                .w("User not found"), // Otherwise, print "user not found"
-
+            : commonLogger.w("User not found"),
         child: image == null
-            // If there is no cached user information or avatar image, use a default image
             ? Shimmer.fromColors(
                 baseColor: shimmer["base"]!,
                 highlightColor: shimmer["highlight"]!,
                 child: CircleAvatar(
-                  // Create a circular avatar icon
-                  radius: 26, // Set radius to 36
+                  radius: 26,
                   backgroundColor: swatch[900],
                 ))
-            // If there is cached user information and an avatar image, use the cached image
             : image != "default"
                 ? CachedNetworkImage(
                     imageUrl: '${Config.uri}/image/thumbnail/$image',
@@ -384,14 +354,12 @@ class _Avatar extends State<Avatar> {
                         baseColor: shimmer["base"]!,
                         highlightColor: shimmer["highlight"]!,
                         child: CircleAvatar(
-                          // Create a circular avatar icon
-                          radius: 26, // Set radius to 36
+                          radius: 26,
                           backgroundColor: swatch[900],
                         )),
                     imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
-                            shape: BoxShape
-                                .circle, // Set the shape of the container to a circle
+                            shape: BoxShape.circle,
                             image: DecorationImage(
                                 image: imageProvider, fit: BoxFit.cover),
                           ),
@@ -400,32 +368,33 @@ class _Avatar extends State<Avatar> {
   }
 }
 
+// Widget for displaying post caption and handling collapse/expand
 class CaptionWrapper extends StatefulWidget {
-  // Create HomePage Class
-  const CaptionWrapper(
-      {super.key,
-      required this.post}); // Take 2 arguments optional key and title of post
-  final Map<String, dynamic> post; // Define title argument
+  const CaptionWrapper({
+    super.key,
+    required this.post,
+  });
+
+  final Map<String, dynamic> post; // Post data
+
   @override
-  State<CaptionWrapper> createState() =>
-      _CaptionWrapper(); //Create state for widget
+  State<CaptionWrapper> createState() => _CaptionWrapper();
 }
 
 class _CaptionWrapper extends State<CaptionWrapper> {
-  bool collapsed = true;
+  bool collapsed = true; // Flag for collapsed/expanded state
   String? username;
+
   @override
   void initState() {
-    SocialAPI.getUser(widget.post["author_id"]).then((user) => mounted
-        ? setState(
-            () => username = user["username"],
-          )
-        : null);
+    // Load user data for the author of the post
+    SocialAPI.getUser(widget.post["author_id"]).then(
+        (user) => mounted ? setState(() => username = user["username"]) : null);
 
     super.initState();
   }
 
-  @override // Override existing build method
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => setState(() {
@@ -440,33 +409,37 @@ class _CaptionWrapper extends State<CaptionWrapper> {
   }
 }
 
+// Widget for displaying post caption
 class Caption extends StatelessWidget {
   final String? username;
   final String? description;
   final bool collapsed;
   final DateTime timestamp;
 
-  const Caption(
-      {super.key,
-      this.username,
-      this.description,
-      required this.collapsed,
-      required this.timestamp});
+  const Caption({
+    super.key,
+    this.username,
+    this.description,
+    required this.collapsed,
+    required this.timestamp,
+  });
 
-  @override // Override existing build method
+  @override
   Widget build(BuildContext context) {
+    // Format the timestamp as relative time
     String timeAgo = timeago.format(timestamp);
     if (username == null || description == null) {
+      // If username or description is null, return an empty container
       return Container(
         padding: const EdgeInsets.all(8),
       );
     }
+    // Return a container with styled text for post caption
     return GestureDetector(
         child: Container(
-      width: double.infinity, // Make as big as parent allows
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      margin: const EdgeInsets.only(
-          bottom: 24), // For testing to highlight seperations
+      margin: const EdgeInsets.only(bottom: 24),
       decoration: const BoxDecoration(
           color: Color(0xcc000000),
           borderRadius: BorderRadius.only(
@@ -476,13 +449,11 @@ class Caption extends StatelessWidget {
           softWrap: true,
           text: TextSpan(children: <InlineSpan>[
             TextSpan(
-                // padding: const EdgeInsets.only(right: 6),
-                // child: Text(
                 text: username,
                 style: TextStyle(
                     color: swatch[801],
                     fontWeight: FontWeight.bold,
-                    fontSize: 15)), //),
+                    fontSize: 15)),
             const WidgetSpan(
                 alignment: PlaceholderAlignment.baseline,
                 baseline: TextBaseline.alphabetic,
@@ -501,8 +472,6 @@ class Caption extends StatelessWidget {
             TextSpan(
               text: description,
               style: TextStyle(color: swatch[801], fontSize: 15),
-
-              //),
             ),
           ])),
     ));

@@ -1,3 +1,4 @@
+// Import necessary packages and files
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,191 +11,177 @@ import '../api/social.dart';
 import '../misc/default_profile.dart';
 import '../swatch.dart';
 
+// Comment Widget class for displaying individual comments
 class Comment extends StatefulWidget {
   final Map<String, dynamic> comment;
+  final int index;
+  final FocusNode focus;
 
-  // Create HomePage Class
-  const Comment(
-      {super.key,
-      required this.index,
-      required this.focus,
-      required this.comment}); // Take 2 arguments optional key and title of post
-  final int index; // Define title argument
-  final FocusNode focus; // Define focus argument
+  // Constructor for Comment widget
+  const Comment({
+    super.key,
+    required this.index,
+    required this.focus,
+    required this.comment,
+  });
+
   @override
-  State<Comment> createState() => _Comment(); //Create state for widget
+  State<Comment> createState() =>
+      _CommentState(); // Create state for the Comment widget
 }
 
-class _Comment extends State<Comment> {
+// State class for the Comment widget
+class _CommentState extends State<Comment> {
   Map<String, dynamic>? user;
   String? avatar;
+
+  // Initialize state variables and fetch user information
   @override
   void initState() {
     SocialAPI.getUser(widget.comment["sender_id"]).then((value) => mounted
-        ? setState(
-            () {
-              user = value;
-              avatar = value["avatar_id"];
-            },
-          )
+        ? setState(() {
+            user = value;
+            avatar = value["avatar_id"];
+          })
         : null);
     super.initState();
   }
 
-  @override // Override existing build method
+  // Build method to create the UI of the Comment widget
+  @override
   Widget build(BuildContext context) {
     return Container(
+      // Container for each comment
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: swatch[401]!)),
-        //borderRadius: BorderRadius.circular(8),
         color: const Color.fromARGB(125, 0, 0, 0),
       ),
-      padding: const EdgeInsets.all(4), // Add padding so doesn't touch edges
+      padding: const EdgeInsets.all(4),
       child: TextButton(
-        onPressed: () => commonLogger.i("Pressed"),
-        // Make list widget clickable
+        onPressed: () => commonLogger.i("Pressed"), // Handle comment press
         onLongPress: () =>
-            commonLogger.i("longPress"), //When list widget clicked
+            commonLogger.i("longPress"), // Handle comment long press
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          // Create Row
           children: [
+            // Display user avatar
             Padding(
-                padding: const EdgeInsets.only(
-                  // Only give right of avatar padding
-                  right: 8,
-                ),
-                child: user == null
-                    // If there is no cached user information or avatar image, use a default image
-                    ? Shimmer.fromColors(
-                        baseColor: shimmer["base"]!,
-                        highlightColor: shimmer["highlight"]!,
-                        child: CircleAvatar(
-                          // Create a circular avatar icon
-                          radius: 25, // Set radius to 36
-                          backgroundColor: swatch[900],
-                        ))
-                    // If there is cached user information and an avatar image, use the cached image
-                    : (avatar != "default" && avatar != null)
-                        ? CachedNetworkImage(
-                            imageUrl:
-                                '${Config.uri}/image/thumbnail/${user!["avatar_id"]}',
-                            placeholder: (context, url) => Shimmer.fromColors(
-                                baseColor: shimmer["base"]!,
-                                highlightColor: shimmer["highlight"]!,
-                                child: CircleAvatar(
-                                  // Create a circular avatar icon
-                                  radius: 25, // Set radius to 36
-                                  backgroundColor: swatch[900],
-                                )),
-                            imageBuilder: (context, imageProvider) => Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape
-                                        .circle, // Set the shape of the container to a circle
-                                    image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover),
-                                  ),
-                                ))
-                        : const DefaultProfile(radius: 25)),
-            Expanded(
-                // Expanded Widget Wrapper
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  // Put rest on right
-                  children: [
-                    RichText(
-                      // Create top row
-                      text: TextSpan(
-                        children: <InlineSpan>[
-                          TextSpan(
-                              text: user != null
-                                  ? user!["username"]
-                                  : "", // User's Display Name
-                              style:
-                                  TextStyle(color: swatch[101])), // Set colour
-                          const WidgetSpan(
-                              alignment: PlaceholderAlignment.baseline,
-                              baseline: TextBaseline.alphabetic,
-                              child: SizedBox(width: 6)),
-                          TextSpan(
-                            text: timeago
-                                .format(
-                                    DateTime.parse(widget.comment["timestamp"]))
-                                .toString(), //Time since sent
-                            style: TextStyle(color: swatch[501]), // Set colour
-                          )
-                        ],
+              padding: const EdgeInsets.only(right: 8),
+              child: user == null
+                  ? Shimmer.fromColors(
+                      // Shimmer effect for loading avatar
+                      baseColor: shimmer["base"]!,
+                      highlightColor: shimmer["highlight"]!,
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundColor: swatch[900],
                       ),
-                    ),
-                    Text(
-                      widget.comment["content"],
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: swatch[801]),
-                    ), // Create message content
-                    // Create footer
-
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment
-                            .end, // Align row on right of screen
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal:
-                                    8), // Apply padding only to left and right
-                            child: TextButton(
-                              // Create text button
-                              onPressed: () => widget.focus
-                                  .requestFocus(), // When reply pressed focus on text input
-                              child: Text(
-                                // Reply Placeholder
-                                AppLocalizations.of(context)!.reply,
-                                textAlign:
-                                    TextAlign.end, // Align with right of screen
-                                style: TextStyle(
-                                    color: swatch[50],
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 0.2),
+                    )
+                  : (avatar != "default" && avatar != null)
+                      ? CachedNetworkImage(
+                          imageUrl:
+                              '${Config.uri}/image/thumbnail/${user!["avatar_id"]}',
+                          placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: shimmer["base"]!,
+                            highlightColor: shimmer["highlight"]!,
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: swatch[900],
+                            ),
+                          ),
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal:
-                                    8), // Apply padding only to left and right
-                            child: Text(
-                              AppLocalizations.of(context)!
-                                  .like, // Like Placeholder
-                              textAlign:
-                                  TextAlign.end, // Align with right of screen
-                              style: TextStyle(
-                                  color: swatch[50],
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.2),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal:
-                                    8), // Apply padding only to left and right
-                            child: Text(
-                              AppLocalizations.of(context)!
-                                  .dislike, // Dislike placeholder
-                              textAlign:
-                                  TextAlign.end, // Align with right of screen
-                              style: TextStyle(
-                                  color: swatch[50],
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.2),
-                            ),
-                          ),
-                        ])
-                  ],
-                ))
+                        )
+                      : const DefaultProfile(radius: 25),
+            ),
+            // Display user information and comment content
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Display user name and time since the comment
+                  RichText(
+                    text: TextSpan(
+                      children: <InlineSpan>[
+                        TextSpan(
+                          text: user != null ? user!["username"] : "",
+                          style: TextStyle(color: swatch[101]),
+                        ),
+                        const WidgetSpan(
+                          alignment: PlaceholderAlignment.baseline,
+                          baseline: TextBaseline.alphabetic,
+                          child: SizedBox(width: 6),
+                        ),
+                        TextSpan(
+                          text: timeago
+                              .format(
+                                  DateTime.parse(widget.comment["timestamp"]))
+                              .toString(),
+                          style: TextStyle(color: swatch[501]),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Display comment content
+                  Text(
+                    widget.comment["content"],
+                    textAlign: TextAlign.start,
+                    style: TextStyle(color: swatch[801]),
+                  ),
+                  // Display comment actions (e.g., reply, like, dislike)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      _buildCommentActionButton(
+                        onPressed: () => widget.focus.requestFocus(),
+                        label: AppLocalizations.of(context)!.reply,
+                      ),
+                      _buildCommentActionButton(
+                        onPressed: () {},
+                        label: AppLocalizations.of(context)!.like,
+                      ),
+                      _buildCommentActionButton(
+                        onPressed: () {},
+                        label: AppLocalizations.of(context)!.dislike,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // Helper method to create comment action buttons
+  Widget _buildCommentActionButton({
+    required VoidCallback onPressed,
+    required String label,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: TextButton(
+        onPressed: onPressed,
+        child: Text(
+          label,
+          textAlign: TextAlign.end,
+          style: TextStyle(
+            color: swatch[50],
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.2,
+          ),
         ),
       ),
     );

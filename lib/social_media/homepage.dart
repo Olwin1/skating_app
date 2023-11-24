@@ -20,73 +20,74 @@ import 'post_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+// HomePage Class
 class HomePage extends StatelessWidget {
-  // Create HomePage Class
   HomePage({super.key});
   final _scrollController = ScrollController();
 
-  @override // Override the existing widget build method
+  @override
   Widget build(BuildContext context) {
-    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-        .show(); // Show The Navbar
+    // Show the Navbar
+    Provider.of<BottomBarVisibilityProvider>(context, listen: false).show();
+
     return Scaffold(
-        backgroundColor: Colors.transparent,
-        extendBodyBehindAppBar: true,
-        extendBody: true,
-        appBar: AppBar(
-          elevation: 8,
-          shadowColor: Colors.green.shade900,
-          backgroundColor: Config.appbarColour,
-          foregroundColor: Colors.transparent,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-          ),
-
-          //title: const Text("Home"),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: TextButton(
-                // Create a basic button
-
-                child: SvgPicture.asset(
-                  "assets/icons/patinka.svg",
-                  fit: BoxFit.fitHeight,
-                  width: 130,
-                  alignment: Alignment.centerLeft,
-                  colorFilter: const ColorFilter.mode(
-                      Color.fromARGB(255, 116, 0, 81), BlendMode.srcIn),
-                ), //#FF8360,
-
-                onPressed: () {
-                  // When image pressed
-                  _scrollController.animateTo(0, //Scroll to top in 500ms
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves
-                          .fastOutSlowIn); //Start scrolling fast then slow down when near top
-                },
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      extendBody: true,
+      appBar: AppBar(
+        // App Bar Configuration
+        elevation: 8,
+        shadowColor: Colors.green.shade900,
+        backgroundColor: Config.appbarColour,
+        foregroundColor: Colors.transparent,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+        ),
+        actions: [
+          // App Bar Actions
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: TextButton(
+              onPressed: () {
+                // Scroll to top when image pressed
+                _scrollController.animateTo(0,
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.fastOutSlowIn);
+              },
+              child: SvgPicture.asset(
+                "assets/icons/patinka.svg",
+                fit: BoxFit.fitHeight,
+                width: 130,
+                alignment: Alignment.centerLeft,
+                colorFilter: const ColorFilter.mode(
+                    Color.fromARGB(255, 116, 0, 81), BlendMode.srcIn),
               ),
             ),
-            const SearchBarr(),
-            TextButton(
-                onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        settings:
-                            const RouteSettings(name: "/PrivateMessageList"),
-                        builder: (context) => const PrivateMessageList(
-                              user: "user",
-                              index: 1,
-                            ))),
-                child: Image.asset(
-                    "assets/icons/message.png")) // Set Button To Message icon
-          ],
-        ),
-        body: Center(
-            child: PostsListView(
+          ),
+          const SearchBarr(),
+          // Navigate to Private Message List
+          TextButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                settings: const RouteSettings(name: "/PrivateMessageList"),
+                builder: (context) => const PrivateMessageList(
+                  user: "user",
+                  index: 1,
+                ),
+              ),
+            ),
+            child: Image.asset("assets/icons/message.png"),
+          ),
+        ],
+      ),
+      body: Center(
+        child: PostsListView(
           scrollController: _scrollController,
-        )));
+        ),
+      ),
+    );
   }
 }
 
@@ -129,10 +130,10 @@ Widget _loadSkeleton() {
       ));
 }
 
+// Posts List View Widget
 class PostsListView extends StatefulWidget {
-  const PostsListView(
-      {super.key, required this.scrollController}); //required this.update});
-  //final ValueChanged<String> update;
+  const PostsListView({super.key, required this.scrollController});
+
   final ScrollController scrollController;
 
   @override
@@ -148,6 +149,7 @@ class _PostsListViewState extends State<PostsListView> {
 
   @override
   void initState() {
+    // Initialize State
     MessagesAPI.getUserId().then((userId) {
       if (userId != null) {
         SocialAPI.getUser(userId).then((userA) {
@@ -155,39 +157,38 @@ class _PostsListViewState extends State<PostsListView> {
         });
       }
     });
+
+    // Get FCM Token (excluding Windows and Linux)
     if (!(Platform.isWindows || Platform.isLinux)) {
       FirebaseMessaging.instance
           .getToken()
           .then((fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
     }
 
-    // addPageRequestListener is called whenever the user scrolls near the end of the list
+    // Add Page Request Listener
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
+
     super.initState();
   }
 
-// Fetches the data for the given pageKey and appends it to the list of items
+  // Fetches the data for the given pageKey and appends it to the list of items
   Future<void> _fetchPage(int pageKey) async {
     try {
       commonLogger.t("Fetching page");
-      // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
       final page = await SocialAPI.getPosts(pageKey);
-      // _pagingController.refresh();
 
       // Loops through each item in the page and adds its ID to the `seenPosts` list
       for (int i = 0; i < page.length; i++) {
         Map<String, dynamic> item = page[i];
         seenPosts.add(item['post_id']);
-        commonLogger.d("Seen posts: $seenPosts");
       }
 
       // Determines if the page being fetched is the last page
       final isLastPage = page.isEmpty;
       if (!mounted) return;
       if (isLastPage) {
-        // If the page is the last page, call `appendLastPage` to add it to the list of items
         if ((_pagingController.itemList == null ||
                 _pagingController.itemList!.isEmpty) &&
             page.isEmpty) {
@@ -200,22 +201,17 @@ class _PostsListViewState extends State<PostsListView> {
         }
       } else {
         final nextPageKey = pageKey += 1;
-        // If the page is not the last page, call `appendPage` to add the newly loaded items to the list of items
         _pagingController.appendPage(page, nextPageKey);
       }
     } catch (error) {
-      // If an error occurs, sets the error state of the PagingController
       _pagingController.error = error;
     }
   }
 
+  // Refresh Page Function
   Future<void> refreshPage() async {
     seenPosts = [];
     _pagingController.refresh();
-    // _pagingController.addPageRequestListener((pageKey) {
-    //   _fetchPage(pageKey);
-    // });
-    //_fetchPage(0);
   }
 
   @override
@@ -227,23 +223,23 @@ class _PostsListViewState extends State<PostsListView> {
       commonLogger.i("larger than 1080");
       size = 1080;
     }
-    commonLogger.i("resif");
-    return Stack(children: [
-      RefreshIndicator(
-        edgeOffset: 94,
-        onRefresh: () => refreshPage(),
-        child: PagedListView<int, Object>(
-          clipBehavior: Clip.none,
-          cacheExtent: 1024,
-          pagingController: _pagingController,
-          scrollController: widget.scrollController,
-          // builderDelegate is responsible for creating the actual widgets to be displayed
-          builderDelegate: PagedChildBuilderDelegate<Object>(
+
+    return Stack(
+      children: [
+        RefreshIndicator(
+          edgeOffset: 94,
+          onRefresh: () => refreshPage(),
+          child: PagedListView<int, Object>(
+            clipBehavior: Clip.none,
+            cacheExtent: 1024,
+            pagingController: _pagingController,
+            scrollController: widget.scrollController,
+            builderDelegate: PagedChildBuilderDelegate<Object>(
               firstPageProgressIndicatorBuilder: (context) => _loadSkeleton(),
               noItemsFoundIndicatorBuilder: (context) => ListError(
-                  title: AppLocalizations.of(context)!.noPostsFound,
-                  body: AppLocalizations.of(context)!.makeFriends),
-              // itemBuilder is called for each item in the list to create a widget for that item
+                title: AppLocalizations.of(context)!.noPostsFound,
+                body: AppLocalizations.of(context)!.makeFriends,
+              ),
               itemBuilder: (context, dynamic item, index) =>
                   item["last"] == true
                       ? const SizedBox(
@@ -253,30 +249,39 @@ class _PostsListViewState extends State<PostsListView> {
                           ? Padding(
                               padding: const EdgeInsets.only(top: 106),
                               child: SizedBox(
-                                  width: size,
-                                  height: size,
-                                  child: PostWidget(
-                                      post: item, index: index, user: user)))
+                                width: size,
+                                height: size,
+                                child: PostWidget(
+                                  post: item,
+                                  index: index,
+                                  user: user,
+                                ),
+                              ),
+                            )
                           : SizedBox(
                               width: size,
                               height: size,
                               child: PostWidget(
-                                  post: item, index: index, user: user))),
-          padding: const EdgeInsets.all(
-              8), // Add padding to list so doesn't overflow to sides of screen
+                                post: item,
+                                index: index,
+                                user: user,
+                              ),
+                            ),
+            ),
+            padding: const EdgeInsets.all(8),
+          ),
         ),
-      )
-    ]);
+      ],
+    );
   }
 
   @override
   void dispose() {
-    // Disposes of the PagingController to free up resources
+    // Dispose of the PagingController to free up resources
     _pagingController.dispose();
     super.dispose();
   }
 }
-
 
 /*
 Nearby skateparks

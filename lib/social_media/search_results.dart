@@ -10,12 +10,15 @@ import '../misc/default_profile.dart';
 import '../swatch.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+// Flag to track if the user is entering a search query
 bool entering = false;
 
 class SearchResults extends StatefulWidget {
   final String query;
 
+  // Constructor for the SearchResults widget
   const SearchResults({super.key, required this.query});
+
   @override
   State<SearchResults> createState() => _SearchResults();
 }
@@ -42,6 +45,7 @@ class _SearchResults extends State<SearchResults> {
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: AppBar(
+        // Styling for the app bar
         iconTheme: IconThemeData(color: swatch[701]),
         elevation: 0,
         shadowColor: Colors.green.shade900,
@@ -54,6 +58,7 @@ class _SearchResults extends State<SearchResults> {
         title: Container(
           padding: const EdgeInsets.all(8),
           child: TextField(
+            // Search input field
             controller: controller,
             showCursor: false,
             maxLines: 1,
@@ -65,24 +70,21 @@ class _SearchResults extends State<SearchResults> {
               isCollapsed: true,
               filled: true,
               fillColor: const Color(0x66000000),
+              // Styling for the input field border
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(32),
                 borderSide: BorderSide(
-                  color:
-                      Colors.green.shade900, // Change the border color to green
-                  width: 1, // You can adjust the border width
+                  color: Colors.green.shade900,
+                  width: 1,
                   style: BorderStyle.solid,
-                  // Remove strokeAlign, as it's not a valid property for BorderSide
                 ),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(32),
                 borderSide: BorderSide(
-                  color:
-                      Colors.green.shade900, // Change the border color to green
-                  width: 1, // You can adjust the border width
+                  color: Colors.green.shade900,
+                  width: 1,
                   style: BorderStyle.solid,
-                  // Remove strokeAlign, as it's not a valid property for BorderSide
                 ),
               ),
               contentPadding:
@@ -93,8 +95,7 @@ class _SearchResults extends State<SearchResults> {
               entering = false; // Set entering flag to false
               mounted
                   ? setState(() {
-                      currentQuery = controller
-                          .text; // Update the current query with the new text value
+                      currentQuery = controller.text;
                     })
                   : null;
             },
@@ -103,11 +104,8 @@ class _SearchResults extends State<SearchResults> {
       ),
       body: Container(
         child: currentQuery == null
-            ? const SizedBox
-                .shrink() // If the current query is null, display an empty SizedBox
-            : SearchResultsList(
-                query:
-                    currentQuery!), // Display the search results based on the current query
+            ? const SizedBox.shrink()
+            : SearchResultsList(query: currentQuery!),
       ),
     );
   }
@@ -125,11 +123,6 @@ class SearchResultsList extends StatefulWidget {
 List<Map<String, dynamic>> results = [];
 
 class _SearchResultsList extends State<SearchResultsList> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   TextEditingController controller = TextEditingController();
 
   @override
@@ -167,76 +160,86 @@ class Results extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: results.length,
-        itemBuilder: (BuildContext context, int index) => Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xb5000000),
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-              height: 84,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: TextButton(
-                // Navigate to the profile page when the button is pressed
-                onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProfilePage(
-                              userId: results[index]["user_id"],
-                              navbar: false,
-                            ))),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    results[index]["avatar_id"] == null
-                        ? const DefaultProfile(radius: 24)
-                        : Flexible(
-                            child: CachedNetworkImage(
-                                imageUrl:
-                                    '${Config.uri}/image/thumbnail/${results[index]["avatar_id"]}',
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                        baseColor: shimmer["base"]!,
-                                        highlightColor: shimmer["highlight"]!,
-                                        child: CircleAvatar(
-                                          radius: 24,
-                                          backgroundColor: swatch[900],
-                                        )),
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.contain),
-                                      ),
-                                    )),
-                          ),
-                    const Padding(padding: EdgeInsets.only(left: 16)),
-                    Flexible(
-                      flex: 6,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(top: 10),
-                            ),
-                            Text(results[index]["username"] ?? "Channel",
-                                style: TextStyle(
-                                  color: swatch[301],
-                                )),
-                            Text(
-                              results[index]["description"] ?? "",
-                              style: TextStyle(color: swatch[601], height: 1.5),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ]),
-                    ),
-                  ],
+      itemCount: results.length,
+      itemBuilder: (BuildContext context, int index) => Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Color(0xb5000000),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          height: 84,
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: TextButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfilePage(
+                  userId: results[index]["user_id"],
+                  navbar: false,
                 ),
               ),
-            )));
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Display user avatar or default profile if not available
+                results[index]["avatar_id"] == null
+                    ? const DefaultProfile(radius: 24)
+                    : Flexible(
+                        child: CachedNetworkImage(
+                          imageUrl:
+                              '${Config.uri}/image/thumbnail/${results[index]["avatar_id"]}',
+                          placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: shimmer["base"]!,
+                            highlightColor: shimmer["highlight"]!,
+                            child: CircleAvatar(
+                              radius: 24,
+                              backgroundColor: swatch[900],
+                            ),
+                          ),
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                const Padding(padding: EdgeInsets.only(left: 16)),
+                Flexible(
+                  flex: 6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(top: 10),
+                      ),
+                      // Display username
+                      Text(
+                        results[index]["username"] ?? "Channel",
+                        style: TextStyle(
+                          color: swatch[301],
+                        ),
+                      ),
+                      // Display user description with text overflow handling
+                      Text(
+                        results[index]["description"] ?? "",
+                        style: TextStyle(color: swatch[601], height: 1.5),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

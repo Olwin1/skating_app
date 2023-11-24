@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:patinka/profile/connections_list.dart';
+import 'package:patinka/profile/list_type.dart';
 
 // FollowersList widget
 
@@ -11,7 +12,7 @@ class FollowersList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConnectionsListView(
-      type: "followers",
+      type: ListType.followersList,
       user: user,
     );
   }

@@ -24,7 +24,7 @@ import '../misc/default_profile.dart';
 import '../swatch.dart';
 
 // Define item type for popup menu
-enum SampleItem { itemOne, itemTwo, itemThree }
+enum DropdownPage { editProfile, settings, saved }
 
 String? currentImage;
 
@@ -292,7 +292,7 @@ class OptionsMenu extends StatefulWidget {
 class _OptionsMenuState extends State<OptionsMenu> {
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<SampleItem>(
+    return PopupMenuButton<DropdownPage>(
       color: const Color(0x66000000),
       icon: Icon(
         Icons.more_vert,
@@ -301,10 +301,10 @@ class _OptionsMenuState extends State<OptionsMenu> {
       // Offset to set the position of the menu relative to the button
       offset: const Offset(0, 64),
       // Callback function that will be called when a menu item is selected
-      onSelected: (SampleItem item) {
+      onSelected: (DropdownPage item) {
         // In this case, it just prints "selected" to the console
         commonLogger.i("selected");
-        if (item == SampleItem.itemOne) {
+        if (item == DropdownPage.editProfile) {
           // If item pressed is Edit Profile
           Navigator.push(
             // Send to edit profile page
@@ -329,7 +329,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
             ),
           );
         }
-        if (item == SampleItem.itemTwo) {
+        if (item == DropdownPage.settings) {
           // If item pressed is Settings
           Navigator.push(
             // Send to settings page
@@ -354,27 +354,27 @@ class _OptionsMenuState extends State<OptionsMenu> {
         }
       },
       // Define the items in the menu using PopupMenuItem widgets
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<DropdownPage>>[
         // First menu item
-        PopupMenuItem<SampleItem>(
-          // Value of the menu item, an instance of the SampleItem enumeration
-          value: SampleItem.itemOne,
+        PopupMenuItem<DropdownPage>(
+          // Value of the menu item, an instance of the DropdownPage enumeration
+          value: DropdownPage.editProfile,
           // Text widget that displays the text for the menu item
           child: Text(AppLocalizations.of(context)!.editProfile,
               style: TextStyle(color: swatch[801])),
         ),
         // Second menu item
-        PopupMenuItem<SampleItem>(
-          // Value of the menu item, an instance of the SampleItem enumeration
-          value: SampleItem.itemTwo,
+        PopupMenuItem<DropdownPage>(
+          // Value of the menu item, an instance of the DropdownPage enumeration
+          value: DropdownPage.settings,
           // Text widget that displays the text for the menu item
           child: Text(AppLocalizations.of(context)!.settings,
               style: TextStyle(color: swatch[801])),
         ),
         // Third menu item
-        PopupMenuItem<SampleItem>(
-          // Value of the menu item, an instance of the SampleItem enumeration
-          value: SampleItem.itemThree,
+        PopupMenuItem<DropdownPage>(
+          // Value of the menu item, an instance of the DropdownPage enumeration
+          value: DropdownPage.saved,
           // Text widget that displays the text for the menu item
           child: Text(AppLocalizations.of(context)!.saved,
               style: TextStyle(color: swatch[801])),

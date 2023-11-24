@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:patinka/profile/list_type.dart';
 
 import 'connections_list.dart';
 
@@ -10,6 +11,6 @@ class FollowingList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ConnectionsListView(type: "following", user: user);
+    return ConnectionsListView(type: ListType.followingList, user: user);
   }
 }

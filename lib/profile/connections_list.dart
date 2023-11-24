@@ -3,10 +3,11 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:patinka/api/social.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/components/list_error.dart';
+import 'package:patinka/profile/list_type.dart';
 import 'package:patinka/profile/user_list_widget.dart';
 
 class ConnectionsListView extends StatefulWidget {
-  final String type;
+  final ListType type;
   final Map<String, dynamic>? user;
 
   const ConnectionsListView({super.key, required this.type, this.user});
@@ -37,13 +38,13 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       List<Map<String, dynamic>> page;
       // Fetch the page of comments using the getComments() function
       commonLogger.d("Selecting ${widget.type}");
-      if (widget.type == "followers") {
+      if (widget.type == ListType.followersList) {
         commonLogger.d("followers selected");
         page = await SocialAPI.getUserFollowers(pageKey, widget.user);
-      } else if (widget.type == "following") {
+      } else if (widget.type == ListType.followingList) {
         commonLogger.d("following selected");
         page = await SocialAPI.getUserFollowing(pageKey, widget.user);
-      } else if (widget.type == "friends") {
+      } else if (widget.type == ListType.friendsList) {
         commonLogger.d("friends selected");
         page = await SocialAPI.getUserFriends(pageKey, widget.user);
       } else {
@@ -74,7 +75,8 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
         // Use the Comment widget to build each item in the list view
-        itemBuilder: (context, item, index) => UserListWidget(user: item),
+        itemBuilder: (context, item, index) =>
+            UserListWidget(user: item, listType: widget.type),
         noItemsFoundIndicatorBuilder: (context) =>
             const ListError(title: "No Follower", body: ""),
       ),

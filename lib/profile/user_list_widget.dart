@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:patinka/profile/list_type.dart';
 import 'package:patinka/profile/profile_page.dart';
 import 'package:patinka/common_logger.dart';
 import '../api/config.dart';
@@ -10,11 +11,11 @@ import '../swatch.dart';
 // UserListWidget class creates a stateful widget that displays a list of users
 class UserListWidget extends StatefulWidget {
   // Constructor for UserListWidget
-  const UserListWidget({super.key, required this.user});
+  const UserListWidget({super.key, required this.user, required this.listType});
 
   // Title for the widget
   final Map<String, dynamic> user;
-
+  final ListType listType;
   // Creates the state for the UserListWidget
   @override
   State<UserListWidget> createState() => _UserListWidget();
@@ -78,7 +79,11 @@ class _UserListWidget extends State<UserListWidget> {
                 // TextButton with an onPressed function that prints test value "ee" and a child text widget with the text "Follow"
                 TextButton(
                     onPressed: () => commonLogger.i("pressed"),
-                    child: Text(AppLocalizations.of(context)!.follow)),
+                    child: Text(widget.listType == ListType.followingList
+                        ? AppLocalizations.of(context)!.unfollow
+                        : widget.listType == ListType.followersList
+                            ? "Remove"
+                            : "Unfriend")),
                 const Spacer()
               ],
             )));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:patinka/profile/list_type.dart';
 
 import '../api/config.dart';
 import '../swatch.dart';
@@ -34,7 +35,7 @@ class FriendsList extends StatelessWidget {
               style: TextStyle(color: swatch[701]),
             )),
         body: ConnectionsListView(
-          type: "friends",
+          type: ListType.friendsList,
           user: user,
         ));
   }

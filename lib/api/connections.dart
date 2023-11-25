@@ -11,6 +11,8 @@ class ConnectionsAPI {
   static final Uri _followUrl = Uri.parse('${Config.uri}/connections/follow');
   static final Uri _unfollowUrl =
       Uri.parse('${Config.uri}/connections/unfollow');
+  static final Uri _unfollowerUrl =
+      Uri.parse('${Config.uri}/connections/unfollower');
   static final Uri _friendUrl = Uri.parse('${Config.uri}/connections/friend');
   static final Uri _unfriendUrl =
       Uri.parse('${Config.uri}/connections/unfriend');
@@ -25,6 +27,16 @@ class ConnectionsAPI {
           .deleteLocalData(name: "user-following-$user", type: CacheTypes.list);
       NetworkManager.instance
           .deleteLocalData(name: user, type: CacheTypes.user);
+
+      String? ownerUser = await storage.getId();
+      if (ownerUser != null) {
+        if (ownerUser != user) {
+          NetworkManager.instance.deleteLocalData(
+              name: "user-following-$ownerUser", type: CacheTypes.list);
+          NetworkManager.instance
+              .deleteLocalData(name: ownerUser, type: CacheTypes.user);
+        }
+      }
 
       // Send a POST request to the follow URL with user information
       var response = await http
@@ -49,8 +61,52 @@ class ConnectionsAPI {
       NetworkManager.instance
           .deleteLocalData(name: user, type: CacheTypes.user);
 
+      String? ownerUser = await storage.getId();
+      if (ownerUser != null) {
+        if (ownerUser != user) {
+          NetworkManager.instance.deleteLocalData(
+              name: "user-following-$ownerUser", type: CacheTypes.list);
+          NetworkManager.instance
+              .deleteLocalData(name: ownerUser, type: CacheTypes.user);
+        }
+      }
+
       // Send a POST request to the unfollow URL with user information
       var response = await http.post(_unfollowUrl,
+          headers: await Config.getDefaultHeadersAuth,
+          body: {
+            'user': user,
+          });
+
+      // Handle and return the response
+      return handleResponse(response, Resp.stringResponse);
+    } catch (e) {
+      // Throw an exception if there's an error during the unfollow process
+      throw Exception("Error during unfollow: $e");
+    }
+  }
+
+  // Define a static method to unfollow a user
+  static Future<Map<String, dynamic>> unfollowerUser(String user) async {
+    try {
+      // Delete local cached data related to the user being unfollowed
+      NetworkManager.instance
+          .deleteLocalData(name: "user-following-$user", type: CacheTypes.list);
+      NetworkManager.instance
+          .deleteLocalData(name: user, type: CacheTypes.user);
+
+      String? ownerUser = await storage.getId();
+      if (ownerUser != null) {
+        if (ownerUser != user) {
+          NetworkManager.instance.deleteLocalData(
+              name: "user-followers-$ownerUser", type: CacheTypes.list);
+          NetworkManager.instance
+              .deleteLocalData(name: ownerUser, type: CacheTypes.user);
+        }
+      }
+
+      // Send a POST request to the unfollow URL with user information
+      var response = await http.post(_unfollowerUrl,
           headers: await Config.getDefaultHeadersAuth,
           body: {
             'user': user,
@@ -72,6 +128,16 @@ class ConnectionsAPI {
           .deleteLocalData(name: "user-friends-$user", type: CacheTypes.list);
       NetworkManager.instance
           .deleteLocalData(name: user, type: CacheTypes.user);
+
+      String? ownerUser = await storage.getId();
+      if (ownerUser != null) {
+        if (ownerUser != user) {
+          NetworkManager.instance.deleteLocalData(
+              name: "user-following-$ownerUser", type: CacheTypes.list);
+          NetworkManager.instance
+              .deleteLocalData(name: ownerUser, type: CacheTypes.user);
+        }
+      }
 
       // Send a POST request to the friend URL with user information
       var response = await http
@@ -95,6 +161,16 @@ class ConnectionsAPI {
           .deleteLocalData(name: "user-friends-$user", type: CacheTypes.list);
       NetworkManager.instance
           .deleteLocalData(name: user, type: CacheTypes.user);
+
+      String? ownerUser = await storage.getId();
+      if (ownerUser != null) {
+        if (ownerUser != user) {
+          NetworkManager.instance.deleteLocalData(
+              name: "user-friends-$ownerUser", type: CacheTypes.list);
+          NetworkManager.instance
+              .deleteLocalData(name: ownerUser, type: CacheTypes.user);
+        }
+      }
 
       // Send a POST request to the unfriend URL with user information
       var response = await http.post(_unfriendUrl,

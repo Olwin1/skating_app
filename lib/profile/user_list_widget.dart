@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:patinka/api/connections.dart';
 import 'package:patinka/profile/list_type.dart';
 import 'package:patinka/profile/profile_page.dart';
 import 'package:patinka/common_logger.dart';
@@ -11,11 +12,18 @@ import '../swatch.dart';
 // UserListWidget class creates a stateful widget that displays a list of users
 class UserListWidget extends StatefulWidget {
   // Constructor for UserListWidget
-  const UserListWidget({super.key, required this.user, required this.listType});
+  const UserListWidget(
+      {super.key,
+      required this.user,
+      required this.listType,
+      this.ownerUser,
+      required this.refreshPage});
 
   // Title for the widget
   final Map<String, dynamic> user;
+  final Map<String, dynamic>? ownerUser;
   final ListType listType;
+  final VoidCallback refreshPage;
   // Creates the state for the UserListWidget
   @override
   State<UserListWidget> createState() => _UserListWidget();
@@ -29,6 +37,24 @@ class _UserListWidget extends State<UserListWidget> {
         MaterialPageRoute(
             builder: (context) =>
                 Profile(userId: widget.user["user_id"], user: widget.user)));
+  }
+
+  void handleDelete() async {
+    switch (widget.listType) {
+      case ListType.followersList:
+        await ConnectionsAPI.unfollowerUser(widget.user["user_id"]);
+        widget.refreshPage();
+        break;
+
+      case ListType.followingList:
+        await ConnectionsAPI.unfollowUser(widget.user["user_id"]);
+        widget.refreshPage();
+        break;
+      case ListType.friendsList:
+        await ConnectionsAPI.unfriendUser(widget.user["user_id"]);
+        widget.refreshPage();
+        break;
+    }
   }
 
   // Builds the widget
@@ -77,13 +103,15 @@ class _UserListWidget extends State<UserListWidget> {
                   flex: 10,
                 ),
                 // TextButton with an onPressed function that prints test value "ee" and a child text widget with the text "Follow"
-                TextButton(
-                    onPressed: () => commonLogger.i("pressed"),
-                    child: Text(widget.listType == ListType.followingList
-                        ? AppLocalizations.of(context)!.unfollow
-                        : widget.listType == ListType.followersList
-                            ? "Remove"
-                            : "Unfriend")),
+                widget.ownerUser == null
+                    ? TextButton(
+                        onPressed: () => handleDelete(),
+                        child: Text(widget.listType == ListType.followingList
+                            ? AppLocalizations.of(context)!.unfollow
+                            : widget.listType == ListType.followersList
+                                ? "Remove"
+                                : "Unfriend"))
+                    : const SizedBox.shrink(),
                 const Spacer()
               ],
             )));

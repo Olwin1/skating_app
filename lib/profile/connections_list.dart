@@ -75,8 +75,11 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
         // Use the Comment widget to build each item in the list view
-        itemBuilder: (context, item, index) =>
-            UserListWidget(user: item, listType: widget.type),
+        itemBuilder: (context, item, index) => UserListWidget(
+            user: item,
+            listType: widget.type,
+            ownerUser: widget.user,
+            refreshPage: _pagingController.refresh),
         noItemsFoundIndicatorBuilder: (context) =>
             const ListError(title: "No Follower", body: ""),
       ),

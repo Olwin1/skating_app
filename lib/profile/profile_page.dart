@@ -651,7 +651,10 @@ class ConnectionLists extends StatelessWidget {
                       // Send to edit profile page
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Lists(index: 1))),
+                          builder: (context) => Lists(
+                                index: 1,
+                                user: user?["user_id"] != self ? user : null,
+                              ))),
                   child: Column(children: [
                     Text((user?["following"] ?? 0).toString(),
                         style: TextStyle(color: swatch[601])),

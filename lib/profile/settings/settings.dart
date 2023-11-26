@@ -137,6 +137,7 @@ class _Settings extends State<Settings> {
                           title: Text(AppLocalizations.of(context)!.email),
                           value: Text(
                               widget.user?["email"] ?? "default@example.com"),
+                          enabled: false,
                         ),
                         // Navigation tile for password settings
                         SettingsTile.navigation(
@@ -144,6 +145,7 @@ class _Settings extends State<Settings> {
                           title: Text(AppLocalizations.of(context)!.password),
                           value: const Text('••••••••'),
                           onPressed: (e) => overlaySettings.password(context),
+                          enabled: false,
                         ),
                         // Switch tile for biometric settings
                         SettingsTile.switchTile(
@@ -152,6 +154,7 @@ class _Settings extends State<Settings> {
                           initialValue: true,
                           leading: const Icon(Icons.fingerprint),
                           title: Text(AppLocalizations.of(context)!.biometrics),
+                          enabled: false,
                         ),
                         // Navigation tile for logout
                         SettingsTile.navigation(
@@ -178,6 +181,7 @@ class _Settings extends State<Settings> {
                           leading: const Icon(Icons.notifications),
                           title: Text(
                               AppLocalizations.of(context)!.pushNotifications),
+                          enabled: false,
                         ),
                         // Switch tile for email notifications
                         SettingsTile.switchTile(
@@ -186,6 +190,7 @@ class _Settings extends State<Settings> {
                           initialValue: true,
                           leading: const Icon(Icons.mail_lock),
                           title: const Text('Email Notifications'),
+                          enabled: false,
                         ),
                       ],
                     ),
@@ -199,6 +204,7 @@ class _Settings extends State<Settings> {
                           title: Text(AppLocalizations.of(context)!.language),
                           value: const Text('English'),
                           onPressed: (e) => overlaySettings.languages(context),
+                          enabled: false,
                         ),
                         // Switch tile for large text settings
                         SettingsTile.switchTile(
@@ -207,6 +213,7 @@ class _Settings extends State<Settings> {
                           initialValue: true,
                           leading: const Icon(Icons.text_decrease),
                           title: Text(AppLocalizations.of(context)!.largeText),
+                          enabled: false,
                         ),
                         // Switch tile for dyslexia font settings
                         SettingsTile.switchTile(
@@ -216,6 +223,7 @@ class _Settings extends State<Settings> {
                           leading: const Icon(Icons.font_download),
                           title:
                               Text(AppLocalizations.of(context)!.dyslexiaFont),
+                          enabled: false,
                         ),
                         // Navigation tile for theme settings
                         SettingsTile.navigation(
@@ -223,6 +231,7 @@ class _Settings extends State<Settings> {
                           title: Text(AppLocalizations.of(context)!.theme),
                           value: const Text('Default'),
                           onPressed: (e) => overlaySettings.theme(context),
+                          enabled: false,
                         ),
                       ],
                     ),
@@ -234,6 +243,7 @@ class _Settings extends State<Settings> {
                         SettingsTile.navigation(
                           leading: const Icon(Icons.format_quote),
                           title: Text(AppLocalizations.of(context)!.faq),
+                          enabled: false,
                         ),
                         // Navigation tile for contacting support
                         SettingsTile.navigation(

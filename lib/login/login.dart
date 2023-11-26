@@ -61,9 +61,8 @@ class _LoginPage extends State<LoginPage> {
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: // TODO REPLACE THIS WITH LOWER RES VERSION OF GRAFFITI WHILE LOADING
-                          const AssetImage(
-                              "assets/backgrounds/graffiti_low_res.png"),
+                      image: const AssetImage(
+                          "assets/backgrounds/graffiti_low_res.png"),
                       fit: BoxFit.cover,
                       alignment: Alignment.bottomLeft,
                       colorFilter: ColorFilter.mode(

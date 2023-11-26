@@ -15,6 +15,9 @@ class ListError extends StatelessWidget {
     // Use the Consumer widget to listen for changes to the CurrentPage object
     return Center(
         child: Column(children: [
+      const SizedBox(
+        height: 150,
+      ),
       Text(
         title,
         style: TextStyle(

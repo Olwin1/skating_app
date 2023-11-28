@@ -270,10 +270,17 @@ class _Settings extends State<Settings> {
                         ),
                         // Navigation tile for contacting support
                         SettingsTile.navigation(
-                          leading: const Icon(Icons.support),
-                          title: Text(
-                              AppLocalizations.of(context)!.contactSupport),
-                        ),
+                            leading: const Icon(Icons.support),
+                            title: Text(
+                                AppLocalizations.of(context)!.contactSupport),
+                            onPressed: (context) {
+                              Navigator.of(context).push(
+                                  // Send to signal info page
+                                  MaterialPageRoute(
+                                      builder: (context) => const SupportList(
+                                            type: SupportListType.support,
+                                          )));
+                            }),
                         // Navigation tile for reporting a bug
                         SettingsTile.navigation(
                           leading: const Icon(Icons.bug_report),

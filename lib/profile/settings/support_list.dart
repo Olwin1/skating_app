@@ -21,6 +21,20 @@ class SupportList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String title = "Reports";
+    switch (type) {
+      case SupportListType.suggestion:
+        title = "Your Suggestions";
+        break;
+
+      case SupportListType.bug:
+        title = "Bug Reports";
+        break;
+
+      case SupportListType.support:
+        title = "Support Requests";
+        break;
+    }
     return Scaffold(
         backgroundColor: const Color(0x34000000),
         resizeToAvoidBottomInset: false,
@@ -37,11 +51,11 @@ class SupportList extends StatelessWidget {
               statusBarIconBrightness: Brightness.light,
             ),
             title: Text(
-              "Supports",
+              title,
               style: TextStyle(color: swatch[701]),
             )),
-        body: const SupportListView(
-          type: SupportListType.bug,
+        body: SupportListView(
+          type: type,
         ));
   }
 }

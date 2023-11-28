@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:patinka/misc/navbar_provider.dart';
+import 'package:patinka/profile/settings/bug_report.dart';
+import 'package:patinka/profile/settings/support_list.dart';
 import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:patinka/profile/settings/settings_overlays.dart';
@@ -255,6 +257,12 @@ class _Settings extends State<Settings> {
                         SettingsTile.navigation(
                           leading: const Icon(Icons.bug_report),
                           title: const Text("Report a bug"),
+                          onPressed: (context) {
+                            Navigator.of(context).push(
+                                // Send to signal info page
+                                MaterialPageRoute(
+                                    builder: (context) => const SupportList()));
+                          },
                         ),
                         // Navigation tile for information about the app
                         SettingsTile.navigation(

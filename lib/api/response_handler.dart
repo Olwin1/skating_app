@@ -28,7 +28,7 @@ void _handleError(dynamic error) {
 
 // Function to handle successful HTTP responses
 dynamic handleResponse(http.Response response, Resp resp) {
-  if (response.statusCode == 200) {
+  if (response.statusCode >= 200 && response.statusCode < 300) {
     switch (resp) {
       case Resp.stringResponse:
         {

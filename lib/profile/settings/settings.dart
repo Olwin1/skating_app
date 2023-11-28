@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:patinka/misc/navbar_provider.dart';
-import 'package:patinka/profile/settings/bug_report.dart';
 import 'package:patinka/profile/settings/list_type.dart';
 import 'package:patinka/profile/settings/support_list.dart';
 import 'package:provider/provider.dart';

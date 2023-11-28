@@ -1,13 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:patinka/api/support.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/components/list_error.dart';
-import 'package:patinka/misc/default_profile.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'bug_report.dart';
+import 'create_report.dart';
 
 import '../../api/config.dart';
 import '../../swatch.dart';

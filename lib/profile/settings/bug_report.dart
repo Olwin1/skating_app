@@ -6,18 +6,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/api/support.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/misc/navbar_provider.dart';
+import 'package:patinka/profile/settings/list_type.dart';
 import 'package:patinka/swatch.dart';
 import 'package:provider/provider.dart';
 
 import '../../api/config.dart';
 
-enum ReportType { bugReport, supportRequest, featureRequest }
-
 class SupportReportCreator extends StatefulWidget {
+  final SupportListType? defaultType;
   // Create SupportReportCreator Class
-  const SupportReportCreator({
-    Key? key,
-  }) : super(key: key);
+  const SupportReportCreator({Key? key, this.defaultType}) : super(key: key);
   @override
   State<SupportReportCreator> createState() =>
       _SupportReportCreator(); //Create state for widget
@@ -29,11 +27,12 @@ class _SupportReportCreator extends State<SupportReportCreator> {
 
   @override
   void initState() {
+    reportType = widget.defaultType;
     super.initState();
   }
 
-  ReportType? reportType;
-  void setType(ReportType type) {
+  SupportListType? reportType;
+  void setType(SupportListType type) {
     setState(() {
       reportType = type;
     });
@@ -47,21 +46,21 @@ class _SupportReportCreator extends State<SupportReportCreator> {
     String reportDescriptionHint = "";
     bool enabled = true;
     switch (reportType) {
-      case ReportType.bugReport:
+      case SupportListType.bug:
         reportTitle = "Bug Report Title";
         reportTitleHint = "Breif Outline of Bug";
         reportDescription = "Report Description";
         reportDescriptionHint =
             "Please include a detailed explanation of the issue you have encountered.";
         break;
-      case ReportType.featureRequest:
+      case SupportListType.suggestion:
         reportTitle = "Feature Request Title";
         reportTitleHint = "Name your suggestion";
         reportDescription = "Feature Description";
         reportDescriptionHint =
             "Please include a detailed description of your proposed feature for the app.";
         break;
-      case ReportType.supportRequest:
+      case SupportListType.support:
         reportTitle = "Support Request Title";
         reportTitleHint = "Breif title for your problem";
         reportDescription = "Extra Info";
@@ -78,15 +77,15 @@ class _SupportReportCreator extends State<SupportReportCreator> {
       try {
         // Call createSession function with necessary parameters4
         switch (reportType) {
-          case ReportType.bugReport:
+          case SupportListType.bug:
             SupportAPI.submitBugReport(
                 titleController.text, descriptionController.text);
             break;
-          case ReportType.featureRequest:
+          case SupportListType.suggestion:
             SupportAPI.submitFeatureRequest(
                 titleController.text, descriptionController.text);
             break;
-          case ReportType.supportRequest:
+          case SupportListType.support:
             SupportAPI.submitSupportRequest(
                 titleController.text, descriptionController.text);
             break;
@@ -126,11 +125,10 @@ class _SupportReportCreator extends State<SupportReportCreator> {
           leadingWidth: 48, // Remove extra leading space
           centerTitle: false, // Align title to left
           title: Title(
-            title: AppLocalizations.of(context)!
-                .saveSession, //Set title to Save Session
+            title: reportType.toString(), //Set title to Save Session
             color: const Color(0xFFDDDDDD),
             child: Text(
-              AppLocalizations.of(context)!.saveSession,
+              "Create Report",
               style: TextStyle(color: swatch[701]),
             ),
           ),
@@ -173,7 +171,8 @@ class _SupportReportCreator extends State<SupportReportCreator> {
                                   children: [
                                     Text("Report Type",
                                         style: TextStyle(color: swatch[401])),
-                                    ReportTypeOptions(
+                                    SupportListTypeOptions(
+                                      defaultValue: reportType,
                                       callback: setType,
                                     )
                                   ],
@@ -236,7 +235,7 @@ class _SupportReportCreator extends State<SupportReportCreator> {
                       ), // Vertically centre Widget with remaining space
                       TextButton(
                         onPressed: () => sendInfo(),
-                        child: Text(AppLocalizations.of(context)!.saveSession,
+                        child: Text("Submit Support Report",
                             style: TextStyle(color: swatch[701])),
                       ), // Save Session Infobox
                     ],
@@ -245,27 +244,29 @@ class _SupportReportCreator extends State<SupportReportCreator> {
   }
 }
 
-class ReportTypeOptions extends StatefulWidget {
+class SupportListTypeOptions extends StatefulWidget {
   final Function callback;
-  // Constructor for the ReportTypeOptions widget
-  // Takes in a required `id` property to distinguish between two ReportTypeOptions widgets
-  const ReportTypeOptions({super.key, required this.callback});
+  final SupportListType? defaultValue;
+  // Constructor for the SupportListTypeOptions widget
+  // Takes in a required `id` property to distinguish between two SupportListTypeOptions widgets
+  const SupportListTypeOptions(
+      {super.key, required this.callback, required this.defaultValue});
 
   // Returns the state object associated with this widget
   @override
-  State<ReportTypeOptions> createState() => _ReportTypeOptionsState();
+  State<SupportListTypeOptions> createState() => _SupportListTypeOptionsState();
 }
 
-class _ReportTypeOptionsState extends State<ReportTypeOptions> {
+class _SupportListTypeOptionsState extends State<SupportListTypeOptions> {
   // `dropdownValueB` holds the selected value for the second dropdown
-  ReportType? dropdownValue;
-  String? sdropdownValue(ReportType? type) {
+  SupportListType? dropdownValue;
+  String? sdropdownValue(SupportListType? type) {
     switch (type) {
-      case ReportType.featureRequest:
+      case SupportListType.suggestion:
         return "Feature Request";
-      case ReportType.supportRequest:
+      case SupportListType.support:
         return "Support Request";
-      case ReportType.bugReport:
+      case SupportListType.bug:
         return "Bug Report";
       case null:
         return null;
@@ -274,14 +275,20 @@ class _ReportTypeOptionsState extends State<ReportTypeOptions> {
     }
   }
 
-  ReportType rdropdownValue(String value) {
+  @override
+  void initState() {
+    dropdownValue = widget.defaultValue;
+    super.initState();
+  }
+
+  SupportListType rdropdownValue(String value) {
     switch (value) {
       case "Feature Request":
-        return ReportType.featureRequest;
+        return SupportListType.suggestion;
       case "Support Request":
-        return ReportType.supportRequest;
+        return SupportListType.support;
       case "Bug Report":
-        return ReportType.bugReport;
+        return SupportListType.bug;
       default:
         throw ArgumentError("Invalid value: $value");
     }
@@ -315,13 +322,13 @@ class _ReportTypeOptionsState extends State<ReportTypeOptions> {
       dropdownColor: swatch[900],
       // Callback function called when an item is selected
       onChanged: (String? value) {
-        ReportType val = ReportType.bugReport;
+        SupportListType val = SupportListType.bug;
         switch (value) {
           case "Feature Request":
-            val = ReportType.featureRequest;
+            val = SupportListType.suggestion;
             break;
           case "Support Request":
-            val = ReportType.supportRequest;
+            val = SupportListType.support;
             break;
         }
         mounted
@@ -336,9 +343,9 @@ class _ReportTypeOptionsState extends State<ReportTypeOptions> {
 
       // Items to show in the dropdown
       items: [
-        sdropdownValue(ReportType.bugReport)!,
-        sdropdownValue(ReportType.featureRequest)!,
-        sdropdownValue(ReportType.supportRequest)!
+        sdropdownValue(SupportListType.bug)!,
+        sdropdownValue(SupportListType.suggestion)!,
+        sdropdownValue(SupportListType.support)!
       ].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,

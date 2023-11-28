@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:patinka/misc/navbar_provider.dart';
 import 'package:patinka/profile/settings/bug_report.dart';
+import 'package:patinka/profile/settings/list_type.dart';
 import 'package:patinka/profile/settings/support_list.dart';
 import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -127,6 +128,18 @@ class _Settings extends State<Settings> {
                           title: const Text("Planned Features"),
                           onPressed: (e) => {overlaySettings.features(context)},
                         ),
+                        SettingsTile.navigation(
+                          leading: const Icon(Icons.egg_alt_rounded),
+                          title: const Text("Suggest a Feature"),
+                          onPressed: (context) {
+                            Navigator.of(context).push(
+                                // Send to signal info page
+                                MaterialPageRoute(
+                                    builder: (context) => const SupportList(
+                                          type: SupportListType.suggestion,
+                                        )));
+                          },
+                        ),
                       ],
                     ),
                     // Section for security-related settings
@@ -246,6 +259,14 @@ class _Settings extends State<Settings> {
                           leading: const Icon(Icons.format_quote),
                           title: Text(AppLocalizations.of(context)!.faq),
                           enabled: false,
+                          onPressed: (context) {
+                            Navigator.of(context).push(
+                                // Send to signal info page
+                                MaterialPageRoute(
+                                    builder: (context) => const SupportList(
+                                          type: SupportListType.support,
+                                        )));
+                          },
                         ),
                         // Navigation tile for contacting support
                         SettingsTile.navigation(
@@ -261,7 +282,9 @@ class _Settings extends State<Settings> {
                             Navigator.of(context).push(
                                 // Send to signal info page
                                 MaterialPageRoute(
-                                    builder: (context) => const SupportList()));
+                                    builder: (context) => const SupportList(
+                                          type: SupportListType.bug,
+                                        )));
                           },
                         ),
                         // Navigation tile for information about the app

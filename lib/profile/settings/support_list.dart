@@ -11,13 +11,13 @@ import 'bug_report.dart';
 
 import '../../api/config.dart';
 import '../../swatch.dart';
-
-enum ListType { support, suggestion, bug }
+import 'list_type.dart';
 
 // FollowingList widget
 
 class SupportList extends StatelessWidget {
-  const SupportList({super.key});
+  final SupportListType type;
+  const SupportList({super.key, required this.type});
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +41,13 @@ class SupportList extends StatelessWidget {
               style: TextStyle(color: swatch[701]),
             )),
         body: const SupportListView(
-          type: ListType.bug,
+          type: SupportListType.bug,
         ));
   }
 }
 
 class SupportListView extends StatefulWidget {
-  final ListType type;
+  final SupportListType type;
 
   const SupportListView({super.key, required this.type});
 
@@ -77,15 +77,15 @@ class _SupportListViewState extends State<SupportListView> {
       List<Map<String, dynamic>> page;
       // Fetch the page of comments using the getComments() function
       switch (widget.type) {
-        case ListType.suggestion:
+        case SupportListType.suggestion:
           page = await SupportAPI.getFeatureRequests(pageKey);
           break;
 
-        case ListType.bug:
+        case SupportListType.bug:
           page = await SupportAPI.getBugReports(pageKey);
           break;
 
-        case ListType.support:
+        case SupportListType.support:
           page = await SupportAPI.getSupportRequests(pageKey);
           break;
       }
@@ -120,7 +120,7 @@ class _SupportListViewState extends State<SupportListView> {
               listType: widget.type,
               refreshPage: _pagingController.refresh),
           noItemsFoundIndicatorBuilder: (context) =>
-              const ListError(title: "No Follower", body: ""),
+              const ListError(title: "No reports", body: "Try creating one!"),
         ),
       ),
       Positioned(
@@ -131,7 +131,9 @@ class _SupportListViewState extends State<SupportListView> {
             onPressed: () => Navigator.of(context).push(
                 // Send to signal info page
                 MaterialPageRoute(
-                    builder: (context) => const SupportReportCreator())),
+                    builder: (context) => SupportReportCreator(
+                          defaultType: widget.type,
+                        ))),
             child: const Icon(
               Icons.add,
               color: Color(0xb8ffffff),
@@ -163,7 +165,7 @@ class UserListWidget extends StatefulWidget {
 
   // Title for the widget
   final Map<String, dynamic> item;
-  final ListType listType;
+  final SupportListType listType;
   final VoidCallback refreshPage;
   // Creates the state for the UserListWidget
   @override
@@ -183,6 +185,11 @@ class _UserListWidget extends State<UserListWidget> {
   // Builds the widget
   @override
   Widget build(BuildContext context) {
+    Color statusColour = widget.item["status"] == "closed"
+        ? Colors.red.shade700
+        : widget.item["status"] == "open"
+            ? swatch[100]!
+            : swatch[500]!;
     // Returns a row with a CircleAvatar, a text widget, and a TextButton
     return GestureDetector(
         onTap: () => handlePress(),
@@ -195,29 +202,38 @@ class _UserListWidget extends State<UserListWidget> {
             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
             child: Row(children: [
               Expanded(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.item["subject"],
-                        style: TextStyle(
-                          color: swatch[801],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    Text(
+                      widget.item["subject"],
+                      style: TextStyle(
+                        color: swatch[801],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
                       ),
-                      Text(
-                        widget.item["content"],
-                        style: TextStyle(color: swatch[801], fontSize: 15),
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
-                      ),
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                    ),
+                    Text(
+                      widget.item["content"],
+                      style: TextStyle(color: swatch[801], fontSize: 15),
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                    ),
+                    Row(children: [
+                      const Text("Status:"),
+                      Container(
+                          margin: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              color: statusColour,
+                              borderRadius: BorderRadius.circular(16)),
+                          child: Text(widget.item["status"]))
                     ]),
-              ),
+                  ])),
               IconButton(
-                  onPressed: () => print("handle icon press"),
+                  onPressed: () => commonLogger.i("handle icon press"),
                   icon: const Icon(Icons.navigate_next))
             ])
 
@@ -225,9 +241,9 @@ class _UserListWidget extends State<UserListWidget> {
             // widget.ownerUser == null
             //     ? TextButton(
             //         onPressed: () => handleDelete(),
-            //         child: Text(widget.listType == ListType.followingList
+            //         child: Text(widget.listType == SupportListType.followingList
             //             ? AppLocalizations.of(context)!.unfollow
-            //             : widget.listType == ListType.followersList
+            //             : widget.listType == SupportListType.followersList
             //                 ? "Remove"
             //                 : "Unfriend"))
             //     : const SizedBox.shrink(),

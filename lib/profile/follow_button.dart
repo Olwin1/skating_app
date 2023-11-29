@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:patinka/api/config.dart';
 import 'package:patinka/api/connections.dart';
 import 'package:patinka/common_logger.dart';
 
@@ -23,11 +24,16 @@ enum FollowState { follow, following, requested }
 class _FollowButtonState extends State<FollowButton> {
   // Initializes the default `type` to "follow"
   FollowState type = FollowState.follow;
+  String isUser = "0";
 
   @override
   void initState() {
     // Runs once when the widget is inserted into the widget tree
     if (widget.user != "0") {
+      isUser = widget.user;
+      storage.getId().then((value) => {
+            if (isUser == value) {setState(() => isUser = "0")}
+          });
       FollowState val = FollowState.follow;
       // Calls `doesFollow` function to check if the user is being followed
       ConnectionsAPI.doesFollow(widget.user).then((value) => {
@@ -110,7 +116,7 @@ class _FollowButtonState extends State<FollowButton> {
             // Calls the `handlePressed` function when the button is pressed
             onPressed: () => handlePressed(),
             // Conditionally displays different text based on the value of `type`
-            child: widget.user != "0"
+            child: isUser != "0"
                 ? Text(
                     type == FollowState.follow
                         ? AppLocalizations.of(context)!.follow

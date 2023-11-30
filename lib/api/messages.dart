@@ -167,7 +167,17 @@ class MessagesAPI {
       });
 
       // Handle the response using a custom response handler and return the result
-      return handleResponse(response, Resp.listResponse);
+      List<Map<String, dynamic>> mappedResponse =
+          handleResponse(response, Resp.listResponse);
+      List<Map<String, dynamic>> returnList = [];
+      for (Map<String, dynamic> item in mappedResponse) {
+        returnList.add({
+          "user_id": item["user_id"],
+          "username": item["username"],
+          "avatar_id": item["avatar"] ?? "default"
+        });
+      }
+      return returnList;
     } catch (e) {
       throw Exception("Error during post: $e");
     }

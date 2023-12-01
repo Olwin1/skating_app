@@ -122,10 +122,7 @@ class _MyAppState extends State<MyApp> {
       ),
       home: loggedIn
           ? StateManagement(setLoggedIn: setLoggedIn, loggedIn: loggedIn)
-          : LoginPage(
-              setLoggedIn: setLoggedIn,
-              loggedIn:
-                  loggedIn), //Login(setLoggedIn: setLoggedIn, loggedIn: loggedIn),
+          : LoginPage(setLoggedIn: setLoggedIn, loggedIn: loggedIn),
     );
   }
 }
@@ -316,8 +313,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       _navigatorKeys[index]!.currentState!.popUntil((route) =>
           route.isFirst); //Reduce navigation stack until back to that page
     } else {
-      //setState(
-      currentPage.set(int.parse(index)); //); // Set current tab to main page
+      currentPage.set(int.parse(index)); // Set current tab to main page
     }
   }
 
@@ -392,7 +388,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                             //When a navbar button is pressed set the current tab to the tabitem that was pressed
                                             mounted
                                                 ? setState(() {
-                                                    //  _currentTab = i;
                                                     currentPage.set(i);
                                                   })
                                                 : null,
@@ -404,14 +399,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                           backgroundColor: const Color.fromARGB(
                                               184, 32, 49, 33), //swatch[51],
                                           activeColor: const Color.fromARGB(
-                                              51,
-                                              31,
-                                              175,
-                                              31), //const Color(0x667fea82),
+                                              51, 31, 175, 31),
                                           shadowColor: Colors.green,
                                           color: const Color.fromARGB(
                                               51, 0, 23, 0),
-                                          //backgroundColor: const AssetImage("assets/backgrounds/navbar_background.png"),
                                           height: 55,
                                         ),
                                       ),

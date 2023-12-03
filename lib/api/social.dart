@@ -297,6 +297,8 @@ class SocialAPI {
           });
       await NetworkManager.instance
           .deleteLocalData(name: "posts", type: CacheTypes.list);
+      await NetworkManager.instance
+          .deleteLocalData(name: "saved-posts", type: CacheTypes.list);
 
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
@@ -316,6 +318,8 @@ class SocialAPI {
           });
       await NetworkManager.instance
           .deleteLocalData(name: "posts", type: CacheTypes.list);
+      await NetworkManager.instance
+          .deleteLocalData(name: "saved-posts", type: CacheTypes.list);
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
       // handle any exceptions that occur during the HTTP request

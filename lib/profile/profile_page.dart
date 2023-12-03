@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_overlay/flutter_overlay.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:patinka/profile/saved_posts.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/messages.dart';
@@ -336,6 +337,29 @@ class _OptionsMenuState extends State<OptionsMenu> {
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
                   Settings(user: widget.user),
+              opaque: false,
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                const begin = 0.0;
+                const end = 1.0;
+                var tween = Tween(begin: begin, end: end);
+                var fadeAnimation = tween.animate(animation);
+                return FadeTransition(
+                  opacity: fadeAnimation,
+                  child: child,
+                );
+              },
+            ),
+          );
+        }
+        if (item == DropdownPage.saved) {
+          // If item pressed is Settings
+          Navigator.push(
+            // Send to settings page
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  const SavedPosts(),
               opaque: false,
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {

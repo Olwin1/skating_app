@@ -413,7 +413,7 @@ class _Avatar extends State<Avatar> {
                                 image: imageProvider, fit: BoxFit.cover),
                           ),
                         ))
-                : DefaultProfile(radius: 36));
+                : const DefaultProfile(radius: 36));
   }
 }
 

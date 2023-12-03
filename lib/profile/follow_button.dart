@@ -34,21 +34,19 @@ class _FollowButtonState extends State<FollowButton> {
       storage.getId().then((value) => {
             if (isUser == value) {setState(() => isUser = "0")}
           });
-      FollowState val = FollowState.follow;
-      // Calls `doesFollow` function to check if the user is being followed
-      ConnectionsAPI.doesFollow(widget.user).then((value) => {
-            // Logs the response from `doesFollow`
-            commonLogger.t("User does follow: ${value.toString()}"),
-            // If the user is already followed, update `type` to "following" or "requested"
-            if (!value["following"])
-              {
-                if (value["requested"]) {val = FollowState.requested}
-              }
-            else
-              {val = FollowState.following},
 
-            mounted ? setState(() => type = val) : null
-          });
+      // If the user is already followed, update `type` to "following" or "requested"
+      if (widget.userObj == null ||
+          widget.userObj!["user_follows"] == null ||
+          widget.userObj!["user_follows"]!["following"] == null) {
+        type = FollowState.follow;
+      } else if (!(widget.userObj?["user_follows"]["following"])) {
+        if (widget.userObj?["user_follows"]["requested"]) {
+          type = FollowState.requested;
+        }
+      } else {
+        type = FollowState.following;
+      }
     }
     // Calls the parent `initState` method
     super.initState();

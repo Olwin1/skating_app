@@ -324,7 +324,7 @@ class _PostWidget extends State<PostWidget> {
                                         width: 56,
                                         height: 56,
                                         child: Avatar(
-                                          user: widget.user!["user_id"],
+                                          user: widget.post!["author_id"],
                                         )))
                           ],
                         ),

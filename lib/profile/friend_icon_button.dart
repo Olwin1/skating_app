@@ -110,20 +110,17 @@ class _FriendIconButtonState extends State<FriendIconButton> {
             });
           } else {
             FriendState val = FriendState.no;
-            ConnectionsAPI.doesFriend(widget.user!["user_id"]).then((value) => {
-                  commonLogger.i(value),
-                  if (!value["friends"])
-                    {
-                      if (value["requestedOutgoing"] != null)
-                        {val = FriendState.requestedOutgoing}
-                      else if (value["requestedIncoming"] != null)
-                        {val = FriendState.requestedIncoming}
-                    }
-                  else
-                    {val = FriendState.yes},
-                  setState(() => friend = val),
-                  commonLogger.w(value)
-                });
+            if (!widget.user?["user_friends"]["friends"]) {
+              if (widget.user?["user_friends"]["requestedOutgoing"] != null) {
+                val = FriendState.requestedOutgoing;
+              } else if (widget.user?["user_friends"]["requestedIncoming"] !=
+                  null) {
+                val = FriendState.requestedIncoming;
+              }
+            } else {
+              val = FriendState.yes;
+            }
+            setState(() => friend = val);
           }
         });
       }

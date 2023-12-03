@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/api/connections.dart';
 import 'package:patinka/profile/list_type.dart';
 import 'package:patinka/profile/profile_page.dart';
+import 'package:shimmer/shimmer.dart';
 import '../api/config.dart';
 import '../misc/default_profile.dart';
 import '../swatch.dart';
@@ -75,8 +76,13 @@ class _UserListWidget extends State<UserListWidget> {
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                  child: widget.user["avatar"] != null
+                  child: widget.user["avatar_id"] != null
                       ? CachedNetworkImage(
+                          placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: shimmer["base"]!,
+                              highlightColor: shimmer["highlight"]!,
+                              child:
+                                  Image.asset("assets/placeholders/1080.png")),
                           imageUrl:
                               '${Config.uri}/image/thumbnail/${widget.user["avatar_id"]}',
                           imageBuilder: (context, imageProvider) => Container(

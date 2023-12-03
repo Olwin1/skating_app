@@ -24,8 +24,8 @@ class NetworkManager {
       required CacheTypes type,
       required dynamic data}) async {
     try {
-      fileManager!.writeUserRequestDataWithTime(
-          "cached-$type-$name", jsonEncode(data), const Duration(hours: 1));
+      fileManager!.writeUserRequestDataWithTime("cached-$name", type.toString(),
+          jsonEncode(data), const Duration(hours: 1));
       return true;
     } catch (e) {
       return false;
@@ -35,8 +35,8 @@ class NetworkManager {
   Future<String?> getLocalData(
       {required String name, required CacheTypes type}) async {
     if (fileManager != null) {
-      final data =
-          await fileManager!.getUserRequestDataOnString("cached-$type-$name");
+      final data = await fileManager!
+          .getUserRequestDataOnString("cached-$name", type.toString());
       return data;
     }
     return null;
@@ -46,7 +46,8 @@ class NetworkManager {
       {required String name, required CacheTypes type}) async {
     try {
       if (fileManager != null) {
-        await fileManager!.removeUserRequestSingleCache("cached-$type-$name");
+        await fileManager!
+            .removeUserRequestSingleCache("cached-$name", type.toString());
         return true;
       }
     } catch (e) {
@@ -58,7 +59,7 @@ class NetworkManager {
   Future<bool> deleteAllLocalData() async {
     try {
       if (fileManager != null) {
-        await fileManager!.removeUserRequestCache("cached");
+        await fileManager!.removeUserRequestCache(null);
         return true;
       }
     } catch (e) {

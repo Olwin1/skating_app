@@ -43,8 +43,12 @@ class LocalManager {
     return null;
   }
 
-  Future<bool> removeAllLocalData(String url) async {
+  Future<bool> removeAllLocalData(String? url) async {
     final pref = await preferences;
+    if (url == null) {
+      pref.clear();
+      return true;
+    }
     pref.getKeys().removeWhere((element) => element.contains(url));
     return true;
   }

@@ -9,27 +9,26 @@ class _FileManager {
     return _instance!;
   }
 
-  final String fileName = "fireball.json";
-
   Future<Directory> documentsPath() async {
-    String tempPath = (await getApplicationDocumentsDirectory()).path;
+//    String tempPath = (await getTemporaryDirectory()).path;
+    String tempPath = (await getExternalStorageDirectory())!.path;
     return Directory(tempPath).create();
   }
 
-  Future<String> filePath() async {
+  Future<String> filePath(String type) async {
     final path = (await documentsPath()).path;
-    return "$path/$fileName";
+    return "$path/$type.json";
   }
 
-  Future<File> getFile() async {
-    String sFilePath = await filePath();
+  Future<File> getFile(String type) async {
+    String sFilePath = await filePath(type);
     File userDocumentFile = File(sFilePath);
     return userDocumentFile;
   }
 
-  Future<Map?> fileReadAllData() async {
+  Future<Map?> fileReadAllData(String type) async {
     try {
-      String sFilePath = await filePath();
+      String sFilePath = await filePath(type);
       File userDocumentFile = File(sFilePath);
       final data = await userDocumentFile.readAsString();
       final jsonData = jsonDecode(data);
@@ -40,12 +39,13 @@ class _FileManager {
     }
   }
 
-  Future<File> writeLocalModelInFile(String key, BaseLocal local) async {
-    String sFilePath = await filePath();
+  Future<File> writeLocalModelInFile(
+      String key, String type, BaseLocal local) async {
+    String sFilePath = await filePath(type);
     final sample = local.toJson();
     final Map model = {key: sample};
 
-    final oldData = await fileReadAllData();
+    final oldData = await fileReadAllData(type);
     model.addAll(oldData ?? {});
     var newLocalData = jsonEncode(model);
 
@@ -54,15 +54,15 @@ class _FileManager {
         flush: true, mode: FileMode.write);
   }
 
-  Future<String?> readOnlyKeyData(String key) async {
-    Map? datas = await fileReadAllData();
+  Future<String?> readOnlyKeyData(String key, String type) async {
+    Map? datas = await fileReadAllData(type);
     if (datas != null && datas[key] != null) {
       final model = datas[key];
       final item = BaseLocal.fromJson(model);
       if (DateTime.now().isBefore(item.time)) {
         return item.model;
       } else {
-        await removeSingleItem(key);
+        await removeSingleItem(key, type);
         return null;
       }
     }
@@ -70,8 +70,8 @@ class _FileManager {
   }
 
   /// Remove old key in  [Directory].
-  Future<bool> removeSingleItem(String key) async {
-    Map? tempDirectory = await fileReadAllData();
+  Future<bool> removeSingleItem(String key, String type) async {
+    Map? tempDirectory = await fileReadAllData(type);
     String? dkey = tempDirectory!.keys.isNotEmpty
         ? tempDirectory.keys.singleWhere(
             (element) => element == key,
@@ -80,7 +80,7 @@ class _FileManager {
 
     if (dkey != null) {
       tempDirectory.remove(dkey);
-      String sFilePath = await filePath();
+      String sFilePath = await filePath(type);
       File userDocumentFile = File(sFilePath);
       await userDocumentFile.writeAsString(
         jsonEncode(tempDirectory),

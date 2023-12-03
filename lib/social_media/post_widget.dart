@@ -315,6 +315,17 @@ class _PostWidget extends State<PostWidget> {
                                 );
                               },
                             ),
+                            const Spacer(),
+                            widget.user == null
+                                ? const SizedBox.shrink()
+                                : Container(
+                                    margin: const EdgeInsets.only(bottom: 12),
+                                    child: SizedBox(
+                                        width: 56,
+                                        height: 56,
+                                        child: Avatar(
+                                          user: widget.user!["user_id"],
+                                        )))
                           ],
                         ),
                       ),
@@ -367,6 +378,7 @@ class _Avatar extends State<Avatar> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
+        style: TextButton.styleFrom(padding: EdgeInsets.zero),
         onPressed: () => profile != null
             ? Navigator.push(
                 context,
@@ -381,7 +393,7 @@ class _Avatar extends State<Avatar> {
                 baseColor: shimmer["base"]!,
                 highlightColor: shimmer["highlight"]!,
                 child: CircleAvatar(
-                  radius: 26,
+                  radius: 36,
                   backgroundColor: swatch[900],
                 ))
             : image != "default"
@@ -391,7 +403,7 @@ class _Avatar extends State<Avatar> {
                         baseColor: shimmer["base"]!,
                         highlightColor: shimmer["highlight"]!,
                         child: CircleAvatar(
-                          radius: 26,
+                          radius: 36,
                           backgroundColor: swatch[900],
                         )),
                     imageBuilder: (context, imageProvider) => Container(
@@ -401,7 +413,7 @@ class _Avatar extends State<Avatar> {
                                 image: imageProvider, fit: BoxFit.cover),
                           ),
                         ))
-                : const DefaultProfile(radius: 26));
+                : DefaultProfile(radius: 36));
   }
 }
 

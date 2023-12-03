@@ -94,7 +94,7 @@ Widget _createGridTileWidget(Map<String, dynamic> post,
             return AlertDialog(
                 backgroundColor: swatch[800],
                 title: Text(
-                  'Are you sure you want to delete this post?',
+                  'Are you sure you want to unsave this post?',
                   style: TextStyle(color: swatch[701]),
                 ),
                 content: SizedBox(
@@ -102,12 +102,12 @@ Widget _createGridTileWidget(Map<String, dynamic> post,
                     child: Column(children: [
                       TextButton(
                         onPressed: () async {
-                          await SocialAPI.delPost(post["post_id"]);
+                          await SocialAPI.unsavePost(post["post_id"]);
                           refreshPage();
                           popNavigator();
                         },
                         child: Text(
-                          'Delete',
+                          'Unsave',
                           style: TextStyle(color: swatch[901]),
                         ),
                       ),

@@ -35,8 +35,12 @@ class _UserListWidget extends State<UserListWidget> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                Profile(userId: widget.user["user_id"], user: widget.user)));
+            builder: (context) => Profile(
+                  userId: widget.user["user_id"],
+                  user: widget.user,
+                  friend:
+                      widget.listType == ListType.friendsList ? true : false,
+                )));
   }
 
   void handleDelete() async {

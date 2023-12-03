@@ -33,9 +33,11 @@ String? currentImage;
 class ProfilePage extends StatelessWidget {
   final String userId;
   final bool navbar;
+  final bool? friend;
 
   // Constructor for ProfilePage, which calls the constructor for its superclass (StatelessWidget)
-  const ProfilePage({super.key, required this.userId, required this.navbar});
+  const ProfilePage(
+      {super.key, required this.userId, required this.navbar, this.friend});
 
   // Override the build method of StatelessWidget to return a Consumer widget
   @override
@@ -51,7 +53,10 @@ class ProfilePage extends StatelessWidget {
                     // Otherwise, return an empty SizedBox widget
                     const SizedBox.shrink(),
           )
-        : Profile(userId: userId);
+        : Profile(
+            userId: userId,
+            friend: friend,
+          );
   }
 }
 
@@ -60,9 +65,11 @@ class Profile extends StatefulWidget {
   const Profile(
       {super.key,
       required this.userId,
-      this.user}); // Take 2 arguments: optional key and required title of the post
+      this.user,
+      this.friend}); // Take 2 arguments: optional key and required title of the post
   final String userId;
   final Map<String, dynamic>? user;
+  final bool? friend;
 
   @override
   // Create state for the widget
@@ -270,7 +277,7 @@ class _Profile extends State<Profile> {
                 child: Text(AppLocalizations.of(context)!.shareProfile,
                     style: TextStyle(color: swatch[401]))),
           )), // Button text
-          FriendIconButton(user: user)
+          FriendIconButton(user: user, friend: widget.friend)
         ]),
         // Expanded grid view with images
         UserPostsList(user: user, imageViewerController: _show)

@@ -8,9 +8,10 @@ import '../swatch.dart';
 
 class FriendIconButton extends StatefulWidget {
   final Map<String, dynamic>? user;
+  final bool? friend;
 
   // StatefulWidget that defines an options menu
-  const FriendIconButton({super.key, required this.user});
+  const FriendIconButton({super.key, required this.user, this.friend});
 
   @override
   State<FriendIconButton> createState() => _FriendIconButtonState();
@@ -102,27 +103,30 @@ class _FriendIconButtonState extends State<FriendIconButton> {
   Widget build(BuildContext context) {
     if (!changed && widget.user != null) {
       if (widget.user != null) {
-        commonLogger.w("USer is availd");
-        MessagesAPI.getUserId().then((value) {
-          if (value == widget.user!["user_id"]) {
-            setState(() {
-              friend = FriendState.self;
-            });
-          } else {
-            FriendState val = FriendState.no;
-            if (!widget.user?["user_friends"]["friends"]) {
-              if (widget.user?["user_friends"]["requestedOutgoing"] != null) {
-                val = FriendState.requestedOutgoing;
-              } else if (widget.user?["user_friends"]["requestedIncoming"] !=
-                  null) {
-                val = FriendState.requestedIncoming;
-              }
+        if (widget.friend == true) {
+          friend = FriendState.yes;
+        } else {
+          MessagesAPI.getUserId().then((value) {
+            if (value == widget.user!["user_id"]) {
+              setState(() {
+                friend = FriendState.self;
+              });
             } else {
-              val = FriendState.yes;
+              FriendState val = FriendState.no;
+              if (!widget.user?["user_friends"]["friends"]) {
+                if (widget.user?["user_friends"]["requestedOutgoing"] != null) {
+                  val = FriendState.requestedOutgoing;
+                } else if (widget.user?["user_friends"]["requestedIncoming"] !=
+                    null) {
+                  val = FriendState.requestedIncoming;
+                }
+              } else {
+                val = FriendState.yes;
+              }
+              setState(() => friend = val);
             }
-            setState(() => friend = val);
-          }
-        });
+          });
+        }
       }
       changed = true;
     }

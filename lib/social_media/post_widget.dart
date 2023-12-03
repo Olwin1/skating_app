@@ -38,7 +38,7 @@ class _PostWidget extends State<PostWidget> {
   @override
   void initState() {
     likedState = widget.post["liked"]; // Set initial liked state
-    savedState = widget.post["isSaved"];
+    savedState = widget.post["saved"];
     super.initState();
   }
 
@@ -58,6 +58,7 @@ class _PostWidget extends State<PostWidget> {
           waiting = false;
           return !isLiked;
         } catch (e) {
+          waiting = true;
           return isLiked;
         }
       } else {
@@ -73,6 +74,7 @@ class _PostWidget extends State<PostWidget> {
           waiting = false;
           return !isLiked;
         } catch (e) {
+          waiting = true;
           return isLiked;
         }
       }
@@ -88,14 +90,13 @@ class _PostWidget extends State<PostWidget> {
         try {
           waitingSave = true;
           await SocialAPI.unsavePost(widget.post["post_id"]);
-          if (savedState!) {
-            if (mounted) {
-              setState(() => savedState = false);
-            }
+          if (savedState! && mounted) {
+            setState(() => savedState = false);
           }
           waitingSave = false;
           return !isSaved;
         } catch (e) {
+          waitingSave = false;
           return isSaved;
         }
       } else {
@@ -103,14 +104,13 @@ class _PostWidget extends State<PostWidget> {
         try {
           waitingSave = true;
           await SocialAPI.savePost(widget.post["post_id"]);
-          if (!savedState!) {
-            if (mounted) {
-              setState(() => savedState = true);
-            }
+          if (!savedState! && mounted) {
+            setState(() => savedState = true);
           }
           waitingSave = false;
           return !isSaved;
         } catch (e) {
+          waitingSave = false;
           return isSaved;
         }
       }
@@ -295,7 +295,7 @@ class _PostWidget extends State<PostWidget> {
                                 )),
                             // Save button
                             LikeButton(
-                              isLiked: savedState ?? widget.post["isSaved"],
+                              isLiked: savedState ?? widget.post["saved"],
                               onTap: (isSaved) => handleSavePressed(isSaved),
                               padding:
                                   const EdgeInsets.only(bottom: 0, top: 18),

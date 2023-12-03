@@ -10,8 +10,8 @@ class _FileManager {
   }
 
   Future<Directory> documentsPath() async {
-//    String tempPath = (await getTemporaryDirectory()).path;
-    String tempPath = (await getExternalStorageDirectory())!.path;
+    String tempPath = (await getTemporaryDirectory()).path;
+    //String tempPath = (await getExternalStorageDirectory())!.path;
     return Directory(tempPath).create();
   }
 

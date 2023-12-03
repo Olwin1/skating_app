@@ -295,6 +295,8 @@ class SocialAPI {
           body: {
             'post': post,
           });
+      await NetworkManager.instance
+          .deleteLocalData(name: "posts", type: CacheTypes.list);
 
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
@@ -312,7 +314,8 @@ class SocialAPI {
           body: {
             'post': post, // include the post ID in the request body
           });
-
+      await NetworkManager.instance
+          .deleteLocalData(name: "posts", type: CacheTypes.list);
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
       // handle any exceptions that occur during the HTTP request
@@ -330,7 +333,8 @@ class SocialAPI {
           body: {
             'post': post, // include the post ID in the request body
           });
-
+      await NetworkManager.instance
+          .deleteLocalData(name: "posts", type: CacheTypes.list);
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
       // handle any exceptions that occur during the HTTP request
@@ -348,7 +352,8 @@ class SocialAPI {
           body: {
             'post': post, // include the post ID in the request body
           });
-
+      await NetworkManager.instance
+          .deleteLocalData(name: "posts", type: CacheTypes.list);
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
       // handle any exceptions that occur during the HTTP request

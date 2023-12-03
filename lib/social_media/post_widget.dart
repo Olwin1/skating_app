@@ -31,11 +31,14 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidget extends State<PostWidget> {
   bool waiting = false; // Flag for ongoing operations
+  bool waitingSave = false; // Flag for ongoing operations
   bool? likedState; // Flag for the liked state of the post
+  bool? savedState; // Flag for the liked state of the post
 
   @override
   void initState() {
     likedState = widget.post["liked"]; // Set initial liked state
+    savedState = widget.post["isSaved"];
     super.initState();
   }
 
@@ -77,9 +80,42 @@ class _PostWidget extends State<PostWidget> {
     return isLiked;
   }
 
-  // Handle the save button press
+  // Handle the like button press
   Future<bool> handleSavePressed(bool isSaved) async {
-    return false; // Placeholder for save functionality
+    if (!waitingSave) {
+      if (isSaved) {
+        // Unlike the post
+        try {
+          waitingSave = true;
+          await SocialAPI.unsavePost(widget.post["post_id"]);
+          if (savedState!) {
+            if (mounted) {
+              setState(() => savedState = false);
+            }
+          }
+          waitingSave = false;
+          return !isSaved;
+        } catch (e) {
+          return isSaved;
+        }
+      } else {
+        // Like the post
+        try {
+          waitingSave = true;
+          await SocialAPI.savePost(widget.post["post_id"]);
+          if (!savedState!) {
+            if (mounted) {
+              setState(() => savedState = true);
+            }
+          }
+          waitingSave = false;
+          return !isSaved;
+        } catch (e) {
+          return isSaved;
+        }
+      }
+    }
+    return isSaved;
   }
 
   // Colors for UI elements
@@ -259,6 +295,7 @@ class _PostWidget extends State<PostWidget> {
                                 )),
                             // Save button
                             LikeButton(
+                              isLiked: savedState ?? widget.post["isSaved"],
                               onTap: (isSaved) => handleSavePressed(isSaved),
                               padding:
                                   const EdgeInsets.only(bottom: 0, top: 18),

@@ -652,7 +652,8 @@ class SocialAPI {
           body: {
             'avatar': avatar,
           });
-
+      await NetworkManager.instance
+          .deleteLocalData(name: "0", type: CacheTypes.user);
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
       // Handling the error

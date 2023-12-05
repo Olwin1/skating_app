@@ -133,6 +133,9 @@ class _Profile extends State<Profile> {
   Widget build(BuildContext context) {
     if (widget.user != null) {
       user = widget.user;
+      if (widget.user!["avatar_id"] != null && avatar == null) {
+        avatar = widget.user!["avatar_id"];
+      }
     }
     return Scaffold(
       backgroundColor: const Color(0x33000000),

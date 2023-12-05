@@ -18,26 +18,16 @@ import 'package:patinka/caching/manager.dart';
 
 String sunsetTime = "00:00";
 
-class SunsetTime extends StatelessWidget {
+class SunsetTime extends StatefulWidget {
   const SunsetTime({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return Consumer<CurrentPage>(
-      builder: (context, currentPage, widget) =>
-          // If the CurrentPage's tab value is 4 (The fitness tracker page), return a Sunset time widget
-          currentPage.tab == 1 ? const SunsetTimeWidget() : const Text("0:00"),
-    );
-  }
+  State<SunsetTime> createState() => _SunsetTimeState();
 }
 
-class SunsetTimeWidget extends StatefulWidget {
-  const SunsetTimeWidget({super.key});
-  @override
-  State<SunsetTimeWidget> createState() =>
-      _SunsetTimeWidget(); //Create state for widget
-}
+class _SunsetTimeState extends State<SunsetTime> {
+  String time = "0:00";
 
-class _SunsetTimeWidget extends State<SunsetTimeWidget> {
   @override
   void initState() {
     NetworkManager.instance
@@ -46,18 +36,44 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
               if (localData != null)
                 {
                   mounted
-                      ? setState(() => sunsetTime =
-                          localData.substring(1, localData.length - 1))
+                      ? setState(() =>
+                          time = localData.substring(1, localData.length - 1))
                       : null
                 }
-              else
-                {
-                  hasLocationPermission().then((value) => {
-                        Geolocator.getCurrentPosition()
-                            .then((position) => {getSunsetTime(position)})
-                      })
-                }
             });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<CurrentPage>(
+      builder: (context, currentPage, widget) =>
+          // If the CurrentPage's tab value is 4 (The fitness tracker page), return a Sunset time widget
+          currentPage.tab == 1
+              ? SunsetTimeWidget(
+                  time: time,
+                )
+              : const Text("0:00"),
+    );
+  }
+}
+
+class SunsetTimeWidget extends StatefulWidget {
+  final String time;
+  const SunsetTimeWidget({super.key, required this.time});
+  @override
+  State<SunsetTimeWidget> createState() =>
+      _SunsetTimeWidget(); //Create state for widget
+}
+
+class _SunsetTimeWidget extends State<SunsetTimeWidget> {
+  String sunsetTime = "0:00";
+  @override
+  void initState() {
+    hasLocationPermission().then((value) => {
+          Geolocator.getCurrentPosition()
+              .then((position) => {getSunsetTime(position)})
+        });
 
     super.initState();
   }
@@ -91,6 +107,9 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (sunsetTime == "0:00") {
+      sunsetTime = widget.time;
+    }
     return Text(sunsetTime, style: TextStyle(color: swatch[401]));
   }
 }

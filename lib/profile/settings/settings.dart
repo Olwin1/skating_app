@@ -134,8 +134,9 @@ class _Settings extends State<Settings> {
                             Navigator.of(context).push(
                                 // Send to signal info page
                                 MaterialPageRoute(
-                                    builder: (context) => const SupportList(
+                                    builder: (context) => SupportList(
                                           type: SupportListType.suggestion,
+                                          user: widget.user,
                                         )));
                           },
                         ),
@@ -262,8 +263,9 @@ class _Settings extends State<Settings> {
                             Navigator.of(context).push(
                                 // Send to signal info page
                                 MaterialPageRoute(
-                                    builder: (context) => const SupportList(
+                                    builder: (context) => SupportList(
                                           type: SupportListType.support,
+                                          user: widget.user,
                                         )));
                           },
                         ),
@@ -276,8 +278,9 @@ class _Settings extends State<Settings> {
                               Navigator.of(context).push(
                                   // Send to signal info page
                                   MaterialPageRoute(
-                                      builder: (context) => const SupportList(
+                                      builder: (context) => SupportList(
                                             type: SupportListType.support,
+                                            user: widget.user,
                                           )));
                             }),
                         // Navigation tile for reporting a bug
@@ -288,8 +291,9 @@ class _Settings extends State<Settings> {
                             Navigator.of(context).push(
                                 // Send to signal info page
                                 MaterialPageRoute(
-                                    builder: (context) => const SupportList(
+                                    builder: (context) => SupportList(
                                           type: SupportListType.bug,
+                                          user: widget.user,
                                         )));
                           },
                         ),

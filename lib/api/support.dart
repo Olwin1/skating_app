@@ -10,6 +10,8 @@ class SupportAPI {
   static final Uri _supportUrl = Uri.parse('${Config.uri}/support/support');
   static final Uri _bugUrl = Uri.parse('${Config.uri}/support/bug');
   static final Uri _feedbackUrl = Uri.parse('${Config.uri}/support/feedback');
+  static final Uri _messagesUrl = Uri.parse('${Config.uri}/support/messages');
+  static final Uri _messageUrl = Uri.parse('${Config.uri}/support/message');
 
   // Define a static method to submit a support request
   static Future<Map<String, dynamic>> submitSupportRequest(
@@ -109,5 +111,60 @@ class SupportAPI {
 
     // Handle the response using a custom response handler and return the result
     return handleResponse(response, Resp.listResponse);
+  }
+
+  /// Retrieves a list of messages associated with a specific feedback ID and page.
+  ///
+  /// Parameters:
+  /// - [feedbackId]: The unique identifier for the feedback.
+  /// - [page]: The page number for paginated results.
+  ///
+  /// Returns:
+  /// A [Future] that completes with a list of maps containing dynamic data.
+  /// Each map represents a message with various attributes.
+  ///
+  /// Throws:
+  /// An [Exception] if there is an error during the HTTP request.
+  static Future<List<Map<String, dynamic>>> getMessages(
+      String feedbackId, int page) async {
+    try {
+      var response = await http.get(
+        _messagesUrl,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Bearer ${await storage.getToken()}',
+          'feedback_id': feedbackId,
+          'page': page.toString(),
+        },
+      );
+      return handleResponse(response, Resp.listResponse);
+    } catch (e) {
+      throw Exception("Error during getMessages: $e");
+    }
+  }
+
+  /// Posts a new message to a support request.
+  ///
+  /// Parameters:
+  /// - [feedbackId]: The unique identifier for the feedback.
+  /// - [content]: The content of the message to be posted.
+  ///
+  /// Returns:
+  /// A [Future] that completes with a map containing dynamic data.
+  /// The map represents the response received after posting the message.
+  ///
+  /// Throws:
+  /// An [Exception] if there is an error during the HTTP request.
+  static Future<Map<String, dynamic>> postMessage(
+      String feedbackId, String content) async {
+    try {
+      var response = await http.post(_messageUrl,
+          headers: await Config.getDefaultHeadersAuth,
+          body: {'feedback_id': feedbackId, 'content': content});
+
+      return handleResponse(response, Resp.stringResponse);
+    } catch (e) {
+      throw Exception("Error during postMessage: $e");
+    }
   }
 }

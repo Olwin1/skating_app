@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:patinka/api/support.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/components/list_error.dart';
+import 'package:patinka/profile/settings/report.dart';
 import 'create_report.dart';
 
 import '../../api/config.dart';
@@ -14,7 +15,8 @@ import 'list_type.dart';
 
 class SupportList extends StatelessWidget {
   final SupportListType type;
-  const SupportList({super.key, required this.type});
+  final Map<String, dynamic>? user;
+  const SupportList({super.key, required this.type, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,7 @@ class SupportList extends StatelessWidget {
               style: TextStyle(color: swatch[701]),
             )),
         body: SupportListView(
+          user: user,
           type: type,
         ));
   }
@@ -59,8 +62,9 @@ class SupportList extends StatelessWidget {
 
 class SupportListView extends StatefulWidget {
   final SupportListType type;
+  final Map<String, dynamic>? user;
 
-  const SupportListView({super.key, required this.type});
+  const SupportListView({super.key, required this.type, required this.user});
 
   @override
   State<SupportListView> createState() => _SupportListViewState();
@@ -127,9 +131,11 @@ class _SupportListViewState extends State<SupportListView> {
         builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
           // Use the Comment widget to build each item in the list view
           itemBuilder: (context, item, index) => UserListWidget(
-              item: item,
-              listType: widget.type,
-              refreshPage: _pagingController.refresh),
+            item: item,
+            listType: widget.type,
+            refreshPage: _pagingController.refresh,
+            user: widget.user,
+          ),
           noItemsFoundIndicatorBuilder: (context) =>
               const ListError(title: "No reports", body: "Try creating one!"),
         ),
@@ -172,10 +178,12 @@ class UserListWidget extends StatefulWidget {
       {super.key,
       required this.item,
       required this.listType,
-      required this.refreshPage});
+      required this.refreshPage,
+      required this.user});
 
   // Title for the widget
   final Map<String, dynamic> item;
+  final Map<String, dynamic>? user;
   final SupportListType listType;
   final VoidCallback refreshPage;
   // Creates the state for the UserListWidget
@@ -186,11 +194,25 @@ class UserListWidget extends StatefulWidget {
 // _UserListWidget class is the state of the UserListWidget
 class _UserListWidget extends State<UserListWidget> {
   void handlePress() {
-    // Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) =>
-    //             Profile(userId: widget.item["user_id"], user: widget.item)));
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => ReportPage(
+          report: widget.item,
+          user: widget.user,
+        ),
+        opaque: false,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = 0.0;
+          const end = 1.0;
+          var tween = Tween(begin: begin, end: end);
+          var fadeAnimation = tween.animate(animation);
+          return FadeTransition(
+            opacity: fadeAnimation,
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   // Builds the widget

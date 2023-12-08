@@ -8,10 +8,7 @@ import 'package:patinka/api/support.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/components/list_error.dart';
 import 'package:patinka/swatch.dart';
-import 'package:provider/provider.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'report_message.dart';
 
 // Initialize an empty list to store new messages
@@ -30,12 +27,12 @@ class Messages extends StatefulWidget {
   final Map<String, dynamic>? user;
 
   @override
-  State<Messages> createState() => _Comments();
+  State<Messages> createState() => _Messages();
 }
 
-class _Comments extends State<Messages> {
+class _Messages extends State<Messages> {
   late FocusNode focus;
-  Key commentsListKey = const Key("commentsList");
+  Key commentsListKey = const Key("supportMessagesList");
   late TextEditingController commentController = TextEditingController();
   String userId = "0";
   final PagingController<int, Map<String, dynamic>> _pagingController =
@@ -53,42 +50,34 @@ class _Comments extends State<Messages> {
     // Create a new focus node every time the widget is built
     focus = FocusNode();
 
-    return Scaffold(
-      backgroundColor: const Color(0x66000000),
-      resizeToAvoidBottomInset: false,
-      extendBodyBehindAppBar: true,
-      extendBody: true,
-      appBar: buildAppBar(context),
-      body: CommentBox(
-        focusNode: focus,
-        userImage: CommentBox.commentImageParser(
-          imageURLorPath: widget.user == null ||
-                  widget.user!["avatar_id"] == null
-              ? "assets/icons/hand.png"
-              : '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
-        ),
-        labelText: AppLocalizations.of(context)!.writeComment,
-        errorText: 'Message cannot be blank',
-        withBorder: false,
-        commentController: commentController,
-        sendButtonMethod: () {
-          // Post a message when the send button is pressed
-          if (commentController.text.isNotEmpty) {
-            SupportAPI.postMessage(widget.feedbackId, commentController.text)
-                .then((value) => _pagingController.refresh());
-
-            commentController.clear();
-          }
-        },
-        backgroundColor: swatch[50],
-        textColor: swatch[801],
-        sendWidget: Icon(Icons.send_sharp, size: 30, color: swatch[801]),
-        child: CommentsListView(
-            key: commentsListKey,
-            post: widget.feedbackId,
-            focus: focus,
-            pagingController: _pagingController),
+    return CommentBox(
+      focusNode: focus,
+      userImage: CommentBox.commentImageParser(
+        imageURLorPath: widget.user == null || widget.user!["avatar_id"] == null
+            ? "assets/icons/hand.png"
+            : '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
       ),
+      labelText: AppLocalizations.of(context)!.writeComment,
+      errorText: 'Message cannot be blank',
+      withBorder: false,
+      commentController: commentController,
+      sendButtonMethod: () {
+        // Post a message when the send button is pressed
+        if (commentController.text.isNotEmpty) {
+          SupportAPI.postMessage(widget.feedbackId, commentController.text)
+              .then((value) => _pagingController.refresh());
+
+          commentController.clear();
+        }
+      },
+      backgroundColor: swatch[50],
+      textColor: swatch[801],
+      sendWidget: Icon(Icons.send_sharp, size: 30, color: swatch[801]),
+      child: MessagesListView(
+          key: commentsListKey,
+          post: widget.feedbackId,
+          focus: focus,
+          pagingController: _pagingController),
     );
   }
 
@@ -99,50 +88,25 @@ class _Comments extends State<Messages> {
     commentController.dispose();
     super.dispose();
   }
-
-  // Build the app bar for the messages screen
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      iconTheme: IconThemeData(color: swatch[701]),
-      elevation: 8,
-      shadowColor: Colors.green.shade900,
-      backgroundColor: Config.appbarColour,
-      foregroundColor: Colors.transparent,
-      systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-      ),
-      leadingWidth: 48,
-      centerTitle: false,
-      title: Title(
-        title: AppLocalizations.of(context)!.commentsTitle,
-        color: const Color(0xFFDDDDDD),
-        child: Text(
-          AppLocalizations.of(context)!.commentsTitle,
-          style: TextStyle(color: swatch[601]),
-        ),
-      ),
-    );
-  }
 }
 
-// CommentsListView Widget - Represents the list view of messages
-class CommentsListView extends StatefulWidget {
+// MessagesListView Widget - Represents the list view of messages
+class MessagesListView extends StatefulWidget {
   final FocusNode focus;
   final String post;
   final PagingController<int, Map<String, dynamic>> pagingController;
 
-  const CommentsListView(
+  const MessagesListView(
       {super.key,
       required this.focus,
       required this.post,
       required this.pagingController});
 
   @override
-  State<CommentsListView> createState() => _CommentsListViewState();
+  State<MessagesListView> createState() => _MessagesListViewState();
 }
 
-class _CommentsListViewState extends State<CommentsListView> {
+class _MessagesListViewState extends State<MessagesListView> {
   static const _pageSize = 20; // Number of items per page
 
   @override

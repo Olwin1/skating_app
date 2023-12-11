@@ -154,8 +154,8 @@ class _MessagesListViewState extends State<MessagesListView> {
     return PagedListView<int, Map<String, dynamic>>(
       pagingController: widget.pagingController,
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-        noItemsFoundIndicatorBuilder: (context) => ListError(
-            title: AppLocalizations.of(context)!.noCommentsFound, body: ""),
+        noItemsFoundIndicatorBuilder: (context) =>
+            const ListError(title: "", body: "Awaiting Response"),
         itemBuilder: (context, item, index) => buildCommentWidget(index, item),
       ),
     );

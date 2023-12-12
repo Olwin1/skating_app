@@ -145,6 +145,7 @@ class _MessagesListViewState extends State<MessagesListView> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height - 350;
     if (newMessages.isNotEmpty) {
       // If there are new messages, refresh the list view
       widget.pagingController.refresh();
@@ -156,7 +157,8 @@ class _MessagesListViewState extends State<MessagesListView> {
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
         noItemsFoundIndicatorBuilder: (context) =>
             const ListError(title: "", body: "Awaiting Response"),
-        itemBuilder: (context, item, index) => buildCommentWidget(index, item),
+        itemBuilder: (context, item, index) =>
+            buildCommentWidget(index, item, height),
       ),
     );
   }
@@ -173,10 +175,11 @@ class _MessagesListViewState extends State<MessagesListView> {
   }
 
   // Build the Message widget for the given index and item
-  Widget buildCommentWidget(int index, Map<String, dynamic> item) {
+  Widget buildCommentWidget(
+      int index, Map<String, dynamic> item, double height) {
     return index == 0
         ? Padding(
-            padding: const EdgeInsets.only(top: 12),
+            padding: EdgeInsets.only(top: height),
             child:
                 ReportMessage(index: index, focus: widget.focus, message: item),
           )

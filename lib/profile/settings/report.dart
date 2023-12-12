@@ -52,6 +52,10 @@ class _ReportPage extends State<ReportPage> {
           decoration: const BoxDecoration(color: Color.fromARGB(158, 0, 0, 0)),
           //padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
           child: Stack(children: [
+            Messages(
+              feedbackId: widget.report["feedback_id"],
+              user: widget.user,
+            ),
             IntrinsicHeight(
               child: Container(
                 decoration: BoxDecoration(
@@ -92,10 +96,6 @@ class _ReportPage extends State<ReportPage> {
                       ]),
                     ]),
               ),
-            ),
-            Messages(
-              feedbackId: widget.report["feedback_id"],
-              user: widget.user,
             )
           ])),
     );

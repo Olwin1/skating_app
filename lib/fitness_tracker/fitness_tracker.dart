@@ -32,15 +32,12 @@ class _SunsetTimeState extends State<SunsetTime> {
   void initState() {
     NetworkManager.instance
         .getLocalData(name: "cache-sunset", type: CacheTypes.misc)
-        .then((String? localData) => {
-              if (localData != null)
-                {
-                  mounted
-                      ? setState(() =>
-                          time = localData.substring(1, localData.length - 1))
-                      : null
-                }
-            });
+        .then((String? localData) {
+      if (localData != null) {
+        String tmpTime = localData.substring(1, localData.length - 1);
+        mounted ? setState(() => time = tmpTime) : time = tmpTime;
+      }
+    });
     super.initState();
   }
 

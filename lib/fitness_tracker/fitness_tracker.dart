@@ -43,13 +43,17 @@ class _SunsetTimeState extends State<SunsetTime> {
 
   @override
   Widget build(BuildContext context) {
+    bool setted = false;
+    void setSetted() {
+      setted = true;
+    }
+
     return Consumer<CurrentPage>(
       builder: (context, currentPage, widget) =>
           // If the CurrentPage's tab value is 4 (The fitness tracker page), return a Sunset time widget
           currentPage.tab == 1
               ? SunsetTimeWidget(
-                  time: time,
-                )
+                  time: time, setted: setted, setSetted: setSetted)
               : const Text("0:00"),
     );
   }
@@ -57,7 +61,13 @@ class _SunsetTimeState extends State<SunsetTime> {
 
 class SunsetTimeWidget extends StatefulWidget {
   final String time;
-  const SunsetTimeWidget({super.key, required this.time});
+  final bool setted;
+  final VoidCallback setSetted;
+  const SunsetTimeWidget(
+      {super.key,
+      required this.time,
+      required this.setted,
+      required this.setSetted});
   @override
   State<SunsetTimeWidget> createState() =>
       _SunsetTimeWidget(); //Create state for widget
@@ -67,10 +77,13 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
   String sunsetTime = "0:00";
   @override
   void initState() {
-    hasLocationPermission().then((value) => {
-          Geolocator.getCurrentPosition()
-              .then((position) => {getSunsetTime(position)})
-        });
+    if (!widget.setted) {
+      hasLocationPermission().then((value) => {
+            Geolocator.getCurrentPosition()
+                .then((position) => {getSunsetTime(position)})
+          });
+      widget.setSetted();
+    }
 
     super.initState();
   }

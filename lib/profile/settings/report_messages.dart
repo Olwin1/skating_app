@@ -1,12 +1,12 @@
 // Import necessary packages and files
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:patinka/api/config.dart';
 import 'package:patinka/api/support.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/components/list_error.dart';
+import 'package:patinka/profile/settings/list_type.dart';
 import 'package:patinka/swatch.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'report_message.dart';
@@ -17,12 +17,13 @@ List<Map<String, dynamic>> newMessages = [];
 // Messages Widget - Represents the page where messages are displayed
 class Messages extends StatefulWidget {
   final String feedbackId;
+  final SupportListType reportType;
 
-  const Messages({
-    super.key,
-    required this.feedbackId,
-    required this.user,
-  });
+  const Messages(
+      {super.key,
+      required this.feedbackId,
+      required this.user,
+      required this.reportType});
 
   final Map<String, dynamic>? user;
 
@@ -77,7 +78,8 @@ class _Messages extends State<Messages> {
           key: commentsListKey,
           post: widget.feedbackId,
           focus: focus,
-          pagingController: _pagingController),
+          pagingController: _pagingController,
+          reportType: widget.reportType),
     );
   }
 
@@ -95,12 +97,14 @@ class MessagesListView extends StatefulWidget {
   final FocusNode focus;
   final String post;
   final PagingController<int, Map<String, dynamic>> pagingController;
+  final SupportListType reportType;
 
   const MessagesListView(
       {super.key,
       required this.focus,
       required this.post,
-      required this.pagingController});
+      required this.pagingController,
+      required this.reportType});
 
   @override
   State<MessagesListView> createState() => _MessagesListViewState();

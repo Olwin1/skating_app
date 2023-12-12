@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:patinka/api/config.dart';
+import 'package:patinka/profile/settings/list_type.dart';
 import 'package:patinka/profile/settings/report_messages.dart';
 import 'package:patinka/swatch.dart';
 
@@ -8,7 +9,13 @@ import 'package:patinka/swatch.dart';
 class ReportPage extends StatefulWidget {
   final Map<String, dynamic> report;
   final Map<String, dynamic>? user;
-  const ReportPage({super.key, required this.report, required this.user});
+  final SupportListType reportType;
+
+  const ReportPage(
+      {super.key,
+      required this.report,
+      required this.user,
+      required this.reportType});
   @override
   State<ReportPage> createState() => _ReportPage();
 }
@@ -50,12 +57,11 @@ class _ReportPage extends State<ReportPage> {
       ),
       body: Container(
           decoration: const BoxDecoration(color: Color.fromARGB(158, 0, 0, 0)),
-          //padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
           child: Stack(children: [
             Messages(
-              feedbackId: widget.report["feedback_id"],
-              user: widget.user,
-            ),
+                feedbackId: widget.report["feedback_id"],
+                user: widget.user,
+                reportType: widget.reportType),
             IntrinsicHeight(
               child: Container(
                 decoration: BoxDecoration(

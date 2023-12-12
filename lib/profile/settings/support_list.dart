@@ -199,6 +199,7 @@ class _UserListWidget extends State<UserListWidget> {
         pageBuilder: (context, animation, secondaryAnimation) => ReportPage(
           report: widget.item,
           user: widget.user,
+          reportType: widget.listType,
         ),
         opaque: false,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {

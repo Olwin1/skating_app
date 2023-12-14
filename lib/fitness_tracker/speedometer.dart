@@ -1,17 +1,16 @@
 // Import necessary packages and files
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/misc/navbar_provider.dart';
 import 'package:patinka/swatch.dart';
 import 'package:provider/provider.dart';
 import '../api/config.dart';
-import 'check_permission.dart';
-
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Define a StatefulWidget for the Speedometer page
@@ -33,12 +32,26 @@ class _SpeedometerPage extends State<SpeedometerPage> {
         .hide(); // Hide The Navbar
     // Check if location permission is granted and listen to position updates
     try {
-      hasLocationPermission().then((value) => {
-            stream = Geolocator.getPositionStream().listen((position) {
-              key.currentState?.updateSpeed(position.speed,
-                  animate: true, duration: const Duration(milliseconds: 800));
-            })
-          });
+      // hasLocationPermission().then((value) => {
+      //       stream = Geolocator.getPositionStream().listen((position) {
+      //         key.currentState?.updateSpeed(position.speed,
+      //             animate: true, duration: const Duration(milliseconds: 800));
+      //       })
+      //     });
+      accelerometerEventStream(samplingPeriod: SensorInterval.uiInterval)
+          .listen(
+        (AccelerometerEvent event) {
+          double speed =
+              sqrt(pow(event.x, 2) + pow(event.y, 2) + pow(event.z, 2)) / 1000;
+          key.currentState?.updateSpeed(speed,
+              animate: true, duration: const Duration(milliseconds: 800));
+        },
+        onError: (error) {
+          // Logic to handle error
+          // Needed for Android in case sensor is not available
+        },
+        cancelOnError: true,
+      );
     } catch (e) {
       commonLogger.e("Speedometer Error: $e");
     }

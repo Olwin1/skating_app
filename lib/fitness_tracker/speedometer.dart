@@ -41,10 +41,14 @@ class _SpeedometerPage extends State<SpeedometerPage> {
       accelerometerEventStream(samplingPeriod: SensorInterval.uiInterval)
           .listen(
         (AccelerometerEvent event) {
-          double speed =
-              sqrt(pow(event.x, 2) + pow(event.y, 2) + pow(event.z, 2)) / 1000;
-          key.currentState?.updateSpeed(speed,
-              animate: true, duration: const Duration(milliseconds: 800));
+          double speed = double.parse((sqrt(pow(event.x, 2) +
+                      pow(event.y, 2) +
+                      pow(double.parse(event.z.toStringAsFixed(2)) - 9.81, 2)) /
+                  1000)
+              .toStringAsFixed(2));
+          print("Speed: $speed");
+          key.currentState
+              ?.updateSpeed(speed, animate: true, duration: Duration.zero);
         },
         onError: (error) {
           // Logic to handle error

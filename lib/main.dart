@@ -180,6 +180,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       const AssetImage("assets/backgrounds/graffiti_low_res.png");
   int selectedpage = 0;
   String? avatar;
+  bool gottenAvatar = false;
+
   @override
   void initState() {
     void getImage(String filePath) {
@@ -196,15 +198,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
     storage.getId().then((value) => {
           value != null
-              ? SocialAPI.getUser(value).then((user) => {
-                    mounted
-                        ? setState(() {
-                            avatar = user["avatar_id"];
-                          })
-                        : null
-                  })
+              ? {
+                  SocialAPI.getUser(value).then((user) => {
+                        mounted
+                            ? setState(() {
+                                avatar = user["avatar_id"];
+                              })
+                            : null
+                      }),
+                  gottenAvatar = true
+                }
               : setState(() {
-                  avatar = "default";
+                  avatar = null;
                 })
         });
     NetworkManager.instance
@@ -346,6 +351,22 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     // than having to individually change instances of widgets.
 // This code returns a Consumer widget that rebuilds its child widget
 // whenever the CurrentPage object changes.
+    if (!gottenAvatar) {
+      storage.getId().then((value) => {
+            value != null
+                ? {
+                    SocialAPI.getUser(value).then((user) => {
+                          mounted
+                              ? setState(() {
+                                  avatar = user["avatar_id"];
+                                })
+                              : null
+                        }),
+                    gottenAvatar = true
+                  }
+                : null
+          });
+    }
     commonLogger.d(backgroundImage.toString());
     return Consumer<CurrentPage>(builder: (context, currentPage, child) {
       return WillPopScope(

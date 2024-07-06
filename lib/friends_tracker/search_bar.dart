@@ -37,17 +37,6 @@ class _CustomTextInput extends State<CustomTextInput> {
     _focusNode.addListener(_onFocusChanged);
   }
 
-  void _onInvisTextChanged() {
-    // String text = _controller.text;
-
-    // if ('"'.allMatches(text).length == 2) {
-    //   _controller.text = text.replaceFirst('"', '‎').replaceFirst('"', '‎');
-    // }
-    //     if ('‎'.allMatches(text).length % 2 != 0) {
-    //   _controller.text = text.replaceAll('‎', '"');
-    // }
-  }
-
   void _onTextChanged() {
     String text = _controller.text;
     int cursorPos = _controller.selection.baseOffset;
@@ -76,26 +65,22 @@ class _CustomTextInput extends State<CustomTextInput> {
   int _findHashtagEnd(String text, int start) {
     int spacePos = text.indexOf(' ', start);
     int quoteStartPos = text.indexOf('"', start);
-    // int invisStartPos = text.indexOf('‎', start);
     int quoteEndPos = -1;
-    // int invisEndPos = -1;
+
     if (quoteStartPos != -1) {
       quoteEndPos = text.indexOf('"', quoteStartPos + 1);
+      if (quoteEndPos == -1) {
+        return text.length; // Incomplete quoted string
+      }
     }
-    // if (invisStartPos != -1) {
-    //   invisEndPos = text.indexOf('‎', invisStartPos + 1);
-    // }
-    
-    // if (invisStartPos != -1 && invisEndPos != -1 && invisEndPos > start) {
-    //   return invisEndPos + 1;
-    // }
-    if (quoteStartPos != -1 && quoteEndPos != -1 && quoteEndPos > start) {
-      return quoteEndPos + 1;
-    }
-    
+
     if (spacePos == -1) {
       return text.length;
     }
+    if (quoteStartPos != -1 && quoteStartPos < spacePos) {
+      return quoteEndPos + 1; // Include the closing quotation mark
+    }
+
     return spacePos;
   }
 
@@ -111,8 +96,7 @@ class _CustomTextInput extends State<CustomTextInput> {
     List<TextSpan> spans = [];
     int start = 0;
 
-    // RegExp exp = RegExp(r'#[\w]+|"(?:([^"]|[^\u200E]))*"');
-    RegExp exp = RegExp(r'#[\w]+|"(?:[^"])*"');
+    RegExp exp = RegExp(r'#[\w]+|#".*?"|#".*'); // Adjusted regex to handle quoted hashtags correctly
     Iterable<RegExpMatch> matches = exp.allMatches(text);
 
     for (RegExpMatch match in matches) {
@@ -123,7 +107,7 @@ class _CustomTextInput extends State<CustomTextInput> {
       }
       String matchedText = text.substring(match.start, match.end);
       spans.add(TextSpan(
-          text: matchedText, // .replaceAll('"', '‎'),
+          text: matchedText,
           style: TextStyle(
               color: Colors.red,
               backgroundColor:
@@ -149,11 +133,6 @@ class _CustomTextInput extends State<CustomTextInput> {
               return true;
             },
             child: TextField(
-              onChanged: (value) {
-                setState(() {
-                  _onInvisTextChanged();
-                });
-              },
               controller: _controller,
               focusNode: _focusNode,
               style: const TextStyle(

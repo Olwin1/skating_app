@@ -26,9 +26,25 @@ class _CustomTextInput extends State<CustomTextInput> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
-  bool _isInsideHashtag = false;
-  int _hashtagStart = -1;
-  int _hashtagEnd = -1;
+  final Map<String, bool> _isInsideFlag = {
+    'town:': false,
+    'name:': false,
+    'postcode:': false,
+    'country': false,
+  };
+  final Map<String, int> _flagStart = {
+    'town:': -1,
+    'name:': -1,
+    'postcode:': -1,
+    'country': -1,
+
+  };
+  final Map<String, int> _flagEnd = {
+    'town:': -1,
+    'name:': -1,
+    'postcode:': -1,
+    'country': -1,
+  };
 
   @override
   void initState() {
@@ -41,44 +57,44 @@ class _CustomTextInput extends State<CustomTextInput> {
     String text = _controller.text;
     int cursorPos = _controller.selection.baseOffset;
 
-    if (text.contains('#')) {
-      int hashPos = text.indexOf('#');
-      if (cursorPos > hashPos) {
-        _hashtagStart = hashPos;
-        _hashtagEnd = _findHashtagEnd(text, hashPos);
-        setState(() {
-          _isInsideHashtag =
-              cursorPos > _hashtagStart && cursorPos <= _hashtagEnd;
-        });
+    for (String flag in _isInsideFlag.keys) {
+      if (text.contains(flag)) {
+        int flagPos = text.indexOf(flag);
+        if (cursorPos > flagPos) {
+          _flagStart[flag] = flagPos;
+          _flagEnd[flag] = _findFlagEnd(text, flagPos);
+          setState(() {
+            _isInsideFlag[flag] =
+                cursorPos > _flagStart[flag]! && cursorPos <= _flagEnd[flag]!;
+          });
+        } else {
+          setState(() {
+            _isInsideFlag[flag] = false;
+          });
+        }
       } else {
         setState(() {
-          _isInsideHashtag = false;
+          _isInsideFlag[flag] = false;
         });
       }
-    } else {
-      setState(() {
-        _isInsideHashtag = false;
-      });
     }
   }
 
-  int _findHashtagEnd(String text, int start) {
+  int _findFlagEnd(String text, int start) {
     int spacePos = text.indexOf(' ', start);
     int quoteStartPos = text.indexOf('"', start);
     int quoteEndPos = -1;
 
-    if (quoteStartPos != -1) {
+    if (quoteStartPos != -1 && quoteStartPos == start + 5) {
       quoteEndPos = text.indexOf('"', quoteStartPos + 1);
       if (quoteEndPos == -1) {
         return text.length; // Incomplete quoted string
       }
+      return quoteEndPos + 1; // Include the closing quotation mark
     }
 
     if (spacePos == -1) {
       return text.length;
-    }
-    if (quoteStartPos != -1 && quoteStartPos < spacePos) {
-      return quoteEndPos + 1; // Include the closing quotation mark
     }
 
     return spacePos;
@@ -86,7 +102,9 @@ class _CustomTextInput extends State<CustomTextInput> {
 
   void _onFocusChanged() {
     setState(() {
-      _isInsideHashtag = _focusNode.hasFocus && _isInsideHashtag;
+      for (String flag in _isInsideFlag.keys) {
+        _isInsideFlag[flag] = _focusNode.hasFocus && _isInsideFlag[flag]!;
+      }
     });
   }
 
@@ -96,7 +114,7 @@ class _CustomTextInput extends State<CustomTextInput> {
     List<TextSpan> spans = [];
     int start = 0;
 
-    RegExp exp = RegExp(r'#[\w]+|#".*?"|#".*'); // Adjusted regex to handle quoted hashtags correctly
+    RegExp exp = RegExp(r'(town:|name:|postcode:|country:)"[^"]*"|(town:|name:|postcode:|country:)[^\s]*');
     Iterable<RegExpMatch> matches = exp.allMatches(text);
 
     for (RegExpMatch match in matches) {
@@ -106,12 +124,13 @@ class _CustomTextInput extends State<CustomTextInput> {
             style: const TextStyle(color: Colors.black)));
       }
       String matchedText = text.substring(match.start, match.end);
+      String flag = _isInsideFlag.keys
+          .firstWhere((element) => matchedText.startsWith(element));
       spans.add(TextSpan(
           text: matchedText,
           style: TextStyle(
               color: Colors.red,
-              backgroundColor:
-                  _isInsideHashtag ? Colors.green : Colors.amber)));
+              backgroundColor: _isInsideFlag[flag]! ? Colors.green : Colors.amber)));
       start = match.end;
     }
     if (start < text.length) {
@@ -151,7 +170,7 @@ class _CustomTextInput extends State<CustomTextInput> {
                 hintText: '',
                 hintStyle: TextStyle(color: Colors.black),
               ),
-              cursorColor: _isInsideHashtag ? Colors.red : Colors.blue,
+              cursorColor: _isInsideFlag.values.any((flag) => flag) ? Colors.red : Colors.blue,
               buildCounter: (context,
                       {required currentLength,
                       maxLength,

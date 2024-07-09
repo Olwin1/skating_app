@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:patinka/swatch.dart';
 
 class SearchBarr extends StatelessWidget {
   const SearchBarr({
@@ -107,6 +109,31 @@ class _CustomTextInput extends State<CustomTextInput> {
       }
     });
   }
+  void handlePasteIn(String pasteIn) {
+if (_controller.text.contains(pasteIn)) {
+  int index = _controller.text.indexOf("pasteIn");
+  _controller.selection = TextSelection.collapsed(offset: index + pasteIn.length);
+}
+else {
+  _controller.text += " $pasteIn";
+  _controller.selection = TextSelection.collapsed(offset: _controller.text.length - 1);
+}
+  }
+  Widget suggestionBuilder(String name, String pasteIn) {
+return SizedBox(width: double.maxFinite, child: TextButton(onPressed: () {handlePasteIn(pasteIn);}, child: Padding(padding:const EdgeInsets.all(8), child: Text(name))));
+  }
+  Widget suggestionsBuilder() {
+    bool hasTown = _controller.text.contains("town:");
+    bool hasName = _controller.text.contains("name:");
+    bool hasCountry = _controller.text.contains("country:");
+    bool hasPostcode = _controller.text.contains("postcode:");
+    List<Widget> suggestions = [];
+    if(!hasTown) {suggestions.add(suggestionBuilder('town:', 'town:""'));}
+    if(!hasName) {suggestions.add(suggestionBuilder('name:', 'name:""'));}
+    if(!hasCountry) {suggestions.add(suggestionBuilder('country:', 'country:""'));}
+    if(!hasPostcode) {suggestions.add(suggestionBuilder('postcode:', 'postcode:""'));}
+return SingleChildScrollView(padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16), child: Container(decoration: const BoxDecoration(borderRadius:  BorderRadius.vertical(bottom: Radius.circular(16), top: Radius.zero), color: Color(0xcf000000)), child: Column(children: suggestions,),));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,8 +166,8 @@ class _CustomTextInput extends State<CustomTextInput> {
           style: const TextStyle(color: Colors.black)));
     }
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return Column(children: [Padding(
+      padding: const EdgeInsets.only(top: 16.0, bottom: 0, left: 16.0, right: 16.0),
       child: Stack(
         children: [
           NotificationListener<ScrollNotification>(
@@ -151,43 +178,50 @@ class _CustomTextInput extends State<CustomTextInput> {
               }
               return true;
             },
-            child: TextField(
+            child: SearchBar(
+              leading: const SizedBox(width: 8,),
               controller: _controller,
               focusNode: _focusNode,
-              style: const TextStyle(
+              textStyle: MaterialStateProperty.resolveWith((states) {
+      return const TextStyle(
                   fontSize: 18.0,
                   color: Colors.purple,
                   height: 1.2,
                   fontFamily: 'Courier',
-                  letterSpacing: 1),
-              maxLines: 1,
+                  letterSpacing: 1);
+    }),
+    textInputAction: TextInputAction.search,
+
               keyboardType: TextInputType.text,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                filled: false,
-                fillColor: Colors.transparent,
-                contentPadding: EdgeInsets.all(8),
-                hintText: '',
-                hintStyle: TextStyle(color: Colors.black),
-              ),
-              cursorColor: _isInsideFlag.values.any((flag) => flag) ? Colors.red : Colors.blue,
-              buildCounter: (context,
-                      {required currentLength,
-                      maxLength,
-                      required isFocused}) =>
-                  null,
-              inputFormatters: [
-                FilteringTextInputFormatter.deny(
-                    RegExp(r'[\u0000-\u001F\u007F-\u009F]')),
-              ],
+              shape: MaterialStateProperty.resolveWith((states) {
+      // // If the button is pressed, return size 40, otherwise 20
+      if (states.contains(MaterialState.focused)) {
+        return const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16), bottom: Radius.zero));
+      }
+      return RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)); 
+    }),
+    padding: MaterialStateProperty.resolveWith((states) {
+      return const EdgeInsets.only(top: 8, bottom: 8, left:0, right:8);
+    }),
+              // cursorColor: _isInsideFlag.values.any((flag) => flag) ? Colors.red : Colors.blue,
+              // buildCounter: (context,
+              //         {required currentLength,
+              //         maxLength,
+              //         required isFocused}) =>
+              //     null,
+              // inputFormatters: [
+              //   FilteringTextInputFormatter.deny(
+              //       RegExp(r'[\u0000-\u001F\u007F-\u009F]')),
+              // ],
               key: const Key("Vis"),
             ),
           ),
           Padding(
             padding:
-                const EdgeInsets.only(top: 12.5, bottom: 8, left: 8, right: 8),
+                const EdgeInsets.only(top: 17, bottom: 8, left: 8, right: 12),
             child: IgnorePointer(
               child: SingleChildScrollView(
+padding: const EdgeInsets.only(right: 8),
                 key: const Key("Invis"),
                 scrollDirection: Axis.horizontal,
                 controller: _scrollController, // Use the same ScrollController
@@ -207,7 +241,14 @@ class _CustomTextInput extends State<CustomTextInput> {
           ),
         ],
       ),
-    );
+    ),
+    AnimatedSwitcher(transitionBuilder: (Widget child, Animation<double> animation) {
+return SlideTransition(
+  position: Tween<Offset>(begin: const Offset(0.0, -0.1), end: const Offset(0.0, 0.0)).animate(animation),
+        child: FadeTransition(opacity: Tween<double>(begin: 0, end: 1).animate(animation), child: child,),
+       );
+   }, duration: const Duration(milliseconds: 200), child: _focusNode.hasFocus?suggestionsBuilder():const SizedBox.shrink())
+    ]);
   }
 
   @override

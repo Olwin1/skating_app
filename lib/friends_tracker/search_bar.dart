@@ -120,7 +120,7 @@ else {
 }
   }
   Widget suggestionBuilder(String name, String pasteIn) {
-return SizedBox(width: double.maxFinite, child: TextButton(onPressed: () {handlePasteIn(pasteIn);}, child: Padding(padding:const EdgeInsets.all(8), child: Text(name))));
+return SizedBox(width: double.maxFinite, child: TextButton(style: const ButtonStyle(alignment: Alignment.centerLeft), onPressed: () {handlePasteIn(pasteIn);}, child: Padding(padding:const EdgeInsets.all(8), child: Text(name))));
   }
   Widget suggestionsBuilder() {
     bool hasTown = _controller.text.contains("town:");
@@ -132,7 +132,7 @@ return SizedBox(width: double.maxFinite, child: TextButton(onPressed: () {handle
     if(!hasName) {suggestions.add(suggestionBuilder('name:', 'name:""'));}
     if(!hasCountry) {suggestions.add(suggestionBuilder('country:', 'country:""'));}
     if(!hasPostcode) {suggestions.add(suggestionBuilder('postcode:', 'postcode:""'));}
-return SingleChildScrollView(padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16), child: Container(decoration: const BoxDecoration(borderRadius:  BorderRadius.vertical(bottom: Radius.circular(16), top: Radius.zero), color: Color(0xcf000000)), child: Column(children: suggestions,),));
+return SingleChildScrollView(padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16), child: Container(decoration: const BoxDecoration(borderRadius:  BorderRadius.vertical(bottom: Radius.circular(16), top: Radius.zero), color: Color(0xcf000000)), child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: suggestions)));
   }
 
   @override
@@ -166,7 +166,7 @@ return SingleChildScrollView(padding: const EdgeInsets.symmetric(vertical: 0, ho
           style: const TextStyle(color: Colors.black)));
     }
 
-    return Column(children: [Padding(
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Padding(
       padding: const EdgeInsets.only(top: 16.0, bottom: 0, left: 16.0, right: 16.0),
       child: Stack(
         children: [
@@ -185,7 +185,7 @@ return SingleChildScrollView(padding: const EdgeInsets.symmetric(vertical: 0, ho
               textStyle: MaterialStateProperty.resolveWith((states) {
       return const TextStyle(
                   fontSize: 18.0,
-                  color: Colors.purple,
+                  color: Colors.transparent,
                   height: 1.2,
                   fontFamily: 'Courier',
                   letterSpacing: 1);
@@ -231,7 +231,6 @@ padding: const EdgeInsets.only(right: 8),
                       children: spans,
                       style: const TextStyle(
                           fontSize: 18.0,
-                          color: Colors.pink,
                           height: 1.2,
                           fontFamily: 'Courier',
                           letterSpacing: 1)),

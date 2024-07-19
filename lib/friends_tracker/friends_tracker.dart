@@ -95,12 +95,6 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
     super.initState(); // Call the superclass's initState method
   }
 
-  void updateSearchOpened(e) {
-    mounted
-        ? setState(() => searchOpened = !e)
-        : null; // Update searchOpened state
-  }
-
   @override
   void dispose() {
     _followOnLocationUpdate = FollowOnLocationUpdate.never;
@@ -111,15 +105,14 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
 
   @override
   Widget build(BuildContext context) {
-    // create an instance of the User class and passing it an id of '1'
     commonLogger.t("Building Map");
-
-    //bool isPortrait = true;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         // Scaffold widget, which is the basic layout element in Flutter
         body: Stack(children: [
           FlutterMap(
+            
               mapController: controller,
               // Create flutter map
               options: MapOptions(
@@ -160,6 +153,7 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
               ],
               children: [
                 TileLayer(
+                  panBuffer: 1,
                   backgroundColor: Colors.transparent,
                   // Map source -- use OpenStreetMaps
                   tileProvider:

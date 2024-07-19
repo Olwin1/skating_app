@@ -4,8 +4,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
 import 'package:patinka/common_logger.dart';
+import 'package:patinka/fitness_tracker/check_permission.dart';
 import 'package:patinka/misc/navbar_provider.dart';
 import 'package:patinka/swatch.dart';
 import 'package:provider/provider.dart';
@@ -32,13 +34,7 @@ class _SpeedometerPage extends State<SpeedometerPage> {
         .hide(); // Hide The Navbar
     // Check if location permission is granted and listen to position updates
     try {
-      // hasLocationPermission().then((value) => {
-      //       stream = Geolocator.getPositionStream().listen((position) {
-      //         key.currentState?.updateSpeed(position.speed,
-      //             animate: true, duration: const Duration(milliseconds: 800));
-      //       })
-      //     });
-      accelerometerEventStream(samplingPeriod: SensorInterval.uiInterval)
+      stream = accelerometerEventStream(samplingPeriod: SensorInterval.uiInterval)
           .listen(
         (AccelerometerEvent event) {
           double speed = double.parse((sqrt(pow(event.x, 2) +
@@ -46,13 +42,19 @@ class _SpeedometerPage extends State<SpeedometerPage> {
                       pow(double.parse(event.z.toStringAsFixed(2)) - 9.81, 2)) /
                   1000)
               .toStringAsFixed(2));
-          print("Speed: $speed");
+          commonLogger.d("Speed: $speed");
           key.currentState
               ?.updateSpeed(speed, animate: true, duration: Duration.zero);
         },
         onError: (error) {
           // Logic to handle error
           // Needed for Android in case sensor is not available
+                hasLocationPermission().then((value) => {
+            stream = Geolocator.getPositionStream().listen((position) {
+              key.currentState?.updateSpeed(position.speed,
+                  animate: true, duration: const Duration(milliseconds: 800));
+            })
+          });
         },
         cancelOnError: true,
       );

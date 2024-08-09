@@ -103,135 +103,154 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
     super.dispose();
   }
 
+  BoxConstraints constraintsMax = const BoxConstraints(maxHeight: 0);
+
   @override
   Widget build(BuildContext context) {
     commonLogger.t("Building Map");
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.transparent,
-        // Scaffold widget, which is the basic layout element in Flutter
-        body: Stack(children: [
-          FlutterMap(
-            
-              mapController: controller,
-              // Create flutter map
-              options: MapOptions(
-                  interactiveFlags:
-                      InteractiveFlag.pinchZoom | InteractiveFlag.drag,
-                  center:
-                      LatLng(51.509364, -0.128928), // Define Starting Position
-                  maxBounds: LatLngBounds(
-                    // Prevent viewing off map
-                    LatLng(-90, -180.0),
-                    LatLng(90.0, 180.0),
-                  ),
-                  zoom: 15, // Set zoom factor
-                  minZoom: 3.0,
-                  maxZoom: 19),
-              nonRotatedChildren: [
-                SafeArea(child: CustomSearchBar(mapController: controller)),
-
-                AnimatedSwitcher(
-                    duration: const Duration(
-                        milliseconds:
-                            800), // Gradually fade back in when visible toggled
-                    switchOutCurve: const Interval(0.999, 1),
-                    child: searchOpened
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 72),
-                            child: FriendActivity(
-                                searchOpened: searchOpened,
-                                sessions: newSessions),
-                          )
-                        : Container()),
-
-                // Default Attribution
-                // AttributionWidget.defaultWidget(
-                //   source: 'OpenStreetMap',
-                //   onSourceTapped: null,
-                // ),
-              ],
-              children: [
-                TileLayer(
-                  panBuffer: 1,
-                  backgroundColor: Colors.transparent,
-                  // Map source -- use OpenStreetMaps
-                  tileProvider:
-                      tileProvider, // For caching tiles to improve responsiveness
-                  maxZoom: 19,
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.skatingapp.map', // Package Name
-                ),
-                MarkerClusterLayerWidget(
-                  // Define the options for the MarkerClusterLayer.
-                  options: MarkerClusterLayerOptions(
-                    // The maximum radius of a cluster.
-                    maxClusterRadius: 45,
-                    // The size of the marker icon for each cluster.
-                    size: const Size(40, 40),
-                    // The position of the anchor point for each marker icon.
-                    anchor: AnchorPos.align(AnchorAlign.center),
-                    // Options for fitting the map to the bounds of the markers.
-                    fitBoundsOptions: const FitBoundsOptions(
-                      // The padding to apply around the bounds of the markers.
-                      padding: EdgeInsets.all(50),
-                      // The maximum zoom level to use when fitting the map bounds.
-                      maxZoom: 15,
-                    ),
-                    // The list of markers to cluster.
-                    markers: friends,
-                    // The builder function for creating the marker icon for each cluster.
-                    builder: (context, markers) {
-                      return Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.blue),
-                        child: Center(
-                          child: Text(
-                            markers.length.toString(),
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                CurrentLocationLayer(
-                  followCurrentLocationStream:
-                      _followCurrentLocationStreamController.stream,
-                  followOnLocationUpdate: _followOnLocationUpdate,
-                ),
-              ]),
-          Positioned(
-            // Position the widget to the bottom-right corner with a margin of 20 pixels.
-            right: 20,
-            bottom: 128,
-            child: FloatingActionButton(
-              // Triggered when the button is pressed.
-              onPressed: () {
-                // Update the widget state.
-                mounted
-                    ? setState(() {
-                        // Toggle the boolean value of the `active` variable.
-                        active = !active;
-                        // Set the `_followOnLocationUpdate` variable to either always or once based on the `active` variable.
-                        _followOnLocationUpdate = active
-                            ? FollowOnLocationUpdate.always
-                            : FollowOnLocationUpdate.once;
-                      })
-                    : null;
-                // If the `active` variable is true, add the zoom level (18) to the `_followCurrentLocationStreamController`.
-                // If the `active` variable is false, do nothing.
-                active ? _followCurrentLocationStreamController.add(18) : null;
-              },
-              child: const Icon(
-                // Show the 'my location' icon on the button.
-                Icons.my_location,
-                // Set the color of the icon to white.
-                color: Colors.white,
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxHeight > constraintsMax.maxHeight) {
+        constraintsMax = constraints;
+      }
+      commonLogger.d(constraintsMax);
+      return Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.transparent,
+          // Scaffold widget, which is the basic layout element in Flutter
+          body: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: constraintsMax.maxWidth,
+                minHeight: constraintsMax.maxHeight,
+                maxWidth: constraintsMax.maxWidth,
+                maxHeight: constraintsMax.maxHeight,
               ),
+              child: FlutterMap(
+                  mapController: controller,
+                  // Create flutter map
+                  options: MapOptions(
+                      interactiveFlags:
+                          InteractiveFlag.pinchZoom | InteractiveFlag.drag,
+                      center: LatLng(
+                          51.509364, -0.128928), // Define Starting Position
+                      maxBounds: LatLngBounds(
+                        // Prevent viewing off map
+                        LatLng(-90, -180.0),
+                        LatLng(90.0, 180.0),
+                      ),
+                      zoom: 15, // Set zoom factor
+                      minZoom: 3.0,
+                      maxZoom: 19),
+                  nonRotatedChildren: [
+                    SafeArea(child: CustomSearchBar(mapController: controller)),
+
+                    AnimatedSwitcher(
+                        duration: const Duration(
+                            milliseconds:
+                                800), // Gradually fade back in when visible toggled
+                        switchOutCurve: const Interval(0.999, 1),
+                        child: searchOpened
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 72),
+                                child: FriendActivity(
+                                    searchOpened: searchOpened,
+                                    sessions: newSessions),
+                              )
+                            : Container()),
+
+                    // Default Attribution
+                    // AttributionWidget.defaultWidget(
+                    //   source: 'OpenStreetMap',
+                    //   onSourceTapped: null,
+                    // ),
+                  ],
+                  children: [
+                    TileLayer(
+                      panBuffer: 1,
+                      backgroundColor: Colors.transparent,
+                      // Map source -- use OpenStreetMaps
+                      tileProvider:
+                          tileProvider, // For caching tiles to improve responsiveness
+                      maxZoom: 19,
+                      urlTemplate:
+                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      userAgentPackageName:
+                          'com.skatingapp.map', // Package Name
+                    ),
+                    MarkerClusterLayerWidget(
+                      // Define the options for the MarkerClusterLayer.
+                      options: MarkerClusterLayerOptions(
+                        // The maximum radius of a cluster.
+                        maxClusterRadius: 45,
+                        // The size of the marker icon for each cluster.
+                        size: const Size(40, 40),
+                        // The position of the anchor point for each marker icon.
+                        anchor: AnchorPos.align(AnchorAlign.center),
+                        // Options for fitting the map to the bounds of the markers.
+                        fitBoundsOptions: const FitBoundsOptions(
+                          // The padding to apply around the bounds of the markers.
+                          padding: EdgeInsets.all(50),
+                          // The maximum zoom level to use when fitting the map bounds.
+                          maxZoom: 15,
+                        ),
+                        // The list of markers to cluster.
+                        markers: friends,
+                        // The builder function for creating the marker icon for each cluster.
+                        builder: (context, markers) {
+                          return Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.blue),
+                            child: Center(
+                              child: Text(
+                                markers.length.toString(),
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    CurrentLocationLayer(
+                      followCurrentLocationStream:
+                          _followCurrentLocationStreamController.stream,
+                      followOnLocationUpdate: _followOnLocationUpdate,
+                    ),
+                  ]),
             ),
-          ),
-        ]));
+          ));
+      // Positioned(
+      //   // Position the widget to the bottom-right corner with a margin of 20 pixels.
+      //   right: 20,
+      //   bottom: 128,
+      //   child: FloatingActionButton(
+      //     // Triggered when the button is pressed.
+      //     onPressed: () {
+      //       // Update the widget state.
+      //       mounted
+      //           ? setState(() {
+      //               // Toggle the boolean value of the `active` variable.
+      //               active = !active;
+      //               // Set the `_followOnLocationUpdate` variable to either always or once based on the `active` variable.
+      //               _followOnLocationUpdate = active
+      //                   ? FollowOnLocationUpdate.always
+      //                   : FollowOnLocationUpdate.once;
+      //             })
+      //           : null;
+      //       // If the `active` variable is true, add the zoom level (18) to the `_followCurrentLocationStreamController`.
+      //       // If the `active` variable is false, do nothing.
+      //       active ? _followCurrentLocationStreamController.add(18) : null;
+      //     },
+      //     child: const Icon(
+      //       // Show the 'my location' icon on the button.
+      //       Icons.my_location,
+      //       // Set the color of the icon to white.
+      //       color: Colors.white,
+      //     ),
+      //   ),
+      // ),
+      //);
+    });
   }
 }

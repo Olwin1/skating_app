@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:patinka/misc/default_profile.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/config.dart';
@@ -13,9 +15,11 @@ class FriendActivity extends StatefulWidget {
   // Create FriendActivity widget
   const FriendActivity(
       {super.key,
+      required this.mapController,
       required this.searchOpened,
       required this.sessions}); // Take 2 arguments optional key and title of post
   final bool searchOpened;
+  final MapController mapController;
   @override
   State<FriendActivity> createState() =>
       _FriendActivity(); //Create state for widget
@@ -34,7 +38,7 @@ class _FriendActivity extends State<FriendActivity> {
               // This next line does the trick.
               scrollDirection: Axis.horizontal,
               children: widget.sessions
-                  .map((session) => FriendActivityProfile(session: session))
+                  .map((session) => FriendActivityProfile(session: session, mapController: widget.mapController))
                   .toList(),
             ))
         : Container();
@@ -43,10 +47,12 @@ class _FriendActivity extends State<FriendActivity> {
 
 class FriendActivityProfile extends StatefulWidget {
   final Map<String, dynamic> session;
+  final MapController mapController;
 
   // Create FriendActivity widget
   const FriendActivityProfile(
       {super.key,
+      required this.mapController,
       required this.session}); // Take 2 arguments optional key and title of post
   @override
   State<FriendActivityProfile> createState() =>
@@ -75,8 +81,8 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
     return Column(children: [
       // Create a button with an icon that represents the user
       TextButton(
-        onPressed: () => commonLogger.d(
-            "Pressed user icon"), // When the button is pressed, print a message
+        onPressed: () => {commonLogger.d(
+            "Pressed user icon"), widget.mapController.move(LatLng(0, 0), 17.0)}, // When the button is pressed, print a message
         child: userCache == null || avatar == null
             // If there is no cached user information or avatar image, use a default image
             ? Shimmer.fromColors(
@@ -92,6 +98,8 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
                 ? CachedNetworkImage(
                     imageUrl: '${Config.uri}/image/${userCache!["avatar_id"]}',
                     imageBuilder: (context, imageProvider) => Container(
+                      height: 64,
+                          width: 64,
                       decoration: BoxDecoration(
                         shape: BoxShape
                             .circle, // Set the shape of the container to a circle
@@ -103,7 +111,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
                 : const DefaultProfile(radius: 32),
       ),
       // Display the username of the user whose information is cached
-      Text(userCache != null ? userCache!["username"] : "Username")
+      Text(userCache != null ? userCache!["username"] : "Username", style: TextStyle(color: swatch[900], fontWeight: FontWeight.bold),)
     ]);
   }
 }

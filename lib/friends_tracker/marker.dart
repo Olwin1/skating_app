@@ -24,9 +24,9 @@ class CustomMarker extends StatefulWidget {
 class _CustomMarker extends State<CustomMarker> {
   @override
   Widget build(BuildContext context) {
-    commonLogger.t('${Config.uri}/image/${widget.sessionData["images"][0]}');
+    //commonLogger.t('${Config.uri}/image/${widget.sessionData["images"][0]}');
     // Check if the sessionData contains any images
-    if (!widget.sessionData["images"].isEmpty) {
+    if (widget.sessionData.containsKey("images") && !widget.sessionData["images"].isEmpty) {
       // Return a Stack widget with two images
       return Stack(
         children: [
@@ -88,7 +88,7 @@ class _CustomMarker extends State<CustomMarker> {
     // If there are no images in sessionData, show the user's avatar as a larger circular image, if available
     return widget.userData["avatar_id"] != null
         ? CachedNetworkImage(
-            imageUrl: '${Config.uri}/image/${widget.sessionData["images"][0]}',
+            imageUrl: '${Config.uri}/image/${widget.userData["avatar_id"]}',
             imageBuilder: (context, imageProvider) => Container(
               width: 64.0,
               height: 64.0,

@@ -76,11 +76,12 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
           for (var session in values) // Loop through the sessions
             {
               userCache = await SocialAPI.getUser(
-                  session["author"]), // Get the user information
+                  session["author_id"]), // Get the user information
               newFriends.add(
                 // Add the marker for the friend's location to the temporary list
                 Marker(
-                    point: LatLng(session["latitude"], session["longitude"]),
+                  key: Key(session["session_id"]),
+                    point: LatLng(0, 0),//session["latitude"], session["longitude"]),
                     width: 80,
                     height: 80,
                     builder: (context) => CustomMarker(
@@ -152,8 +153,9 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                         child: searchOpened
                             ? Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 72),
+                                    const EdgeInsets.symmetric(vertical: 90),
                                 child: FriendActivity(
+                                  mapController: controller,
                                     searchOpened: searchOpened,
                                     sessions: newSessions),
                               )

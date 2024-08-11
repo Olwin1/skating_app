@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:patinka/api/image.dart';
@@ -93,6 +94,17 @@ class _SendPost extends State<SendPost> {
                         Navigator.of(context).pop(),
                         Navigator.of(context).pop(),
                         widget.currentPage.set(0),
+                        SchedulerBinding.instance
+                            .addPostFrameCallback((_) async {
+                          SchedulerBinding.instance
+                              .addPostFrameCallback((_) async {
+                            commonLogger.d("Showing Navbar");
+                            Provider.of<BottomBarVisibilityProvider>(context,
+                                    listen: false)
+                                .show(); // Show The Navbar
+                          });
+                          ;
+                        })
                       })
             });
       } catch (e) {
@@ -103,12 +115,7 @@ class _SendPost extends State<SendPost> {
     // Return the scaffold with the app bar and body
     return PopScope(
         canPop: true,
-        onPopInvoked: (bool didPop) {
-          if (didPop) {
-            Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-                .show(); // Show The Navbar
-          }
-        },
+        onPopInvoked: (bool didPop) {},
         child: Scaffold(
           backgroundColor: Colors.transparent,
           extendBodyBehindAppBar: true,

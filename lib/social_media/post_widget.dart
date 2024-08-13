@@ -4,13 +4,15 @@ import 'package:patinka/misc/default_profile.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/social.dart';
 import 'package:patinka/common_logger.dart';
-import 'package:patinka/profile/profile_page.dart';
+import 'package:patinka/profile/profile_page/profile_page.dart';
 import 'package:patinka/swatch.dart';
 import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
 import 'comments.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../api/config.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
+import 'handle_buttons.dart';
 
 // Widget representing a post
 class PostWidget extends StatefulWidget {
@@ -30,8 +32,6 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidget extends State<PostWidget> {
-  bool waiting = false; // Flag for ongoing operations
-  bool waitingSave = false; // Flag for ongoing operations
   bool? likedState; // Flag for the liked state of the post
   bool? savedState; // Flag for the liked state of the post
 
@@ -42,86 +42,25 @@ class _PostWidget extends State<PostWidget> {
     super.initState();
   }
 
-  // Handle the like button press
-  Future<bool> handleLikePressed(bool isLiked) async {
-    if (!waiting) {
-      if (isLiked) {
-        // Unlike the post
-        try {
-          waiting = true;
-          await SocialAPI.unlikePost(widget.post["post_id"]);
-          if (likedState!) {
+/// SET STATES
+void setLikedState(bool val) {
+            if (!likedState!) {
             if (mounted) {
-              setState(() => likedState = false);
+              setState(() => likedState = val);
             }
           }
-          waiting = false;
-          return !isLiked;
-        } catch (e) {
-          waiting = true;
-          return isLiked;
-        }
-      } else {
-        // Like the post
-        try {
-          waiting = true;
-          await SocialAPI.likePost(widget.post["post_id"]);
-          if (!likedState!) {
-            if (mounted) {
-              setState(() => likedState = true);
-            }
+}
+void setSavedState(bool val) {
+            if (savedState! && mounted) {
+            setState(() => savedState = val);
           }
-          waiting = false;
-          return !isLiked;
-        } catch (e) {
-          waiting = true;
-          return isLiked;
-        }
-      }
-    }
-    return isLiked;
-  }
+}
 
-  // Handle the like button press
-  Future<bool> handleSavePressed(bool isSaved) async {
-    if (!waitingSave) {
-      if (isSaved) {
-        // Unlike the post
-        try {
-          waitingSave = true;
-          await SocialAPI.unsavePost(widget.post["post_id"]);
-          if (savedState! && mounted) {
-            setState(() => savedState = false);
-          }
-          waitingSave = false;
-          return !isSaved;
-        } catch (e) {
-          waitingSave = false;
-          return isSaved;
-        }
-      } else {
-        // Like the post
-        try {
-          waitingSave = true;
-          await SocialAPI.savePost(widget.post["post_id"]);
-          if (!savedState! && mounted) {
-            setState(() => savedState = true);
-          }
-          waitingSave = false;
-          return !isSaved;
-        } catch (e) {
-          waitingSave = false;
-          return isSaved;
-        }
-      }
-    }
-    return isSaved;
-  }
+///
 
-  // Colors for UI elements
-  Color selected = const Color.fromARGB(255, 136, 255, 0);
-  Color unselected = const Color.fromARGB(255, 31, 207, 46);
-  Color secondary = const Color.fromARGB(255, 15, 95, 5);
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +146,7 @@ class _PostWidget extends State<PostWidget> {
                             // Like button with animation
                             LikeButton(
                               isLiked: likedState ?? widget.post["liked"],
-                              onTap: (isLiked) => handleLikePressed(isLiked),
+                              onTap: (isLiked) => handleLikePressed(isLiked, setLikedState, widget.post),
                               padding:
                                   const EdgeInsets.only(bottom: 0, top: 18),
                               countPostion: CountPostion.bottom,
@@ -296,7 +235,7 @@ class _PostWidget extends State<PostWidget> {
                             // Save button
                             LikeButton(
                               isLiked: savedState ?? widget.post["saved"],
-                              onTap: (isSaved) => handleSavePressed(isSaved),
+                              onTap: (isSaved) => handleSavePressed(isSaved, setSavedState, widget.post),
                               padding:
                                   const EdgeInsets.only(bottom: 0, top: 18),
                               countPostion: CountPostion.bottom,

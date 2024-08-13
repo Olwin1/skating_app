@@ -64,8 +64,6 @@ void setSavedState(bool val) {
 
   @override
   Widget build(BuildContext context) {
-    // Log the build process
-    commonLogger.t("Building ${widget.post['liked']}");
 
     // Extract comment count from post data
     String comments = widget.post['comment_count'] ?? "0";
@@ -302,9 +300,9 @@ class _Avatar extends State<Avatar> {
     SocialAPI.getUser(widget.user).then((userCache) => {
           if (mounted)
             {
-              setState(() => {
-                    image = userCache["avatar_id"],
-                    profile = userCache["user_id"]
+              setState(() {
+                    image = userCache["avatar_id"];
+                    profile = userCache["user_id"];
                   })
             }
         });

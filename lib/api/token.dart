@@ -21,8 +21,8 @@ class SecureStorage {
 
   // Define a method named getToken that returns a Future<String>
   Future<String?> getToken() async {
-    commonLogger.d(
-        "Getting the token at $_keyToken at ${await storage.read(key: _keyToken)}");
+    // commonLogger.d(
+    //     "Getting the token at $_keyToken at ${await storage.read(key: _keyToken)}");
     // Use the FlutterSecureStorage instance to read the value stored with the _keyToken key and return it
     return await storage.read(key: _keyToken);
   }

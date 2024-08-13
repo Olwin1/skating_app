@@ -90,25 +90,13 @@ class _Profile extends State<Profile> {
   String comments = "0";
 
   /// SET STATES
-  void setLikedState(bool val) {
-    if (mounted) {
-      setState(() => likedState = val);
-    }
-  }
-
-  void setSavedState(bool val) {
-    if (mounted) {
-      setState(() => savedState = val);
-    }
-  }
-
   void setCommentState(int count) {
     if (mounted) {
       setState(() => comments = count.toString());
     }
   }
 
-  Function setAllStates = (bool saved, bool liked, int count) {};
+  Function setAllStates = (bool saved, bool liked, int count, Map<String, dynamic> postData) {};
 
   ///
 
@@ -118,7 +106,7 @@ class _Profile extends State<Profile> {
 
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       setAllStates(
-          postData["saved"], postData["liked"], postData["comment_count"]);
+          postData["saved"], postData["liked"], postData["comment_count"], postData);
     });
 
     // Show dialog with updated information
@@ -135,18 +123,19 @@ class _Profile extends State<Profile> {
   }
 
   Widget _dialogContent(StateSetter setState) {
-    setAllStates = (bool saved, bool liked, int count) {
+    setAllStates = (bool saved, bool liked, int count, Map<String, dynamic> postData) {
       if (mounted) {
         setState(() {
           savedState = saved;
           likedState = liked;
           comments = count.toString();
+          post = postData;
         });
       }
     };
     return GestureDetector(
       onTap: () {
-        setAllStates = (bool saved, bool liked, int count) {};
+        setAllStates = (bool saved, bool liked, int count, Map<String, dynamic> postData) {};
         Navigator.pop(context, 'close');
       },
       child: currentImage != null

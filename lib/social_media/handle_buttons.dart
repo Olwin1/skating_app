@@ -41,7 +41,7 @@ export 'package:patinka/social_media/handle_buttons.dart';
           waiting = false;
           return !isLiked;
         } catch (e) {
-          waiting = true;
+          waiting = false;
           return isLiked;
         }
       }

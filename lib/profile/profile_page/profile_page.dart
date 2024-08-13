@@ -161,9 +161,6 @@ class _Profile extends State<Profile> {
                   PostFooter(
                     likedState: likedState,
                     savedState: savedState,
-                    setLikedState: (bool val) {
-                      setState(() => likedState = val);
-                    },
                     setSavedState: (bool val) {
                       setState(() => savedState = val);
                     },

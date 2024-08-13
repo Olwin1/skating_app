@@ -4,34 +4,59 @@ import 'package:patinka/social_media/comments.dart';
 import 'package:patinka/social_media/handle_buttons.dart';
 import 'package:patinka/social_media/post_widget.dart';
 
-class PostFooter extends StatelessWidget {
-  const PostFooter(
-      {super.key,
-      required this.likedState,
-      required this.savedState,
-      required this.setLikedState,
-      required this.setSavedState,
-      required this.post,
-      required this.comments,
-      required this.user});
+class PostFooter extends StatefulWidget {
+  const PostFooter({
+    super.key,
+    required this.likedState,
+    required this.savedState,
+    required this.setSavedState,
+    required this.post,
+    required this.comments,
+    required this.user,
+  });
+
   final bool likedState;
   final bool savedState;
-  final Function setLikedState;
-  final Function setSavedState;
+  final Function(bool) setSavedState;
   final Map<String, dynamic>? post;
   final String comments;
   final Map<String, dynamic>? user;
 
   @override
+  State<PostFooter> createState() => _PostFooterState();
+}
+
+class _PostFooterState extends State<PostFooter> {
+  late bool likedState;
+  late int likeCount;
+
+  @override
+  void initState() {
+    super.initState();
+    likedState = widget.likedState;
+    likeCount = widget.post?['like_count'] ?? 0;
+  }
+
+  Future<bool> handleLikePressed(bool isLiked) async {
+    setState(() {
+      likedState = !isLiked;
+      likeCount = likedState ? likeCount + 1 : likeCount - 1;
+    });
+    // Perform additional logic, e.g., API call, if necessary
+    return !isLiked;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 73,
-        width: 300,
-        child: Row(children: [
+      height: 73,
+      width: 300,
+      child: Row(
+        children: [
           // Like button with animation
           LikeButton(
             isLiked: likedState,
-            onTap: (isLiked) => handleLikePressed(isLiked, setLikedState, post),
+            onTap: handleLikePressed,
             padding: const EdgeInsets.only(bottom: 0, top: 18),
             countPostion: CountPostion.bottom,
             size: 32.0,
@@ -47,27 +72,16 @@ class PostFooter extends StatelessWidget {
                 size: 32.0,
               );
             },
-            likeCount: post?['like_count'] ?? 0,
+            likeCount: likeCount,
             countBuilder: (int? count, bool isLiked, String text) {
               var color = isLiked ? selected : unselected;
-              Widget result;
-              if (count == 0) {
-                result = Center(
-                    child: Text(
-                  "Like",
+              return Center(
+                child: Text(
+                  count == 0 ? "Like" : text,
                   style: TextStyle(
                       color: color, fontSize: 16, fontWeight: FontWeight.w100),
-                ));
-              } else {
-                result = Center(
-                    child: Text(
-                  text,
-                  style: TextStyle(
-                      color: color, fontSize: 16, fontWeight: FontWeight.w100),
-                  textAlign: TextAlign.center,
-                ));
-              }
-              return result;
+                ),
+              );
             },
           ),
           // Comment button
@@ -75,43 +89,46 @@ class PostFooter extends StatelessWidget {
             height: 72,
             width: 72,
             child: ListTile(
-                title: IconButton(
-                  onPressed: () => Navigator.of(context).push(
-                    // Navigate to comments page
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          Comments(post: post?["post_id"], user: user),
-                      opaque: false,
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        const begin = 0.0;
-                        const end = 1.0;
-                        var tween = Tween(begin: begin, end: end);
-                        var fadeAnimation = tween.animate(animation);
-                        return FadeTransition(
-                          opacity: fadeAnimation,
-                          child: child,
-                        );
-                      },
-                    ),
+              title: IconButton(
+                onPressed: () => Navigator.of(context).push(
+                  // Navigate to comments page
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        Comments(
+                            post: widget.post?["post_id"], user: widget.user),
+                    opaque: false,
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      const begin = 0.0;
+                      const end = 1.0;
+                      var tween = Tween(begin: begin, end: end);
+                      var fadeAnimation = tween.animate(animation);
+                      return FadeTransition(
+                        opacity: fadeAnimation,
+                        child: child,
+                      );
+                    },
                   ),
-                  icon: Icon(
-                    Icons.comment,
-                    color: unselected,
-                  ),
-                  padding: const EdgeInsets.only(top: 16),
-                  constraints: const BoxConstraints(),
                 ),
-                subtitle: Text(
-                  comments,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: unselected),
-                )),
+                icon: Icon(
+                  Icons.comment,
+                  color: unselected,
+                ),
+                padding: const EdgeInsets.only(top: 16),
+                constraints: const BoxConstraints(),
+              ),
+              subtitle: Text(
+                widget.comments,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: unselected),
+              ),
+            ),
           ),
           // Save button
           LikeButton(
-            isLiked: savedState,
-            onTap: (isSaved) => handleSavePressed(isSaved, setSavedState, post),
+            isLiked: widget.savedState,
+            onTap: (isSaved) =>
+                handleSavePressed(isSaved, widget.setSavedState, widget.post),
             padding: const EdgeInsets.only(bottom: 0, top: 18),
             countPostion: CountPostion.bottom,
             size: 28.0,
@@ -129,15 +146,20 @@ class PostFooter extends StatelessWidget {
             },
           ),
           const Spacer(),
-          user == null? const SizedBox.shrink()
+          widget.user == null
+              ? const SizedBox.shrink()
               : Container(
                   margin: const EdgeInsets.only(bottom: 12),
                   child: SizedBox(
-                      width: 56,
-                      height: 56,
-                      child: Avatar(
-                        user: user!["user_id"],
-                      )))
-        ]));
+                    width: 56,
+                    height: 56,
+                    child: Avatar(
+                      user: widget.user!["user_id"],
+                    ),
+                  ),
+                ),
+        ],
+      ),
+    );
   }
 }

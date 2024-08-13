@@ -13,6 +13,7 @@ class PostFooter extends StatefulWidget {
     required this.post,
     required this.comments,
     required this.user,
+    required this.backgroundColor
   });
 
   final bool likedState;
@@ -21,6 +22,7 @@ class PostFooter extends StatefulWidget {
   final Map<String, dynamic>? post;
   final String comments;
   final Map<String, dynamic>? user;
+  final Color backgroundColor;
 
   @override
   State<PostFooter> createState() => _PostFooterState();
@@ -48,7 +50,9 @@ class _PostFooterState extends State<PostFooter> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+      decoration: BoxDecoration(color: widget.backgroundColor, borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8))),
       height: 73,
       width: 300,
       child: Row(
@@ -57,9 +61,9 @@ class _PostFooterState extends State<PostFooter> {
           LikeButton(
             isLiked: likedState,
             onTap: handleLikePressed,
-            padding: const EdgeInsets.only(bottom: 0, top: 18),
+            padding: const EdgeInsets.only(bottom: 0, top: 12),
             countPostion: CountPostion.bottom,
-            size: 32.0,
+            size: 28.0,
             circleColor: CircleColor(start: secondary, end: selected),
             bubblesColor: BubblesColor(
               dotPrimaryColor: unselected,
@@ -85,10 +89,12 @@ class _PostFooterState extends State<PostFooter> {
             },
           ),
           // Comment button
-          SizedBox(
+          Container(
+            padding: const EdgeInsets.only(bottom: 29),
             height: 72,
             width: 72,
             child: ListTile(
+              contentPadding: EdgeInsets.zero,//EdgeInsets.only(bottom: 16),
               title: IconButton(
                 onPressed: () => Navigator.of(context).push(
                   // Navigate to comments page
@@ -111,10 +117,11 @@ class _PostFooterState extends State<PostFooter> {
                   ),
                 ),
                 icon: Icon(
+                  size: 26,
                   Icons.comment,
                   color: unselected,
                 ),
-                padding: const EdgeInsets.only(top: 16),
+                padding: const EdgeInsets.only(top: 14),
                 constraints: const BoxConstraints(),
               ),
               subtitle: Text(
@@ -129,7 +136,7 @@ class _PostFooterState extends State<PostFooter> {
             isLiked: widget.savedState,
             onTap: (isSaved) =>
                 handleSavePressed(isSaved, widget.setSavedState, widget.post),
-            padding: const EdgeInsets.only(bottom: 0, top: 18),
+            padding: const EdgeInsets.only(bottom: 0, top: 4),
             countPostion: CountPostion.bottom,
             size: 28.0,
             circleColor: CircleColor(start: secondary, end: selected),
@@ -149,7 +156,7 @@ class _PostFooterState extends State<PostFooter> {
           widget.user == null
               ? const SizedBox.shrink()
               : Container(
-                  margin: const EdgeInsets.only(bottom: 12),
+                  margin: const EdgeInsets.only(top: 8),
                   child: SizedBox(
                     width: 56,
                     height: 56,

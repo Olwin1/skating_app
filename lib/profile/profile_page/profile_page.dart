@@ -74,22 +74,15 @@ class Profile extends StatefulWidget {
 // The state class for the ProfilePage widget
 class _Profile extends State<Profile> {
   List<Map<String, dynamic>> posts = [];
-  // void _show() {
-  //   HiOverlay.show(
-  //     context,
-  //     child: _dialog(),
-  //   ).then((value) {
-  //     commonLogger.t('Recieved value: $value');
-  //   });
-  // }
 
   Map<String, dynamic>? post;
 
   bool likedState = false; // Flag for the liked state of the post
   bool savedState = false; // Flag for the liked state of the post
   String comments = "0";
+  final backgroundColor = const Color(0xbb000000);
 
-  /// SET STATES
+
   void setCommentState(int count) {
     if (mounted) {
       setState(() => comments = count.toString());
@@ -141,22 +134,22 @@ class _Profile extends State<Profile> {
       child: currentImage != null
           ? Container(
               color: const Color(0x55000000),
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 64),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 124),
               child: Column(
                 children: [
                   SizedBox(
                     width: 300,
                     height: 300,
-                    child: CachedNetworkImage(
+                    child: Stack(children: [Column(children: [const SizedBox(height: 290,), Container(height: 10, width: 300, color: backgroundColor)]), CachedNetworkImage(
                       imageUrl: '${Config.uri}/image/$currentImage',
                       imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: const BorderRadius.all(Radius.circular(8)),
                           image: DecorationImage(
                               image: imageProvider, fit: BoxFit.contain),
                         ),
                       ),
-                    ),
+                    ),])
                   ),
                   PostFooter(
                     likedState: likedState,
@@ -167,6 +160,7 @@ class _Profile extends State<Profile> {
                     post: post,
                     comments: comments,
                     user: user,
+                    backgroundColor: backgroundColor,
                   ),
                 ],
               ),

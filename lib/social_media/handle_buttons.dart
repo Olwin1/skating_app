@@ -1,10 +1,12 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:patinka/api/social.dart';
+import 'package:patinka/common_logger.dart';
 // Export login and signup functions from auth.dart
 export 'package:patinka/social_media/handle_buttons.dart';
 
-
+const String errorCode409 = "Error during post: Exception: Error during request: Received status code 409";
   // Colors for UI elements
   Color selected = const Color.fromARGB(255, 136, 255, 0);
   Color unselected = const Color.fromARGB(255, 31, 207, 46);
@@ -29,8 +31,15 @@ export 'package:patinka/social_media/handle_buttons.dart';
           waiting = false;
           return !isLiked;
         } catch (e) {
-          waiting = true;
-          return isLiked;
+          waiting = false;
+              // Checking for a 409 error
+    if (e.toString().contains(errorCode409)) {
+      commonLogger.e("Like State Conflict Occured (Already Unliked) - Fixing State");
+      return !isLiked;
+    } else {
+                return isLiked;
+
+    }
         }
       } else {
         // Like the post
@@ -42,7 +51,14 @@ export 'package:patinka/social_media/handle_buttons.dart';
           return !isLiked;
         } catch (e) {
           waiting = false;
-          return isLiked;
+              // Checking for a 409 error
+    if (e.toString().contains(errorCode409)) {
+      commonLogger.e("Like State Conflict Occured (Already liked) - Fixing State");
+      return !isLiked;
+    } else {
+                return isLiked;
+
+    }
         }
       }
     }

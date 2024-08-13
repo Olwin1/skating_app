@@ -39,9 +39,9 @@ class _PostFooterState extends State<PostFooter> {
     likeCount = widget.post?['like_count'] ?? 0;
   }
 
-  Future<bool> handleLikePressed(bool isLiked) async {
+  Future<bool> handleLikePressedState(bool isLiked) async {
     setState(() {
-      likedState = !isLiked;
+      likedState = isLiked;
       likeCount = likedState ? likeCount + 1 : likeCount - 1;
     });
     // Perform additional logic, e.g., API call, if necessary
@@ -60,7 +60,7 @@ class _PostFooterState extends State<PostFooter> {
           // Like button with animation
           LikeButton(
             isLiked: likedState,
-            onTap: handleLikePressed,
+            onTap: (isLiked) => handleLikePressed(isLiked, handleLikePressedState, widget.post),
             padding: const EdgeInsets.only(bottom: 0, top: 12),
             countPostion: CountPostion.bottom,
             size: 28.0,

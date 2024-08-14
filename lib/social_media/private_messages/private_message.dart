@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get_it/get_it.dart';
+import 'package:patinka/social_media/private_messages/session_notification.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/misc/navbar_provider.dart';
@@ -165,16 +167,17 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   // Function to update messages when new messages arrive
-  void updateMessages(Map<String, dynamic> data) {
+  void updateMessages(Map<String, dynamic> data)  async {
     if (data["channel"] == channelId) {
       commonLogger.d("ITS A MATCH!");
+      User user = await getUser(data["sender"]);
       // Add the new message to the beginning of the list
       mounted
-          ? setState(() async {
+          ? setState(() {
               _messages.insert(
                 0,
                 types.TextMessage(
-                  author: await getUser(data["sender_id"]),
+                  author: user,
                   createdAt: DateTime.now().millisecondsSinceEpoch,
                   id: const Uuid().v1(),
                   text: data["content"],
@@ -182,6 +185,9 @@ class _PrivateMessage extends State<PrivateMessage> {
               );
             })
           : null;
+    }
+    else {
+      showNotification(context);
     }
   }
 
@@ -430,7 +436,8 @@ class _PrivateMessage extends State<PrivateMessage> {
 
         // Send the message to the server
         if (channelId != null) {
-          await MessagesAPI.postMessage(channelId!, message.text, null)
+          
+          await getIt<WebSocketConnection>().emitMessage(channelId!, message.text, null)
               .then((value) => {sending = false});
         } else {
           // If there is no channel ID, create a new channel

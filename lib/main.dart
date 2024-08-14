@@ -31,6 +31,7 @@ import './friends_tracker/caching/map_cache.dart'
 import './window_manager/window_manager.dart';
 import 'package:patinka/firebase/init_firebase.dart';
 import 'package:path/path.dart' as path;
+import 'package:in_app_notification/in_app_notification.dart';
 // AndroidNotificationChannel channel = const AndroidNotificationChannel(
 //   'ChannelId', // id
 //   'ChannelId', // title
@@ -66,7 +67,7 @@ Future<void> main() async {
     ChangeNotifierProvider<BottomBarVisibilityProvider>(
       create: (_) => BottomBarVisibilityProvider(),
     ),
-  ], child: Phoenix(child: const MyApp())));
+  ], child: Phoenix(child: const InAppNotification(child: MyApp()))));
 }
 
 class MyApp extends StatefulWidget {

@@ -46,12 +46,25 @@ class WebSocketConnection {
             "Sending NewMessage: $data"); // logs the received data to console
         _streamController.add(data); // adds data to the stream controller
       });
+
       // Adds a listener for the 'disconnect' event
       socket.onDisconnect((_) =>
           commonLogger.t("Disconnecting from socket")); // logs to console
     } catch (e) {
       commonLogger
           .e('Error connecting to WebSocket: $e'); // logs any errors to console
+    }
+  }
+
+  // Method to emit a message to the server
+  Future<bool> emitMessage(String channel, String content, String? image) async {
+    if (socket.connected) {
+      socket.emit("message", {"channel": channel, "content": content});
+      commonLogger.d('Emitting message, Data: $content');
+      return true;
+    } else {
+      commonLogger.e('Socket is not connected. Cannot emit message.');
+      return false;
     }
   }
 }

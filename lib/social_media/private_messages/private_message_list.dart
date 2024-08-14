@@ -20,6 +20,8 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import 'session_notification.dart';
+
 // Initialize GetIt for dependency injection
 GetIt getIt = GetIt.instance;
 
@@ -93,27 +95,28 @@ class _PrivateMessageList extends State<PrivateMessageList> {
           ),
           actions: [
             IconButton(
-              onPressed: () => Navigator.of(context, rootNavigator: false).push(
-                // Navigate to the new channel page
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      NewChannelPage(
-                    callback: _pagingController.refresh,
-                  ),
-                  opaque: false,
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
-                    const begin = 0.0;
-                    const end = 1.0;
-                    var tween = Tween(begin: begin, end: end);
-                    var fadeAnimation = tween.animate(animation);
-                    return FadeTransition(
-                      opacity: fadeAnimation,
-                      child: child,
-                    );
-                  },
-                ),
-              ),
+              onPressed: () => showNotification(context),
+              // Navigator.of(context, rootNavigator: false).push(
+              //   // Navigate to the new channel page
+              //   PageRouteBuilder(
+              //     pageBuilder: (context, animation, secondaryAnimation) =>
+              //         NewChannelPage(
+              //       callback: _pagingController.refresh,
+              //     ),
+              //     opaque: false,
+              //     transitionsBuilder:
+              //         (context, animation, secondaryAnimation, child) {
+              //       const begin = 0.0;
+              //       const end = 1.0;
+              //       var tween = Tween(begin: begin, end: end);
+              //       var fadeAnimation = tween.animate(animation);
+              //       return FadeTransition(
+              //         opacity: fadeAnimation,
+              //         child: child,
+              //       );
+              //     },
+              //   ),
+              // ),
               icon: const Icon(Icons.add),
             )
           ],
@@ -241,11 +244,13 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       getIt<WebSocketConnection>().socket.connect();
     }
 
-    subscription = getIt<WebSocketConnection>().stream.listen((data) => mounted
+    subscription = getIt<WebSocketConnection>().stream.listen((data) {mounted
         ? setState(() {
             channelsData[data["channel"]] = data["content"];
           })
-        : null);
+        : null; 
+      showNotification(context);
+        });
 
     super.initState();
   }
@@ -313,7 +318,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
                     index: index,
                     channel: item,
                     desc:
-                        "Last Message: ${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
+                        "Last Message:", //${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
                     currentUser: widget.currentUser,
                     refreshPage: widget.refreshList),
           ),

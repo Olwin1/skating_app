@@ -167,7 +167,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   // Function to update messages when new messages arrive
-  void updateMessages(Map<String, dynamic> data)  async {
+  void updateMessages(Map<String, dynamic> data) async {
     if (data["channel"] == channelId) {
       commonLogger.d("ITS A MATCH!");
       User user = await getUser(data["sender"]);
@@ -185,8 +185,7 @@ class _PrivateMessage extends State<PrivateMessage> {
               );
             })
           : null;
-    }
-    else {
+    } else {
       showNotification(context, data, widget.currentUser);
     }
   }
@@ -436,8 +435,8 @@ class _PrivateMessage extends State<PrivateMessage> {
 
         // Send the message to the server
         if (channelId != null) {
-          
-          await getIt<WebSocketConnection>().emitMessage(channelId!, message.text, null)
+          await getIt<WebSocketConnection>()
+              .emitMessage(channelId!, message.text, null)
               .then((value) => {sending = false});
         } else {
           // If there is no channel ID, create a new channel

@@ -93,8 +93,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
           ),
           actions: [
             IconButton(
-              onPressed: () => 
-              Navigator.of(context, rootNavigator: false).push(
+              onPressed: () => Navigator.of(context, rootNavigator: false).push(
                 // Navigate to the new channel page
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
@@ -132,8 +131,8 @@ class _PrivateMessageList extends State<PrivateMessageList> {
                     : ChannelsListView(
                         currentUser: currentUser!,
                         pagingController: _pagingController,
-                        refreshList: _pagingController.refresh, 
-                        ),
+                        refreshList: _pagingController.refresh,
+                      ),
               ),
             ],
           ),
@@ -209,12 +208,12 @@ Widget _loadingSkeleton() {
 
 // Widget for the list of channels
 class ChannelsListView extends StatefulWidget {
-  const ChannelsListView(
-      {super.key,
-      required this.currentUser,
-      required this.pagingController,
-      required this.refreshList,
-      });
+  const ChannelsListView({
+    super.key,
+    required this.currentUser,
+    required this.pagingController,
+    required this.refreshList,
+  });
 
   final String currentUser;
   final PagingController<int, Map<String, dynamic>> pagingController;
@@ -244,14 +243,15 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       getIt<WebSocketConnection>().socket.connect();
     }
 
-    subscription = getIt<WebSocketConnection>().stream.listen((data) {mounted
-        ? setState(() {
-            channelsData[data["channel"]] = data["content"];
-          })
-        : null; 
-        //TODO add channel to this
+    subscription = getIt<WebSocketConnection>().stream.listen((data) {
+      mounted
+          ? setState(() {
+              channelsData[data["channel"]] = data["content"];
+            })
+          : null;
+      //TODO add channel to this
       showNotification(context, data, widget.currentUser);
-        });
+    });
 
     super.initState();
   }

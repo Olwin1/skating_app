@@ -18,8 +18,6 @@ import 'list_widget.dart';
 import '../../api/messages.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:timeago/timeago.dart' as timeago;
-
 import 'session_notification.dart';
 
 // Initialize GetIt for dependency injection
@@ -95,28 +93,28 @@ class _PrivateMessageList extends State<PrivateMessageList> {
           ),
           actions: [
             IconButton(
-              onPressed: () => showNotification(context),
-              // Navigator.of(context, rootNavigator: false).push(
-              //   // Navigate to the new channel page
-              //   PageRouteBuilder(
-              //     pageBuilder: (context, animation, secondaryAnimation) =>
-              //         NewChannelPage(
-              //       callback: _pagingController.refresh,
-              //     ),
-              //     opaque: false,
-              //     transitionsBuilder:
-              //         (context, animation, secondaryAnimation, child) {
-              //       const begin = 0.0;
-              //       const end = 1.0;
-              //       var tween = Tween(begin: begin, end: end);
-              //       var fadeAnimation = tween.animate(animation);
-              //       return FadeTransition(
-              //         opacity: fadeAnimation,
-              //         child: child,
-              //       );
-              //     },
-              //   ),
-              // ),
+              onPressed: () => 
+              Navigator.of(context, rootNavigator: false).push(
+                // Navigate to the new channel page
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      NewChannelPage(
+                    callback: _pagingController.refresh,
+                  ),
+                  opaque: false,
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    const begin = 0.0;
+                    const end = 1.0;
+                    var tween = Tween(begin: begin, end: end);
+                    var fadeAnimation = tween.animate(animation);
+                    return FadeTransition(
+                      opacity: fadeAnimation,
+                      child: child,
+                    );
+                  },
+                ),
+              ),
               icon: const Icon(Icons.add),
             )
           ],
@@ -130,11 +128,12 @@ class _PrivateMessageList extends State<PrivateMessageList> {
             children: [
               Expanded(
                 child: currentUser == null
-                    ? Container()
+                    ? const SizedBox.shrink()
                     : ChannelsListView(
                         currentUser: currentUser!,
                         pagingController: _pagingController,
-                        refreshList: _pagingController.refresh),
+                        refreshList: _pagingController.refresh, 
+                        ),
               ),
             ],
           ),
@@ -214,7 +213,8 @@ class ChannelsListView extends StatefulWidget {
       {super.key,
       required this.currentUser,
       required this.pagingController,
-      required this.refreshList});
+      required this.refreshList,
+      });
 
   final String currentUser;
   final PagingController<int, Map<String, dynamic>> pagingController;
@@ -249,7 +249,8 @@ class _ChannelsListViewState extends State<ChannelsListView> {
             channelsData[data["channel"]] = data["content"];
           })
         : null; 
-      showNotification(context);
+        //TODO add channel to this
+      showNotification(context, data, widget.currentUser);
         });
 
     super.initState();

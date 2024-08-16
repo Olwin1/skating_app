@@ -140,7 +140,7 @@ class MessagesAPI {
   }
 
   // Method to retrieve information about a specific channel
-  static Future<Object> getChannel(String channel) async {
+  static Future<Map<String, dynamic>> getChannel(String channel) async {
     try {
       // Send GET request to retrieve information about a specific channel
       var response = await http.get(_channelUrl, headers: {

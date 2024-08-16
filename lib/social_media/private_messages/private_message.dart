@@ -187,7 +187,7 @@ class _PrivateMessage extends State<PrivateMessage> {
           : null;
     }
     else {
-      showNotification(context);
+      showNotification(context, data, widget.currentUser);
     }
   }
 

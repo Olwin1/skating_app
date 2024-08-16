@@ -2,25 +2,67 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:in_app_notification/in_app_notification.dart';
+import 'package:patinka/api/messages.dart';
+import 'package:patinka/api/social.dart';
 import 'package:patinka/social_media/post_widget.dart';
 import 'package:patinka/swatch.dart';
 
-void showNotification(context) {
-  InAppNotification.show(child: const NotificationBody(count: 1, minHeight: 34,), context: context);
+import 'private_message.dart';
+int dur = 3;
+Map<String, dynamic>? user;
+Map<String, dynamic>? channel;
+void handleTap(context, Map<String, dynamic>? user, Map<String, dynamic>? channel, String currentUser, String channelId) async {
+                            // Navigate to PrivateMessage page when the list item is clicked
+                                Map<String, dynamic>? userV = user?? await SocialAPI.getUser(currentUser);
+    Map<String, dynamic>? channelV = channel??await MessagesAPI.getChannel(channelId);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PrivateMessage(
+                  index: 1,
+                  channel: channelV,
+                  user: userV,
+                  currentUser: currentUser,
+                ),
+              ),
+            );
+}
+
+void showNotification(context, Map<String, dynamic> data, String currentUser) {
+  InAppNotification.show(onTap: () => handleTap(context, user, channel, currentUser, data["channel"]), child: NotificationBody(count: 1, minHeight: 34, senderId: data["sender"], content: data["content"], channelId: data["channel"], currentUser: currentUser,), context: context, duration: Duration(seconds: dur));
 }
 
 class NotificationBody extends StatelessWidget {
   final int count;
   final double minHeight;
+  final String senderId;
+  final String content;
+  final String channelId;
+  final String currentUser;
 
-  const NotificationBody({
+   NotificationBody({
     super.key,
     this.count = 0,
     this.minHeight = 0.0,
+    required this.senderId,
+    required this.content,
+    required this.channelId,
+    required this.currentUser
   });
+
+    void init() {
+    // Get the current user's identifier and set the state
+
+    SocialAPI.getUser(currentUser).then((value) => user = value);
+    MessagesAPI.getChannel(channelId).then((value) => channel = value);
+    }
+
+
 
   @override
   Widget build(BuildContext context) {
+    init();
+
     final minHeight = math.min(
       this.minHeight,
       MediaQuery.of(context).size.height,
@@ -34,10 +76,10 @@ class NotificationBody extends StatelessWidget {
                 color: const Color(0xff004400),
                 borderRadius: BorderRadius.circular(16)),
             child: Column(children: [
-              Padding(padding: EdgeInsets.all(8), child: Row(
+              Padding(padding: const EdgeInsets.all(8), child: Row(
                 children: [
-                  Container(margin: EdgeInsets.symmetric(horizontal: 8), height:48, width:48, child:
-                  Avatar(user: "0")),
+                  Container(margin: const EdgeInsets.symmetric(horizontal: 8), height:48, width:48, child:
+                  Avatar(user: senderId)),
                   Expanded(child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -46,18 +88,18 @@ class NotificationBody extends StatelessWidget {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w500, color: swatch[101])),
                       Text(
-                        "Bro what are you even doing i literally cant even",
+                        content,
                         softWrap: true,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                       )
                     ],
                   ),),
                 ],
               ),),
-                  SizedBox(height: 15,),
-              AnimatedLine()
+                  const SizedBox(height: 15,),
+              const AnimatedLine()
               //Container(color: Colors.green, width: double.maxFinite, height: 3)
             ])));
   }
@@ -67,10 +109,10 @@ class AnimatedLine extends StatefulWidget {
   const AnimatedLine({super.key});
 
   @override
-  _AnimatedLineState createState() => _AnimatedLineState();
+  AnimatedLineState createState() => AnimatedLineState();
 }
 
-class _AnimatedLineState extends State<AnimatedLine>
+class AnimatedLineState extends State<AnimatedLine>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -79,7 +121,7 @@ class _AnimatedLineState extends State<AnimatedLine>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 10),
+      duration: Duration(seconds: dur + 1),
       vsync: this,
     );
 

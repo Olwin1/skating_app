@@ -55,7 +55,10 @@ class _PrivateMessage extends State<PrivateMessage> {
   int _page = 0;
   bool loading = false;
   bool userFound = false;
-  late StreamSubscription subscription;
+  late StreamSubscription subscriptionMessages;
+  late StreamSubscription subscriptionSeen;
+  late StreamSubscription subscriptionTyping;
+  late StreamSubscription subscriptionMessagesDelivered;
   TextEditingController controller = TextEditingController();
   types.User? user;
 
@@ -83,8 +86,17 @@ class _PrivateMessage extends State<PrivateMessage> {
     getIt<WebSocketConnection>().socket.emit("joinChannel", [channelId]);
 
     // Subscribe to the websocket stream
-    subscription = getIt<WebSocketConnection>().stream.listen(
+    subscriptionMessages = getIt<WebSocketConnection>().streamMessages.listen(
           (data) => updateMessages(data),
+        );
+            subscriptionSeen = getIt<WebSocketConnection>().streamSeen.listen(
+          (data) => updateSeen(data),
+        );
+            subscriptionTyping = getIt<WebSocketConnection>().streamTyping.listen(
+          (data) => null,
+        );
+    subscriptionMessagesDelivered = getIt<WebSocketConnection>().streamMessagesDelivered.listen(
+          (data) => updateDelivered(data),
         );
   }
 
@@ -177,17 +189,47 @@ class _PrivateMessage extends State<PrivateMessage> {
               _messages.insert(
                 0,
                 types.TextMessage(
+                  showStatus: true,
                   author: user,
                   createdAt: DateTime.now().millisecondsSinceEpoch,
-                  id: const Uuid().v1(),
+                  id: data["messageNumber"].toString(),
                   text: data["content"],
                 ),
               );
             })
           : null;
+          getIt<WebSocketConnection>().emitSeenMessage(data["channel"], data["messageNumber"], data["messageId"]);
     } else {
       showNotification(context, data, widget.currentUser);
     }
+  }
+
+    // Function to update messages when new messages arrive
+  void updateSeen(Map<String, dynamic> data) async {
+    if (data["channel"] == channelId) {
+      String messageNumber = data["messageNumber"].toString();
+      commonLogger.d("ITS A MATCH for seen!");
+      for (int i = 0; i < _messages.length; i++){
+        if(_messages[i].id == messageNumber) {
+          setState(() {
+          _messages[i] = _messages[i].copyWith(status: Status.seen);
+          });
+        }
+      }
+  }
+  }
+  void updateDelivered(Map<String, dynamic> data) async {
+    if (data["channel"] == channelId) {
+      String messageNumber = data["messageNumber"].toString();
+      commonLogger.d("ITS A MATCH for seen!");
+      for (int i = 0; i < _messages.length; i++){
+        if(_messages[i].author == user && _messages[i].status == Status.sending && _messages[i].metadata!["content"] == data["content"]) {
+          setState(() {
+          _messages[i] = _messages[i].copyWith(status: Status.delivered, id: messageNumber);
+          });
+        }
+      }
+  }
   }
 
   // Function to load initial messages
@@ -203,8 +245,18 @@ class _PrivateMessage extends State<PrivateMessage> {
       final messagesRaw = await MessagesAPI.getMessages(_page, channelId!);
       for (int i = 0; i < messagesRaw.length; i++) {
         dynamic message = messagesRaw[i];
+List<String> messageReaders = [];
+        for (int j = 0; j < message["message_readers"].length; j++) {
+          messageReaders.add(message["message_readers"][j]["user_id"]);
+          if(message["message_readers"][j]["user_id"] == widget.currentUser) {
+            break;
+          }
+        }
+
+
         messages.add(
           types.TextMessage(
+            status: messageReaders.isNotEmpty?Status.seen:Status.delivered,
             author: await getUser(message["sender_id"]),
             createdAt:
                 DateTime.parse(message["date_sent"]).millisecondsSinceEpoch,
@@ -353,6 +405,9 @@ class _PrivateMessage extends State<PrivateMessage> {
             loading || !userFound
                 ? _messagesSkeleton()
                 : Chat(
+                  customStatusBuilder: (message, {required BuildContext context}) {
+                    return MessageStatus(status: message.status,);
+                  },
                     inputOptions: InputOptions(
                       inputClearMode: InputClearMode.never,
                       textEditingController: controller,
@@ -424,10 +479,13 @@ class _PrivateMessage extends State<PrivateMessage> {
 
         // Create a new text message
         final textMessage = types.TextMessage(
+          showStatus: true,
+          status: Status.sending,
           author: await getUser(widget.currentUser),
           createdAt: DateTime.now().millisecondsSinceEpoch,
           id: const Uuid().v1(),
           text: message.text,
+          metadata: {"content": message.text},
         );
 
         // Add the message to the message list
@@ -482,7 +540,10 @@ class _PrivateMessage extends State<PrivateMessage> {
   @override
   void dispose() {
     try {
-      subscription.cancel(); // Stop listening to new messages
+      subscriptionMessages.cancel(); // Stop listening to new messages
+      subscriptionSeen.cancel(); // Stop listening to new seen
+      subscriptionTyping.cancel(); // Stop listening to new typing
+      subscriptionMessagesDelivered.cancel();
     } catch (e) {
       commonLogger.e("An error has occured: $e");
     }

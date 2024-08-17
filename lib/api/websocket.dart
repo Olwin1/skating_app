@@ -8,11 +8,23 @@ import 'config.dart';
 // Creates a class for a WebSocketConnection
 class WebSocketConnection {
   // Creates a StreamController to broadcast events
-  final StreamController<Map<String, dynamic>> _streamController =
+  final StreamController<Map<String, dynamic>> _streamControllerMessages =
+      StreamController<Map<String, dynamic>>.broadcast();
+  final StreamController<Map<String, dynamic>> _streamControllerSeen =
+      StreamController<Map<String, dynamic>>.broadcast();
+  final StreamController<Map<String, dynamic>> _streamControllerTyping =
+      StreamController<Map<String, dynamic>>.broadcast();
+  final StreamController<Map<String, dynamic>> _streamControllerMessagesDelivered =
       StreamController<Map<String, dynamic>>.broadcast();
 
   // Getter method for the stream controller's stream
-  Stream<Map<String, dynamic>> get stream => _streamController.stream;
+  Stream<Map<String, dynamic>> get streamMessages =>
+      _streamControllerMessages.stream;
+  Stream<Map<String, dynamic>> get streamSeen => _streamControllerSeen.stream;
+  Stream<Map<String, dynamic>> get streamTyping =>
+      _streamControllerTyping.stream;
+  Stream<Map<String, dynamic>> get streamMessagesDelivered =>
+      _streamControllerMessagesDelivered.stream;
 
   // Creates a variable to store the io.Socket instance
   late io.Socket socket;
@@ -44,7 +56,29 @@ class WebSocketConnection {
       socket.on('newMessage', (data) {
         commonLogger.d(
             "Sending NewMessage: $data"); // logs the received data to console
-        _streamController.add(data); // adds data to the stream controller
+        _streamControllerMessages
+            .add(data); // adds data to the stream controller
+      });
+
+      // Adds a listener for the 'newSeen' event
+      socket.on('newSeen', (data) {
+        commonLogger
+            .d("Sending NewSeen: $data"); // logs the received data to console
+        _streamControllerSeen.add(data); // adds data to the stream controller
+      });
+
+      // Adds a listener for the 'newTyping' event
+      socket.on('newTyping', (data) {
+        commonLogger
+            .d("Sending NewTyping: $data"); // logs the received data to console
+        _streamControllerTyping.add(data); // adds data to the stream controller
+      });
+
+            // Adds a listener for the 'delivered' event
+      socket.on('delivered', (data) {
+        commonLogger
+            .d("Sending Delivered: $data"); // logs the received data to console
+        _streamControllerMessagesDelivered.add(data); // adds data to the stream controller
       });
 
       // Adds a listener for the 'disconnect' event
@@ -57,10 +91,23 @@ class WebSocketConnection {
   }
 
   // Method to emit a message to the server
-  Future<bool> emitMessage(String channel, String content, String? image) async {
+  Future<bool> emitMessage(
+      String channel, String content, String? image) async {
     if (socket.connected) {
       socket.emit("message", {"channel": channel, "content": content});
       commonLogger.d('Emitting message, Data: $content');
+      return true;
+    } else {
+      commonLogger.e('Socket is not connected. Cannot emit message.');
+      return false;
+    }
+  }
+
+  // Method to emit a message to the server
+  Future<bool> emitSeenMessage(String channel, int messageNumber, String messageId) async {
+    if (socket.connected) {
+      socket.emit("seen", {"channel": channel, "messageNumber": messageNumber, "messageId": messageId});
+      commonLogger.d('Emitting seen, Message Number: $messageNumber');
       return true;
     } else {
       commonLogger.e('Socket is not connected. Cannot emit message.');

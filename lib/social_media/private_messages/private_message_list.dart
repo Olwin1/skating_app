@@ -228,7 +228,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
   static const _pageSize = 20;
   List<String> title = [];
   List<String> channel = [];
-  late StreamSubscription subscription;
+  late StreamSubscription subscriptionMessages;
   Map<String, dynamic> channelsData = <String, dynamic>{};
   PagingController<int, Map<String, dynamic>>? _pagingController;
 
@@ -243,13 +243,12 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       getIt<WebSocketConnection>().socket.connect();
     }
 
-    subscription = getIt<WebSocketConnection>().stream.listen((data) {
+    subscriptionMessages = getIt<WebSocketConnection>().streamMessages.listen((data) {
       mounted
           ? setState(() {
               channelsData[data["channel"]] = data["content"];
             })
           : null;
-      //TODO add channel to this
       showNotification(context, data, widget.currentUser);
     });
 
@@ -330,7 +329,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
   void dispose() {
     try {
       _pagingController?.dispose();
-      subscription.cancel();
+      subscriptionMessages.cancel();
       if (getIt<WebSocketConnection>().socket.connected) {
         getIt<WebSocketConnection>().socket.disconnect();
       }

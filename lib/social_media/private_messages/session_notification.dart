@@ -55,7 +55,7 @@ class NotificationBody extends StatelessWidget {
   final String channelId;
   final String currentUser;
 
-  NotificationBody(
+  const NotificationBody(
       {super.key,
       this.count = 0,
       this.minHeight = 0.0,

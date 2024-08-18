@@ -62,18 +62,19 @@ class _PrivateMessage extends State<PrivateMessage> {
   TextEditingController controller = TextEditingController();
   types.User? user;
 
-
   Timer? _typingTimer;
   //Has a callback function - is used
   // ignore: unused_field
   Timer? _keepaliveTimer;
-  final Duration typingDelay = const Duration(seconds: 3); // 3 to 5 seconds delay
-  final Duration keepaliveDelay = const Duration(seconds: 3); // 3 to 5 seconds delay
+  final Duration typingDelay =
+      const Duration(seconds: 3); // 3 to 5 seconds delay
+  final Duration keepaliveDelay =
+      const Duration(seconds: 3); // 3 to 5 seconds delay
   bool isTyping = false;
 
   @override
   void initState() {
-  controller.addListener(_onTextChanged);
+    controller.addListener(_onTextChanged);
     // Initialize the user if not already initialized
     if (user == null) {
       getUser(null).then(
@@ -100,15 +101,16 @@ class _PrivateMessage extends State<PrivateMessage> {
     subscriptionMessages = getIt<WebSocketConnection>().streamMessages.listen(
           (data) => updateMessages(data),
         );
-            subscriptionSeen = getIt<WebSocketConnection>().streamSeen.listen(
+    subscriptionSeen = getIt<WebSocketConnection>().streamSeen.listen(
           (data) => updateSeen(data),
         );
-            subscriptionTyping = getIt<WebSocketConnection>().streamTyping.listen(
+    subscriptionTyping = getIt<WebSocketConnection>().streamTyping.listen(
           (data) => handleTyping(data),
         );
-    subscriptionMessagesDelivered = getIt<WebSocketConnection>().streamMessagesDelivered.listen(
-          (data) => updateDelivered(data),
-        );
+    subscriptionMessagesDelivered =
+        getIt<WebSocketConnection>().streamMessagesDelivered.listen(
+              (data) => updateDelivered(data),
+            );
   }
 
   void _onTextChanged() {
@@ -119,20 +121,24 @@ class _PrivateMessage extends State<PrivateMessage> {
     _resetTypingTimer();
   }
 
-
   void _onTypingStarted() {
     isTyping = true;
-    
-    print('User started typing');
-    channelId==null?null:getIt<WebSocketConnection>().emitTyping(channelId!, TypingState.started);
-    _startTypingCheckTimer();
 
+    print('User started typing');
+    channelId == null
+        ? null
+        : getIt<WebSocketConnection>()
+            .emitTyping(channelId!, TypingState.started);
+    _startTypingCheckTimer();
   }
 
   void _onTypingStopped() {
     isTyping = false;
     print('User stopped typing');
-    channelId==null?null:getIt<WebSocketConnection>().emitTyping(channelId!, TypingState.stopped);
+    channelId == null
+        ? null
+        : getIt<WebSocketConnection>()
+            .emitTyping(channelId!, TypingState.stopped);
     _typingTimer?.cancel();
   }
 
@@ -140,9 +146,11 @@ class _PrivateMessage extends State<PrivateMessage> {
     _typingTimer?.cancel(); // Cancel any existing timer
     _keepaliveTimer = Timer.periodic(typingDelay, (timer) {
       if (isTyping) {
-
         print('User is still typing...');
-    channelId==null?null:getIt<WebSocketConnection>().emitTyping(channelId!, TypingState.typing);
+        channelId == null
+            ? null
+            : getIt<WebSocketConnection>()
+                .emitTyping(channelId!, TypingState.typing);
       } else {
         timer.cancel();
       }
@@ -252,38 +260,43 @@ class _PrivateMessage extends State<PrivateMessage> {
               );
             })
           : null;
-          getIt<WebSocketConnection>().emitSeenMessage(data["channel"], data["messageNumber"], data["messageId"]);
+      getIt<WebSocketConnection>().emitSeenMessage(
+          data["channel"], data["messageNumber"], data["messageId"]);
     } else {
       showNotification(context, data, widget.currentUser);
     }
   }
 
-    // Function to update messages when new messages arrive
+  // Function to update messages when new messages arrive
   void updateSeen(Map<String, dynamic> data) async {
     if (data["channel"] == channelId) {
       String messageNumber = data["messageNumber"].toString();
       commonLogger.d("ITS A MATCH for seen!");
-      for (int i = 0; i < _messages.length; i++){
-        if(_messages[i].id == messageNumber) {
+      for (int i = 0; i < _messages.length; i++) {
+        if (_messages[i].id == messageNumber) {
           setState(() {
-          _messages[i] = _messages[i].copyWith(status: Status.seen);
+            _messages[i] = _messages[i].copyWith(status: Status.seen);
           });
         }
       }
+    }
   }
-  }
+
   void updateDelivered(Map<String, dynamic> data) async {
     if (data["channel"] == channelId) {
       String messageNumber = data["messageNumber"].toString();
       commonLogger.d("ITS A MATCH for seen!");
-      for (int i = 0; i < _messages.length; i++){
-        if(_messages[i].author == user && _messages[i].status == Status.sending && _messages[i].metadata!["content"] == data["content"]) {
+      for (int i = 0; i < _messages.length; i++) {
+        if (_messages[i].author == user &&
+            _messages[i].status == Status.sending &&
+            _messages[i].metadata!["content"] == data["content"]) {
           setState(() {
-          _messages[i] = _messages[i].copyWith(status: Status.delivered, id: messageNumber);
+            _messages[i] = _messages[i]
+                .copyWith(status: Status.delivered, id: messageNumber);
           });
         }
       }
-  }
+    }
   }
 
   // Function to load initial messages
@@ -299,18 +312,17 @@ class _PrivateMessage extends State<PrivateMessage> {
       final messagesRaw = await MessagesAPI.getMessages(_page, channelId!);
       for (int i = 0; i < messagesRaw.length; i++) {
         dynamic message = messagesRaw[i];
-List<String> messageReaders = [];
+        List<String> messageReaders = [];
         for (int j = 0; j < message["message_readers"].length; j++) {
           messageReaders.add(message["message_readers"][j]["user_id"]);
-          if(message["message_readers"][j]["user_id"] == widget.currentUser) {
+          if (message["message_readers"][j]["user_id"] == widget.currentUser) {
             break;
           }
         }
 
-
         messages.add(
           types.TextMessage(
-            status: messageReaders.isNotEmpty?Status.seen:Status.delivered,
+            status: messageReaders.isNotEmpty ? Status.seen : Status.delivered,
             author: await getUser(message["sender_id"]),
             createdAt:
                 DateTime.parse(message["date_sent"]).millisecondsSinceEpoch,
@@ -357,30 +369,34 @@ List<String> messageReaders = [];
           : null;
     }
   }
-Map<String, Timer> typingUserTimers = {};
+
+  Map<String, Timer> typingUserTimers = {};
   void handleTyping(Map<String, dynamic> data) {
-    if(data["channel"] == channelId) {
-      switch(data["typingState"]) {
+    if (data["channel"] == channelId) {
+      switch (data["typingState"]) {
         case TypingState.started:
         case TypingState.typing:
-          if(typingUserTimers.containsKey(data["sender"])) {
-          //If is existing typing user
-          typingUserTimers[data["sender"]]!.cancel();
+          if (typingUserTimers.containsKey(data["sender"])) {
+            //If is existing typing user
+            typingUserTimers[data["sender"]]!.cancel();
           }
-          typingUserTimers[data["sender"]] = Timer.periodic(typingDelay, (timer) {handleTypingCancel(data);});
-bool found = false;
-          for (int i = 0; i < typingUsers.length; i++){
-            if(typingUsers[i].id == data["sender"]) {
+          typingUserTimers[data["sender"]] =
+              Timer.periodic(typingDelay, (timer) {
+            handleTypingCancel(data);
+          });
+          bool found = false;
+          for (int i = 0; i < typingUsers.length; i++) {
+            if (typingUsers[i].id == data["sender"]) {
               found = true;
               break;
             }
           }
-          if(!found){
-          getUser(data["sender"]).then((value) => {
-            setState(() {
-            typingUsers.add(value);
-            })
-          });
+          if (!found) {
+            getUser(data["sender"]).then((value) => {
+                  setState(() {
+                    typingUsers.add(value);
+                  })
+                });
           }
           break;
         default:
@@ -388,25 +404,25 @@ bool found = false;
       }
     }
   }
+
   List<User> typingUsers = [];
 
   void handleTypingCancel(Map<String, dynamic> data) {
-if(typingUserTimers.containsKey(data["sender"])) {
-  typingUserTimers.remove(data["sender"])!.cancel();
-}
-for (int i = 0; i < typingUsers.length; i++){
-  if(typingUsers[i].id == data["sender"]) {
-    setState(() {
-      typingUsers.removeAt(i);
-    });
-    break;
-  }
-}
+    if (typingUserTimers.containsKey(data["sender"])) {
+      typingUserTimers.remove(data["sender"])!.cancel();
+    }
+    for (int i = 0; i < typingUsers.length; i++) {
+      if (typingUsers[i].id == data["sender"]) {
+        setState(() {
+          typingUsers.removeAt(i);
+        });
+        break;
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
     // Hide the Navbar
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
 
@@ -506,10 +522,15 @@ for (int i = 0; i < typingUsers.length; i++){
             loading || !userFound
                 ? _messagesSkeleton()
                 : Chat(
-                  typingIndicatorOptions: TypingIndicatorOptions(typingMode: TypingIndicatorMode.both, typingUsers: typingUsers),
-                  customStatusBuilder: (message, {required BuildContext context}) {
-                    return MessageStatus(status: message.status,);
-                  },
+                    typingIndicatorOptions: TypingIndicatorOptions(
+                        typingMode: TypingIndicatorMode.both,
+                        typingUsers: typingUsers),
+                    customStatusBuilder: (message,
+                        {required BuildContext context}) {
+                      return MessageStatus(
+                        status: message.status,
+                      );
+                    },
                     inputOptions: InputOptions(
                       inputClearMode: InputClearMode.never,
                       textEditingController: controller,
@@ -527,34 +548,41 @@ for (int i = 0; i < typingUsers.length; i++){
                     },
                     user: user!,
                     theme: DefaultChatTheme(
-                      primaryColor: swatch[301]!,
-                      sentMessageBodyTextStyle: TextStyle(
-                        color: swatch[800],
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        height: 1.5,
-                      ),
-                      backgroundColor: Colors.transparent,
-                      secondaryColor: swatch[50]!,
-                      inputBackgroundColor: swatch[51]!,
-                      inputTextColor: swatch[800]!,
-                      dateDividerTextStyle: TextStyle(
-                        color: swatch[701],
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                        height: 1.333,
-                      ),
-                      inputMargin: const EdgeInsets.only(
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                      ),
-                      inputPadding: const EdgeInsets.all(16),
-                      inputBorderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(24),
-                      ),
-                      typingIndicatorTheme: TypingIndicatorTheme(animatedCirclesColor: swatch[801]!, animatedCircleSize: 6, bubbleBorder: BorderRadius.circular(1), bubbleColor: Colors.transparent, countAvatarColor: swatch[700]!, countTextColor: swatch[701]!, multipleUserTextStyle: TextStyle(color: swatch[801]))
-                    ),
+                        primaryColor: swatch[301]!,
+                        sentMessageBodyTextStyle: TextStyle(
+                          color: swatch[800],
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                        ),
+                        backgroundColor: Colors.transparent,
+                        secondaryColor: swatch[50]!,
+                        inputBackgroundColor: swatch[51]!,
+                        inputTextColor: swatch[800]!,
+                        dateDividerTextStyle: TextStyle(
+                          color: swatch[701],
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          height: 1.333,
+                        ),
+                        inputMargin: const EdgeInsets.only(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                        ),
+                        inputPadding: const EdgeInsets.all(16),
+                        inputBorderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(24),
+                        ),
+                        typingIndicatorTheme: TypingIndicatorTheme(
+                            animatedCirclesColor: swatch[801]!,
+                            animatedCircleSize: 6,
+                            bubbleBorder: BorderRadius.circular(1),
+                            bubbleColor: Colors.transparent,
+                            countAvatarColor: swatch[700]!,
+                            countTextColor: swatch[701]!,
+                            multipleUserTextStyle:
+                                TextStyle(color: swatch[801]))),
                     onEndReached: () => _loadMoreMessages(),
                   ),
           ],
@@ -571,7 +599,6 @@ for (int i = 0; i < typingUsers.length; i++){
           })
         : null;
   }
-
 
   // Function to handle send button press
   void _handleSendPressed(types.PartialText message) async {
@@ -644,16 +671,13 @@ for (int i = 0; i < typingUsers.length; i++){
   @override
   void dispose() {
     try {
-
-
       subscriptionMessages.cancel(); // Stop listening to new messages
       subscriptionSeen.cancel(); // Stop listening to new seen
       subscriptionTyping.cancel(); // Stop listening to new typing
       subscriptionMessagesDelivered.cancel();
 
-
-          controller.removeListener(_onTextChanged);
-    _typingTimer?.cancel();
+      controller.removeListener(_onTextChanged);
+      _typingTimer?.cancel();
     } catch (e) {
       commonLogger.e("An error has occured: $e");
     }

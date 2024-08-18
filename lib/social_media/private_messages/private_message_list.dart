@@ -243,7 +243,8 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       getIt<WebSocketConnection>().socket.connect();
     }
 
-    subscriptionMessages = getIt<WebSocketConnection>().streamMessages.listen((data) {
+    subscriptionMessages =
+        getIt<WebSocketConnection>().streamMessages.listen((data) {
       mounted
           ? setState(() {
               channelsData[data["channel"]] = data["content"];

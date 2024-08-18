@@ -678,6 +678,7 @@ class _PrivateMessage extends State<PrivateMessage> {
 
       controller.removeListener(_onTextChanged);
       _typingTimer?.cancel();
+      _keepaliveTimer?.cancel();
     } catch (e) {
       commonLogger.e("An error has occured: $e");
     }

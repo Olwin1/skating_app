@@ -4,6 +4,8 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../common_logger.dart';
 import 'config.dart';
+enum TypingState {started, typing, stopped}      
+
 
 // Creates a class for a WebSocketConnection
 class WebSocketConnection {
@@ -25,6 +27,7 @@ class WebSocketConnection {
       _streamControllerTyping.stream;
   Stream<Map<String, dynamic>> get streamMessagesDelivered =>
       _streamControllerMessagesDelivered.stream;
+
 
   // Creates a variable to store the io.Socket instance
   late io.Socket socket;
@@ -69,9 +72,23 @@ class WebSocketConnection {
 
       // Adds a listener for the 'newTyping' event
       socket.on('newTyping', (data) {
+      TypingState typingState;
+      switch(data["typingState"]) {
+        case 2:
+          typingState = TypingState.started;
+          break;
+        case 1:
+          typingState = TypingState.typing;
+          break;
+        default:
+          typingState = TypingState.stopped;
+          break;
+      }
+      Map<String, dynamic> e = data;
+      e["typingState"] = typingState;
         commonLogger
-            .d("Sending NewTyping: $data"); // logs the received data to console
-        _streamControllerTyping.add(data); // adds data to the stream controller
+            .d("Sending NewTyping: $e"); // logs the received data to console
+        _streamControllerTyping.add(e); // adds data to the stream controller
       });
 
             // Adds a listener for the 'delivered' event
@@ -108,6 +125,30 @@ class WebSocketConnection {
     if (socket.connected) {
       socket.emit("seen", {"channel": channel, "messageNumber": messageNumber, "messageId": messageId});
       commonLogger.d('Emitting seen, Message Number: $messageNumber');
+      return true;
+    } else {
+      commonLogger.e('Socket is not connected. Cannot emit message.');
+      return false;
+    }
+  }
+
+    Future<bool> emitTyping(String channel, TypingState typingState) async {
+    if (socket.connected) {
+            int typingStateRaw;
+      switch(typingState) {
+        case TypingState.started:
+          typingStateRaw = 2;
+          break;
+        case TypingState.typing:
+          typingStateRaw = 1;
+          break;
+        case TypingState.stopped:
+          typingStateRaw = 0;
+          break;
+      }
+
+      socket.emit("typing", {"channel": channel, "typingState": typingStateRaw});
+      commonLogger.d('Emitting typing, Typing State: $typingState');
       return true;
     } else {
       commonLogger.e('Socket is not connected. Cannot emit message.');

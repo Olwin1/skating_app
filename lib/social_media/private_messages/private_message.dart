@@ -62,8 +62,18 @@ class _PrivateMessage extends State<PrivateMessage> {
   TextEditingController controller = TextEditingController();
   types.User? user;
 
+
+  Timer? _typingTimer;
+  //Has a callback function - is used
+  // ignore: unused_field
+  Timer? _keepaliveTimer;
+  final Duration typingDelay = const Duration(seconds: 3); // 3 to 5 seconds delay
+  final Duration keepaliveDelay = const Duration(seconds: 3); // 3 to 5 seconds delay
+  bool isTyping = false;
+
   @override
   void initState() {
+  controller.addListener(_onTextChanged);
     // Initialize the user if not already initialized
     if (user == null) {
       getUser(null).then(
@@ -75,6 +85,7 @@ class _PrivateMessage extends State<PrivateMessage> {
     } else {
       setState(() => userFound = true);
     }
+    //getUser("387949971204341760").then((value) => setState(() {typingUsers.add(value); typingUsers.add(value); typingUsers.add(value);})); //Temp for typing
 
     channelId = widget.channel?["channel_id"];
     super.initState();
@@ -93,11 +104,54 @@ class _PrivateMessage extends State<PrivateMessage> {
           (data) => updateSeen(data),
         );
             subscriptionTyping = getIt<WebSocketConnection>().streamTyping.listen(
-          (data) => null,
+          (data) => handleTyping(data),
         );
     subscriptionMessagesDelivered = getIt<WebSocketConnection>().streamMessagesDelivered.listen(
           (data) => updateDelivered(data),
         );
+  }
+
+  void _onTextChanged() {
+    if (!isTyping) {
+      _onTypingStarted();
+    }
+
+    _resetTypingTimer();
+  }
+
+
+  void _onTypingStarted() {
+    isTyping = true;
+    
+    print('User started typing');
+    channelId==null?null:getIt<WebSocketConnection>().emitTyping(channelId!, TypingState.started);
+    _startTypingCheckTimer();
+
+  }
+
+  void _onTypingStopped() {
+    isTyping = false;
+    print('User stopped typing');
+    channelId==null?null:getIt<WebSocketConnection>().emitTyping(channelId!, TypingState.stopped);
+    _typingTimer?.cancel();
+  }
+
+  void _startTypingCheckTimer() {
+    _typingTimer?.cancel(); // Cancel any existing timer
+    _keepaliveTimer = Timer.periodic(typingDelay, (timer) {
+      if (isTyping) {
+
+        print('User is still typing...');
+    channelId==null?null:getIt<WebSocketConnection>().emitTyping(channelId!, TypingState.typing);
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  void _resetTypingTimer() {
+    _typingTimer?.cancel();
+    _typingTimer = Timer(typingDelay, _onTypingStopped);
   }
 
   // Function to show a skeleton UI while messages are loading
@@ -303,9 +357,56 @@ List<String> messageReaders = [];
           : null;
     }
   }
+Map<String, Timer> typingUserTimers = {};
+  void handleTyping(Map<String, dynamic> data) {
+    if(data["channel"] == channelId) {
+      switch(data["typingState"]) {
+        case TypingState.started:
+        case TypingState.typing:
+          if(typingUserTimers.containsKey(data["sender"])) {
+          //If is existing typing user
+          typingUserTimers[data["sender"]]!.cancel();
+          }
+          typingUserTimers[data["sender"]] = Timer.periodic(typingDelay, (timer) {handleTypingCancel(data);});
+bool found = false;
+          for (int i = 0; i < typingUsers.length; i++){
+            if(typingUsers[i].id == data["sender"]) {
+              found = true;
+              break;
+            }
+          }
+          if(!found){
+          getUser(data["sender"]).then((value) => {
+            setState(() {
+            typingUsers.add(value);
+            })
+          });
+          }
+          break;
+        default:
+          handleTypingCancel(data);
+      }
+    }
+  }
+  List<User> typingUsers = [];
+
+  void handleTypingCancel(Map<String, dynamic> data) {
+if(typingUserTimers.containsKey(data["sender"])) {
+  typingUserTimers.remove(data["sender"])!.cancel();
+}
+for (int i = 0; i < typingUsers.length; i++){
+  if(typingUsers[i].id == data["sender"]) {
+    setState(() {
+      typingUsers.removeAt(i);
+    });
+    break;
+  }
+}
+  }
 
   @override
   Widget build(BuildContext context) {
+
     // Hide the Navbar
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
 
@@ -405,6 +506,7 @@ List<String> messageReaders = [];
             loading || !userFound
                 ? _messagesSkeleton()
                 : Chat(
+                  typingIndicatorOptions: TypingIndicatorOptions(typingMode: TypingIndicatorMode.both, typingUsers: typingUsers),
                   customStatusBuilder: (message, {required BuildContext context}) {
                     return MessageStatus(status: message.status,);
                   },
@@ -451,6 +553,7 @@ List<String> messageReaders = [];
                       inputBorderRadius: const BorderRadius.vertical(
                         top: Radius.circular(24),
                       ),
+                      typingIndicatorTheme: TypingIndicatorTheme(animatedCirclesColor: swatch[801]!, animatedCircleSize: 6, bubbleBorder: BorderRadius.circular(1), bubbleColor: Colors.transparent, countAvatarColor: swatch[700]!, countTextColor: swatch[701]!, multipleUserTextStyle: TextStyle(color: swatch[801]))
                     ),
                     onEndReached: () => _loadMoreMessages(),
                   ),
@@ -468,6 +571,7 @@ List<String> messageReaders = [];
           })
         : null;
   }
+
 
   // Function to handle send button press
   void _handleSendPressed(types.PartialText message) async {
@@ -540,10 +644,16 @@ List<String> messageReaders = [];
   @override
   void dispose() {
     try {
+
+
       subscriptionMessages.cancel(); // Stop listening to new messages
       subscriptionSeen.cancel(); // Stop listening to new seen
       subscriptionTyping.cancel(); // Stop listening to new typing
       subscriptionMessagesDelivered.cancel();
+
+
+          controller.removeListener(_onTextChanged);
+    _typingTimer?.cancel();
     } catch (e) {
       commonLogger.e("An error has occured: $e");
     }

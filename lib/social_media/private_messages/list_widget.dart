@@ -116,7 +116,7 @@ class _ListWidget extends State<ListWidget> {
               context,
               MaterialPageRoute(
                 builder: (context) => PrivateMessage(
-                  index: 1,
+                  initSelf: false,
                   channel: widget.channel,
                   user: user,
                   currentUser: widget.currentUser,

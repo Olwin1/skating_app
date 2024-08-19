@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +19,7 @@ import 'api/config.dart';
 import 'api/social.dart';
 import 'common_logger.dart';
 import 'misc/default_profile.dart';
+import 'services/navigation_service.dart';
 import 'swatch.dart';
 import 'tab_navigator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -102,6 +104,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       title: 'Patinka',
+      navigatorKey: NavigationService.navigatorKey, // For Notifications - get build context
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       themeMode: ThemeMode.dark,

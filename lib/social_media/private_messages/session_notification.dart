@@ -22,7 +22,7 @@ void handleTap(context, Map<String, dynamic>? user,
     context,
     MaterialPageRoute(
       builder: (context) => PrivateMessage(
-        index: 1,
+        initSelf: false,
         channel: channelV,
         user: userV,
         currentUser: currentUser,

@@ -30,14 +30,14 @@ class PrivateMessage extends StatefulWidget {
   // Constructor takes an index and a channel as arguments
   const PrivateMessage({
     super.key,
-    required this.index,
+    required this.initSelf,
     this.channel,
     this.user,
     required this.currentUser,
     this.callback,
   });
 
-  final int index;
+  final bool initSelf;
   final Map<String, dynamic>? channel;
   final Map<String, dynamic>? user;
   final String currentUser;

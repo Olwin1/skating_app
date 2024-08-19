@@ -103,7 +103,6 @@ class _SendPost extends State<SendPost> {
                                     listen: false)
                                 .show(); // Show The Navbar
                           });
-                          ;
                         })
                       })
             });

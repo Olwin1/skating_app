@@ -6,7 +6,6 @@ import 'package:patinka/swatch.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'connections_list.dart';
-import 'profile_page.dart';
 
 class ProfileBanner extends StatelessWidget {
   final String? avatar;

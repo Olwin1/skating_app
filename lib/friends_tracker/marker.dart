@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/config.dart';
-import 'package:patinka/common_logger.dart';
 
 import '../misc/default_profile.dart';
 import '../swatch.dart';

@@ -44,9 +44,9 @@ class _EditPost extends State<EditPost> {
             widget.selectedImage); // Set the provider for the selected image.
     getAssetImage().then((value) => {
           mounted
-              ? setState(() => {
-                    initialSelection = widget.selectedImage,
-                    _imageToCrop = value, // Set the image data to be cropped.
+              ? setState(() {
+                    initialSelection = widget.selectedImage;
+                    _imageToCrop = value; // Set the image data to be cropped.
                   })
               : null,
         }); // Load the image data asynchronously.
@@ -67,10 +67,10 @@ class _EditPost extends State<EditPost> {
       // If the selection has changed,
       getAssetImage().then((value) => {
             mounted
-                ? setState(() => {
-                      initialSelection = widget.selectedImage,
+                ? setState(() {
+                      initialSelection = widget.selectedImage;
                       _imageToCrop =
-                          value, // Update the image data to be cropped.
+                          value; // Update the image data to be cropped.
                     })
                 : null,
           }); // Load the image data asynchronously.

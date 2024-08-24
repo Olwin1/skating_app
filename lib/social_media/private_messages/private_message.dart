@@ -426,6 +426,10 @@ class _PrivateMessage extends State<PrivateMessage> {
     // Hide the Navbar
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
 
+    if (getIt<WebSocketConnection>().socket.disconnected) {
+      getIt<WebSocketConnection>().socket.connect();
+    }
+
     // Set locale based on the language
     ChatL10n locale;
     switch (AppLocalizations.of(context)!.localeName) {

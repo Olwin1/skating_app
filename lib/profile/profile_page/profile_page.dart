@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_overlay/flutter_overlay.dart';
+import 'package:patinka/common_logger.dart';
 import 'package:patinka/profile/profile_page/options_menu.dart';
 import 'package:patinka/profile/profile_page/page_structure.dart';
 import 'package:patinka/profile/profile_page/post_footer.dart';
+import 'package:patinka/services/navigation_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/social.dart';
@@ -13,7 +15,6 @@ import 'package:patinka/api/social.dart';
 import '../../api/config.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../current_tab.dart';
 import '../../swatch.dart';
 
 // Define item type for popup menu
@@ -39,15 +40,16 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Use the Consumer widget to listen for changes to the CurrentPage object
     return navbar
-        ? Consumer<CurrentPage>(
-            builder: (context, currentPage, widget) =>
-                // If the CurrentPage's tab value is 4 (The profile page), return a Profile widget
-                currentPage.tab == 4
+        ? Consumer<NavigationService>(
+      builder: (context, navigationService, _) {
+        int a = NavigationService.getCurrentIndex();
+        commonLogger.d("Profile paege i: $a");
+        return a == 4
                     ? Profile(userId: userId)
                     :
                     // Otherwise, return an empty SizedBox widget
-                    const SizedBox.shrink(),
-          )
+                    const SizedBox.shrink();})
+          
         : Profile(
             userId: userId,
             friend: friend,

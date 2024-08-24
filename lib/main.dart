@@ -23,7 +23,6 @@ import 'services/navigation_service.dart';
 import 'swatch.dart';
 import 'tab_navigator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'current_tab.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import './misc/navbar_provider.dart';
@@ -104,7 +103,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       title: 'Patinka',
-      navigatorKey: NavigationService.navigatorKey, // For Notifications - get build context
+      //navigatorKey: NavigationService.currentNavigatorKey, // For Notifications - get build context
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       themeMode: ThemeMode.dark,
@@ -149,8 +148,8 @@ class StateManagement extends StatelessWidget {
   // with a CurrentPage object as the notifier and a child MyHomePage widget.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<CurrentPage>(
-      create: (_) => CurrentPage(),
+    return ChangeNotifierProvider<NavigationService>(
+      create: (_) => NavigationService.instance,
       child: MyHomePage(
         loggedIn: loggedIn,
         setLoggedIn: setLoggedIn,
@@ -306,43 +305,55 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     ]);
   }
 
-  final Map<String, GlobalKey<NavigatorState>> _navigatorKeys = {
-    "0": GlobalKey<
-        NavigatorState>(), //Create an individual navigation stack for each item
-    "1": GlobalKey<NavigatorState>(),
-    "2": GlobalKey<NavigatorState>(),
-    "3": GlobalKey<NavigatorState>(),
-    "4": GlobalKey<NavigatorState>(),
-  };
-  void _selectTab(
-      CurrentPage currentPage, TabItem<Widget> tabItem, String index) {
-    if (index == currentPage.tab.toString()) {
+  // final Map<String, GlobalKey<NavigatorState>> _navigatorKeys = {
+  //   "0": GlobalKey<
+  //       NavigatorState>(), //Create an individual navigation stack for each item
+  //   "1": GlobalKey<NavigatorState>(),
+  //   "2": GlobalKey<NavigatorState>(),
+  //   "3": GlobalKey<NavigatorState>(),
+  //   "4": GlobalKey<NavigatorState>(),
+  // };
+  void _selectTab(TabItem<Widget> tabItem, String index) {
+    if (index == NavigationService.getCurrentIndex().toString()) {
       // If current tab is main tab
       // pop to first route
-      _navigatorKeys[index]!.currentState!.popUntil((route) =>
+      NavigationService.navigatorKey(index)!.currentState!.popUntil((route) =>
           route.isFirst); //Reduce navigation stack until back to that page
     } else {
-      currentPage.set(int.parse(index)); // Set current tab to main page
+      NavigationService.setCurrentIndex(int.parse(index)); // Set current tab to main page
     }
   }
 
-  Future<bool> handlePop(CurrentPage currentPage) async {
-    final isFirstRouteInCurrentTab =
-        !await _navigatorKeys[currentPage.tab.toString()]!
-            .currentState!
-            .maybePop();
+  Future<void> handlePop(bool didPop) async {
+//     if(didPop) {return;}
+//     print("Popping with tab ${NavigationService.getCurrentIndex()}");
+//           //final isFirstRouteInCurrentTabb = ;#
+//           final modalRoute = ModalRoute.of(NavigationService.currentNavigatorKey!.currentContext!)!;
+//           final isFirstRouteInCurrentTab = modalRoute.isFirst && modalRoute.isCurrent;
+//       if(isFirstRouteInCurrentTab) {
+//       if(NavigationService.getCurrentIndex() != 0) {
+//         _selectTab(tabItems()[0], "0");
+//         return;
+//       }
+//       else {
+//         return;
+//       }
+//       }
+//     if(mounted){
+//     // let system handle back button if on the first route
+//     final NavigatorState a = Navigator.of(context);
+//     //final a = NavigationService.currentNavigatorKey!.currentState;
+//     if(a!.canPop()){
+//     a.pop();
+// print("PopPOng");
+//     }
+//     else {
+//       print("Cant pop");
+//     }
+//     //navigator.pop();
+//     }
 
-    if (isFirstRouteInCurrentTab) {
-      // if not on the 'main' tab
-      if (currentPage.tab != 0) {
-        // select 'main' tab
-        _selectTab(currentPage, tabItems()[0], "0");
-        // back button handled by app
-        return false;
-      }
-    }
-    // let system handle back button if on the first route
-    return isFirstRouteInCurrentTab;
+// //    return isFirstRouteInCurrentTab;
   }
 
   @override
@@ -372,10 +383,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           });
     }
     commonLogger.d(backgroundImage.toString());
-    return Consumer<CurrentPage>(builder: (context, currentPage, child) {
-      return WillPopScope(
+    return PopScope(
+      canPop: false,
           // Handle user swiping back inside application
-          onWillPop: () => handlePop(currentPage),
+          onPopInvoked: (bool didPop) => handlePop(didPop),
           child: Scaffold(
               extendBody: true,
               bottomNavigationBar: Consumer<BottomBarVisibilityProvider>(
@@ -407,13 +418,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                           //Define Navbar Object
                                           items:
                                               tabItems(), //Set navbar items to the tabitems
-                                          initialActiveIndex: currentPage
-                                              .tab, // Set initial selection to main page
+                                          //initialActiveIndex: NavigationService.getCurrentIndex(), // Set initial selection to main page
+                                          initialActiveIndex: 0, // Set initial selection to main page
                                           onTap: (int i) => {
                                             //When a navbar button is pressed set the current tab to the tabitem that was pressed
                                             mounted
                                                 ? setState(() {
-                                                    currentPage.set(i);
+                                                    NavigationService.setCurrentIndex(i);
                                                   })
                                                 : null,
                                             commonLogger.t(
@@ -461,25 +472,22 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           ),
                           padding: const EdgeInsets.all(16))),
                   // Create a navigator stack for each item
-                  _buildOffstageNavigator(currentPage, 0),
-                  _buildOffstageNavigator(currentPage, 1),
-                  _buildOffstageNavigator(currentPage, 2),
-                  _buildOffstageNavigator(currentPage, 3),
-                  _buildOffstageNavigator(currentPage, 4),
+                  _buildOffstageNavigator(0),
+                  _buildOffstageNavigator(1),
+                  _buildOffstageNavigator(2),
+                  _buildOffstageNavigator(3),
+                  _buildOffstageNavigator(4),
                 ],
               )
 
               // This trailing comma makes auto-formatting nicer for build methods.
               ));
-    });
   }
 
-  Widget _buildOffstageNavigator(CurrentPage currentPage, int tabItemIndex) {
-    if (currentPage.tab == tabItemIndex) {}
+  Widget _buildOffstageNavigator(int tabItemIndex) {
     return Offstage(
-      offstage: currentPage.tab != tabItemIndex,
+      offstage: NavigationService.getCurrentIndex() != tabItemIndex,
       child: TabNavigator(
-        navigatorKey: _navigatorKeys[tabItemIndex.toString()],
         tabItemIndex: tabItemIndex,
         tabitems: tabItems(),
       ),

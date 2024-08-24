@@ -9,9 +9,9 @@ import 'package:patinka/friends_tracker/marker.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:patinka/api/session.dart';
+import 'package:patinka/services/navigation_service.dart';
 import 'package:provider/provider.dart';
 import '../api/social.dart';
-import '../current_tab.dart';
 import './caching/map_cache.dart'
     if (dart.library.io) './caching/map_cache_mobile.dart'
     if (dart.library.html) './caching/map_cache_web.dart';
@@ -31,15 +31,13 @@ class FriendsTracker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Use the Consumer widget to listen for changes to the CurrentPage object
-    return Consumer<CurrentPage>(
-      builder: (context, currentPage, widget) =>
-          // If the CurrentPage's tab value is 3 (The friends tracker), return a FriendsTrackerPage widget
-          currentPage.tab == 3
+    return Consumer<NavigationService>(
+      builder: (context, navigationService, _) {
+        return NavigationService.getCurrentIndex() == 3
               ? const FriendsTrackerPage()
               :
               // Otherwise, return an empty SizedBox widget
-              const SizedBox.shrink(),
-    );
+              const SizedBox.shrink();});
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:patinka/services/navigation_service.dart';
 
 // Define a class named CurrentPage that extends ChangeNotifier.
 class CurrentPage extends ChangeNotifier {
@@ -9,7 +10,8 @@ class CurrentPage extends ChangeNotifier {
   int get tab => _tab;
 
   // Define a setter method named 'set' that takes a parameter named 'tab'.
-  void set(tab) {
+  void set(int tab) {
+        NavigationService.setCurrentIndex(tab);
     // Set the value of the _tab variable to the value of the 'tab' parameter.
     _tab = tab;
     // Notify any listeners that the value of the _tab variable has changed.
@@ -18,6 +20,7 @@ class CurrentPage extends ChangeNotifier {
 
   // Define a method named 'reset' that sets the value of the _tab variable to 0.
   void reset() {
+        NavigationService.setCurrentIndex(0);
     _tab = 0;
     // Notify any listeners that the value of the _tab variable has changed.
     notifyListeners();

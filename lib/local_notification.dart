@@ -29,7 +29,7 @@ Future<void> _firebaseMessagingMessageOpenedHandler(RemoteMessage message) async
             return;
           }
         Navigator.push(
-    NavigationService.navigatorKey.currentContext!,
+    NavigationService.currentNavigatorKey!.currentContext!,
     MaterialPageRoute(
       builder: (context) => PrivateMessage(
         initSelf: true,
@@ -126,7 +126,7 @@ class NotificationManager extends ChangeNotifier {
         "channel": message.data["channelId"],
         };
           
-          showNotification(NavigationService.navigatorKey.currentContext, data, userId);
+          showNotification(NavigationService.currentNavigatorKey!.currentContext, data, userId);
           addMessage(message);
         }
       });

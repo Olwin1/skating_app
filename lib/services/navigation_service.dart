@@ -50,6 +50,4 @@ class NavigationService extends ChangeNotifier {
     instance.dispose();
     super.dispose();
   }
-
-  // ... other methods and getters
 }

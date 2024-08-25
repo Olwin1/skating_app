@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/services.dart';
@@ -305,33 +304,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     ]);
   }
 
-  // final Map<String, GlobalKey<NavigatorState>> _navigatorKeys = {
-  //   "0": GlobalKey<
-  //       NavigatorState>(), //Create an individual navigation stack for each item
-  //   "1": GlobalKey<NavigatorState>(),
-  //   "2": GlobalKey<NavigatorState>(),
-  //   "3": GlobalKey<NavigatorState>(),
-  //   "4": GlobalKey<NavigatorState>(),
-  // };
-  void _selectTab(TabItem<Widget> tabItem, String index) {
-    if (index == NavigationService.getCurrentIndex().toString()) {
-      // If current tab is main tab
-      // pop to first route
-      NavigationService.navigatorKey(index)!.currentState!.popUntil((route) =>
-          route.isFirst); //Reduce navigation stack until back to that page
-    } else {
-      NavigationService.setCurrentIndex(int.parse(index)); // Set current tab to main page
-    }
-  }
-
   Future<void> handlePop(bool didPop) async {
-    if(didPop) {return;}
+    if (didPop) {
+      return;
+    }
     print("Popping with tab ${NavigationService.getCurrentIndex()}");
-          //final isFirstRouteInCurrentTabb = ;#
-          final modalRoute = ModalRoute.of(NavigationService.currentNavigatorKey.currentContext!)!;
-          final isFirstRouteInCurrentTab = modalRoute.isFirst && modalRoute.isCurrent;
-      if(isFirstRouteInCurrentTab) {
-        print("SHould change");
+    //final isFirstRouteInCurrentTabb = ;#
+    final modalRoute =
+        ModalRoute.of(NavigationService.currentNavigatorKey.currentContext!)!;
+    final isFirstRouteInCurrentTab = modalRoute.isFirst && modalRoute.isCurrent;
+    if (isFirstRouteInCurrentTab) {
+      print("SHould change");
       // if(NavigationService.getCurrentIndex() != 0) {
       //   _selectTab(tabItems()[0], "0");
       //   return;
@@ -339,19 +322,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       // else {
       //   return;
       // }
+    }
+    if (mounted) {
+      // let system handle back button if on the first route
+      //final NavigatorState a = Navigator.of(context);
+      final a = NavigationService.currentNavigatorKey.currentState;
+      if (a!.canPop()) {
+        a.pop();
+        print("PopPOng");
+      } else {
+        print("Cant pop");
       }
-    if(mounted){
-    // let system handle back button if on the first route
-    //final NavigatorState a = Navigator.of(context);
-    final a = NavigationService.currentNavigatorKey.currentState;
-    if(a!.canPop()){
-    a.pop();
-print("PopPOng");
-    }
-    else {
-      print("Cant pop");
-    }
-    //navigator.pop();
+      //navigator.pop();
     }
 
 //    return isFirstRouteInCurrentTab;
@@ -385,104 +367,105 @@ print("PopPOng");
     }
     commonLogger.d(backgroundImage.toString());
     return PopScope(
-      canPop: false,
-          // Handle user swiping back inside application
-          onPopInvoked: (bool didPop) => handlePop(didPop),
-          child: Scaffold(
-              extendBody: true,
-              bottomNavigationBar: Consumer<BottomBarVisibilityProvider>(
-                builder: (context, bottomBarVisibilityProvider, child) {
-                  return AnimatedBuilder(
-                    animation: bottomBarVisibilityProvider.animationController,
-                    builder: (context, child) {
-                      final translateY = Tween<double>(
-                        begin:
-                            bottomBarVisibilityProvider.isVisible ? 0.0 : 1.0,
-                        end: bottomBarVisibilityProvider.isVisible ? 1.0 : 0.0,
-                      )
-                          .animate(
-                              bottomBarVisibilityProvider.animationController)
-                          .value;
+        canPop: false,
+        // Handle user swiping back inside application
+        onPopInvoked: (bool didPop) => handlePop(didPop),
+        child: Scaffold(
+            extendBody: true,
+            bottomNavigationBar: Consumer<BottomBarVisibilityProvider>(
+              builder: (context, bottomBarVisibilityProvider, child) {
+                return AnimatedBuilder(
+                  animation: bottomBarVisibilityProvider.animationController,
+                  builder: (context, child) {
+                    final translateY = Tween<double>(
+                      begin: bottomBarVisibilityProvider.isVisible ? 0.0 : 1.0,
+                      end: bottomBarVisibilityProvider.isVisible ? 1.0 : 0.0,
+                    )
+                        .animate(
+                            bottomBarVisibilityProvider.animationController)
+                        .value;
 
-                      return Transform.translate(
-                        offset: Offset(0.0,
-                            translateY * 85.0), // Adjust the height as needed
-                        child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            child: !bottomBarVisibilityProvider.isVisible
-                                ? const Wrap() // Hide the widget when visible
-                                : Wrap(
-                                    children: [
-                                      StyleProvider(
-                                        style: Style(),
-                                        child: ConvexAppBar(
-                                          //Define Navbar Object
-                                          items:
-                                              tabItems(), //Set navbar items to the tabitems
-                                          //initialActiveIndex: NavigationService.getCurrentIndex(), // Set initial selection to main page
-                                          initialActiveIndex: 0, // Set initial selection to main page
-                                          onTap: (int i) => {
-                                            //When a navbar button is pressed set the current tab to the tabitem that was pressed
-                                            mounted
-                                                ? setState(() {
-                                                    NavigationService.setCurrentIndex(i);
-                                                  })
-                                                : null,
-                                            commonLogger.t(
-                                                "Setting the current page: $i")
-                                          }, // When a button is pressed... output to console
-                                          style: TabStyle
-                                              .fixedCircle, // Set the navbar style to have the circle stay at the centre
-                                          backgroundColor: const Color.fromARGB(
-                                              184, 32, 49, 33), //swatch[51],
-                                          activeColor: const Color.fromARGB(
-                                              51, 31, 175, 31),
-                                          shadowColor: Colors.green,
-                                          color: const Color.fromARGB(
-                                              51, 0, 23, 0),
-                                          height: 55,
-                                        ),
+                    return Transform.translate(
+                      offset: Offset(0.0,
+                          translateY * 85.0), // Adjust the height as needed
+                      child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          child: !bottomBarVisibilityProvider.isVisible
+                              ? const Wrap() // Hide the widget when visible
+                              : Wrap(
+                                  children: [
+                                    StyleProvider(
+                                      style: Style(),
+                                      child: ConvexAppBar(
+                                        //Define Navbar Object
+                                        items:
+                                            tabItems(), //Set navbar items to the tabitems
+                                        //initialActiveIndex: NavigationService.getCurrentIndex(), // Set initial selection to main page
+                                        initialActiveIndex:
+                                            0, // Set initial selection to main page
+                                        onTap: (int i) => {
+                                          //When a navbar button is pressed set the current tab to the tabitem that was pressed
+                                          mounted
+                                              ? setState(() {
+                                                  NavigationService
+                                                      .setCurrentIndex(i);
+                                                })
+                                              : null,
+                                          commonLogger
+                                              .t("Setting the current page: $i")
+                                        }, // When a button is pressed... output to console
+                                        style: TabStyle
+                                            .fixedCircle, // Set the navbar style to have the circle stay at the centre
+                                        backgroundColor: const Color.fromARGB(
+                                            184, 32, 49, 33), //swatch[51],
+                                        activeColor: const Color.fromARGB(
+                                            51, 31, 175, 31),
+                                        shadowColor: Colors.green,
+                                        color:
+                                            const Color.fromARGB(51, 0, 23, 0),
+                                        height: 55,
                                       ),
-                                    ],
-                                  )),
-                      );
-                    },
-                  );
-                },
-              ),
-              body: Stack(
-                children: [
-                  SingleChildScrollView(
-                      clipBehavior: Clip.none,
-                      physics: const ClampingScrollPhysics(
-                          parent: NeverScrollableScrollPhysics()),
-                      child: Container(
-                          constraints: BoxConstraints(
-                              minHeight: MediaQuery.of(context).size.height,
-                              minWidth: MediaQuery.of(context).size.width),
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: backgroundImage,
-                                fit: BoxFit.cover,
-                                alignment: Alignment.center,
-                                colorFilter: ColorFilter.mode(
-                                    Colors.black.withOpacity(0.4),
-                                    BlendMode.srcOver)),
-                          ),
-                          padding: const EdgeInsets.all(16))),
-                  // Create a navigator stack for each item
-                  _buildOffstageNavigator(0),
-                  _buildOffstageNavigator(1),
-                  _buildOffstageNavigator(2),
-                  _buildOffstageNavigator(3),
-                  _buildOffstageNavigator(4),
-                ],
-              )
+                                    ),
+                                  ],
+                                )),
+                    );
+                  },
+                );
+              },
+            ),
+            body: Stack(
+              children: [
+                SingleChildScrollView(
+                    clipBehavior: Clip.none,
+                    physics: const ClampingScrollPhysics(
+                        parent: NeverScrollableScrollPhysics()),
+                    child: Container(
+                        constraints: BoxConstraints(
+                            minHeight: MediaQuery.of(context).size.height,
+                            minWidth: MediaQuery.of(context).size.width),
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: backgroundImage,
+                              fit: BoxFit.cover,
+                              alignment: Alignment.center,
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.4),
+                                  BlendMode.srcOver)),
+                        ),
+                        padding: const EdgeInsets.all(16))),
+                // Create a navigator stack for each item
+                _buildOffstageNavigator(0),
+                _buildOffstageNavigator(1),
+                _buildOffstageNavigator(2),
+                _buildOffstageNavigator(3),
+                _buildOffstageNavigator(4),
+              ],
+            )
 
-              // This trailing comma makes auto-formatting nicer for build methods.
-              ));
+            // This trailing comma makes auto-formatting nicer for build methods.
+            ));
   }
 
   Widget _buildOffstageNavigator(int tabItemIndex) {

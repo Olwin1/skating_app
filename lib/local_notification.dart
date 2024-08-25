@@ -13,34 +13,38 @@ import 'common_logger.dart';
 // Entry point for handling Firebase background messages
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    await Firebase.initializeApp(); // Ensure Firebase is initialized
+  await Firebase.initializeApp(); // Ensure Firebase is initialized
   if (message.notification != null) {
     print(Config.uri);
     NotificationManager.instance.addMessage(message);
   }
 }
-Future<void> _firebaseMessagingMessageOpenedHandler(RemoteMessage message) async {
-  if(message.data.containsKey('channelId') && message.data.containsKey("click_action")) {
-    if(message.data["click_action"] == "FLUTTER_NOTIFICATION_CLICK") {
-      Map<String, dynamic> user = await SocialAPI.getUser(message.data["senderId"]);
-      Map<String, dynamic> channel = await MessagesAPI.getChannel(message.data["channelId"]);
-          String? userId = await storage.getId();
-          if(userId == null) {
-            return;
-          }
-        Navigator.push(
-    NavigationService.currentNavigatorKey.currentContext!,
-    MaterialPageRoute(
-      builder: (context) => PrivateMessage(
-        initSelf: true,
-        channel: channel,
-        user: user,
-        currentUser: userId,
-      ),
-    ),
-  );
+
+Future<void> _firebaseMessagingMessageOpenedHandler(
+    RemoteMessage message) async {
+  if (message.data.containsKey('channelId') &&
+      message.data.containsKey("click_action")) {
+    if (message.data["click_action"] == "FLUTTER_NOTIFICATION_CLICK") {
+      Map<String, dynamic> user =
+          await SocialAPI.getUser(message.data["senderId"]);
+      Map<String, dynamic> channel =
+          await MessagesAPI.getChannel(message.data["channelId"]);
+      String? userId = await storage.getId();
+      if (userId == null) {
+        return;
+      }
+      Navigator.push(
+        NavigationService.currentNavigatorKey.currentContext!,
+        MaterialPageRoute(
+          builder: (context) => PrivateMessage(
+            initSelf: true,
+            channel: channel,
+            user: user,
+            currentUser: userId,
+          ),
+        ),
+      );
     }
-    
   }
 }
 
@@ -114,19 +118,19 @@ class NotificationManager extends ChangeNotifier {
       // Listens for incoming messages while the app is in the foreground
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         if (message.notification != null) {
-
           print("AAAAAAA RECIEVED COW");
           String? userId = await storage.getId();
-          if(userId == null){
+          if (userId == null) {
             return;
           }
-          Map<String, dynamic> data = { 
-        "sender": message.data["senderId"],
-        "content": message.notification?.body??"",
-        "channel": message.data["channelId"],
-        };
-          
-          showNotification(NavigationService.currentNavigatorKey.currentContext, data, userId);
+          Map<String, dynamic> data = {
+            "sender": message.data["senderId"],
+            "content": message.notification?.body ?? "",
+            "channel": message.data["channelId"],
+          };
+
+          showNotification(NavigationService.currentNavigatorKey.currentContext,
+              data, userId);
           addMessage(message);
         }
       });
@@ -136,7 +140,7 @@ class NotificationManager extends ChangeNotifier {
           _firebaseMessagingBackgroundHandler);
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         _firebaseMessagingMessageOpenedHandler(message);
-       });
+      });
 
       // Listens for token refresh events
       FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {

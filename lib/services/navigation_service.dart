@@ -33,12 +33,12 @@ class NavigationService extends ChangeNotifier {
 
   // Get the currently selected NavigatorState
   static GlobalKey<NavigatorState> get currentNavigatorKey {
-    commonLogger.d("Getting Current Navigator of ${_currentIndex}");
+    commonLogger.d("Getting Current Navigator of $_currentIndex");
     return navigatorKeys[_currentIndex.toString()]!;
   }
 
   static GlobalKey<NavigatorState>? navigatorKey(String index) {
-    commonLogger.d("Getting Navigator of ${index}");
+    commonLogger.d("Getting Navigator of $index");
     return navigatorKeys[index];
   }
 

@@ -325,35 +325,36 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Future<void> handlePop(bool didPop) async {
-//     if(didPop) {return;}
-//     print("Popping with tab ${NavigationService.getCurrentIndex()}");
-//           //final isFirstRouteInCurrentTabb = ;#
-//           final modalRoute = ModalRoute.of(NavigationService.currentNavigatorKey!.currentContext!)!;
-//           final isFirstRouteInCurrentTab = modalRoute.isFirst && modalRoute.isCurrent;
-//       if(isFirstRouteInCurrentTab) {
-//       if(NavigationService.getCurrentIndex() != 0) {
-//         _selectTab(tabItems()[0], "0");
-//         return;
-//       }
-//       else {
-//         return;
-//       }
-//       }
-//     if(mounted){
-//     // let system handle back button if on the first route
-//     final NavigatorState a = Navigator.of(context);
-//     //final a = NavigationService.currentNavigatorKey!.currentState;
-//     if(a!.canPop()){
-//     a.pop();
-// print("PopPOng");
-//     }
-//     else {
-//       print("Cant pop");
-//     }
-//     //navigator.pop();
-//     }
+    if(didPop) {return;}
+    print("Popping with tab ${NavigationService.getCurrentIndex()}");
+          //final isFirstRouteInCurrentTabb = ;#
+          final modalRoute = ModalRoute.of(NavigationService.currentNavigatorKey.currentContext!)!;
+          final isFirstRouteInCurrentTab = modalRoute.isFirst && modalRoute.isCurrent;
+      if(isFirstRouteInCurrentTab) {
+        print("SHould change");
+      // if(NavigationService.getCurrentIndex() != 0) {
+      //   _selectTab(tabItems()[0], "0");
+      //   return;
+      // }
+      // else {
+      //   return;
+      // }
+      }
+    if(mounted){
+    // let system handle back button if on the first route
+    //final NavigatorState a = Navigator.of(context);
+    final a = NavigationService.currentNavigatorKey.currentState;
+    if(a!.canPop()){
+    a.pop();
+print("PopPOng");
+    }
+    else {
+      print("Cant pop");
+    }
+    //navigator.pop();
+    }
 
-// //    return isFirstRouteInCurrentTab;
+//    return isFirstRouteInCurrentTab;
   }
 
   @override

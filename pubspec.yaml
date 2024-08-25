@@ -83,18 +83,18 @@ dependencies:
   timeago: ^3.3.0
   shimmer: ^3.0.0
   logger: ^2.0.2+1
-  email_validator: ^2.1.17
+  email_validator: ^3.0.0
   flutter_map_tile_caching: ^8.0.1
   firebase_messaging: ^14.6.5
   firebase_core: ^2.14.0
-  flutter_local_notifications: ^16.1.0
+  flutter_local_notifications: ^17.2.2
   firebase_analytics: ^10.4.4
-  device_info_plus: ^9.0.2
+  device_info_plus: ^10.1.2
   shared_preferences: ^2.2.0
   path_provider: ^2.1.0
-  window_manager: ^0.3.7
+  window_manager: ^0.4.2
   path: ^1.8.3
-  sensors_plus: ^4.0.1
+  sensors_plus: ^6.0.1
   in_app_notification: ^1.1.2
 
 dependency_overrides:
@@ -109,9 +109,9 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.1
+  flutter_lints: ^4.0.0
   dart_code_metrics: ^5.7.6
-  lints: ^3.0.0
+  lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

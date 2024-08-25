@@ -331,11 +331,11 @@ class _LanguagePopupItemState extends State<LanguagePopupItem> {
   }
 }
 
-class MainColour extends MaterialStateColor {
+class MainColour extends WidgetStateColor {
   const MainColour() : super(0xffffffff);
 
   @override
-  Color resolve(Set<MaterialState> states) {
+  Color resolve(Set<WidgetState> states) {
     return swatch[301]!;
   }
 }

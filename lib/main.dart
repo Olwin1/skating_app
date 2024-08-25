@@ -220,26 +220,28 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       if (filePath != null) {
         getImage(filePath);
       } else {
-        MediaQueryData mediaQuery = MediaQuery.of(context);
-        final physicalPixelWidth =
-            mediaQuery.size.width * mediaQuery.devicePixelRatio;
-        final physicalPixelHeight =
-            mediaQuery.size.height * mediaQuery.devicePixelRatio;
-        downloadBackgroundImage(physicalPixelWidth, physicalPixelHeight)
-            .then((value) {
-          if (value) {
-            commonLogger.d("Downloading Value is true");
-            NetworkManager.instance
-                .getLocalData(
-                    name: "current-background", type: CacheTypes.background)
-                .then((filePath) {
-              if (filePath != null) {
-                commonLogger.d("File path aint none");
-                getImage(filePath);
-              }
-            });
-          }
-        });
+        if (mounted) {
+          MediaQueryData mediaQuery = MediaQuery.of(context);
+          final physicalPixelWidth =
+              mediaQuery.size.width * mediaQuery.devicePixelRatio;
+          final physicalPixelHeight =
+              mediaQuery.size.height * mediaQuery.devicePixelRatio;
+          downloadBackgroundImage(physicalPixelWidth, physicalPixelHeight)
+              .then((value) {
+            if (value) {
+              commonLogger.d("Downloading Value is true");
+              NetworkManager.instance
+                  .getLocalData(
+                      name: "current-background", type: CacheTypes.background)
+                  .then((filePath) {
+                if (filePath != null) {
+                  commonLogger.d("File path aint none");
+                  getImage(filePath);
+                }
+              });
+            }
+          });
+        }
       }
     });
     super.initState();
@@ -304,25 +306,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     ]);
   }
 
-  Future<void> handlePop(bool didPop) async {
+  Future<void> handlePop(bool didPop, Object? result) async {
     if (didPop) {
       return;
     }
     print("Popping with tab ${NavigationService.getCurrentIndex()}");
     //final isFirstRouteInCurrentTabb = ;#
-    final modalRoute =
-        ModalRoute.of(NavigationService.currentNavigatorKey.currentContext!)!;
-    final isFirstRouteInCurrentTab = modalRoute.isFirst && modalRoute.isCurrent;
-    if (isFirstRouteInCurrentTab) {
-      print("SHould change");
-      // if(NavigationService.getCurrentIndex() != 0) {
-      //   _selectTab(tabItems()[0], "0");
-      //   return;
-      // }
-      // else {
-      //   return;
-      // }
-    }
     if (mounted) {
       // let system handle back button if on the first route
       //final NavigatorState a = Navigator.of(context);
@@ -369,7 +358,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return PopScope(
         canPop: false,
         // Handle user swiping back inside application
-        onPopInvoked: (bool didPop) => handlePop(didPop),
+        onPopInvokedWithResult: (bool didPop, Object? result) =>
+            handlePop(didPop, result),
         child: Scaffold(
             extendBody: true,
             bottomNavigationBar: Consumer<BottomBarVisibilityProvider>(

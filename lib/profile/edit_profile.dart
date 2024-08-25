@@ -137,7 +137,7 @@ class _EditProfile extends State<EditProfile> {
   Widget build(BuildContext context) {
     return PopScope(
         canPop: true,
-        onPopInvoked: (bool didPop) => _onWillPop(didPop),
+        onPopInvokedWithResult: (bool didPop, result) => _onWillPop(didPop),
         child: Scaffold(
             backgroundColor: Colors.transparent,
             resizeToAvoidBottomInset: false,

@@ -64,7 +64,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
 
     return PopScope(
       canPop: true,
-      onPopInvoked: (bool didPop) {
+      onPopInvokedWithResult: (bool didPop, result) {
         // Show the bottom navigation bar when navigating back
         if (didPop) {
           Provider.of<BottomBarVisibilityProvider>(context, listen: false)
@@ -250,7 +250,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
               channelsData[data["channel"]] = data["content"];
             })
           : null;
-      showNotification(context, data, widget.currentUser);
+      mounted?showNotification(context, data, widget.currentUser):null;
     });
 
     super.initState();

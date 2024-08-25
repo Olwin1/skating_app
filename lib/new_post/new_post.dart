@@ -34,7 +34,7 @@ class NewPost extends StatelessWidget {
           Consumer<NavigationService>(
       builder: (context, navigationService, _) {
         return NavigationService.getCurrentIndex() == 2
-              ? NewPostPage()
+              ? const NewPostPage()
               :
               // Otherwise, return an empty SizedBox widget
               const SizedBox.shrink();});

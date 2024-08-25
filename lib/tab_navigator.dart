@@ -29,19 +29,18 @@ class TabNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var routeBuilders = _routeBuilders;
 
     return Navigator(
         key: NavigationService.navigatorKey(tabItemIndex.toString()),
         initialRoute: "0", //Set initial page to main page
 // TODO: opPopPage deprecated after Flutter 3.24 - change handler at that point for back on last route.
-        onPopPage: (route, result) {
-          if (!route.didPop(result)) {
-            return false;
-          }
+        onDidRemovePage: (Page<Object?> page) {
+          // if (!route.didPop(result)) {
+          //   return false;
+          // }
 
-          if (NavigationService.getCurrentIndex() != 0) {
-            print("cows");
+          // if (NavigationService.getCurrentIndex() != 0) {
+          //   print("cows");
             // PushReplacement to index 0
             // WidgetsBinding.instance.addPostFrameCallback((_) {
             //   NavigationService.navigatorKey("0")
@@ -49,14 +48,13 @@ class TabNavigator extends StatelessWidget {
             //       ?.pushReplacementNamed("/");
             // });
             // NavigationService.setCurrentIndex(0);
-          }
           print("cos");
 
-          return route.didPop(result);
+          // return route.didPop(result);
         },
         onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) {
-            return routeBuilders[tabItemIndex.toString()]!;
+            return _routeBuilders[tabItemIndex.toString()]!;
           }); //Get page at index i
         });
   }

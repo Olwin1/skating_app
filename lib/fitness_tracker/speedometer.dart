@@ -64,7 +64,7 @@ class _SpeedometerPage extends State<SpeedometerPage> {
     // Return a Scaffold with an AppBar and a KdGaugeView widget
     return PopScope(
         canPop: true,
-        onPopInvoked: (bool didPop) {
+        onPopInvokedWithResult: (bool didPop, result) {
           if (didPop) {
             Provider.of<BottomBarVisibilityProvider>(context, listen: false)
                 .show(); // Show The Navbar

@@ -442,7 +442,7 @@ class _PrivateMessage extends State<PrivateMessage> {
 
     return PopScope(
       canPop: true,
-      onPopInvoked: (bool hasPopped) => _onWillPop(hasPopped),
+      onPopInvokedWithResult: (bool hasPopped, result) => _onWillPop(hasPopped),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,

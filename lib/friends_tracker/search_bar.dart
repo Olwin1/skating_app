@@ -218,7 +218,7 @@ class _CustomSearchBar extends State<CustomSearchBar> {
               },
               child: SearchBar(
                 hintText: AppLocalizations.of(context)!.search,
-                hintStyle: MaterialStateProperty.resolveWith((states) {
+                hintStyle: WidgetStateProperty.resolveWith((states) {
                   return const TextStyle(
                       fontSize: 18.0,
                       color: Color.fromARGB(255, 131, 154, 128),
@@ -232,7 +232,7 @@ class _CustomSearchBar extends State<CustomSearchBar> {
                 ),
                 controller: _controller,
                 focusNode: _focusNode,
-                textStyle: MaterialStateProperty.resolveWith((states) {
+                textStyle: WidgetStateProperty.resolveWith((states) {
                   return const TextStyle(
                       fontSize: 18.0,
                       color: Colors.transparent,
@@ -242,9 +242,9 @@ class _CustomSearchBar extends State<CustomSearchBar> {
                 }),
                 textInputAction: TextInputAction.search,
                 keyboardType: TextInputType.text,
-                shape: MaterialStateProperty.resolveWith((states) {
+                shape: WidgetStateProperty.resolveWith((states) {
                   // // If the button is pressed, return size 40, otherwise 20
-                  if (states.contains(MaterialState.focused)) {
+                  if (states.contains(WidgetState.focused)) {
                     return const RoundedRectangleBorder(
                         borderRadius: BorderRadius.vertical(
                             top: Radius.circular(16), bottom: Radius.zero));
@@ -252,7 +252,7 @@ class _CustomSearchBar extends State<CustomSearchBar> {
                   return RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24.0));
                 }),
-                padding: MaterialStateProperty.resolveWith((states) {
+                padding: WidgetStateProperty.resolveWith((states) {
                   return const EdgeInsets.only(
                       top: 8, bottom: 8, left: 0, right: 8);
                 }),

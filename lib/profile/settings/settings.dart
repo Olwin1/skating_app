@@ -54,7 +54,7 @@ class _Settings extends State<Settings> {
     // Building the UI of the Settings widget
     return PopScope(
       // Handle when the user navigates back
-      onPopInvoked: (popped) {
+      onPopInvokedWithResult: (popped, result) {
         if (popped) {
           // Show the bottom navigation bar
           Provider.of<BottomBarVisibilityProvider>(context, listen: false)
@@ -177,9 +177,9 @@ class _Settings extends State<Settings> {
                           title: Text(AppLocalizations.of(context)!.logout),
                           onPressed: (e) => {
                             // Remove stored tokens and restart app
-                            storage
-                                .logout()
-                                .then((value) => Phoenix.rebirth(context))
+                            storage.logout().then((value) => {
+                                  if (mounted) {Phoenix.rebirth(context)}
+                                })
                           },
                         ),
                       ],

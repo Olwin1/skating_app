@@ -90,8 +90,8 @@ class _SendPost extends State<SendPost> {
                   // Wait for "postPost" to complete successfully
                   .then((value) => {
                         // When "postPost" completes successfully, close the current screen
-                        Navigator.of(context).pop(),
-                        Navigator.of(context).pop(),
+                        NavigationService.currentNavigatorKey.currentState?.pop(),
+                        NavigationService.currentNavigatorKey.currentState?.pop(),
                         NavigationService.setCurrentIndex(0),
                         SchedulerBinding.instance
                             .addPostFrameCallback((_) async {
@@ -113,7 +113,7 @@ class _SendPost extends State<SendPost> {
     // Return the scaffold with the app bar and body
     return PopScope(
         canPop: true,
-        onPopInvoked: (bool didPop) {},
+        onPopInvokedWithResult: (bool didPop, result) {},
         child: Scaffold(
           backgroundColor: Colors.transparent,
           extendBodyBehindAppBar: true,

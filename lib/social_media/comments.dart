@@ -58,7 +58,7 @@ class _Comments extends State<Comments> {
 
     return PopScope(
       canPop: true,
-      onPopInvoked: (bool didPop) {
+      onPopInvokedWithResult: (bool didPop, result) {
         // Show the bottom navigation bar when leaving the comment screen
         if (didPop) {
           Provider.of<BottomBarVisibilityProvider>(context, listen: false)

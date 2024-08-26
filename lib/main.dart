@@ -102,7 +102,6 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       title: 'Patinka',
-      //navigatorKey: NavigationService.currentNavigatorKey, // For Notifications - get build context
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       themeMode: ThemeMode.dark,

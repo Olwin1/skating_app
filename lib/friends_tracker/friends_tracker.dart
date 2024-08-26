@@ -104,6 +104,12 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
 
   BoxConstraints constraintsMax = const BoxConstraints(maxHeight: 0);
 
+  void focusChangeCallback() {
+    setState(() {
+      searchOpened = !searchOpened;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     commonLogger.t("Building Map");
@@ -141,7 +147,7 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                       minZoom: 3.0,
                       maxZoom: 19),
                   nonRotatedChildren: [
-                    SafeArea(child: CustomSearchBar(mapController: controller)),
+                    SafeArea(child: CustomSearchBar(mapController: controller, focusChangeCallback: focusChangeCallback)),
 
                     AnimatedSwitcher(
                         duration: const Duration(
@@ -157,7 +163,7 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                                     searchOpened: searchOpened,
                                     sessions: newSessions),
                               )
-                            : Container()),
+                            : const SizedBox.shrink()),
 
                     // Default Attribution
                     // AttributionWidget.defaultWidget(

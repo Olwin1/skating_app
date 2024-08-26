@@ -7,8 +7,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomSearchBar extends StatefulWidget {
   final MapController mapController;
+  final Function focusChangeCallback;
 
-  const CustomSearchBar({super.key, required this.mapController});
+  const CustomSearchBar({super.key, required this.mapController, required this.focusChangeCallback});
 
   @override
   State<CustomSearchBar> createState() => _CustomSearchBar();
@@ -94,6 +95,7 @@ class _CustomSearchBar extends State<CustomSearchBar> {
   }
 
   void _onFocusChanged() {
+    widget.focusChangeCallback();
     setState(() {
       for (String flag in _isInsideFlag.keys) {
         _isInsideFlag[flag] = _focusNode.hasFocus && _isInsideFlag[flag]!;

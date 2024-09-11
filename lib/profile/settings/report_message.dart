@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/api/config.dart';
 import 'package:patinka/api/social.dart';
 import 'package:patinka/misc/default_profile.dart';
+import 'package:patinka/services/role.dart';
 import 'package:patinka/swatch.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/common_logger.dart';
@@ -15,6 +16,7 @@ class ReportMessage extends StatefulWidget {
   final Map<String, dynamic> message;
   final int index;
   final FocusNode focus;
+  final Status status;
 
   // Constructor for Message widget
   const ReportMessage({
@@ -22,6 +24,7 @@ class ReportMessage extends StatefulWidget {
     required this.index,
     required this.focus,
     required this.message,
+    required this.status
   });
 
   @override
@@ -137,24 +140,7 @@ class _ReportMessageState extends State<ReportMessage> {
                     textAlign: TextAlign.start,
                     style: TextStyle(color: swatch[801]),
                   ),
-                  // Display message actions (e.g., reply, like, dislike)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      _buildCommentActionButton(
-                        onPressed: () => widget.focus.requestFocus(),
-                        label: AppLocalizations.of(context)!.reply,
-                      ),
-                      _buildCommentActionButton(
-                        onPressed: () {},
-                        label: AppLocalizations.of(context)!.like,
-                      ),
-                      _buildCommentActionButton(
-                        onPressed: () {},
-                        label: AppLocalizations.of(context)!.dislike,
-                      ),
-                    ],
-                  ),
+                  const SizedBox(height: 20)
                 ],
               ),
             ),
@@ -169,20 +155,22 @@ class _ReportMessageState extends State<ReportMessage> {
     required VoidCallback onPressed,
     required String label,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: TextButton(
-        onPressed: onPressed,
-        child: Text(
+    Widget txt = Text(
           label,
           textAlign: TextAlign.end,
           style: TextStyle(
-            color: swatch[50],
+            color: widget.status!=Status.closed?swatch[50]:Colors.grey,
             fontWeight: FontWeight.bold,
             letterSpacing: 0.2,
           ),
-        ),
-      ),
+        );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: widget.status!=Status.closed?TextButton(
+        onPressed: onPressed,
+        child: txt,
+      ):Padding(padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16), child: txt),
     );
   }
 }

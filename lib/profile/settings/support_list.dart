@@ -82,14 +82,6 @@ class _SupportListViewState extends State<SupportListView> {
 UserRole userRole = UserRole.regular;
   @override
   void initState() {
-    if(widget.user != null) {
-      UserRole tmp = RoleServices.convertToEnum(widget.user!["user_role"]);
-      if(tmp != UserRole.regular) {
-setState(() {
-    userRole = tmp;
-});
-      }
-    }
     // Add a listener for page requests, and call _fetchPage() when a page is requested
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
@@ -204,6 +196,19 @@ class UserListWidget extends StatefulWidget {
 
 // _UserListWidget class is the state of the UserListWidget
 class _UserListWidget extends State<UserListWidget> {
+  UserRole userRole = UserRole.regular;
+  @override
+  void initState() {
+    if(widget.user != null) {
+      UserRole tmp = RoleServices.convertToEnum(widget.user!["user_role"]);
+      if(tmp != UserRole.regular) {
+setState(() {
+    userRole = tmp;
+});
+      }
+    }
+    super.initState();
+  }
   void handlePress() {
     Navigator.of(context).push(
       PageRouteBuilder(
@@ -211,8 +216,9 @@ class _UserListWidget extends State<UserListWidget> {
           report: widget.item,
           user: widget.user,
           reportType: widget.listType,
+          userRole: userRole
         ),
-        opaque: false,
+        opaque: true,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = 0.0;
           const end = 1.0;

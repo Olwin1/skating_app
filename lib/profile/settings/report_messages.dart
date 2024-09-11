@@ -7,6 +7,7 @@ import 'package:patinka/api/support.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/components/list_error.dart';
 import 'package:patinka/profile/settings/list_type.dart';
+import 'package:patinka/services/role.dart';
 import 'package:patinka/swatch.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'report_message.dart';
@@ -23,9 +24,12 @@ class Messages extends StatefulWidget {
       {super.key,
       required this.feedbackId,
       required this.user,
-      required this.reportType});
+      required this.reportType,
+      required this.status
+      });
 
   final Map<String, dynamic>? user;
+  final Status status;
 
   @override
   State<Messages> createState() => _Messages();
@@ -50,7 +54,7 @@ class _Messages extends State<Messages> {
   Widget build(BuildContext context) {
     // Create a new focus node every time the widget is built
     focus = FocusNode();
-
+if(widget.status != Status.closed) {
     return CommentBox(
       focusNode: focus,
       userImage: CommentBox.commentImageParser(
@@ -58,7 +62,7 @@ class _Messages extends State<Messages> {
             ? "assets/icons/hand.png"
             : '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
       ),
-      labelText: AppLocalizations.of(context)!.writeComment,
+      labelText: AppLocalizations.of(context)!.message,
       errorText: 'Message cannot be blank',
       withBorder: false,
       commentController: commentController,
@@ -75,12 +79,23 @@ class _Messages extends State<Messages> {
       textColor: swatch[801],
       sendWidget: Icon(Icons.send_sharp, size: 30, color: swatch[801]),
       child: MessagesListView(
+        status: widget.status,
           key: commentsListKey,
           post: widget.feedbackId,
           focus: focus,
           pagingController: _pagingController,
           reportType: widget.reportType),
     );
+  }
+  else {
+    return Stack(children: [MessagesListView(
+          status: widget.status,
+          key: commentsListKey,
+          post: widget.feedbackId,
+          focus: focus,
+          pagingController: _pagingController,
+          reportType: widget.reportType), Positioned(right:0, left:0, bottom:0, child: Container(padding: const EdgeInsets.symmetric(vertical: 20), height: 100, color: const Color(0xcc000000), child: const Center(child: Column(children: [Text("This Report Has Been Marked As Closed.", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, ),), Text("Reports marked as closed cannot be modified.")]))))]);
+  }
   }
 
   @override
@@ -98,13 +113,16 @@ class MessagesListView extends StatefulWidget {
   final String post;
   final PagingController<int, Map<String, dynamic>> pagingController;
   final SupportListType reportType;
+  final Status status;
 
   const MessagesListView(
       {super.key,
       required this.focus,
       required this.post,
       required this.pagingController,
-      required this.reportType});
+      required this.reportType,
+      required this.status,
+      });
 
   @override
   State<MessagesListView> createState() => _MessagesListViewState();
@@ -185,8 +203,8 @@ class _MessagesListViewState extends State<MessagesListView> {
         ? Padding(
             padding: EdgeInsets.only(top: height),
             child:
-                ReportMessage(index: index, focus: widget.focus, message: item),
+                ReportMessage(index: index, focus: widget.focus, message: item, status: widget.status),
           )
-        : ReportMessage(index: index, focus: widget.focus, message: item);
+        : ReportMessage(index: index, focus: widget.focus, message: item, status: widget.status);
   }
 }

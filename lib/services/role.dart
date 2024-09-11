@@ -3,6 +3,12 @@ enum UserRole {
   moderator,
   administrator
 }
+enum Status {
+  open,
+  inProgress,
+  resolved,
+  closed
+}
 class RoleServices {
   static UserRole convertToEnum(String role) {
     switch(role) {
@@ -12,6 +18,18 @@ class RoleServices {
         return UserRole.administrator;
       default:
         return UserRole.regular;
+    }
+  }
+    static Status convertToStatus(String role) {
+    switch(role) {
+      case "open":
+        return Status.open;
+      case "inProgess":
+        return Status.inProgress;
+      case "resolved":
+        return Status.resolved;
+      default:
+        return Status.closed;
     }
   }
 }

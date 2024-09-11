@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:patinka/api/config.dart';
 import 'package:patinka/profile/settings/list_type.dart';
 import 'package:patinka/profile/settings/report_messages.dart';
+import 'package:patinka/profile/settings/status_dropdown.dart';
 import 'package:patinka/services/role.dart';
 import 'package:patinka/swatch.dart';
 
@@ -17,7 +18,7 @@ class ReportPage extends StatefulWidget {
       {super.key,
       required this.report,
       required this.user,
-      required this.reportType,required this. userRole});
+      required this.reportType,required this.userRole});
   @override
   State<ReportPage> createState() => _ReportPage();
 }
@@ -36,7 +37,19 @@ class _ReportPage extends State<ReportPage> {
     }
     super.initState();
   }
-  
+  Widget loadStatusIcon(Color statusColour) {
+    if(widget.userRole != UserRole.moderator || widget.userRole == UserRole.administrator) {
+      return StatusDropdown(report: widget.report, onStatusChanged: (a) {print("Update request status");});
+    }
+        return Container(
+                            margin: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                color: statusColour,
+                                borderRadius: BorderRadius.circular(16)),
+                            child: Text(widget.report["status"]));
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -110,13 +123,7 @@ class _ReportPage extends State<ReportPage> {
                       ),
                       Row(children: [
                         const Text("Status:"),
-                        Container(
-                            margin: const EdgeInsets.all(8),
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                color: statusColour,
-                                borderRadius: BorderRadius.circular(16)),
-                            child: Text(widget.report["status"]))
+                        loadStatusIcon(statusColour),
                       ]),
                     ]),
               ),

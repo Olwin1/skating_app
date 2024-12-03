@@ -38,7 +38,7 @@ class _SpeedometerPage extends State<SpeedometerPage> {
       //             animate: true, duration: const Duration(milliseconds: 800));
       //       })
       //     });
-      accelerometerEventStream(samplingPeriod: SensorInterval.uiInterval)
+      stream = accelerometerEventStream(samplingPeriod: SensorInterval.uiInterval)
           .listen(
         (AccelerometerEvent event) {
           double speed = double.parse((sqrt(pow(event.x, 2) +

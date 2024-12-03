@@ -18,7 +18,7 @@ import 'list_widget.dart';
 import '../../api/messages.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:timeago/timeago.dart' as timeago;
+import 'session_notification.dart';
 
 // Initialize GetIt for dependency injection
 GetIt getIt = GetIt.instance;
@@ -64,7 +64,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
 
     return PopScope(
       canPop: true,
-      onPopInvoked: (bool didPop) {
+      onPopInvokedWithResult: (bool didPop, result) {
         // Show the bottom navigation bar when navigating back
         if (didPop) {
           Provider.of<BottomBarVisibilityProvider>(context, listen: false)
@@ -127,11 +127,12 @@ class _PrivateMessageList extends State<PrivateMessageList> {
             children: [
               Expanded(
                 child: currentUser == null
-                    ? Container()
+                    ? const SizedBox.shrink()
                     : ChannelsListView(
                         currentUser: currentUser!,
                         pagingController: _pagingController,
-                        refreshList: _pagingController.refresh),
+                        refreshList: _pagingController.refresh,
+                      ),
               ),
             ],
           ),
@@ -207,11 +208,12 @@ Widget _loadingSkeleton() {
 
 // Widget for the list of channels
 class ChannelsListView extends StatefulWidget {
-  const ChannelsListView(
-      {super.key,
-      required this.currentUser,
-      required this.pagingController,
-      required this.refreshList});
+  const ChannelsListView({
+    super.key,
+    required this.currentUser,
+    required this.pagingController,
+    required this.refreshList,
+  });
 
   final String currentUser;
   final PagingController<int, Map<String, dynamic>> pagingController;
@@ -226,7 +228,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
   static const _pageSize = 20;
   List<String> title = [];
   List<String> channel = [];
-  late StreamSubscription subscription;
+  late StreamSubscription subscriptionMessages;
   Map<String, dynamic> channelsData = <String, dynamic>{};
   PagingController<int, Map<String, dynamic>>? _pagingController;
 
@@ -241,11 +243,15 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       getIt<WebSocketConnection>().socket.connect();
     }
 
-    subscription = getIt<WebSocketConnection>().stream.listen((data) => mounted
-        ? setState(() {
-            channelsData[data["channel"]] = data["content"];
-          })
-        : null);
+    subscriptionMessages =
+        getIt<WebSocketConnection>().streamMessages.listen((data) {
+      mounted
+          ? setState(() {
+              channelsData[data["channel"]] = data["content"];
+            })
+          : null;
+      mounted?showNotification(context, data, widget.currentUser):null;
+    });
 
     super.initState();
   }
@@ -313,7 +319,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
                     index: index,
                     channel: item,
                     desc:
-                        "Last Message: ${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
+                        "Last Message:", //${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
                     currentUser: widget.currentUser,
                     refreshPage: widget.refreshList),
           ),
@@ -324,7 +330,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
   void dispose() {
     try {
       _pagingController?.dispose();
-      subscription.cancel();
+      subscriptionMessages.cancel();
       if (getIt<WebSocketConnection>().socket.connected) {
         getIt<WebSocketConnection>().socket.disconnect();
       }

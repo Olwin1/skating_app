@@ -5,6 +5,8 @@ import 'package:patinka/api/support.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/components/list_error.dart';
 import 'package:patinka/profile/settings/report.dart';
+import 'package:patinka/services/role.dart';
+import 'package:patinka/social_media/post_widget.dart';
 import 'create_report.dart';
 
 import '../../api/config.dart';
@@ -77,7 +79,7 @@ class _SupportListViewState extends State<SupportListView> {
   // The controller that manages pagination
   final PagingController<int, Map<String, dynamic>> _pagingController =
       PagingController(firstPageKey: 0);
-
+UserRole userRole = UserRole.regular;
   @override
   void initState() {
     // Add a listener for page requests, and call _fetchPage() when a page is requested
@@ -124,6 +126,7 @@ class _SupportListViewState extends State<SupportListView> {
 
   @override
   Widget build(BuildContext context) {
+
     // Build a paginated list view of comments using the PagedListView widget
     return Stack(children: [
       PagedListView<int, Map<String, dynamic>>(
@@ -193,6 +196,19 @@ class UserListWidget extends StatefulWidget {
 
 // _UserListWidget class is the state of the UserListWidget
 class _UserListWidget extends State<UserListWidget> {
+  UserRole userRole = UserRole.regular;
+  @override
+  void initState() {
+    if(widget.user != null) {
+      UserRole tmp = RoleServices.convertToEnum(widget.user!["user_role"]);
+      if(tmp != UserRole.regular) {
+setState(() {
+    userRole = tmp;
+});
+      }
+    }
+    super.initState();
+  }
   void handlePress() {
     Navigator.of(context).push(
       PageRouteBuilder(
@@ -200,8 +216,9 @@ class _UserListWidget extends State<UserListWidget> {
           report: widget.item,
           user: widget.user,
           reportType: widget.listType,
+          userRole: userRole
         ),
-        opaque: false,
+        opaque: true,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = 0.0;
           const end = 1.0;
@@ -219,6 +236,14 @@ class _UserListWidget extends State<UserListWidget> {
   // Builds the widget
   @override
   Widget build(BuildContext context) {
+    bool isOwnReport = true;
+    bool isAssignedToUser = false;
+    if(widget.user!["user_id"] != widget.item["user_id"]) {
+      isOwnReport = false;
+      if(widget.user!["user_id"] == widget.item["assigned_to"]) {
+        isAssignedToUser = true;
+      }
+    }
     Color statusColour = widget.item["status"] == "closed"
         ? Colors.red.shade700
         : widget.item["status"] == "open"
@@ -239,6 +264,7 @@ class _UserListWidget extends State<UserListWidget> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                      Row(children: [
                     Text(
                       widget.item["subject"],
                       style: TextStyle(
@@ -249,6 +275,9 @@ class _UserListWidget extends State<UserListWidget> {
                       overflow: TextOverflow.fade,
                       softWrap: false,
                     ),
+                                              const SizedBox(width: 50,),
+                      !isOwnReport?!isAssignedToUser?const Text("Unassigned"):const SizedBox.shrink():const SizedBox.shrink(),
+                    ]),
                     Text(
                       widget.item["content"],
                       style: TextStyle(color: swatch[801], fontSize: 15),
@@ -263,24 +292,17 @@ class _UserListWidget extends State<UserListWidget> {
                           decoration: BoxDecoration(
                               color: statusColour,
                               borderRadius: BorderRadius.circular(16)),
-                          child: Text(widget.item["status"]))
+                          child: Text(widget.item["status"])),
+                          const SizedBox(width: 45,),
+                      !isOwnReport?isAssignedToUser?const Text("Assigned to:"): const Text("Created By:"):const SizedBox.shrink(),
+                      !isOwnReport?isAssignedToUser?Container(margin: const EdgeInsets.only(left: 8), height:28, width: 28, child: Avatar(user: widget.item["assigned_to"])):const SizedBox.shrink():const SizedBox.shrink(),
+                      !isOwnReport?!isAssignedToUser?Container(margin: const EdgeInsets.only(left: 8), height:28, width: 28, child: Avatar(user: widget.item["user_id"])):const SizedBox.shrink():const SizedBox.shrink(),
                     ]),
                   ])),
               IconButton(
                   onPressed: () => commonLogger.i("handle icon press"),
                   icon: const Icon(Icons.navigate_next))
             ])
-
-            // TextButton with an onPressed function that prints test value "ee" and a child text widget with the text "Follow"
-            // widget.ownerUser == null
-            //     ? TextButton(
-            //         onPressed: () => handleDelete(),
-            //         child: Text(widget.listType == SupportListType.followingList
-            //             ? AppLocalizations.of(context)!.unfollow
-            //             : widget.listType == SupportListType.followersList
-            //                 ? "Remove"
-            //                 : "Unfriend"))
-            //     : const SizedBox.shrink(),
             ));
   }
 }

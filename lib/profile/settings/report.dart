@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:patinka/api/config.dart';
 import 'package:patinka/profile/settings/list_type.dart';
 import 'package:patinka/profile/settings/report_messages.dart';
+import 'package:patinka/profile/settings/status_dropdown.dart';
+import 'package:patinka/services/role.dart';
 import 'package:patinka/swatch.dart';
 
 // Define a StatefulWidget for the Report page
@@ -10,23 +12,50 @@ class ReportPage extends StatefulWidget {
   final Map<String, dynamic> report;
   final Map<String, dynamic>? user;
   final SupportListType reportType;
+  final UserRole userRole;
 
   const ReportPage(
       {super.key,
       required this.report,
       required this.user,
-      required this.reportType});
+      required this.reportType,required this.userRole});
   @override
   State<ReportPage> createState() => _ReportPage();
 }
 
 // Define the State for the Report page
 class _ReportPage extends State<ReportPage> {
+  Status status = Status.closed;
+
+  @override
+  void initState() {
+    Status tmpStatus = RoleServices.convertToStatus(widget.report["status"]);
+    if(tmpStatus != Status.closed) {
+      setState(() {
+        status = tmpStatus;
+      });
+    }
+    super.initState();
+  }
+  Widget loadStatusIcon(Color statusColour) {
+    if(widget.userRole != UserRole.moderator || widget.userRole == UserRole.administrator) {
+      return StatusDropdown(report: widget.report, onStatusChanged: (a) {print("Update request status");});
+    }
+        return Container(
+                            margin: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                color: statusColour,
+                                borderRadius: BorderRadius.circular(16)),
+                            child: Text(widget.report["status"]));
+  }
+
   @override
   Widget build(BuildContext context) {
-    Color statusColour = widget.report["status"] == "closed"
+
+    Color statusColour = status == Status.closed
         ? Colors.red.shade700
-        : widget.report["status"] == "open"
+        : status == Status.open
             ? swatch[100]!
             : swatch[500]!;
     return Scaffold(
@@ -56,12 +85,14 @@ class _ReportPage extends State<ReportPage> {
         ),
       ),
       body: Container(
-          decoration: const BoxDecoration(color: Color.fromARGB(158, 0, 0, 0)),
+          decoration: const BoxDecoration(color: Color.fromARGB(88, 62, 23, 23)),
           child: Stack(children: [
             Messages(
                 feedbackId: widget.report["feedback_id"],
                 user: widget.user,
-                reportType: widget.reportType),
+                reportType: widget.reportType,
+                status: status
+                ),
             IntrinsicHeight(
               child: Container(
                 decoration: BoxDecoration(
@@ -92,13 +123,7 @@ class _ReportPage extends State<ReportPage> {
                       ),
                       Row(children: [
                         const Text("Status:"),
-                        Container(
-                            margin: const EdgeInsets.all(8),
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                color: statusColour,
-                                borderRadius: BorderRadius.circular(16)),
-                            child: Text(widget.report["status"]))
+                        loadStatusIcon(statusColour),
                       ]),
                     ]),
               ),

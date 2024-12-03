@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:patinka/api/image.dart';
@@ -6,17 +7,16 @@ import 'package:patinka/api/social.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/misc/navbar_provider.dart';
+import 'package:patinka/services/navigation_service.dart';
 import 'package:patinka/swatch.dart';
 import 'package:provider/provider.dart';
 
 import '../api/config.dart';
-import '../current_tab.dart';
 
 // Define a widget for sending a post with an image
 class SendPost extends StatefulWidget {
-  const SendPost({super.key, required this.image, required this.currentPage});
+  const SendPost({super.key, required this.image});
   final Uint8List image;
-  final CurrentPage currentPage;
 
   @override
   State<SendPost> createState() => _SendPost(); // Create state for widget
@@ -90,9 +90,19 @@ class _SendPost extends State<SendPost> {
                   // Wait for "postPost" to complete successfully
                   .then((value) => {
                         // When "postPost" completes successfully, close the current screen
-                        Navigator.of(context).pop(),
-                        Navigator.of(context).pop(),
-                        widget.currentPage.set(0),
+                        NavigationService.currentNavigatorKey.currentState?.pop(),
+                        NavigationService.currentNavigatorKey.currentState?.pop(),
+                        NavigationService.setCurrentIndex(0),
+                        SchedulerBinding.instance
+                            .addPostFrameCallback((_) async {
+                          SchedulerBinding.instance
+                              .addPostFrameCallback((_) async {
+                            commonLogger.d("Showing Navbar");
+                            Provider.of<BottomBarVisibilityProvider>(context,
+                                    listen: false)
+                                .show(); // Show The Navbar
+                          });
+                        })
                       })
             });
       } catch (e) {
@@ -103,12 +113,7 @@ class _SendPost extends State<SendPost> {
     // Return the scaffold with the app bar and body
     return PopScope(
         canPop: true,
-        onPopInvoked: (bool didPop) {
-          if (didPop) {
-            Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-                .show(); // Show The Navbar
-          }
-        },
+        onPopInvokedWithResult: (bool didPop, result) {},
         child: Scaffold(
           backgroundColor: Colors.transparent,
           extendBodyBehindAppBar: true,

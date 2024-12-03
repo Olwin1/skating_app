@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shimmer/shimmer.dart';
@@ -48,33 +49,39 @@ class _EditProfile extends State<EditProfile> {
 
   Future<bool> _onWillPop(bool didPop) async {
     if (didPop) {
-      if (aboutMeController.text == widget.user?["description"]) {
+      String? previousText = widget.user?["description"];
+      previousText ??= "";
+      if (aboutMeController.text == previousText) {
         return true;
       }
-      showDialog(
-        useRootNavigator: false,
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: swatch[800],
-            title: Text(
-              'Processing',
-              style: TextStyle(color: swatch[701]),
-            ),
-            content: Text(
-              'Please wait...',
-              style: TextStyle(color: swatch[901]),
-            ),
-          );
-        },
-      );
-      await SocialAPI.setDescription(aboutMeController.text);
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        showDialog(
+          useRootNavigator: false,
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: swatch[800],
+              title: Text(
+                'Processing',
+                style: TextStyle(color: swatch[701]),
+              ),
+              content: Text(
+                'Please wait...',
+                style: TextStyle(color: swatch[901]),
+              ),
+            );
+          },
+        );
+        await SocialAPI.setDescription(aboutMeController.text);
 
-      // Pop the dialog
-      if (mounted) {
-        Navigator.of(context).pop();
-      }
+        // Pop the dialog
+        if (mounted) {
+          commonLogger.d("Popping Processing Message");
+          Navigator.of(context).pop();
+        }
+      });
+
       // Return 'true' to allow the user to navigate back
       return true;
     }
@@ -130,7 +137,7 @@ class _EditProfile extends State<EditProfile> {
   Widget build(BuildContext context) {
     return PopScope(
         canPop: true,
-        onPopInvoked: (bool didPop) => _onWillPop(didPop),
+        onPopInvokedWithResult: (bool didPop, result) => _onWillPop(didPop),
         child: Scaffold(
             backgroundColor: Colors.transparent,
             resizeToAvoidBottomInset: false,

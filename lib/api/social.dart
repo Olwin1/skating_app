@@ -631,7 +631,10 @@ class SocialAPI {
           body: {
             'description': desc,
           });
-
+          String? aa = await NetworkManager.instance.getLocalData(name: "0", type: CacheTypes.user);
+      await NetworkManager.instance
+          .deleteLocalData(name: "0", type: CacheTypes.user);
+          print("AAAAA");
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
       // Handling the error

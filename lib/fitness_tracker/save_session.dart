@@ -99,7 +99,7 @@ class _SaveSession extends State<SaveSession> {
 
     return PopScope(
         canPop: true,
-        onPopInvoked: (bool didPop) {
+        onPopInvokedWithResult: (bool didPop, result) {
           if (didPop) {
             Provider.of<BottomBarVisibilityProvider>(context, listen: false)
                 .show(); // Show The Navbar

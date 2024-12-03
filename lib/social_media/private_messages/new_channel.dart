@@ -28,7 +28,7 @@ class _NewChannelPageState extends State<NewChannelPage> {
     // Build the page with a paginated list view
     return PopScope(
       canPop: true,
-      onPopInvoked: (bool didPop) {
+      onPopInvokedWithResult: (bool didPop, result) {
         if (didPop) {
           // Show the bottom navigation bar when popping
           Provider.of<BottomBarVisibilityProvider>(context, listen: false)

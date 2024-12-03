@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/social.dart';
 import 'package:patinka/common_logger.dart';
-import 'package:patinka/profile/profile_page.dart';
+import 'package:patinka/profile/profile_page/profile_page.dart';
 import '../api/config.dart';
 import '../misc/default_profile.dart';
 import '../swatch.dart';

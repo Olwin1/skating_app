@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:patinka/api/connections.dart';
 import 'package:patinka/profile/list_type.dart';
-import 'package:patinka/profile/profile_page.dart';
+import 'package:patinka/profile/profile_page/profile_page.dart';
 import 'package:shimmer/shimmer.dart';
 import '../api/config.dart';
 import '../misc/default_profile.dart';

@@ -43,7 +43,7 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
       context,
       MaterialPageRoute(
         builder: (context) => PrivateMessage(
-          index: 1,
+          initSelf: false,
           user: widget.user,
           callback: widget.callback,
           currentUser: currentUser,

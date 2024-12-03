@@ -22,11 +22,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // HomePage Class
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
-  final _scrollController = ScrollController();
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+  final ScrollController scrollController = ScrollController();
+
     // Show the Navbar
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).show();
 
@@ -52,7 +53,7 @@ class HomePage extends StatelessWidget {
               child: TextButton(
                 onPressed: () {
                   // Scroll to top when image pressed
-                  _scrollController.animateTo(0,
+                  scrollController.animateTo(0,
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.fastOutSlowIn);
                 },
@@ -85,7 +86,7 @@ class HomePage extends StatelessWidget {
         ),
         body: Center(
           child: PostsListView(
-            scrollController: _scrollController,
+            scrollController: scrollController,
           ),
         ),
       ),

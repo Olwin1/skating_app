@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:patinka/common_logger.dart';
 import 'package:patinka/fitness_tracker/save_session.dart';
 import 'package:patinka/fitness_tracker/speedometer.dart';
+import 'package:patinka/services/navigation_service.dart';
 import 'package:solar_calculator/solar_calculator.dart';
 import '../api/config.dart';
 import '../swatch.dart';
@@ -13,7 +14,6 @@ import 'package:patinka/fitness_tracker/timer.dart';
 import 'check_permission.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import '../current_tab.dart';
 import 'package:patinka/caching/manager.dart';
 
 String sunsetTime = "00:00";
@@ -48,14 +48,13 @@ class _SunsetTimeState extends State<SunsetTime> {
       setted = true;
     }
 
-    return Consumer<CurrentPage>(
-      builder: (context, currentPage, widget) =>
-          // If the CurrentPage's tab value is 4 (The fitness tracker page), return a Sunset time widget
-          currentPage.tab == 1
+    return Consumer<NavigationService>(
+      builder: (context, navigationService, _) {
+        return NavigationService.getCurrentIndex() == 1
               ? SunsetTimeWidget(
                   time: time, setted: setted, setSetted: setSetted)
-              : const Text("0:00"),
-    );
+              : const Text("0:00");});
+    
   }
 }
 

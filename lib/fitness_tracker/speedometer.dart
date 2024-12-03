@@ -4,8 +4,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
 import 'package:patinka/common_logger.dart';
+import 'package:patinka/fitness_tracker/check_permission.dart';
 import 'package:patinka/misc/navbar_provider.dart';
 import 'package:patinka/swatch.dart';
 import 'package:provider/provider.dart';
@@ -32,12 +34,6 @@ class _SpeedometerPage extends State<SpeedometerPage> {
         .hide(); // Hide The Navbar
     // Check if location permission is granted and listen to position updates
     try {
-      // hasLocationPermission().then((value) => {
-      //       stream = Geolocator.getPositionStream().listen((position) {
-      //         key.currentState?.updateSpeed(position.speed,
-      //             animate: true, duration: const Duration(milliseconds: 800));
-      //       })
-      //     });
       stream = accelerometerEventStream(samplingPeriod: SensorInterval.uiInterval)
           .listen(
         (AccelerometerEvent event) {
@@ -53,6 +49,12 @@ class _SpeedometerPage extends State<SpeedometerPage> {
         onError: (error) {
           // Logic to handle error
           // Needed for Android in case sensor is not available
+                hasLocationPermission().then((value) => {
+            stream = Geolocator.getPositionStream().listen((position) {
+              key.currentState?.updateSpeed(position.speed,
+                  animate: true, duration: const Duration(milliseconds: 800));
+            })
+          });
         },
         cancelOnError: true,
       );
@@ -62,7 +64,7 @@ class _SpeedometerPage extends State<SpeedometerPage> {
     // Return a Scaffold with an AppBar and a KdGaugeView widget
     return PopScope(
         canPop: true,
-        onPopInvoked: (bool didPop) {
+        onPopInvokedWithResult: (bool didPop, result) {
           if (didPop) {
             Provider.of<BottomBarVisibilityProvider>(context, listen: false)
                 .show(); // Show The Navbar

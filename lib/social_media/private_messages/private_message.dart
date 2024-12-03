@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get_it/get_it.dart';
+import 'package:patinka/social_media/private_messages/session_notification.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/misc/navbar_provider.dart';
@@ -28,14 +30,14 @@ class PrivateMessage extends StatefulWidget {
   // Constructor takes an index and a channel as arguments
   const PrivateMessage({
     super.key,
-    required this.index,
+    required this.initSelf,
     this.channel,
     this.user,
     required this.currentUser,
     this.callback,
   });
 
-  final int index;
+  final bool initSelf;
   final Map<String, dynamic>? channel;
   final Map<String, dynamic>? user;
   final String currentUser;
@@ -53,12 +55,26 @@ class _PrivateMessage extends State<PrivateMessage> {
   int _page = 0;
   bool loading = false;
   bool userFound = false;
-  late StreamSubscription subscription;
+  late StreamSubscription subscriptionMessages;
+  late StreamSubscription subscriptionSeen;
+  late StreamSubscription subscriptionTyping;
+  late StreamSubscription subscriptionMessagesDelivered;
   TextEditingController controller = TextEditingController();
   types.User? user;
 
+  Timer? _typingTimer;
+  //Has a callback function - is used
+  // ignore: unused_field
+  Timer? _keepaliveTimer;
+  final Duration typingDelay =
+      const Duration(seconds: 3); // 3 to 5 seconds delay
+  final Duration keepaliveDelay =
+      const Duration(seconds: 3); // 3 to 5 seconds delay
+  bool isTyping = false;
+
   @override
   void initState() {
+    controller.addListener(_onTextChanged);
     // Initialize the user if not already initialized
     if (user == null) {
       getUser(null).then(
@@ -70,6 +86,7 @@ class _PrivateMessage extends State<PrivateMessage> {
     } else {
       setState(() => userFound = true);
     }
+    //getUser("387949971204341760").then((value) => setState(() {typingUsers.add(value); typingUsers.add(value); typingUsers.add(value);})); //Temp for typing
 
     channelId = widget.channel?["channel_id"];
     super.initState();
@@ -81,9 +98,68 @@ class _PrivateMessage extends State<PrivateMessage> {
     getIt<WebSocketConnection>().socket.emit("joinChannel", [channelId]);
 
     // Subscribe to the websocket stream
-    subscription = getIt<WebSocketConnection>().stream.listen(
+    subscriptionMessages = getIt<WebSocketConnection>().streamMessages.listen(
           (data) => updateMessages(data),
         );
+    subscriptionSeen = getIt<WebSocketConnection>().streamSeen.listen(
+          (data) => updateSeen(data),
+        );
+    subscriptionTyping = getIt<WebSocketConnection>().streamTyping.listen(
+          (data) => handleTyping(data),
+        );
+    subscriptionMessagesDelivered =
+        getIt<WebSocketConnection>().streamMessagesDelivered.listen(
+              (data) => updateDelivered(data),
+            );
+  }
+
+  void _onTextChanged() {
+    if (!isTyping) {
+      _onTypingStarted();
+    }
+
+    _resetTypingTimer();
+  }
+
+  void _onTypingStarted() {
+    isTyping = true;
+
+    print('User started typing');
+    channelId == null
+        ? null
+        : getIt<WebSocketConnection>()
+            .emitTyping(channelId!, TypingState.started);
+    _startTypingCheckTimer();
+  }
+
+  void _onTypingStopped() {
+    isTyping = false;
+    print('User stopped typing');
+    channelId == null
+        ? null
+        : getIt<WebSocketConnection>()
+            .emitTyping(channelId!, TypingState.stopped);
+    _typingTimer?.cancel();
+  }
+
+  void _startTypingCheckTimer() {
+    _typingTimer?.cancel(); // Cancel any existing timer
+    _keepaliveTimer = Timer.periodic(typingDelay, (timer) {
+      if (isTyping) {
+        print('User is still typing...');
+        channelId == null
+            ? null
+            : getIt<WebSocketConnection>()
+                .emitTyping(channelId!, TypingState.typing);
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  void _resetTypingTimer() {
+    _typingTimer?.cancel();
+    _typingTimer = Timer(typingDelay, _onTypingStopped);
   }
 
   // Function to show a skeleton UI while messages are loading
@@ -165,23 +241,61 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   // Function to update messages when new messages arrive
-  void updateMessages(Map<String, dynamic> data) {
+  void updateMessages(Map<String, dynamic> data) async {
     if (data["channel"] == channelId) {
       commonLogger.d("ITS A MATCH!");
+      User user = await getUser(data["sender"]);
       // Add the new message to the beginning of the list
       mounted
-          ? setState(() async {
+          ? setState(() {
               _messages.insert(
                 0,
                 types.TextMessage(
-                  author: await getUser(data["sender_id"]),
+                  showStatus: true,
+                  author: user,
                   createdAt: DateTime.now().millisecondsSinceEpoch,
-                  id: const Uuid().v1(),
+                  id: data["messageNumber"].toString(),
                   text: data["content"],
                 ),
               );
             })
           : null;
+      getIt<WebSocketConnection>().emitSeenMessage(
+          data["channel"], data["messageNumber"], data["messageId"]);
+    } else {
+      showNotification(context, data, widget.currentUser);
+    }
+  }
+
+  // Function to update messages when new messages arrive
+  void updateSeen(Map<String, dynamic> data) async {
+    if (data["channel"] == channelId) {
+      String messageNumber = data["messageNumber"].toString();
+      commonLogger.d("ITS A MATCH for seen!");
+      for (int i = 0; i < _messages.length; i++) {
+        if (_messages[i].id == messageNumber) {
+          setState(() {
+            _messages[i] = _messages[i].copyWith(status: Status.seen);
+          });
+        }
+      }
+    }
+  }
+
+  void updateDelivered(Map<String, dynamic> data) async {
+    if (data["channel"] == channelId) {
+      String messageNumber = data["messageNumber"].toString();
+      commonLogger.d("ITS A MATCH for seen!");
+      for (int i = 0; i < _messages.length; i++) {
+        if (_messages[i].author == user &&
+            _messages[i].status == Status.sending &&
+            _messages[i].metadata!["content"] == data["content"]) {
+          setState(() {
+            _messages[i] = _messages[i]
+                .copyWith(status: Status.delivered, id: messageNumber);
+          });
+        }
+      }
     }
   }
 
@@ -198,8 +312,17 @@ class _PrivateMessage extends State<PrivateMessage> {
       final messagesRaw = await MessagesAPI.getMessages(_page, channelId!);
       for (int i = 0; i < messagesRaw.length; i++) {
         dynamic message = messagesRaw[i];
+        List<String> messageReaders = [];
+        for (int j = 0; j < message["message_readers"].length; j++) {
+          messageReaders.add(message["message_readers"][j]["user_id"]);
+          if (message["message_readers"][j]["user_id"] == widget.currentUser) {
+            break;
+          }
+        }
+
         messages.add(
           types.TextMessage(
+            status: messageReaders.isNotEmpty ? Status.seen : Status.delivered,
             author: await getUser(message["sender_id"]),
             createdAt:
                 DateTime.parse(message["date_sent"]).millisecondsSinceEpoch,
@@ -247,10 +370,65 @@ class _PrivateMessage extends State<PrivateMessage> {
     }
   }
 
+  Map<String, Timer> typingUserTimers = {};
+  void handleTyping(Map<String, dynamic> data) {
+    if (data["channel"] == channelId) {
+      switch (data["typingState"]) {
+        case TypingState.started:
+        case TypingState.typing:
+          if (typingUserTimers.containsKey(data["sender"])) {
+            //If is existing typing user
+            typingUserTimers[data["sender"]]!.cancel();
+          }
+          typingUserTimers[data["sender"]] =
+              Timer.periodic(typingDelay, (timer) {
+            handleTypingCancel(data);
+          });
+          bool found = false;
+          for (int i = 0; i < typingUsers.length; i++) {
+            if (typingUsers[i].id == data["sender"]) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            getUser(data["sender"]).then((value) => {
+                  setState(() {
+                    typingUsers.add(value);
+                  })
+                });
+          }
+          break;
+        default:
+          handleTypingCancel(data);
+      }
+    }
+  }
+
+  List<User> typingUsers = [];
+
+  void handleTypingCancel(Map<String, dynamic> data) {
+    if (typingUserTimers.containsKey(data["sender"])) {
+      typingUserTimers.remove(data["sender"])!.cancel();
+    }
+    for (int i = 0; i < typingUsers.length; i++) {
+      if (typingUsers[i].id == data["sender"]) {
+        setState(() {
+          typingUsers.removeAt(i);
+        });
+        break;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Hide the Navbar
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
+
+    if (getIt<WebSocketConnection>().socket.disconnected) {
+      getIt<WebSocketConnection>().socket.connect();
+    }
 
     // Set locale based on the language
     ChatL10n locale;
@@ -264,7 +442,7 @@ class _PrivateMessage extends State<PrivateMessage> {
 
     return PopScope(
       canPop: true,
-      onPopInvoked: (bool hasPopped) => _onWillPop(hasPopped),
+      onPopInvokedWithResult: (bool hasPopped, result) => _onWillPop(hasPopped),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
@@ -348,6 +526,15 @@ class _PrivateMessage extends State<PrivateMessage> {
             loading || !userFound
                 ? _messagesSkeleton()
                 : Chat(
+                    typingIndicatorOptions: TypingIndicatorOptions(
+                        typingMode: TypingIndicatorMode.both,
+                        typingUsers: typingUsers),
+                    customStatusBuilder: (message,
+                        {required BuildContext context}) {
+                      return MessageStatus(
+                        status: message.status,
+                      );
+                    },
                     inputOptions: InputOptions(
                       inputClearMode: InputClearMode.never,
                       textEditingController: controller,
@@ -365,33 +552,41 @@ class _PrivateMessage extends State<PrivateMessage> {
                     },
                     user: user!,
                     theme: DefaultChatTheme(
-                      primaryColor: swatch[301]!,
-                      sentMessageBodyTextStyle: TextStyle(
-                        color: swatch[800],
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        height: 1.5,
-                      ),
-                      backgroundColor: Colors.transparent,
-                      secondaryColor: swatch[50]!,
-                      inputBackgroundColor: swatch[51]!,
-                      inputTextColor: swatch[800]!,
-                      dateDividerTextStyle: TextStyle(
-                        color: swatch[701],
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                        height: 1.333,
-                      ),
-                      inputMargin: const EdgeInsets.only(
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                      ),
-                      inputPadding: const EdgeInsets.all(16),
-                      inputBorderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(24),
-                      ),
-                    ),
+                        primaryColor: swatch[301]!,
+                        sentMessageBodyTextStyle: TextStyle(
+                          color: swatch[800],
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                        ),
+                        backgroundColor: Colors.transparent,
+                        secondaryColor: swatch[50]!,
+                        inputBackgroundColor: swatch[51]!,
+                        inputTextColor: swatch[800]!,
+                        dateDividerTextStyle: TextStyle(
+                          color: swatch[701],
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          height: 1.333,
+                        ),
+                        inputMargin: const EdgeInsets.only(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                        ),
+                        inputPadding: const EdgeInsets.all(16),
+                        inputBorderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(24),
+                        ),
+                        typingIndicatorTheme: TypingIndicatorTheme(
+                            animatedCirclesColor: swatch[801]!,
+                            animatedCircleSize: 6,
+                            bubbleBorder: BorderRadius.circular(1),
+                            bubbleColor: Colors.transparent,
+                            countAvatarColor: swatch[700]!,
+                            countTextColor: swatch[701]!,
+                            multipleUserTextStyle:
+                                TextStyle(color: swatch[801]))),
                     onEndReached: () => _loadMoreMessages(),
                   ),
           ],
@@ -419,10 +614,13 @@ class _PrivateMessage extends State<PrivateMessage> {
 
         // Create a new text message
         final textMessage = types.TextMessage(
+          showStatus: true,
+          status: Status.sending,
           author: await getUser(widget.currentUser),
           createdAt: DateTime.now().millisecondsSinceEpoch,
           id: const Uuid().v1(),
           text: message.text,
+          metadata: {"content": message.text},
         );
 
         // Add the message to the message list
@@ -430,7 +628,8 @@ class _PrivateMessage extends State<PrivateMessage> {
 
         // Send the message to the server
         if (channelId != null) {
-          await MessagesAPI.postMessage(channelId!, message.text, null)
+          await getIt<WebSocketConnection>()
+              .emitMessage(channelId!, message.text, null)
               .then((value) => {sending = false});
         } else {
           // If there is no channel ID, create a new channel
@@ -476,7 +675,14 @@ class _PrivateMessage extends State<PrivateMessage> {
   @override
   void dispose() {
     try {
-      subscription.cancel(); // Stop listening to new messages
+      subscriptionMessages.cancel(); // Stop listening to new messages
+      subscriptionSeen.cancel(); // Stop listening to new seen
+      subscriptionTyping.cancel(); // Stop listening to new typing
+      subscriptionMessagesDelivered.cancel();
+
+      controller.removeListener(_onTextChanged);
+      _typingTimer?.cancel();
+      _keepaliveTimer?.cancel();
     } catch (e) {
       commonLogger.e("An error has occured: $e");
     }

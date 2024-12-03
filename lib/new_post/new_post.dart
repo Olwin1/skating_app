@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:patinka/services/navigation_service.dart';
 import 'package:photo_gallery/photo_gallery.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,6 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../api/config.dart';
-import '../current_tab.dart';
 import '../swatch.dart';
 
 // Define the NewPost widget which extends StatefulWidget
@@ -29,21 +29,21 @@ class NewPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Use the Consumer widget to listen for changes to the CurrentPage object
-    return Consumer<CurrentPage>(
-      builder: (context, currentPage, widget) =>
+    return 
           // If the CurrentPage's tab value is 2 (New Post Page), return a NewPostPage widget
-          currentPage.tab == 2
-              ? NewPostPage(currentPage: currentPage)
+          Consumer<NavigationService>(
+      builder: (context, navigationService, _) {
+        return NavigationService.getCurrentIndex() == 2
+              ? const NewPostPage()
               :
               // Otherwise, return an empty SizedBox widget
-              const SizedBox.shrink(),
-    );
+              const SizedBox.shrink();});
   }
 }
 
 class NewPostPage extends StatefulWidget {
-  final CurrentPage currentPage;
-  const NewPostPage({super.key, required this.currentPage});
+
+  const NewPostPage({super.key});
 
   @override
   // Create the state for the NewPost widget
@@ -147,7 +147,6 @@ class _NewPostPage extends State<NewPostPage> {
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => SendPost(
           image: selectedImage!,
-          currentPage: widget.currentPage,
         ),
         opaque: false,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {

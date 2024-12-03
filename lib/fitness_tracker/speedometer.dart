@@ -46,7 +46,7 @@ class _SpeedometerPage extends State<SpeedometerPage> {
                       pow(double.parse(event.z.toStringAsFixed(2)) - 9.81, 2)) /
                   1000)
               .toStringAsFixed(2));
-          print("Speed: $speed");
+          commonLogger.d("Speed: $speed");
           key.currentState
               ?.updateSpeed(speed, animate: true, duration: Duration.zero);
         },

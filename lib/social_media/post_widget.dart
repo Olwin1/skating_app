@@ -363,9 +363,9 @@ class _Avatar extends State<Avatar> {
     SocialAPI.getUser(widget.user).then((userCache) => {
           if (mounted)
             {
-              setState(() => {
-                    image = userCache["avatar_id"],
-                    profile = userCache["user_id"]
+              setState(() {
+                    image = userCache["avatar_id"];
+                    profile = userCache["user_id"];
                   })
             }
         });

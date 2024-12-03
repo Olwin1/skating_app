@@ -290,13 +290,13 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
               onPressed: () {
                 // Update the widget state.
                 mounted
-                    ? setState(() => {
+                    ? setState(() {
                           // Toggle the boolean value of the `active` variable.
-                          active = !active,
+                          active = !active;
                           // Set the `_followOnLocationUpdate` variable to either always or once based on the `active` variable.
                           _followOnLocationUpdate = active
                               ? FollowOnLocationUpdate.always
-                              : FollowOnLocationUpdate.once,
+                              : FollowOnLocationUpdate.once;
                         })
                     : null;
                 // If the `active` variable is true, add the zoom level (18) to the `_followCurrentLocationStreamController`.

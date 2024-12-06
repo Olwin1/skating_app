@@ -13,6 +13,8 @@ import '../api/config.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'handle_buttons.dart';
+import 'post_options_modal.dart';
+import 'user_reports/report_user.dart';
 
 // Widget representing a post
 class PostWidget extends StatefulWidget {
@@ -56,12 +58,6 @@ void setSavedState(bool val) {
           }
 }
 
-///
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
 
@@ -69,7 +65,22 @@ void setSavedState(bool val) {
     String comments = widget.post['comment_count'] ?? "0";
 
     // Widget structure for a post
-    return Column(
+return GestureDetector(
+  // Detects a long press gesture on the widget
+  onLongPress: () {
+  ModalBottomSheet.show(
+    context: context,
+    builder: (context) => PostOptionsBottomSheet(
+      post: widget.post,
+      savedState: savedState!,
+      setSavedState: setSavedState,
+    ),
+    startSize: 0.3,
+  );
+},
+
+
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
@@ -276,7 +287,7 @@ void setSavedState(bool val) {
         // Widget for displaying post caption
         CaptionWrapper(post: widget.post)
       ],
-    );
+    ));
   }
 }
 

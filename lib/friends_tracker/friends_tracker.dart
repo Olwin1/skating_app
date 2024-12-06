@@ -32,12 +32,13 @@ class FriendsTracker extends StatelessWidget {
   Widget build(BuildContext context) {
     // Use the Consumer widget to listen for changes to the CurrentPage object
     return Consumer<NavigationService>(
-      builder: (context, navigationService, _) {
-        return NavigationService.getCurrentIndex() == 3
-              ? const FriendsTrackerPage()
-              :
-              // Otherwise, return an empty SizedBox widget
-              const SizedBox.shrink();});
+        builder: (context, navigationService, _) {
+      return NavigationService.getCurrentIndex() == 3
+          ? const FriendsTrackerPage()
+          :
+          // Otherwise, return an empty SizedBox widget
+          const SizedBox.shrink();
+    });
   }
 }
 
@@ -78,8 +79,9 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
               newFriends.add(
                 // Add the marker for the friend's location to the temporary list
                 Marker(
-                  key: Key(session["session_id"]),
-                    point: LatLng(0, 0),//session["latitude"], session["longitude"]),
+                    key: Key(session["session_id"]),
+                    point: LatLng(
+                        0, 0), //session["latitude"], session["longitude"]),
                     width: 80,
                     height: 80,
                     builder: (context) => CustomMarker(
@@ -147,7 +149,10 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                       minZoom: 3.0,
                       maxZoom: 19),
                   nonRotatedChildren: [
-                    SafeArea(child: CustomSearchBar(mapController: controller, focusChangeCallback: focusChangeCallback)),
+                    SafeArea(
+                        child: CustomSearchBar(
+                            mapController: controller,
+                            focusChangeCallback: focusChangeCallback)),
 
                     AnimatedSwitcher(
                         duration: const Duration(
@@ -159,7 +164,7 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 90),
                                 child: FriendActivity(
-                                  mapController: controller,
+                                    mapController: controller,
                                     searchOpened: searchOpened,
                                     sessions: newSessions),
                               )

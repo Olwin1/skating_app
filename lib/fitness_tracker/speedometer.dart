@@ -34,8 +34,9 @@ class _SpeedometerPage extends State<SpeedometerPage> {
         .hide(); // Hide The Navbar
     // Check if location permission is granted and listen to position updates
     try {
-      stream = accelerometerEventStream(samplingPeriod: SensorInterval.uiInterval)
-          .listen(
+      stream =
+          accelerometerEventStream(samplingPeriod: SensorInterval.uiInterval)
+              .listen(
         (AccelerometerEvent event) {
           double speed = double.parse((sqrt(pow(event.x, 2) +
                       pow(event.y, 2) +
@@ -49,12 +50,13 @@ class _SpeedometerPage extends State<SpeedometerPage> {
         onError: (error) {
           // Logic to handle error
           // Needed for Android in case sensor is not available
-                hasLocationPermission().then((value) => {
-            stream = Geolocator.getPositionStream().listen((position) {
-              key.currentState?.updateSpeed(position.speed,
-                  animate: true, duration: const Duration(milliseconds: 800));
-            })
-          });
+          hasLocationPermission().then((value) => {
+                stream = Geolocator.getPositionStream().listen((position) {
+                  key.currentState?.updateSpeed(position.speed,
+                      animate: true,
+                      duration: const Duration(milliseconds: 800));
+                })
+              });
         },
         cancelOnError: true,
       );

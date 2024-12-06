@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final ScrollController scrollController = ScrollController();
+    final ScrollController scrollController = ScrollController();
 
     // Show the Navbar
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).show();

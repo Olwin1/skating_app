@@ -9,7 +9,10 @@ class CustomSearchBar extends StatefulWidget {
   final MapController mapController;
   final Function focusChangeCallback;
 
-  const CustomSearchBar({super.key, required this.mapController, required this.focusChangeCallback});
+  const CustomSearchBar(
+      {super.key,
+      required this.mapController,
+      required this.focusChangeCallback});
 
   @override
   State<CustomSearchBar> createState() => _CustomSearchBar();

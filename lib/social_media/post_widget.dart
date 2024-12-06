@@ -44,250 +44,256 @@ class _PostWidget extends State<PostWidget> {
     super.initState();
   }
 
-/// SET STATES
-void setLikedState(bool val) {
-            if (!likedState!) {
-            if (mounted) {
-              setState(() => likedState = val);
-            }
-          }
-}
-void setSavedState(bool val) {
-            if (savedState! && mounted) {
-            setState(() => savedState = val);
-          }
-}
+  /// SET STATES
+  void setLikedState(bool val) {
+    if (!likedState!) {
+      if (mounted) {
+        setState(() => likedState = val);
+      }
+    }
+  }
+
+  void setSavedState(bool val) {
+    if (savedState! && mounted) {
+      setState(() => savedState = val);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
     // Extract comment count from post data
     String comments = widget.post['comment_count'] ?? "0";
 
     // Widget structure for a post
-return GestureDetector(
-  // Detects a long press gesture on the widget
-  onLongPress: () {
-  ModalBottomSheet.show(
-    context: context,
-    builder: (context) => PostOptionsBottomSheet(
-      post: widget.post,
-      savedState: savedState!,
-      setSavedState: setSavedState,
-    ),
-    startSize: 0.3,
-  );
-},
-
-
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              // Container for overlay on post image
-              Container(
-                margin: const EdgeInsets.only(top: 320),
-                height: 60,
-                color: const Color(0xcc000000),
-              ),
-              Container(
-                color: Colors.transparent,
-                padding: const EdgeInsets.all(0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: ZoomOverlay(
-                        // Zoomable overlay for the post image
-                        modalBarrierColor: Colors.black12,
-                        minScale: 0.5,
-                        maxScale: 3.0,
-                        animationCurve: Curves.fastOutSlowIn,
-                        animationDuration: const Duration(milliseconds: 600),
-                        twoTouchOnly: true,
-                        child: CachedNetworkImage(
-                          // Post image loaded from the network
-                          imageUrl:
-                              "${Config.uri}/image/${widget.post['image']}",
-                          placeholder: (context, url) => Shimmer.fromColors(
-                              baseColor: shimmer["base"]!,
-                              highlightColor: shimmer["highlight"]!,
-                              child:
-                                  Image.asset("assets/placeholders/1080.png")),
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  bottomLeft: Radius.circular(8)),
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover),
+    return GestureDetector(
+        // Detects a long press gesture on the widget
+        onLongPress: () {
+          ModalBottomSheet.show(
+            context: context,
+            builder: (context) => PostOptionsBottomSheet(
+              post: widget.post,
+              savedState: savedState!,
+              setSavedState: setSavedState,
+            ),
+            startSize: 0.3,
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // Container for overlay on post image
+                  Container(
+                    margin: const EdgeInsets.only(top: 320),
+                    height: 60,
+                    color: const Color(0xcc000000),
+                  ),
+                  Container(
+                    color: Colors.transparent,
+                    padding: const EdgeInsets.all(0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: ZoomOverlay(
+                            // Zoomable overlay for the post image
+                            modalBarrierColor: Colors.black12,
+                            minScale: 0.5,
+                            maxScale: 3.0,
+                            animationCurve: Curves.fastOutSlowIn,
+                            animationDuration:
+                                const Duration(milliseconds: 600),
+                            twoTouchOnly: true,
+                            child: CachedNetworkImage(
+                              // Post image loaded from the network
+                              imageUrl:
+                                  "${Config.uri}/image/${widget.post['image']}",
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                  baseColor: shimmer["base"]!,
+                                  highlightColor: shimmer["highlight"]!,
+                                  child: Image.asset(
+                                      "assets/placeholders/1080.png")),
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(8),
+                                      bottomLeft: Radius.circular(8)),
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                              fit: BoxFit.contain,
                             ),
                           ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                          fit: BoxFit.contain,
                         ),
-                      ),
-                    ),
-                    // Container for buttons and additional info
-                    SizedBox(
-                      width: 72,
-                      height: double.maxFinite,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: const AssetImage(
-                                  "assets/backgrounds/post_background.png"),
-                              fit: BoxFit.cover,
-                              colorFilter: ColorFilter.mode(
-                                  Colors.black.withOpacity(0.3),
-                                  BlendMode.srcOver)),
-                          borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(8),
-                              bottomRight: Radius.circular(8)),
-                        ),
-                        child: Column(
-                          children: [
-                            // Like button with animation
-                            LikeButton(
-                              isLiked: likedState ?? widget.post["liked"],
-                              onTap: (isLiked) => handleLikePressed(isLiked, setLikedState, widget.post),
-                              padding:
-                                  const EdgeInsets.only(bottom: 0, top: 18),
-                              countPostion: CountPostion.bottom,
-                              size: 32.0,
-                              circleColor:
-                                  CircleColor(start: secondary, end: selected),
-                              bubblesColor: BubblesColor(
-                                dotPrimaryColor: unselected,
-                                dotSecondaryColor: secondary,
-                              ),
-                              likeBuilder: (bool isLiked) {
-                                return Icon(
-                                  Icons.thumb_up,
-                                  color: isLiked ? selected : unselected,
+                        // Container for buttons and additional info
+                        SizedBox(
+                          width: 72,
+                          height: double.maxFinite,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: const AssetImage(
+                                      "assets/backgrounds/post_background.png"),
+                                  fit: BoxFit.cover,
+                                  colorFilter: ColorFilter.mode(
+                                      Colors.black.withOpacity(0.3),
+                                      BlendMode.srcOver)),
+                              borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(8),
+                                  bottomRight: Radius.circular(8)),
+                            ),
+                            child: Column(
+                              children: [
+                                // Like button with animation
+                                LikeButton(
+                                  isLiked: likedState ?? widget.post["liked"],
+                                  onTap: (isLiked) => handleLikePressed(
+                                      isLiked, setLikedState, widget.post),
+                                  padding:
+                                      const EdgeInsets.only(bottom: 0, top: 18),
+                                  countPostion: CountPostion.bottom,
                                   size: 32.0,
-                                );
-                              },
-                              likeCount:
-                                  int.parse(widget.post['total_likes'] ?? "0"),
-                              countBuilder:
-                                  (int? count, bool isLiked, String text) {
-                                var color = isLiked ? selected : unselected;
-                                Widget result;
-                                if (count == 0) {
-                                  result = Center(
-                                      child: Text(
-                                    "Like",
-                                    style: TextStyle(
-                                        color: color,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w100),
-                                  ));
-                                } else {
-                                  result = Center(
-                                      child: Text(
-                                    text,
-                                    style: TextStyle(
-                                        color: color,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w100),
-                                    textAlign: TextAlign.center,
-                                  ));
-                                }
-                                return result;
-                              },
-                            ),
-                            // Comment button
-                            ListTile(
-                                title: IconButton(
-                                  onPressed: () => Navigator.of(context).push(
-                                    // Navigate to comments page
-                                    PageRouteBuilder(
-                                      pageBuilder: (context, animation,
-                                              secondaryAnimation) =>
-                                          Comments(
-                                              post: widget.post["post_id"],
-                                              user: widget.user),
-                                      opaque: false,
-                                      transitionsBuilder: (context, animation,
-                                          secondaryAnimation, child) {
-                                        const begin = 0.0;
-                                        const end = 1.0;
-                                        var tween =
-                                            Tween(begin: begin, end: end);
-                                        var fadeAnimation =
-                                            tween.animate(animation);
-                                        return FadeTransition(
-                                          opacity: fadeAnimation,
-                                          child: child,
-                                        );
-                                      },
-                                    ),
+                                  circleColor: CircleColor(
+                                      start: secondary, end: selected),
+                                  bubblesColor: BubblesColor(
+                                    dotPrimaryColor: unselected,
+                                    dotSecondaryColor: secondary,
                                   ),
-                                  icon: Icon(
-                                    Icons.comment,
-                                    color: unselected,
-                                  ),
-                                  padding: const EdgeInsets.only(top: 16),
-                                  constraints: const BoxConstraints(),
+                                  likeBuilder: (bool isLiked) {
+                                    return Icon(
+                                      Icons.thumb_up,
+                                      color: isLiked ? selected : unselected,
+                                      size: 32.0,
+                                    );
+                                  },
+                                  likeCount: int.parse(
+                                      widget.post['total_likes'] ?? "0"),
+                                  countBuilder:
+                                      (int? count, bool isLiked, String text) {
+                                    var color = isLiked ? selected : unselected;
+                                    Widget result;
+                                    if (count == 0) {
+                                      result = Center(
+                                          child: Text(
+                                        "Like",
+                                        style: TextStyle(
+                                            color: color,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w100),
+                                      ));
+                                    } else {
+                                      result = Center(
+                                          child: Text(
+                                        text,
+                                        style: TextStyle(
+                                            color: color,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w100),
+                                        textAlign: TextAlign.center,
+                                      ));
+                                    }
+                                    return result;
+                                  },
                                 ),
-                                subtitle: Text(
-                                  comments,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: unselected),
-                                )),
-                            // Save button
-                            LikeButton(
-                              isLiked: savedState ?? widget.post["saved"],
-                              onTap: (isSaved) => handleSavePressed(isSaved, setSavedState, widget.post),
-                              padding:
-                                  const EdgeInsets.only(bottom: 0, top: 18),
-                              countPostion: CountPostion.bottom,
-                              size: 28.0,
-                              circleColor:
-                                  CircleColor(start: secondary, end: selected),
-                              bubblesColor: BubblesColor(
-                                dotPrimaryColor: unselected,
-                                dotSecondaryColor: secondary,
-                              ),
-                              likeBuilder: (bool isSaved) {
-                                return Icon(
-                                  Icons.save,
-                                  color: isSaved ? selected : unselected,
+                                // Comment button
+                                ListTile(
+                                    title: IconButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).push(
+                                        // Navigate to comments page
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation,
+                                                  secondaryAnimation) =>
+                                              Comments(
+                                                  post: widget.post["post_id"],
+                                                  user: widget.user),
+                                          opaque: false,
+                                          transitionsBuilder: (context,
+                                              animation,
+                                              secondaryAnimation,
+                                              child) {
+                                            const begin = 0.0;
+                                            const end = 1.0;
+                                            var tween =
+                                                Tween(begin: begin, end: end);
+                                            var fadeAnimation =
+                                                tween.animate(animation);
+                                            return FadeTransition(
+                                              opacity: fadeAnimation,
+                                              child: child,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      icon: Icon(
+                                        Icons.comment,
+                                        color: unselected,
+                                      ),
+                                      padding: const EdgeInsets.only(top: 16),
+                                      constraints: const BoxConstraints(),
+                                    ),
+                                    subtitle: Text(
+                                      comments,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: unselected),
+                                    )),
+                                // Save button
+                                LikeButton(
+                                  isLiked: savedState ?? widget.post["saved"],
+                                  onTap: (isSaved) => handleSavePressed(
+                                      isSaved, setSavedState, widget.post),
+                                  padding:
+                                      const EdgeInsets.only(bottom: 0, top: 18),
+                                  countPostion: CountPostion.bottom,
                                   size: 28.0,
-                                );
-                              },
+                                  circleColor: CircleColor(
+                                      start: secondary, end: selected),
+                                  bubblesColor: BubblesColor(
+                                    dotPrimaryColor: unselected,
+                                    dotSecondaryColor: secondary,
+                                  ),
+                                  likeBuilder: (bool isSaved) {
+                                    return Icon(
+                                      Icons.save,
+                                      color: isSaved ? selected : unselected,
+                                      size: 28.0,
+                                    );
+                                  },
+                                ),
+                                const Spacer(),
+                                widget.user == null
+                                    ? const SizedBox.shrink()
+                                    : Container(
+                                        margin:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: SizedBox(
+                                            width: 56,
+                                            height: 56,
+                                            child: Avatar(
+                                              user: widget.post!["author_id"],
+                                            )))
+                              ],
                             ),
-                            const Spacer(),
-                            widget.user == null
-                                ? const SizedBox.shrink()
-                                : Container(
-                                    margin: const EdgeInsets.only(bottom: 12),
-                                    child: SizedBox(
-                                        width: 56,
-                                        height: 56,
-                                        child: Avatar(
-                                          user: widget.post!["author_id"],
-                                        )))
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        // Widget for displaying post caption
-        CaptionWrapper(post: widget.post)
-      ],
-    ));
+            ),
+            // Widget for displaying post caption
+            CaptionWrapper(post: widget.post)
+          ],
+        ));
   }
 }
 
@@ -312,9 +318,9 @@ class _Avatar extends State<Avatar> {
           if (mounted)
             {
               setState(() {
-                    image = userCache["avatar_id"];
-                    profile = userCache["user_id"];
-                  })
+                image = userCache["avatar_id"];
+                profile = userCache["user_id"];
+              })
             }
         });
     super.initState();

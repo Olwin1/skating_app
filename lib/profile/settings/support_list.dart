@@ -79,7 +79,7 @@ class _SupportListViewState extends State<SupportListView> {
   // The controller that manages pagination
   final PagingController<int, Map<String, dynamic>> _pagingController =
       PagingController(firstPageKey: 0);
-UserRole userRole = UserRole.regular;
+  UserRole userRole = UserRole.regular;
   @override
   void initState() {
     // Add a listener for page requests, and call _fetchPage() when a page is requested
@@ -126,7 +126,6 @@ UserRole userRole = UserRole.regular;
 
   @override
   Widget build(BuildContext context) {
-
     // Build a paginated list view of comments using the PagedListView widget
     return Stack(children: [
       PagedListView<int, Map<String, dynamic>>(
@@ -199,25 +198,25 @@ class _UserListWidget extends State<UserListWidget> {
   UserRole userRole = UserRole.regular;
   @override
   void initState() {
-    if(widget.user != null) {
+    if (widget.user != null) {
       UserRole tmp = RoleServices.convertToEnum(widget.user!["user_role"]);
-      if(tmp != UserRole.regular) {
-setState(() {
-    userRole = tmp;
-});
+      if (tmp != UserRole.regular) {
+        setState(() {
+          userRole = tmp;
+        });
       }
     }
     super.initState();
   }
+
   void handlePress() {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => ReportPage(
-          report: widget.item,
-          user: widget.user,
-          reportType: widget.listType,
-          userRole: userRole
-        ),
+            report: widget.item,
+            user: widget.user,
+            reportType: widget.listType,
+            userRole: userRole),
         opaque: true,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = 0.0;
@@ -238,9 +237,9 @@ setState(() {
   Widget build(BuildContext context) {
     bool isOwnReport = true;
     bool isAssignedToUser = false;
-    if(widget.user!["user_id"] != widget.item["user_id"]) {
+    if (widget.user!["user_id"] != widget.item["user_id"]) {
       isOwnReport = false;
-      if(widget.user!["user_id"] == widget.item["assigned_to"]) {
+      if (widget.user!["user_id"] == widget.item["assigned_to"]) {
         isAssignedToUser = true;
       }
     }
@@ -264,19 +263,25 @@ setState(() {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                      Row(children: [
-                    Text(
-                      widget.item["subject"],
-                      style: TextStyle(
-                        color: swatch[801],
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                    Row(children: [
+                      Text(
+                        widget.item["subject"],
+                        style: TextStyle(
+                          color: swatch[801],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
                       ),
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                    ),
-                                              const SizedBox(width: 50,),
-                      !isOwnReport?!isAssignedToUser?const Text("Unassigned"):const SizedBox.shrink():const SizedBox.shrink(),
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      !isOwnReport
+                          ? !isAssignedToUser
+                              ? const Text("Unassigned")
+                              : const SizedBox.shrink()
+                          : const SizedBox.shrink(),
                     ]),
                     Text(
                       widget.item["content"],
@@ -293,16 +298,38 @@ setState(() {
                               color: statusColour,
                               borderRadius: BorderRadius.circular(16)),
                           child: Text(widget.item["status"])),
-                          const SizedBox(width: 45,),
-                      !isOwnReport?isAssignedToUser?const Text("Assigned to:"): const Text("Created By:"):const SizedBox.shrink(),
-                      !isOwnReport?isAssignedToUser?Container(margin: const EdgeInsets.only(left: 8), height:28, width: 28, child: Avatar(user: widget.item["assigned_to"])):const SizedBox.shrink():const SizedBox.shrink(),
-                      !isOwnReport?!isAssignedToUser?Container(margin: const EdgeInsets.only(left: 8), height:28, width: 28, child: Avatar(user: widget.item["user_id"])):const SizedBox.shrink():const SizedBox.shrink(),
+                      const SizedBox(
+                        width: 45,
+                      ),
+                      !isOwnReport
+                          ? isAssignedToUser
+                              ? const Text("Assigned to:")
+                              : const Text("Created By:")
+                          : const SizedBox.shrink(),
+                      !isOwnReport
+                          ? isAssignedToUser
+                              ? Container(
+                                  margin: const EdgeInsets.only(left: 8),
+                                  height: 28,
+                                  width: 28,
+                                  child:
+                                      Avatar(user: widget.item["assigned_to"]))
+                              : const SizedBox.shrink()
+                          : const SizedBox.shrink(),
+                      !isOwnReport
+                          ? !isAssignedToUser
+                              ? Container(
+                                  margin: const EdgeInsets.only(left: 8),
+                                  height: 28,
+                                  width: 28,
+                                  child: Avatar(user: widget.item["user_id"]))
+                              : const SizedBox.shrink()
+                          : const SizedBox.shrink(),
                     ]),
                   ])),
               IconButton(
                   onPressed: () => commonLogger.i("handle icon press"),
                   icon: const Icon(Icons.navigate_next))
-            ])
-            ));
+            ])));
   }
 }

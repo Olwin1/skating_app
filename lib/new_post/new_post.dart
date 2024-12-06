@@ -29,20 +29,19 @@ class NewPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Use the Consumer widget to listen for changes to the CurrentPage object
-    return 
-          // If the CurrentPage's tab value is 2 (New Post Page), return a NewPostPage widget
-          Consumer<NavigationService>(
-      builder: (context, navigationService, _) {
-        return NavigationService.getCurrentIndex() == 2
-              ? const NewPostPage()
-              :
-              // Otherwise, return an empty SizedBox widget
-              const SizedBox.shrink();});
+    return
+        // If the CurrentPage's tab value is 2 (New Post Page), return a NewPostPage widget
+        Consumer<NavigationService>(builder: (context, navigationService, _) {
+      return NavigationService.getCurrentIndex() == 2
+          ? const NewPostPage()
+          :
+          // Otherwise, return an empty SizedBox widget
+          const SizedBox.shrink();
+    });
   }
 }
 
 class NewPostPage extends StatefulWidget {
-
   const NewPostPage({super.key});
 
   @override

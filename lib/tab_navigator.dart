@@ -29,7 +29,6 @@ class TabNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Navigator(
         key: NavigationService.navigatorKey(tabItemIndex.toString()),
         initialRoute: "0", //Set initial page to main page
@@ -41,13 +40,13 @@ class TabNavigator extends StatelessWidget {
 
           // if (NavigationService.getCurrentIndex() != 0) {
           //   print("cows");
-            // PushReplacement to index 0
-            // WidgetsBinding.instance.addPostFrameCallback((_) {
-            //   NavigationService.navigatorKey("0")
-            //       ?.currentState
-            //       ?.pushReplacementNamed("/");
-            // });
-            // NavigationService.setCurrentIndex(0);
+          // PushReplacement to index 0
+          // WidgetsBinding.instance.addPostFrameCallback((_) {
+          //   NavigationService.navigatorKey("0")
+          //       ?.currentState
+          //       ?.pushReplacementNamed("/");
+          // });
+          // NavigationService.setCurrentIndex(0);
           print("cos");
 
           // return route.didPop(result);

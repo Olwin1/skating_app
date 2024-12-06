@@ -25,8 +25,7 @@ class Messages extends StatefulWidget {
       required this.feedbackId,
       required this.user,
       required this.reportType,
-      required this.status
-      });
+      required this.status});
 
   final Map<String, dynamic>? user;
   final Status status;
@@ -54,48 +53,69 @@ class _Messages extends State<Messages> {
   Widget build(BuildContext context) {
     // Create a new focus node every time the widget is built
     focus = FocusNode();
-if(widget.status != Status.closed) {
-    return CommentBox(
-      focusNode: focus,
-      userImage: CommentBox.commentImageParser(
-        imageURLorPath: widget.user == null || widget.user!["avatar_id"] == null
-            ? "assets/icons/hand.png"
-            : '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
-      ),
-      labelText: AppLocalizations.of(context)!.message,
-      errorText: 'Message cannot be blank',
-      withBorder: false,
-      commentController: commentController,
-      sendButtonMethod: () {
-        // Post a message when the send button is pressed
-        if (commentController.text.isNotEmpty) {
-          SupportAPI.postMessage(widget.feedbackId, commentController.text)
-              .then((value) => _pagingController.refresh());
+    if (widget.status != Status.closed) {
+      return CommentBox(
+        focusNode: focus,
+        userImage: CommentBox.commentImageParser(
+          imageURLorPath: widget.user == null ||
+                  widget.user!["avatar_id"] == null
+              ? "assets/icons/hand.png"
+              : '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
+        ),
+        labelText: AppLocalizations.of(context)!.message,
+        errorText: 'Message cannot be blank',
+        withBorder: false,
+        commentController: commentController,
+        sendButtonMethod: () {
+          // Post a message when the send button is pressed
+          if (commentController.text.isNotEmpty) {
+            SupportAPI.postMessage(widget.feedbackId, commentController.text)
+                .then((value) => _pagingController.refresh());
 
-          commentController.clear();
-        }
-      },
-      backgroundColor: swatch[50],
-      textColor: swatch[801],
-      sendWidget: Icon(Icons.send_sharp, size: 30, color: swatch[801]),
-      child: MessagesListView(
-        status: widget.status,
-          key: commentsListKey,
-          post: widget.feedbackId,
-          focus: focus,
-          pagingController: _pagingController,
-          reportType: widget.reportType),
-    );
-  }
-  else {
-    return Stack(children: [MessagesListView(
-          status: widget.status,
-          key: commentsListKey,
-          post: widget.feedbackId,
-          focus: focus,
-          pagingController: _pagingController,
-          reportType: widget.reportType), Positioned(right:0, left:0, bottom:0, child: Container(padding: const EdgeInsets.symmetric(vertical: 20), height: 100, color: const Color(0xcc000000), child: const Center(child: Column(children: [Text("This Report Has Been Marked As Closed.", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, ),), Text("Reports marked as closed cannot be modified.")]))))]);
-  }
+            commentController.clear();
+          }
+        },
+        backgroundColor: swatch[50],
+        textColor: swatch[801],
+        sendWidget: Icon(Icons.send_sharp, size: 30, color: swatch[801]),
+        child: MessagesListView(
+            status: widget.status,
+            key: commentsListKey,
+            post: widget.feedbackId,
+            focus: focus,
+            pagingController: _pagingController,
+            reportType: widget.reportType),
+      );
+    } else {
+      return Stack(children: [
+        MessagesListView(
+            status: widget.status,
+            key: commentsListKey,
+            post: widget.feedbackId,
+            focus: focus,
+            pagingController: _pagingController,
+            reportType: widget.reportType),
+        Positioned(
+            right: 0,
+            left: 0,
+            bottom: 0,
+            child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                height: 100,
+                color: const Color(0xcc000000),
+                child: const Center(
+                    child: Column(children: [
+                  Text(
+                    "This Report Has Been Marked As Closed.",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  Text("Reports marked as closed cannot be modified.")
+                ]))))
+      ]);
+    }
   }
 
   @override
@@ -115,14 +135,14 @@ class MessagesListView extends StatefulWidget {
   final SupportListType reportType;
   final Status status;
 
-  const MessagesListView(
-      {super.key,
-      required this.focus,
-      required this.post,
-      required this.pagingController,
-      required this.reportType,
-      required this.status,
-      });
+  const MessagesListView({
+    super.key,
+    required this.focus,
+    required this.post,
+    required this.pagingController,
+    required this.reportType,
+    required this.status,
+  });
 
   @override
   State<MessagesListView> createState() => _MessagesListViewState();
@@ -202,9 +222,16 @@ class _MessagesListViewState extends State<MessagesListView> {
     return index == 0
         ? Padding(
             padding: EdgeInsets.only(top: height),
-            child:
-                ReportMessage(index: index, focus: widget.focus, message: item, status: widget.status),
+            child: ReportMessage(
+                index: index,
+                focus: widget.focus,
+                message: item,
+                status: widget.status),
           )
-        : ReportMessage(index: index, focus: widget.focus, message: item, status: widget.status);
+        : ReportMessage(
+            index: index,
+            focus: widget.focus,
+            message: item,
+            status: widget.status);
   }
 }

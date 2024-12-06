@@ -90,8 +90,10 @@ class _SendPost extends State<SendPost> {
                   // Wait for "postPost" to complete successfully
                   .then((value) => {
                         // When "postPost" completes successfully, close the current screen
-                        NavigationService.currentNavigatorKey.currentState?.pop(),
-                        NavigationService.currentNavigatorKey.currentState?.pop(),
+                        NavigationService.currentNavigatorKey.currentState
+                            ?.pop(),
+                        NavigationService.currentNavigatorKey.currentState
+                            ?.pop(),
                         NavigationService.setCurrentIndex(0),
                         SchedulerBinding.instance
                             .addPostFrameCallback((_) async {

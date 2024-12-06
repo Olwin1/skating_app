@@ -18,7 +18,8 @@ class ReportPage extends StatefulWidget {
       {super.key,
       required this.report,
       required this.user,
-      required this.reportType,required this.userRole});
+      required this.reportType,
+      required this.userRole});
   @override
   State<ReportPage> createState() => _ReportPage();
 }
@@ -30,29 +31,33 @@ class _ReportPage extends State<ReportPage> {
   @override
   void initState() {
     Status tmpStatus = RoleServices.convertToStatus(widget.report["status"]);
-    if(tmpStatus != Status.closed) {
+    if (tmpStatus != Status.closed) {
       setState(() {
         status = tmpStatus;
       });
     }
     super.initState();
   }
+
   Widget loadStatusIcon(Color statusColour) {
-    if(widget.userRole != UserRole.moderator || widget.userRole == UserRole.administrator) {
-      return StatusDropdown(report: widget.report, onStatusChanged: (a) {print("Update request status");});
+    if (widget.userRole != UserRole.moderator ||
+        widget.userRole == UserRole.administrator) {
+      return StatusDropdown(
+          report: widget.report,
+          onStatusChanged: (a) {
+            print("Update request status");
+          });
     }
-        return Container(
-                            margin: const EdgeInsets.all(8),
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                color: statusColour,
-                                borderRadius: BorderRadius.circular(16)),
-                            child: Text(widget.report["status"]));
+    return Container(
+        margin: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+            color: statusColour, borderRadius: BorderRadius.circular(16)),
+        child: Text(widget.report["status"]));
   }
 
   @override
   Widget build(BuildContext context) {
-
     Color statusColour = status == Status.closed
         ? Colors.red.shade700
         : status == Status.open
@@ -85,14 +90,14 @@ class _ReportPage extends State<ReportPage> {
         ),
       ),
       body: Container(
-          decoration: const BoxDecoration(color: Color.fromARGB(88, 62, 23, 23)),
+          decoration:
+              const BoxDecoration(color: Color.fromARGB(88, 62, 23, 23)),
           child: Stack(children: [
             Messages(
                 feedbackId: widget.report["feedback_id"],
                 user: widget.user,
                 reportType: widget.reportType,
-                status: status
-                ),
+                status: status),
             IntrinsicHeight(
               child: Container(
                 decoration: BoxDecoration(

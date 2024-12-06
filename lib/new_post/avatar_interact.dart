@@ -45,9 +45,9 @@ class _AvatarInteract extends State<AvatarInteract> {
     getAssetImage().then((value) => {
           mounted
               ? setState(() {
-                    initialSelection = widget.selectedImage;
-                    _imageToCrop = value; // Set the image data to be cropped.
-                  })
+                  initialSelection = widget.selectedImage;
+                  _imageToCrop = value; // Set the image data to be cropped.
+                })
               : null,
         }); // Load the image data asynchronously.
 
@@ -68,10 +68,10 @@ class _AvatarInteract extends State<AvatarInteract> {
       getAssetImage().then((value) => {
             mounted
                 ? setState(() {
-                      initialSelection = widget.selectedImage;
-                      _imageToCrop =
-                          value; // Update the image data to be cropped.
-                    })
+                    initialSelection = widget.selectedImage;
+                    _imageToCrop =
+                        value; // Update the image data to be cropped.
+                  })
                 : null,
           }); // Load the image data asynchronously.
     }

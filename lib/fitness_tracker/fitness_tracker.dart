@@ -49,12 +49,11 @@ class _SunsetTimeState extends State<SunsetTime> {
     }
 
     return Consumer<NavigationService>(
-      builder: (context, navigationService, _) {
-        return NavigationService.getCurrentIndex() == 1
-              ? SunsetTimeWidget(
-                  time: time, setted: setted, setSetted: setSetted)
-              : const Text("0:00");});
-    
+        builder: (context, navigationService, _) {
+      return NavigationService.getCurrentIndex() == 1
+          ? SunsetTimeWidget(time: time, setted: setted, setSetted: setSetted)
+          : const Text("0:00");
+    });
   }
 }
 

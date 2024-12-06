@@ -19,13 +19,12 @@ class ReportMessage extends StatefulWidget {
   final Status status;
 
   // Constructor for Message widget
-  const ReportMessage({
-    super.key,
-    required this.index,
-    required this.focus,
-    required this.message,
-    required this.status
-  });
+  const ReportMessage(
+      {super.key,
+      required this.index,
+      required this.focus,
+      required this.message,
+      required this.status});
 
   @override
   State<ReportMessage> createState() =>
@@ -156,21 +155,25 @@ class _ReportMessageState extends State<ReportMessage> {
     required String label,
   }) {
     Widget txt = Text(
-          label,
-          textAlign: TextAlign.end,
-          style: TextStyle(
-            color: widget.status!=Status.closed?swatch[50]:Colors.grey,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.2,
-          ),
-        );
+      label,
+      textAlign: TextAlign.end,
+      style: TextStyle(
+        color: widget.status != Status.closed ? swatch[50] : Colors.grey,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 0.2,
+      ),
+    );
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: widget.status!=Status.closed?TextButton(
-        onPressed: onPressed,
-        child: txt,
-      ):Padding(padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16), child: txt),
+      child: widget.status != Status.closed
+          ? TextButton(
+              onPressed: onPressed,
+              child: txt,
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              child: txt),
     );
   }
 }

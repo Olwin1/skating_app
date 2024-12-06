@@ -38,7 +38,8 @@ class _FriendActivity extends State<FriendActivity> {
               // This next line does the trick.
               scrollDirection: Axis.horizontal,
               children: widget.sessions
-                  .map((session) => FriendActivityProfile(session: session, mapController: widget.mapController))
+                  .map((session) => FriendActivityProfile(
+                      session: session, mapController: widget.mapController))
                   .toList(),
             ))
         : Container();
@@ -81,8 +82,10 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
     return Column(children: [
       // Create a button with an icon that represents the user
       TextButton(
-        onPressed: () => {commonLogger.d(
-            "Pressed user icon"), widget.mapController.move(LatLng(0, 0), 17.0)}, // When the button is pressed, print a message
+        onPressed: () => {
+          commonLogger.d("Pressed user icon"),
+          widget.mapController.move(LatLng(0, 0), 17.0)
+        }, // When the button is pressed, print a message
         child: userCache == null || avatar == null
             // If there is no cached user information or avatar image, use a default image
             ? Shimmer.fromColors(
@@ -99,7 +102,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
                     imageUrl: '${Config.uri}/image/${userCache!["avatar_id"]}',
                     imageBuilder: (context, imageProvider) => Container(
                       height: 64,
-                          width: 64,
+                      width: 64,
                       decoration: BoxDecoration(
                         shape: BoxShape
                             .circle, // Set the shape of the container to a circle
@@ -111,7 +114,10 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
                 : const DefaultProfile(radius: 32),
       ),
       // Display the username of the user whose information is cached
-      Text(userCache != null ? userCache!["username"] : "Username", style: TextStyle(color: swatch[900], fontWeight: FontWeight.bold),)
+      Text(
+        userCache != null ? userCache!["username"] : "Username",
+        style: TextStyle(color: swatch[900], fontWeight: FontWeight.bold),
+      )
     ]);
   }
 }

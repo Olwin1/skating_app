@@ -24,7 +24,8 @@ class _CustomMarker extends State<CustomMarker> {
   @override
   Widget build(BuildContext context) {
     // Check if the sessionData contains any images
-    if (widget.sessionData.containsKey("images") && !widget.sessionData["images"].isEmpty) {
+    if (widget.sessionData.containsKey("images") &&
+        !widget.sessionData["images"].isEmpty) {
       // Return a Stack widget with two images
       return Stack(
         children: [

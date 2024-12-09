@@ -10,7 +10,7 @@ import '../api/config.dart';
 import '../api/social.dart';
 import '../misc/default_profile.dart';
 import '../swatch.dart';
-import 'comment_options_modal.dart';
+import 'modals/comment_options_modal.dart';
 import 'user_reports/report_user.dart';
 
 // Comment Widget class for displaying individual comments

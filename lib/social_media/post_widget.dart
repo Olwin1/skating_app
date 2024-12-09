@@ -13,7 +13,7 @@ import '../api/config.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'handle_buttons.dart';
-import 'post_options_modal.dart';
+import 'modals/post_options_modal.dart';
 import 'user_reports/report_user.dart';
 
 // Widget representing a post

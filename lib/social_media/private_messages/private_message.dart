@@ -8,7 +8,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get_it/get_it.dart';
-import 'package:patinka/social_media/message_options_modal.dart';
+import 'package:patinka/social_media/modals/message_options_modal.dart';
 import 'package:patinka/social_media/private_messages/session_notification.dart';
 import 'package:patinka/social_media/user_reports/report_user.dart';
 import 'package:provider/provider.dart';

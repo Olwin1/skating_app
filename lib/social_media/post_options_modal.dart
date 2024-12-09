@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:patinka/social_media/report_content_type.dart';
 import 'package:patinka/social_media/user_reports/buttons.dart';
 
 class PostOptionsBottomSheet extends StatelessWidget {
@@ -21,7 +22,7 @@ class PostOptionsBottomSheet extends StatelessWidget {
         SaveButton(
             post: post, savedState: savedState, setSavedState: setSavedState),
         QRCodeButton(),
-        ReportButton(),
+        ReportButton(reportContentType: ReportContentType.post,),
       ],
     );
   }

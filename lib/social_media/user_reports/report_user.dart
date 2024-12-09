@@ -15,11 +15,11 @@ class ModalBottomSheet {
           builder, // The builder to create the content of the modal
       AnimationStyle animationStyle = AnimationStyle
           .defaultStyle, // The animation style for the modal (default: defaultStyle)
-      double startSize = 0.4}) {
+      double startSize = 0.4, bool hideNavbar = true}) {
     // The initial size of the modal (default: 40% of the screen height)
 
     // Hide the bottom navbar before showing the modal
-    Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
+    hideNavbar?Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide():null;
 
     // Show the modal bottom sheet with customized options
     showModalBottomSheet<void>(
@@ -76,7 +76,7 @@ class ModalBottomSheet {
               });
         }).whenComplete(() {
       // Once the modal is dismissed, show the bottom navbar again
-      if (NavigationService.currentNavigatorKey.currentState != null &&
+      if (hideNavbar&&NavigationService.currentNavigatorKey.currentState != null &&
           NavigationService.currentNavigatorKey.currentState!.mounted !=
               false) {
         // Ensure the current context is still mounted and then show the navbar

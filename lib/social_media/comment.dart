@@ -10,6 +10,8 @@ import '../api/config.dart';
 import '../api/social.dart';
 import '../misc/default_profile.dart';
 import '../swatch.dart';
+import 'comment_options_modal.dart';
+import 'user_reports/report_user.dart';
 
 // Comment Widget class for displaying individual comments
 class Comment extends StatefulWidget {
@@ -59,8 +61,16 @@ class _CommentState extends State<Comment> {
       padding: const EdgeInsets.all(4),
       child: TextButton(
         onPressed: () => commonLogger.i("Pressed"), // Handle comment press
-        onLongPress: () =>
-            commonLogger.i("longPress"), // Handle comment long press
+        onLongPress: () {
+          ModalBottomSheet.show(
+            context: context,
+            builder: (context) => CommentOptionsBottomSheet(
+              comment: widget.comment,
+            ),
+            startSize: 0.2,
+            hideNavbar: false
+          );
+        },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

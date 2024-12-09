@@ -8,7 +8,9 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get_it/get_it.dart';
+import 'package:patinka/social_media/message_options_modal.dart';
 import 'package:patinka/social_media/private_messages/session_notification.dart';
+import 'package:patinka/social_media/user_reports/report_user.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/misc/navbar_provider.dart';
@@ -588,6 +590,16 @@ class _PrivateMessage extends State<PrivateMessage> {
                             multipleUserTextStyle:
                                 TextStyle(color: swatch[801]))),
                     onEndReached: () => _loadMoreMessages(),
+                    onMessageLongPress: (context, message) {
+                      ModalBottomSheet.show(
+                        context: context,
+                        builder: (context) => MessageOptionsBottomSheet(
+                          message: message,
+                        ),
+                        startSize: 0.2,
+                        hideNavbar: false
+                      );
+                    },
                   ),
           ],
         ),

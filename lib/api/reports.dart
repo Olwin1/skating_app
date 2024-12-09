@@ -4,10 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:patinka/social_media/report_content_type.dart';
 import 'config.dart';
 
-// The SupportAPI class provides methods to handle various support-related actions, such as reporting content,
+// The ReportAPI class provides methods to handle various report-related actions, such as reporting users,
 // modifying report statuses, and fetching reports. It interacts with an API backend using HTTP requests.
-class SupportAPI {
-  // Define API endpoints for different support actions
+class ReportAPI {
+  // Define API endpoints for different report actions
   static final Uri _reportUrl = Uri.parse('${Config.uri}/support/report');
   static final Uri _reportDataUrl =
       Uri.parse('${Config.uri}/support/report_data');
@@ -33,11 +33,11 @@ class SupportAPI {
         _reportUrl,
         headers: await Config.getDefaultHeadersAuth,
         body: {
-          'reported_content': reportContentType,
+          'reported_content': reportContentType.name,
           'reported_content_id': contentId,
           'reported_user_id': reportedUserId,
           'report_type': reportType,
-          'description': null // Optional description of the report
+          'description': "" // Optional description of the report
         },
       );
 

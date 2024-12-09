@@ -22,7 +22,10 @@ class PostOptionsBottomSheet extends StatelessWidget {
         SaveButton(
             post: post, savedState: savedState, setSavedState: setSavedState),
         QRCodeButton(),
-        ReportButton(reportContentType: ReportContentType.post,),
+        ReportButton(
+            reportContentType: ReportContentType.post,
+            contentId: post["post_id"],
+            reportedUserId: post["author_id"]),
       ],
     );
   }

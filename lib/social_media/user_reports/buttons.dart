@@ -53,8 +53,10 @@ class QRCodeButton extends StatelessWidget {
 }
 
 class ReportButton extends StatelessWidget {
-  const ReportButton({super.key, required this.reportContentType});
+  const ReportButton({super.key, required this.reportContentType, required this.contentId, required this.reportedUserId});
   final ReportContentType reportContentType;
+  final String contentId;
+  final String reportedUserId;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +85,7 @@ class ReportButton extends StatelessWidget {
         });
         ModalBottomSheet.show(
             context: context,
-            builder: (context) => ReportReasonBottomSheet(reportContentType: reportContentType),
+            builder: (context) => ReportReasonBottomSheet(reportContentType: reportContentType, contentId: contentId, reportedUserId: reportedUserId),
             startSize: 0.65);
       },
     );

@@ -34,6 +34,7 @@ class _UserReportPage extends State<UserReportPage> {
   String? status;
   dynamic content;
   String? selectedNewStatus;
+  String? selectedDuration;
 
   @override
   void initState() {
@@ -245,7 +246,9 @@ class _UserReportPage extends State<UserReportPage> {
         Container(
           color: Colors.blueGrey,
           height: 100,
-          child: Row(children: [
+          child: ListView(
+  // This next line does the trick.
+  scrollDirection: Axis.horizontal, children: [
             DropdownMenu(
                 onSelected: (String? selectedElement) {
                   selectedNewStatus = selectedElement;
@@ -254,6 +257,25 @@ class _UserReportPage extends State<UserReportPage> {
                     .map<DropdownMenuEntry<String>>(((String item) {
                   return DropdownMenuEntry<String>(value: item, label: item);
                 })).toList()),
+            DropdownMenu(
+                onSelected: (String? selectedElement) {
+                  selectedDuration = selectedElement;
+                },
+                dropdownMenuEntries: [
+                  DropdownMenuEntry<String>(value: "60", label: "1 Hour"),
+                  DropdownMenuEntry<String>(value: "180", label: "3 Hours"),
+                  DropdownMenuEntry<String>(value: "360", label: "6 Hours"),
+                  DropdownMenuEntry<String>(value: "480", label: "8 Hours"),
+                  DropdownMenuEntry<String>(value: "720", label: "12 Hours"),
+                  DropdownMenuEntry<String>(value: "1440", label: "24 Hours"),
+                  DropdownMenuEntry<String>(value: "2880", label: "2 Days"),
+                  DropdownMenuEntry<String>(value: "4320", label: "3 Days"),
+                  DropdownMenuEntry<String>(value: "7200", label: "5 Days"),
+                  DropdownMenuEntry<String>(value: "1080", label: "7 Days"),
+                  DropdownMenuEntry<String>(value: "20160", label: "14 Days"),
+                  DropdownMenuEntry<String>(value: "44640", label: "31 Days"),
+                  DropdownMenuEntry<String>(value: "133920", label: "3 Months")
+                ]),
             TextButton(
                 onPressed: () async {
                   String? newStatus = selectedNewStatus;

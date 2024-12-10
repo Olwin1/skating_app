@@ -75,7 +75,7 @@ class ReportAPI {
   // - reportId: ID of the report to retrieve
   // - type: Type of content being reported (e.g., message, post, etc.)
   // Returns: A map containing the content data of the report
-  static Future<Map<String, dynamic>> getReportData(
+  static Future<dynamic> getReportData(
       String reportId, ReportContentType type) async {
     try {
       var response = await http.get(
@@ -89,7 +89,7 @@ class ReportAPI {
 
       // Handle different content types (e.g., list response for messages)
       if (type == ReportContentType.message) {
-        return handleResponse(response, Resp.listStringResponse);
+        return handleResponse(response, Resp.listResponse);
       }
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
@@ -123,7 +123,7 @@ class ReportAPI {
   // Parameters:
   // - page: Page number for pagination
   // Returns: A map containing a list of reports
-  static Future<Map<String, dynamic>> getReports(int page) async {
+  static Future<List<Map<String, dynamic>>> getReports(int page) async {
     try {
       var response = await http.get(
         _reportListUrl,
@@ -134,7 +134,7 @@ class ReportAPI {
         },
       );
 
-      return handleResponse(response, Resp.listStringResponse);
+      return handleResponse(response, Resp.listResponse);
     } catch (e) {
       // Handle any errors during the reports retrieval process
       throw Exception("Error while getting reports: $e");
@@ -146,7 +146,7 @@ class ReportAPI {
   // - page: Page number for pagination
   // - userId: Optional user ID to filter reports (if null, defaults to the requesting user)
   // Returns: A map containing a list of reports
-  static Future<Map<String, dynamic>> getReportsFrom(
+  static Future<List<Map<String, dynamic>>> getReportsFrom(
       int page, String? userId) async {
     try {
       var response = await http.get(
@@ -160,7 +160,7 @@ class ReportAPI {
         },
       );
 
-      return handleResponse(response, Resp.listStringResponse);
+      return handleResponse(response, Resp.listResponse);
     } catch (e) {
       // Handle any errors during the reports retrieval process
       throw Exception("Error while getting reports: $e");
@@ -172,7 +172,7 @@ class ReportAPI {
   // - page: Page number for pagination
   // - userId: ID of the user the reports are filed against
   // Returns: A map containing a list of reports
-  static Future<Map<String, dynamic>> getReportsAgainst(
+  static Future<List<Map<String, dynamic>>> getReportsAgainst(
       int page, String userId) async {
     try {
       var response = await http.get(
@@ -185,7 +185,7 @@ class ReportAPI {
         },
       );
 
-      return handleResponse(response, Resp.listStringResponse);
+      return handleResponse(response, Resp.listResponse);
     } catch (e) {
       // Handle any errors during the reports retrieval process
       throw Exception("Error while getting reports: $e");

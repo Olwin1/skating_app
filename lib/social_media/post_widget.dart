@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
+import 'package:patinka/api/token.dart';
 import 'package:patinka/misc/default_profile.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:patinka/api/social.dart';
@@ -313,7 +314,7 @@ class Avatar extends StatefulWidget {
 class _Avatar extends State<Avatar> {
   @override
   void initState() {
-    // Load user data for the given user ID
+    // Load user data forthe given user ID
     SocialAPI.getUser(widget.user).then((userCache) => {
           if (mounted)
             {
@@ -323,6 +324,7 @@ class _Avatar extends State<Avatar> {
               })
             }
         });
+
     super.initState();
   }
 

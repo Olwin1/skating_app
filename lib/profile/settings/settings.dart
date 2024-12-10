@@ -15,6 +15,7 @@ import 'package:patinka/swatch.dart';
 
 import '../../api/config.dart';
 import '../../api/token.dart';
+import 'report_list.dart';
 
 // Creating an instance of SecureStorage for handling secure data storage
 SecureStorage storage = SecureStorage();
@@ -283,6 +284,28 @@ class _Settings extends State<Settings> {
                                             user: widget.user,
                                           )));
                             }),
+
+                        // Navigation tile for support staff to see reports
+                        //TODO: ADD HANDLER IF DOES NOT EXIST SO DISABLED BUTTON IS NOT VISIBLE TO NEW USERS
+                        widget.user!["user_role"] == "moderator" ||
+                                widget.user!["user_role"] == "administrator"
+                            ? SettingsTile.navigation(
+                                leading: const Icon(Icons.policy),
+                                title: Text("Review Reports"),
+                                onPressed: (context) {
+                                  Navigator.of(context).push(
+                                      // Send to signal info page
+                                      MaterialPageRoute(
+                                          builder: (context) => ReportList(
+                                                user: widget.user,
+                                              )));
+                                })
+                            : SettingsTile.navigation(
+                                leading: const Icon(Icons.construction),
+                                title: Text("WIP"),
+                                enabled: false,
+                              ),
+
                         // Navigation tile for reporting a bug
                         SettingsTile.navigation(
                           leading: const Icon(Icons.bug_report),

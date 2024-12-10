@@ -40,4 +40,19 @@ class StatusColour {
     }
     return statusColour;
   }
+
+  static List<String> getStatusList() {
+    return [
+      "pending_review",
+      "invalid",
+      "valid_no_action",
+      "warning_issued",
+      "temporary_ban",
+      "permanent_ban",
+      "further_investigation",
+      "escalated",
+      "resolved",
+      "closed_no_resolution"
+    ];
+  }
 }

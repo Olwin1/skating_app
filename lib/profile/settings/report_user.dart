@@ -31,17 +31,15 @@ class UserReportPage extends StatefulWidget {
 
 // Define the State for the Report page
 class _UserReportPage extends State<UserReportPage> {
-  Status status = Status.closed;
-  dynamic? content;
+  String? status;
+  dynamic content;
+  String? selectedNewStatus;
 
   @override
   void initState() {
-    Status tmpStatus = RoleServices.convertToStatus(widget.report["status"]);
-    if (tmpStatus != Status.closed) {
-      setState(() {
-        status = tmpStatus;
-      });
-    }
+    setState(() {
+      status = widget.report["status"];
+    });
 
     ReportAPI.getReportData(
             widget.report["report_id"],
@@ -72,12 +70,16 @@ class _UserReportPage extends State<UserReportPage> {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             color: statusColour, borderRadius: BorderRadius.circular(16)),
-        child: Text(widget.report["status"], style: TextStyle(backgroundColor: Colors.black.withAlpha(150)),));
+        child: Text(
+          status ?? "",
+          style: TextStyle(backgroundColor: Colors.black.withAlpha(150)),
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
-    Color statusColour = StatusColour.getColour(widget.report["status"]);
+    Color statusColour =
+        status != null ? StatusColour.getColour(status!) : Colors.transparent;
 
     Widget reportedContentPreview = SizedBox.shrink();
     if (content != null) {
@@ -159,9 +161,14 @@ class _UserReportPage extends State<UserReportPage> {
                               Text(content![index]["sender_id"])
                             ],
                           ),
-                          Text(content![index]["content"],
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.pink))
+                          Container(
+                              padding: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.black),
+                              child: Text(content![index]["content"],
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.pink))),
                         ]));
                   }));
           break;
@@ -235,6 +242,38 @@ class _UserReportPage extends State<UserReportPage> {
               ),
             )),
         reportedContentPreview,
+        Container(
+          color: Colors.blueGrey,
+          height: 100,
+          child: Row(children: [
+            DropdownMenu(
+                onSelected: (String? selectedElement) {
+                  selectedNewStatus = selectedElement;
+                },
+                dropdownMenuEntries: StatusColour.getStatusList()
+                    .map<DropdownMenuEntry<String>>(((String item) {
+                  return DropdownMenuEntry<String>(value: item, label: item);
+                })).toList()),
+            TextButton(
+                onPressed: () async {
+                  String? newStatus = selectedNewStatus;
+                  if (newStatus == null) {
+                    return;
+                  }
+                  try {
+                    await ReportAPI.modifyReportStatus(
+                        widget.report["report_id"], newStatus);
+                    setState(() {
+                      status = newStatus;
+                    });
+                  } catch (e) {
+                    commonLogger
+                        .e("An Error Occured During Status Modification: $e");
+                  }
+                },
+                child: Text("Submit"))
+          ]),
+        )
       ]),
     );
   }

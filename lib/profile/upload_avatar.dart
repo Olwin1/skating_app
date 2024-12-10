@@ -1,19 +1,19 @@
-import 'dart:io';
+import "dart:io";
 
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:http/http.dart';
-import 'package:photo_gallery/photo_gallery.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:patinka/api/social.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/new_post/avatar_interact.dart';
-import 'package:transparent_image/transparent_image.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import '../api/image.dart';
-import '../swatch.dart';
+import "package:device_info_plus/device_info_plus.dart";
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_phoenix/flutter_phoenix.dart";
+import "package:http/http.dart";
+import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
+import "package:patinka/api/image.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/new_post/avatar_interact.dart";
+import "package:patinka/swatch.dart";
+import "package:permission_handler/permission_handler.dart";
+import "package:photo_gallery/photo_gallery.dart";
+import "package:transparent_image/transparent_image.dart";
 
 // Define the NewPost widget which extends StatefulWidget
 
@@ -47,7 +47,7 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
     initAsync(); // Call the initAsync function.
   }
 
-  void _update(String id) {
+  void _update(final String id) {
     mounted ? setState(() => _selectedImage = id) : null;
   }
 
@@ -56,9 +56,9 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
     commonLogger.d("Running initAsync");
     if (await _promptPermissionSetting()) {
       // Check if the user has granted permission to access the device's photo gallery.
-      List<Album> albums = await PhotoGallery.listAlbums(
+      final List<Album> albums = await PhotoGallery.listAlbums(
           mediumType: MediumType.image); // Load all albums that contain images.
-      MediaPage imagePage = await albums[0].listMedia(
+      final MediaPage imagePage = await albums[0].listMedia(
         skip: 0,
         take: 1,
       ); // Load the first page of images from the first album.
@@ -84,8 +84,8 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
     commonLogger.t("Prompting image permissions");
     // Check if the device is iOS and both the storage and photos permissions have been granted,
     // or if the device is Android and the storage permission has been granted.
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     if (Platform.isIOS &&
             await Permission.storage.request().isGranted &&
             await Permission.photos.request().isGranted ||
@@ -103,11 +103,11 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
     return false; // Return false if the permissions have not been granted.
   }
 
-  Future<String?> sendImage(image) async {
+  Future<String?> sendImage(final Uint8List image) async {
     try {
       // Upload the image file
-      StreamedResponse? response = await uploadFile(image);
-      String? id = await response?.stream.bytesToString();
+      final StreamedResponse? response = await uploadFile(image);
+      final String? id = await response?.stream.bytesToString();
       if (id != null) {
         return id.substring(1, id.length - 1);
         //Navigator.of(context).pop();
@@ -120,42 +120,42 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
     return null;
   }
 
-  void sendInfo(image) async {
+  void sendInfo(final Uint8List image) async {
     try {
       showDialog(
         useRootNavigator: false,
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: swatch[800],
-            title: Text(
-              'Processing',
-              style: TextStyle(color: swatch[701]),
-            ),
-            content: Text(
-              'Please wait...',
-              style: TextStyle(color: swatch[901]),
-            ),
-          );
-        },
+        builder: (final BuildContext context) => AlertDialog(
+          backgroundColor: swatch[800],
+          title: Text(
+            "Processing",
+            style: TextStyle(color: swatch[701]),
+          ),
+          content: Text(
+            "Please wait...",
+            style: TextStyle(color: swatch[901]),
+          ),
+        ),
       );
       // Call the "sendImage" function and wait for it to complete
-      String? imageId = await sendImage(image);
+      final String? imageId = await sendImage(image);
       // When "sendImage" completes successfully, call "postPost"
       // with the text from "descriptionController" and the returned value
       if (imageId != null) {
         await SocialAPI.setAvatar(imageId);
         // Wait for "postPost" to complete successfully
         // When "postPost" completes successfully, close the current screen
-        if (mounted) Phoenix.rebirth(context);
+        if (mounted) {
+          Phoenix.rebirth(context);
+        }
       }
     } catch (e) {
       commonLogger.e("Error creating post: $e");
     }
   }
 
-  void callback(image) {
+  void callback(final Uint8List image) {
     commonLogger.t("Navigating to send post page");
 
     selectedImage = image;
@@ -169,80 +169,75 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
 
   @override
   // Build the UI for the NewPost widget
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0x24000000),
-      resizeToAvoidBottomInset: false,
-      extendBodyBehindAppBar: true,
-      extendBody: true,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: swatch[701]),
-        elevation: 0,
-        shadowColor: Colors.green.shade900,
-        backgroundColor: const Color(0xa4000000),
-        foregroundColor: Colors.transparent,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
+  Widget build(final BuildContext context) => Scaffold(
+        backgroundColor: const Color(0x24000000),
+        resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: true,
+        extendBody: true,
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: swatch[701]),
+          elevation: 0,
+          shadowColor: Colors.green.shade900,
+          backgroundColor: const Color(0xa4000000),
+          foregroundColor: Colors.transparent,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          ),
+          title: Text(
+            "New Avatar",
+            style: TextStyle(color: swatch[701]),
+          ),
+          actions: [
+            IconButton(
+                onPressed: () => _selectedImage != null
+                    ? {
+                        mounted
+                            ? setState(
+                                () => selected = true,
+                              )
+                            : null,
+                        if (selectedImage != null)
+                          {commonLogger.i("No image has been selected")}
+                      }
+                    : commonLogger.i("No image has been selected."),
+                icon: const Icon(Icons.arrow_forward))
+          ],
         ),
-        title: Text(
-          "New Avatar",
-          style: TextStyle(color: swatch[701]),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () => _selectedImage != null
-                  ? {
-                      mounted
-                          ? setState(
-                              () => selected = true,
-                            )
-                          : null,
-                      if (selectedImage != null)
-                        {commonLogger.i("No image has been selected")}
-                    }
-                  : commonLogger.i("No image has been selected."),
-              icon: const Icon(Icons.arrow_forward))
-        ],
-      ),
-      body: _loading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : Container(
-              padding: const EdgeInsets.only(top: 8),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // A container that displays the selected image
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: AvatarInteract(
-                          selected: selected,
-                          selectedImage: _selectedImage!,
-                          callback: callback,
-                        )),
-                    //const Spacer(),
-                    // A layout builder that displays a grid of images from the photo gallery
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        // Determines the width and height of each grid item based on the constraints
-                        return SizedBox(
-                            height: MediaQuery.of(context).size.height -
-                                MediaQuery.of(context).size.width -
-                                150,
-                            child: PhotosGridView(
-                              update: _update,
-                            ));
-                      },
-                    ),
-                  ])),
-    );
-  }
+        body: _loading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Container(
+                padding: const EdgeInsets.only(top: 8),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // A container that displays the selected image
+                      SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: AvatarInteract(
+                            selected: selected,
+                            selectedImage: _selectedImage!,
+                            callback: callback,
+                          )),
+                      //const Spacer(),
+                      // A layout builder that displays a grid of images from the photo gallery
+                      LayoutBuilder(
+                          builder: (final context, final constraints) =>
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height -
+                                      MediaQuery.of(context).size.width -
+                                      150,
+                                  child: PhotosGridView(
+                                    update: _update,
+                                  ))),
+                    ])),
+      );
 }
 
 class PhotosGridView extends StatefulWidget {
-  const PhotosGridView({super.key, required this.update});
+  const PhotosGridView({required this.update, super.key});
   final ValueChanged<String> update;
 
   @override
@@ -259,14 +254,12 @@ class _PhotosGridViewState extends State<PhotosGridView> {
   @override
   void initState() {
     // addPageRequestListener is called whenever the user scrolls near the end of the list
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 
   // Fetches the data for the given pageKey and appends it to the list of items
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(final int pageKey) async {
     try {
       if (_albums != null) {
         // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
@@ -276,7 +269,9 @@ class _PhotosGridViewState extends State<PhotosGridView> {
         );
         final newItems = page.items;
         final isLastPage = newItems.length < _pageSize;
-        if (!mounted) return;
+        if (!mounted) {
+          return;
+        }
         if (isLastPage) {
           // appendLastPage is called if there are no more items to load
           _pagingController.appendLastPage(newItems);
@@ -292,7 +287,7 @@ class _PhotosGridViewState extends State<PhotosGridView> {
   }
 
   @override
-  Widget build(BuildContext context) => PagedGridView<int, Medium>(
+  Widget build(final BuildContext context) => PagedGridView<int, Medium>(
         // Uses the SliverGridDelegateWithMaxCrossAxisExtent to layout the grid
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           childAspectRatio: 1, // Ratio of width to height of grid items
@@ -303,26 +298,27 @@ class _PhotosGridViewState extends State<PhotosGridView> {
         ),
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Medium>(
-          itemBuilder: (context, item, index) => GestureDetector(
-              onTap: () => widget.update(
-                  // Updates the selected image when an image is tapped
-                  item.id),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5.0),
-                child: Container(
-                  color: shimmer["base"],
-                  child: FadeInImage(
-                    fit: BoxFit.cover,
-                    placeholder: MemoryImage(kTransparentImage),
-                    // Uses the ThumbnailProvider to display the grid image
-                    image: ThumbnailProvider(
-                      mediumId: item.id,
-                      mediumType: item.mediumType,
-                      highQuality: false,
+          itemBuilder: (final context, final item, final index) =>
+              GestureDetector(
+                  onTap: () => widget.update(
+                      // Updates the selected image when an image is tapped
+                      item.id),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5.0),
+                    child: Container(
+                      color: shimmer["base"],
+                      child: FadeInImage(
+                        fit: BoxFit.cover,
+                        placeholder: MemoryImage(kTransparentImage),
+                        // Uses the ThumbnailProvider to display the grid image
+                        image: ThumbnailProvider(
+                          mediumId: item.id,
+                          mediumType: item.mediumType,
+                          highQuality: false,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              )),
+                  )),
         ),
       );
 

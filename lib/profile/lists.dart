@@ -1,17 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/profile/followers_list.dart';
-import 'package:patinka/profile/following_list.dart';
-import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../api/config.dart';
-import '../swatch.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/profile/followers_list.dart";
+import "package:patinka/profile/following_list.dart";
+import "package:patinka/swatch.dart";
 
 // Lists widget
 class Lists extends StatefulWidget {
-  const Lists({super.key, required this.index, this.user});
+  const Lists({required this.index, super.key, this.user});
 
   final int index;
   final Map<String, dynamic>? user;
@@ -25,7 +24,7 @@ class _Lists extends State<Lists> {
   late int _selectedItemPosition = widget.index;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     commonLogger.t("Selected item position: $_selectedItemPosition");
     return Scaffold(
       backgroundColor: const Color(0x34000000),
@@ -70,7 +69,7 @@ class _Lists extends State<Lists> {
               // Setting the current index of the SnakeBar
               currentIndex: _selectedItemPosition,
               // Setting the onTap function of the SnakeBar
-              onTap: (index) => {
+              onTap: (final index) => {
                 mounted ? setState(() => _selectedItemPosition = index) : null
               },
               // Setting the items of the SnakeBar
@@ -89,12 +88,12 @@ class _Lists extends State<Lists> {
       // Setting the body of the scaffold to a ListView with some UserListWidgets
       body: AnimatedSwitcher(
           duration: const Duration(milliseconds: 800), // Duration for animation
-          transitionBuilder: (child, animation) {
+          transitionBuilder: (final child, final animation) {
             // Function to build the transition
             // Define the offset animation using a Tween and the provided animation
             final offsetAnimation = Tween(
               begin: const Offset(1.5, 0.0), // Starting position for the child
-              end: const Offset(0.0, 0.0), // Ending position for the child
+              end: Offset.zero, // Ending position for the child
             ).animate(animation);
             // Return the child wrapped in a ClipRect and SlideTransition
             return ClipRect(

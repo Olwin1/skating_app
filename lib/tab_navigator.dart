@@ -1,17 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:patinka/new_post/new_post.dart';
-import 'package:patinka/profile/profile_page/profile_page.dart';
-import 'friends_tracker/friends_tracker.dart';
-import 'services/navigation_service.dart';
-import 'social_media/homepage.dart';
-import 'fitness_tracker/fitness_tracker.dart';
+import "package:convex_bottom_bar/convex_bottom_bar.dart";
+import "package:flutter/material.dart";
+import "package:patinka/fitness_tracker/fitness_tracker.dart";
+import "package:patinka/friends_tracker/friends_tracker.dart";
+import "package:patinka/new_post/new_post.dart";
+import "package:patinka/profile/profile_page/profile_page.dart";
+import "package:patinka/services/navigation_service.dart";
+import "package:patinka/social_media/homepage.dart";
 
 class TabNavigator extends StatelessWidget {
   const TabNavigator(
-      {super.key,
-      required this.tabItemIndex, // Navbar item selected
-      required this.tabitems}); // Array of navbar items
+      {required this.tabItemIndex,
+      required this.tabitems,
+      super.key}); // Navbar item selected // Array of navbar items, super.key,
   final int tabItemIndex;
   final List<TabItem<Widget>> tabitems;
 
@@ -28,33 +28,29 @@ class TabNavigator extends StatelessWidget {
   };
 
   @override
-  Widget build(BuildContext context) {
-    return Navigator(
-        key: NavigationService.navigatorKey(tabItemIndex.toString()),
-        initialRoute: "0", //Set initial page to main page
+  Widget build(final BuildContext context) => Navigator(
+      key: NavigationService.navigatorKey(tabItemIndex.toString()),
+      initialRoute: "0", //Set initial page to main page
 // TODO: opPopPage deprecated after Flutter 3.24 - change handler at that point for back on last route.
-        onDidRemovePage: (Page<Object?> page) {
-          // if (!route.didPop(result)) {
-          //   return false;
-          // }
+      onDidRemovePage: (final Page<Object?> page) {
+        // if (!route.didPop(result)) {
+        //   return false;
+        // }
 
-          // if (NavigationService.getCurrentIndex() != 0) {
-          //   print("cows");
-          // PushReplacement to index 0
-          // WidgetsBinding.instance.addPostFrameCallback((_) {
-          //   NavigationService.navigatorKey("0")
-          //       ?.currentState
-          //       ?.pushReplacementNamed("/");
-          // });
-          // NavigationService.setCurrentIndex(0);
-          print("cos");
+        // if (NavigationService.getCurrentIndex() != 0) {
+        //   print("cows");
+        // PushReplacement to index 0
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
+        //   NavigationService.navigatorKey("0")
+        //       ?.currentState
+        //       ?.pushReplacementNamed("/");
+        // });
+        // NavigationService.setCurrentIndex(0);
+        print("cos");
 
-          // return route.didPop(result);
-        },
-        onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) {
-            return _routeBuilders[tabItemIndex.toString()]!;
-          }); //Get page at index i
-        });
-  }
+        // return route.didPop(result);
+      },
+      onGenerateRoute: (final routeSettings) => MaterialPageRoute(
+          builder: (final context) =>
+              _routeBuilders[tabItemIndex.toString()]!)); //Get page at index i
 }

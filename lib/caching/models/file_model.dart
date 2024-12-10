@@ -1,10 +1,6 @@
-import 'dart:typed_data';
+import "dart:typed_data";
 
 class BaseFileModel {
-  final String key;
-  final String type;
-  final Uint8List object;
-  final String? jsonObject;
 
   BaseFileModel({
     required this.key,
@@ -12,4 +8,8 @@ class BaseFileModel {
     required this.type,
     this.jsonObject,
   });
+  final String key;
+  final String type;
+  final Uint8List object;
+  final String? jsonObject;
 }

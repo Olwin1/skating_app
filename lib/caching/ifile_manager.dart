@@ -1,7 +1,7 @@
 abstract class IFileManager {
   Future<bool> writeUserRequestDataWithTime(
-      String key, String type, String model, Duration time);
-  Future<String?> getUserRequestDataOnString(String key, String type);
-  Future<bool> removeUserRequestSingleCache(String key, String type);
-  Future<bool> removeUserRequestCache(String? type);
+      final String key, final String type, final String model, final Duration time);
+  Future<String?> getUserRequestDataOnString(final String key, final String type);
+  Future<bool> removeUserRequestSingleCache(final String key, final String type);
+  Future<bool> removeUserRequestCache(final String? type);
 }

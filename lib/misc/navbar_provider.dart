@@ -1,12 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import "package:flutter/material.dart";
+import "package:flutter/scheduler.dart";
 
 class BottomBarVisibilityProvider extends ChangeNotifier
     implements TickerProvider {
-  bool isVisible = true;
-  late AnimationController _animationController;
-
-  AnimationController get animationController => _animationController;
 
   BottomBarVisibilityProvider() {
     _animationController = AnimationController(
@@ -14,30 +10,28 @@ class BottomBarVisibilityProvider extends ChangeNotifier
       duration: const Duration(milliseconds: 200),
     );
   }
+  bool isVisible = true;
+  late AnimationController _animationController;
+
+  AnimationController get animationController => _animationController;
   void show() {
     if (!isVisible) {
       isVisible = true;
       _animationController.reverse();
       // Using Future to schedule the notification after the build phase
-      Future.microtask(() {
-        notifyListeners();
-      });
+      Future.microtask(notifyListeners);
     }
   }
 
   @override
-  Ticker createTicker(TickerCallback onTick) {
-    return Ticker(onTick);
-  }
+  Ticker createTicker(final TickerCallback onTick) => Ticker(onTick);
 
   void hide() {
     if (isVisible) {
-      _animationController.forward().then((value) => isVisible = false);
+      _animationController.forward().then((final value) => isVisible = false);
 
       // Using Future to schedule the notification after the build phase
-      Future.microtask(() {
-        notifyListeners();
-      });
+      Future.microtask(notifyListeners);
     }
   }
 

@@ -1,32 +1,23 @@
-import 'dart:convert';
+import "dart:convert";
 
-import './models/local_data.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import "package:patinka/caching/ifile_manager.dart";
+import "package:patinka/caching/models/local_data.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
-import './ifile_manager.dart';
-
-part './core/preferences.dart';
+part "./core/preferences.dart";
 
 class LocalPreferences implements IFileManager {
   LocalManager manager = LocalManager.instance;
   @override
-  Future<String?> getUserRequestDataOnString(String key, String type) async {
-    return await manager.getModelString(key);
-  }
+  Future<String?> getUserRequestDataOnString(final String key, final String type) async => await manager.getModelString(key);
 
   @override
-  Future<bool> removeUserRequestCache(String? type) async {
-    return await manager.removeAllLocalData(type);
-  }
+  Future<bool> removeUserRequestCache(final String? type) async => await manager.removeAllLocalData(type);
 
   @override
-  Future<bool> removeUserRequestSingleCache(String key, String type) async {
-    return await manager.removeModel(key);
-  }
+  Future<bool> removeUserRequestSingleCache(final String key, final String type) async => await manager.removeModel(key);
 
   @override
   Future<bool> writeUserRequestDataWithTime(
-      String key, String type, Object model, Duration time) async {
-    return await manager.writeModelInJson(model, key, time);
-  }
+      final String key, final String type, final Object model, final Duration time) async => await manager.writeModelInJson(model, key, time);
 }

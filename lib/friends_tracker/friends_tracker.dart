@@ -1,21 +1,21 @@
-import 'dart:async';
+import "dart:async";
 
-import 'package:flutter/material.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/friends_tracker/friend_activity.dart';
-import 'package:patinka/friends_tracker/marker.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:patinka/api/session.dart';
-import 'package:patinka/services/navigation_service.dart';
-import 'package:provider/provider.dart';
-import '../api/social.dart';
-import './caching/map_cache.dart'
-    if (dart.library.io) './caching/map_cache_mobile.dart'
-    if (dart.library.html) './caching/map_cache_web.dart';
-import './search_bar.dart';
+import "package:flutter/material.dart";
+import "package:flutter_map/flutter_map.dart";
+import "package:flutter_map_location_marker/flutter_map_location_marker.dart";
+import "package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart";
+import "package:latlong2/latlong.dart";
+import "package:patinka/api/session.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/friends_tracker/caching/map_cache.dart"
+    if (dart.library.io) "./caching/map_cache_mobile.dart"
+    if (dart.library.html) "./caching/map_cache_web.dart";
+import "package:patinka/friends_tracker/friend_activity.dart";
+import "package:patinka/friends_tracker/marker.dart";
+import "package:patinka/friends_tracker/search_bar.dart";
+import "package:patinka/services/navigation_service.dart";
+import "package:provider/provider.dart";
 
 bool searchOpened = true;
 bool active = false;
@@ -29,17 +29,13 @@ class FriendsTracker extends StatelessWidget {
 
   // Override the build method of StatelessWidget to return a Consumer widget
   @override
-  Widget build(BuildContext context) {
-    // Use the Consumer widget to listen for changes to the CurrentPage object
-    return Consumer<NavigationService>(
-        builder: (context, navigationService, _) {
-      return NavigationService.getCurrentIndex() == 3
-          ? const FriendsTrackerPage()
-          :
-          // Otherwise, return an empty SizedBox widget
-          const SizedBox.shrink();
-    });
-  }
+  Widget build(final BuildContext context) => Consumer<NavigationService>(
+      builder: (final context, final navigationService, final _) =>
+          NavigationService.getCurrentIndex() == 3
+              ? const FriendsTrackerPage()
+              :
+              // Otherwise, return an empty SizedBox widget
+              const SizedBox.shrink());
 }
 
 class FriendsTrackerPage extends StatefulWidget {
@@ -67,12 +63,12 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
         .never; // Set the initial value for the follow update
     _followCurrentLocationStreamController = StreamController<
         double?>(); // Create the stream for updating the follow location
-    List<Marker> newFriends =
+    final List<Marker> newFriends =
         []; // Temporary list for storing the markers of the friends' locations
     Map<String, dynamic> userCache; // Cache for storing user information
-    SessionAPI.getSessions().then((values) async => {
+    SessionAPI.getSessions().then((final values) async => {
           // Get the list of sessions for each friend
-          for (var session in values) // Loop through the sessions
+          for (final session in values) // Loop through the sessions
             {
               userCache = await SocialAPI.getUser(
                   session["author_id"]), // Get the user information
@@ -84,7 +80,7 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                         0, 0), //session["latitude"], session["longitude"]),
                     width: 80,
                     height: 80,
-                    builder: (context) => CustomMarker(
+                    builder: (final context) => CustomMarker(
                         sessionData: session, userData: userCache)),
               ),
             },
@@ -113,9 +109,9 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     commonLogger.t("Building Map");
-    return LayoutBuilder(builder: (context, constraints) {
+    return LayoutBuilder(builder: (final context, final constraints) {
       if (constraints.maxHeight > constraintsMax.maxHeight) {
         constraintsMax = constraints;
       }
@@ -185,9 +181,9 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                           tileProvider, // For caching tiles to improve responsiveness
                       maxZoom: 19,
                       urlTemplate:
-                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                       userAgentPackageName:
-                          'com.skatingapp.map', // Package Name
+                          "com.skatingapp.map", // Package Name
                     ),
                     MarkerClusterLayerWidget(
                       // Define the options for the MarkerClusterLayer.
@@ -208,19 +204,17 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                         // The list of markers to cluster.
                         markers: friends,
                         // The builder function for creating the marker icon for each cluster.
-                        builder: (context, markers) {
-                          return Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.blue),
-                            child: Center(
-                              child: Text(
-                                markers.length.toString(),
-                                style: const TextStyle(color: Colors.white),
-                              ),
+                        builder: (final context, final markers) => DecoratedBox(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.blue),
+                          child: Center(
+                            child: Text(
+                              markers.length.toString(),
+                              style: const TextStyle(color: Colors.white),
                             ),
-                          );
-                        },
+                          ),
+                        ),
                       ),
                     ),
                     CurrentLocationLayer(

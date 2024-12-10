@@ -1,17 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/api/config.dart';
-
-import '../misc/default_profile.dart';
-import '../swatch.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/material.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/misc/default_profile.dart";
+import "package:patinka/swatch.dart";
+import "package:shimmer/shimmer.dart";
 
 class CustomMarker extends StatefulWidget {
   // Create FriendActivity widget
   const CustomMarker(
-      {super.key,
-      required this.userData,
-      required this.sessionData}); // Take 2 arguments optional key and title of post
+      {required this.userData, required this.sessionData, super.key}); // Take 2 arguments optional key and title of post
   final Map<String, dynamic> userData;
   final Map<String, dynamic> sessionData;
 
@@ -22,7 +19,7 @@ class CustomMarker extends StatefulWidget {
 
 class _CustomMarker extends State<CustomMarker> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Check if the sessionData contains any images
     if (widget.sessionData.containsKey("images") &&
         !widget.sessionData["images"].isEmpty) {
@@ -35,7 +32,7 @@ class _CustomMarker extends State<CustomMarker> {
             child: CachedNetworkImage(
               imageUrl:
                   '${Config.uri}/image/${widget.sessionData["images"][0]}',
-              imageBuilder: (context, imageProvider) => Container(
+              imageBuilder: (final context, final imageProvider) => Container(
                 width: 64.0,
                 height: 64.0,
                 decoration: BoxDecoration(
@@ -44,7 +41,7 @@ class _CustomMarker extends State<CustomMarker> {
                       DecorationImage(image: imageProvider, fit: BoxFit.cover),
                 ),
               ),
-              placeholder: (context, url) => Shimmer.fromColors(
+              placeholder: (final context, final url) => Shimmer.fromColors(
                   baseColor: shimmer["base"]!,
                   highlightColor: shimmer["highlight"]!,
                   child: CircleAvatar(
@@ -52,7 +49,7 @@ class _CustomMarker extends State<CustomMarker> {
                     radius: 32, // Set radius to 36
                     backgroundColor: swatch[900],
                   )),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
+              errorWidget: (final context, final url, final error) => const Icon(Icons.error),
             ),
           ),
           // Show the user's avatar as a smaller circular image, if available
@@ -60,7 +57,7 @@ class _CustomMarker extends State<CustomMarker> {
               ? CachedNetworkImage(
                   imageUrl:
                       '${Config.uri}/image/widget.sessionData["images"][0]',
-                  imageBuilder: (context, imageProvider) => Container(
+                  imageBuilder: (final context, final imageProvider) => Container(
                     width: 32.0,
                     height: 32.0,
                     decoration: BoxDecoration(
@@ -69,7 +66,7 @@ class _CustomMarker extends State<CustomMarker> {
                           image: imageProvider, fit: BoxFit.cover),
                     ),
                   ),
-                  placeholder: (context, url) => Shimmer.fromColors(
+                  placeholder: (final context, final url) => Shimmer.fromColors(
                       baseColor: shimmer["base"]!,
                       highlightColor: shimmer["highlight"]!,
                       child: CircleAvatar(
@@ -77,7 +74,7 @@ class _CustomMarker extends State<CustomMarker> {
                         radius: 16, // Set radius to 36
                         backgroundColor: swatch[900],
                       )),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  errorWidget: (final context, final url, final error) => const Icon(Icons.error),
                 )
               // If the user doesn't have an avatar, show a default placeholder image
               : const DefaultProfile(radius: 16)
@@ -88,7 +85,7 @@ class _CustomMarker extends State<CustomMarker> {
     return widget.userData["avatar_id"] != null
         ? CachedNetworkImage(
             imageUrl: '${Config.uri}/image/${widget.userData["avatar_id"]}',
-            imageBuilder: (context, imageProvider) => Container(
+            imageBuilder: (final context, final imageProvider) => Container(
               width: 64.0,
               height: 64.0,
               decoration: BoxDecoration(
@@ -96,7 +93,7 @@ class _CustomMarker extends State<CustomMarker> {
                 image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
               ),
             ),
-            placeholder: (context, url) => Shimmer.fromColors(
+            placeholder: (final context, final url) => Shimmer.fromColors(
                 baseColor: shimmer["base"]!,
                 highlightColor: shimmer["highlight"]!,
                 child: CircleAvatar(
@@ -104,7 +101,7 @@ class _CustomMarker extends State<CustomMarker> {
                   radius: 32, // Set radius to 36
                   backgroundColor: swatch[900],
                 )),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
+            errorWidget: (final context, final url, final error) => const Icon(Icons.error),
           )
         // If the user doesn't have an avatar, show a default placeholder image
         : Shimmer.fromColors(

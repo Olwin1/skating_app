@@ -1,25 +1,21 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:patinka/api/config.dart';
-import 'package:patinka/profile/settings/list_type.dart';
-import 'package:patinka/profile/settings/report_messages.dart';
-import 'package:patinka/profile/settings/status_dropdown.dart';
-import 'package:patinka/services/role.dart';
-import 'package:patinka/swatch.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/profile/settings/list_type.dart";
+import "package:patinka/profile/settings/report_messages.dart";
+import "package:patinka/profile/settings/status_dropdown.dart";
+import "package:patinka/services/role.dart";
+import "package:patinka/swatch.dart";
 
 // Define a StatefulWidget for the Report page
 class ReportPage extends StatefulWidget {
+
+  const ReportPage(
+      {required this.report, required this.user, required this.reportType, required this.userRole, super.key});
   final Map<String, dynamic> report;
   final Map<String, dynamic>? user;
   final SupportListType reportType;
   final UserRole userRole;
-
-  const ReportPage(
-      {super.key,
-      required this.report,
-      required this.user,
-      required this.reportType,
-      required this.userRole});
   @override
   State<ReportPage> createState() => _ReportPage();
 }
@@ -30,7 +26,7 @@ class _ReportPage extends State<ReportPage> {
 
   @override
   void initState() {
-    Status tmpStatus = RoleServices.convertToStatus(widget.report["status"]);
+    final Status tmpStatus = RoleServices.convertToStatus(widget.report["status"]);
     if (tmpStatus != Status.closed) {
       setState(() {
         status = tmpStatus;
@@ -39,12 +35,12 @@ class _ReportPage extends State<ReportPage> {
     super.initState();
   }
 
-  Widget loadStatusIcon(Color statusColour) {
+  Widget loadStatusIcon(final Color statusColour) {
     if (widget.userRole != UserRole.moderator ||
         widget.userRole == UserRole.administrator) {
       return StatusDropdown(
           report: widget.report,
-          onStatusChanged: (a) {
+          onStatusChanged: (final a) {
             print("Update request status");
           });
     }
@@ -57,8 +53,8 @@ class _ReportPage extends State<ReportPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    Color statusColour = status == Status.closed
+  Widget build(final BuildContext context) {
+    final Color statusColour = status == Status.closed
         ? Colors.red.shade700
         : status == Status.open
             ? swatch[100]!
@@ -89,7 +85,7 @@ class _ReportPage extends State<ReportPage> {
           ),
         ),
       ),
-      body: Container(
+      body: DecoratedBox(
           decoration:
               const BoxDecoration(color: Color.fromARGB(88, 62, 23, 23)),
           child: Stack(children: [

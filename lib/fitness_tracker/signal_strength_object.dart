@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 class SignalStrengthObject extends StatefulWidget {
   // Create HomePage Class
   const SignalStrengthObject(
-      {super.key,
-      required this.title,
-      required this.body}); // Take optional key
+      {required this.title, required this.body, super.key}); // Take optional key
   final String title; // Take title and body arguments as strings
   final String body;
 
@@ -16,8 +14,7 @@ class SignalStrengthObject extends StatefulWidget {
 
 class _SignalStrengthObject extends State<SignalStrengthObject> {
   @override // Override existing build method
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(final BuildContext context) => Padding(
       padding: const EdgeInsets.symmetric(
           vertical:
               16), // Add vertical padding of 16 logical pixels to space each row
@@ -45,5 +42,4 @@ class _SignalStrengthObject extends State<SignalStrengthObject> {
         ],
       ),
     );
-  }
 }

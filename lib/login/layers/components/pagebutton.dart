@@ -1,14 +1,11 @@
-import 'package:flutter/material.dart';
-import '../../config.dart';
+import "package:flutter/material.dart";
+import "package:patinka/login/config.dart";
 
 class PageButton extends StatelessWidget {
   const PageButton(
-      {super.key,
+      {required this.top, required this.label, required this.callback, super.key,
       this.left,
-      this.right,
-      required this.top,
-      required this.label,
-      required this.callback});
+      this.right});
   final double? left;
   final double? right;
   final double top;
@@ -16,20 +13,18 @@ class PageButton extends StatelessWidget {
   final Function callback;
 
   @override
-  Widget build(BuildContext context) {
-    return Positioned(
+  Widget build(final BuildContext context) => Positioned(
         left: left,
         top: top,
         right: right,
         child: TextButton(
-            onPressed: () => callback(),
+            onPressed: callback as VoidCallback,
             child: Text(
               label,
               style: TextStyle(
                   color: forgotPasswordText,
                   fontSize: 16,
-                  fontFamily: 'Poppins-Medium',
+                  fontFamily: "Poppins-Medium",
                   fontWeight: FontWeight.w500),
             )));
-  }
 }

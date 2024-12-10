@@ -1,28 +1,29 @@
 // Import necessary Dart and Flutter packages
-import 'dart:async';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_types/flutter_chat_types.dart';
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:get_it/get_it.dart';
-import 'package:patinka/social_media/modals/message_options_modal.dart';
-import 'package:patinka/social_media/private_messages/session_notification.dart';
-import 'package:patinka/social_media/user_reports/report_user.dart';
-import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/misc/navbar_provider.dart';
-import 'package:patinka/api/websocket.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:uuid/uuid.dart';
-import '../../api/config.dart';
-import '../../api/messages.dart';
-import '../../api/social.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../misc/default_profile.dart';
-import '../../swatch.dart';
+import "dart:async";
+
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/material.dart";
+import "package:flutter/scheduler.dart";
+import "package:flutter/services.dart";
+import "package:flutter_chat_types/flutter_chat_types.dart" as types;
+import "package:flutter_chat_types/flutter_chat_types.dart";
+import "package:flutter_chat_ui/flutter_chat_ui.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:get_it/get_it.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/messages.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/api/websocket.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/misc/default_profile.dart";
+import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/social_media/modals/message_options_modal.dart";
+import "package:patinka/social_media/private_messages/session_notification.dart";
+import "package:patinka/social_media/user_reports/report_user.dart";
+import "package:patinka/swatch.dart";
+import "package:provider/provider.dart";
+import "package:shimmer/shimmer.dart";
+import "package:uuid/uuid.dart";
 
 // Initialize GetIt for dependency injection
 GetIt getIt = GetIt.instance;
@@ -31,11 +32,11 @@ GetIt getIt = GetIt.instance;
 class PrivateMessage extends StatefulWidget {
   // Constructor takes an index and a channel as arguments
   const PrivateMessage({
-    super.key,
     required this.initSelf,
+    required this.currentUser,
+    super.key,
     this.channel,
     this.user,
-    required this.currentUser,
     this.callback,
   });
 
@@ -80,7 +81,7 @@ class _PrivateMessage extends State<PrivateMessage> {
     // Initialize the user if not already initialized
     if (user == null) {
       getUser(null).then(
-        (value) => {
+        (final value) => {
           user = value,
           setState(() => userFound = true),
         },
@@ -101,17 +102,17 @@ class _PrivateMessage extends State<PrivateMessage> {
 
     // Subscribe to the websocket stream
     subscriptionMessages = getIt<WebSocketConnection>().streamMessages.listen(
-          (data) => updateMessages(data),
+          updateMessages,
         );
     subscriptionSeen = getIt<WebSocketConnection>().streamSeen.listen(
-          (data) => updateSeen(data),
+          updateSeen,
         );
     subscriptionTyping = getIt<WebSocketConnection>().streamTyping.listen(
-          (data) => handleTyping(data),
+          handleTyping,
         );
     subscriptionMessagesDelivered =
         getIt<WebSocketConnection>().streamMessagesDelivered.listen(
-              (data) => updateDelivered(data),
+              updateDelivered,
             );
   }
 
@@ -126,7 +127,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   void _onTypingStarted() {
     isTyping = true;
 
-    print('User started typing');
+    print("User started typing");
     channelId == null
         ? null
         : getIt<WebSocketConnection>()
@@ -136,7 +137,7 @@ class _PrivateMessage extends State<PrivateMessage> {
 
   void _onTypingStopped() {
     isTyping = false;
-    print('User stopped typing');
+    print("User stopped typing");
     channelId == null
         ? null
         : getIt<WebSocketConnection>()
@@ -146,9 +147,9 @@ class _PrivateMessage extends State<PrivateMessage> {
 
   void _startTypingCheckTimer() {
     _typingTimer?.cancel(); // Cancel any existing timer
-    _keepaliveTimer = Timer.periodic(typingDelay, (timer) {
+    _keepaliveTimer = Timer.periodic(typingDelay, (final timer) {
       if (isTyping) {
-        print('User is still typing...');
+        print("User is still typing...");
         channelId == null
             ? null
             : getIt<WebSocketConnection>()
@@ -166,29 +167,27 @@ class _PrivateMessage extends State<PrivateMessage> {
 
   // Function to show a skeleton UI while messages are loading
   Widget _messagesSkeleton() {
-    Widget child(bool lalign, double width) {
-      return Shimmer.fromColors(
-        baseColor: shimmer["base"]!,
-        highlightColor: shimmer["highlight"]!,
-        child: Container(
-          width: 100,
-          padding: const EdgeInsets.only(top: 8),
-          child: Align(
-            alignment: lalign ? Alignment.centerLeft : Alignment.centerRight,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xb5000000),
-                borderRadius: BorderRadius.all(Radius.circular(8)),
+    Widget child(final bool lalign, final double width) => Shimmer.fromColors(
+          baseColor: shimmer["base"]!,
+          highlightColor: shimmer["highlight"]!,
+          child: Container(
+            width: 100,
+            padding: const EdgeInsets.only(top: 8),
+            child: Align(
+              alignment: lalign ? Alignment.centerLeft : Alignment.centerRight,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xb5000000),
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                height: 42,
+                width: width,
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(vertical: 8),
               ),
-              height: 42,
-              width: width,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              padding: const EdgeInsets.symmetric(vertical: 8),
             ),
           ),
-        ),
-      );
-    }
+        );
 
     return SizedBox(
       height: MediaQuery.of(context).size.height,
@@ -216,8 +215,8 @@ class _PrivateMessage extends State<PrivateMessage> {
   List<types.User> users = [];
 
   // Function to get user information
-  Future<types.User> getUser(String? id) async {
-    String userId = id ?? widget.currentUser;
+  Future<types.User> getUser(final String? id) async {
+    final String userId = id ?? widget.currentUser;
 
     // Check if user information is already fetched
     for (var i = 0; i < users.length; i++) {
@@ -228,8 +227,8 @@ class _PrivateMessage extends State<PrivateMessage> {
     }
 
     // Fetch user information from the API
-    Map<String, dynamic> user = await SocialAPI.getUser(userId);
-    types.User newUser = types.User(
+    final Map<String, dynamic> user = await SocialAPI.getUser(userId);
+    final types.User newUser = types.User(
       id: userId,
       firstName: user["username"],
       imageUrl: user["avatar_id"] == null
@@ -243,10 +242,10 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   // Function to update messages when new messages arrive
-  void updateMessages(Map<String, dynamic> data) async {
+  void updateMessages(final Map<String, dynamic> data) async {
     if (data["channel"] == channelId) {
       commonLogger.d("ITS A MATCH!");
-      User user = await getUser(data["sender"]);
+      final User user = await getUser(data["sender"]);
       // Add the new message to the beginning of the list
       mounted
           ? setState(() {
@@ -270,9 +269,9 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   // Function to update messages when new messages arrive
-  void updateSeen(Map<String, dynamic> data) async {
+  void updateSeen(final Map<String, dynamic> data) async {
     if (data["channel"] == channelId) {
-      String messageNumber = data["messageNumber"].toString();
+      final String messageNumber = data["messageNumber"].toString();
       commonLogger.d("ITS A MATCH for seen!");
       for (int i = 0; i < _messages.length; i++) {
         if (_messages[i].id == messageNumber) {
@@ -284,9 +283,9 @@ class _PrivateMessage extends State<PrivateMessage> {
     }
   }
 
-  void updateDelivered(Map<String, dynamic> data) async {
+  void updateDelivered(final Map<String, dynamic> data) async {
     if (data["channel"] == channelId) {
-      String messageNumber = data["messageNumber"].toString();
+      final String messageNumber = data["messageNumber"].toString();
       commonLogger.d("ITS A MATCH for seen!");
       for (int i = 0; i < _messages.length; i++) {
         if (_messages[i].author == user &&
@@ -308,13 +307,13 @@ class _PrivateMessage extends State<PrivateMessage> {
     }
 
     loading = true;
-    List<types.Message> messages = [];
+    final List<types.Message> messages = [];
 
     if (channelId != null) {
       final messagesRaw = await MessagesAPI.getMessages(_page, channelId!);
       for (int i = 0; i < messagesRaw.length; i++) {
-        dynamic message = messagesRaw[i];
-        List<String> messageReaders = [];
+        final dynamic message = messagesRaw[i];
+        final List<String> messageReaders = [];
         for (int j = 0; j < message["message_readers"].length; j++) {
           messageReaders.add(message["message_readers"][j]["user_id"]);
           if (message["message_readers"][j]["user_id"] == widget.currentUser) {
@@ -350,9 +349,9 @@ class _PrivateMessage extends State<PrivateMessage> {
       commonLogger.t("Loading more messages");
       final nextPage = _page + 1;
       final messagesRaw = await MessagesAPI.getMessages(nextPage, channelId!);
-      List<types.Message> messages = [];
+      final List<types.Message> messages = [];
       for (int i = 0; i < messagesRaw.length; i++) {
-        dynamic message = messagesRaw[i];
+        final dynamic message = messagesRaw[i];
         messages.add(
           types.TextMessage(
             author: await getUser(message["sender_id"]),
@@ -373,7 +372,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   Map<String, Timer> typingUserTimers = {};
-  void handleTyping(Map<String, dynamic> data) {
+  void handleTyping(final Map<String, dynamic> data) {
     if (data["channel"] == channelId) {
       switch (data["typingState"]) {
         case TypingState.started:
@@ -383,7 +382,7 @@ class _PrivateMessage extends State<PrivateMessage> {
             typingUserTimers[data["sender"]]!.cancel();
           }
           typingUserTimers[data["sender"]] =
-              Timer.periodic(typingDelay, (timer) {
+              Timer.periodic(typingDelay, (final timer) {
             handleTypingCancel(data);
           });
           bool found = false;
@@ -394,7 +393,7 @@ class _PrivateMessage extends State<PrivateMessage> {
             }
           }
           if (!found) {
-            getUser(data["sender"]).then((value) => {
+            getUser(data["sender"]).then((final value) => {
                   setState(() {
                     typingUsers.add(value);
                   })
@@ -409,7 +408,7 @@ class _PrivateMessage extends State<PrivateMessage> {
 
   List<User> typingUsers = [];
 
-  void handleTypingCancel(Map<String, dynamic> data) {
+  void handleTypingCancel(final Map<String, dynamic> data) {
     if (typingUserTimers.containsKey(data["sender"])) {
       typingUserTimers.remove(data["sender"])!.cancel();
     }
@@ -424,7 +423,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Hide the Navbar
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
 
@@ -444,7 +443,8 @@ class _PrivateMessage extends State<PrivateMessage> {
 
     return PopScope(
       canPop: true,
-      onPopInvokedWithResult: (bool hasPopped, result) => _onWillPop(hasPopped),
+      onPopInvokedWithResult: (final bool hasPopped, final result) =>
+          _onWillPop(hasPopped),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
@@ -481,7 +481,8 @@ class _PrivateMessage extends State<PrivateMessage> {
                           width: 40,
                           imageUrl:
                               '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
-                          placeholder: (context, url) => Shimmer.fromColors(
+                          placeholder: (final context, final url) =>
+                              Shimmer.fromColors(
                             baseColor: shimmer["base"]!,
                             highlightColor: shimmer["highlight"]!,
                             child: CircleAvatar(
@@ -489,7 +490,8 @@ class _PrivateMessage extends State<PrivateMessage> {
                               backgroundColor: swatch[900],
                             ),
                           ),
-                          imageBuilder: (context, imageProvider) => Container(
+                          imageBuilder: (final context, final imageProvider) =>
+                              Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
@@ -531,25 +533,23 @@ class _PrivateMessage extends State<PrivateMessage> {
                     typingIndicatorOptions: TypingIndicatorOptions(
                         typingMode: TypingIndicatorMode.both,
                         typingUsers: typingUsers),
-                    customStatusBuilder: (message,
-                        {required BuildContext context}) {
-                      return MessageStatus(
-                        status: message.status,
-                      );
-                    },
+                    customStatusBuilder: (final message,
+                            {required final BuildContext context}) =>
+                        MessageStatus(
+                      status: message.status,
+                    ),
                     inputOptions: InputOptions(
                       inputClearMode: InputClearMode.never,
                       textEditingController: controller,
                     ),
-                    nameBuilder: (types.User user) {
-                      return user.firstName != null
-                          ? Text(user.firstName!)
-                          : const Text("placeholdser");
-                    },
+                    nameBuilder: (final types.User user) =>
+                        user.firstName != null
+                            ? Text(user.firstName!)
+                            : const Text("placeholdser"),
                     l10n: locale,
                     messages: _messages,
                     onSendPressed: _handleSendPressed,
-                    onMessageTap: (context, p1) {
+                    onMessageTap: (final context, final p1) {
                       commonLogger.d("eeeeeadss  ${p1.author.id}");
                     },
                     user: user!,
@@ -571,11 +571,7 @@ class _PrivateMessage extends State<PrivateMessage> {
                           fontWeight: FontWeight.w800,
                           height: 1.333,
                         ),
-                        inputMargin: const EdgeInsets.only(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                        ),
+                        inputMargin: EdgeInsets.zero,
                         inputPadding: const EdgeInsets.all(16),
                         inputBorderRadius: const BorderRadius.vertical(
                           top: Radius.circular(24),
@@ -589,16 +585,15 @@ class _PrivateMessage extends State<PrivateMessage> {
                             countTextColor: swatch[701]!,
                             multipleUserTextStyle:
                                 TextStyle(color: swatch[801]))),
-                    onEndReached: () => _loadMoreMessages(),
-                    onMessageLongPress: (context, message) {
+                    onEndReached: _loadMoreMessages,
+                    onMessageLongPress: (final context, final message) {
                       ModalBottomSheet.show(
-                        context: context,
-                        builder: (context) => MessageOptionsBottomSheet(
-                          message: message,
-                        ),
-                        startSize: 0.2,
-                        hideNavbar: false
-                      );
+                          context: context,
+                          builder: (final context) => MessageOptionsBottomSheet(
+                                message: message,
+                              ),
+                          startSize: 0.2,
+                          hideNavbar: false);
                     },
                   ),
           ],
@@ -608,7 +603,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   // Function to add a new message to the message list
-  void _addMessage(types.Message message) {
+  void _addMessage(final types.Message message) {
     mounted
         ? setState(() {
             _messages.insert(0, message);
@@ -617,7 +612,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   // Function to handle send button press
-  void _handleSendPressed(types.PartialText message) async {
+  void _handleSendPressed(final types.PartialText message) async {
     try {
       if (!sending) {
         controller.clear();
@@ -642,20 +637,18 @@ class _PrivateMessage extends State<PrivateMessage> {
         if (channelId != null) {
           await getIt<WebSocketConnection>()
               .emitMessage(channelId!, message.text, null)
-              .then((value) => {sending = false});
+              .then((final value) => {sending = false});
         } else {
           // If there is no channel ID, create a new channel
-          List<String> participants = [widget.currentUser];
-          Map<String, dynamic> channel =
+          final List<String> participants = [widget.currentUser];
+          final Map<String, dynamic> channel =
               await MessagesAPI.postChannel(participants);
           channelId = channel["channel"]["channel_id"];
           if (channelId != null) {
             await MessagesAPI.postMessage(channelId!, message.text, null)
-                .then((value) => {sending = false});
+                .then((final value) => {sending = false});
           }
-          if (widget.callback != null) {
-            widget.callback!();
-          }
+          widget.callback!();
           commonLogger.d(channel);
         }
       }
@@ -673,11 +666,11 @@ class _PrivateMessage extends State<PrivateMessage> {
   }
 
   // Function to handle back navigation
-  Future<bool> _onWillPop(bool hasPopped) async {
+  Future<bool> _onWillPop(final bool hasPopped) async {
     if (mounted && widget.channel == null) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
+      SchedulerBinding.instance.addPostFrameCallback((final _) {
         Navigator.of(context)
-            .popUntil(ModalRoute.withName('/PrivateMessageList'));
+            .popUntil(ModalRoute.withName("/PrivateMessageList"));
       });
     }
     return true;

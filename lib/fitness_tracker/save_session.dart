@@ -1,40 +1,39 @@
 // ignore_for_file: use_super_parameters
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:patinka/api/session.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/misc/navbar_provider.dart';
-import 'package:patinka/swatch.dart';
-import 'package:provider/provider.dart';
-
-import '../api/config.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:geolocator/geolocator.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/session.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/swatch.dart";
+import "package:provider/provider.dart";
 
 const List<String> sessionType = <String>[
-  'Recreational/Fitness Skating',
-  'Agressive Inline Skating',
-  'Agressive Quad Skating',
-  'Artistic/Figure Skating',
-  'Urban/Freestyle Skating',
-  'Off-Road Skating',
-  'Roller Hockey',
-  'Ice Hockey',
-  'Roller Disco',
-  'Roller Derby',
+  "Recreational/Fitness Skating",
+  "Agressive Inline Skating",
+  "Agressive Quad Skating",
+  "Artistic/Figure Skating",
+  "Urban/Freestyle Skating",
+  "Off-Road Skating",
+  "Roller Hockey",
+  "Ice Hockey",
+  "Roller Disco",
+  "Roller Derby",
 ];
-const List<String> sessionOptions = <String>['Friends'];
+const List<String> sessionOptions = <String>["Friends"];
 
 class SaveSession extends StatefulWidget {
   // Create SaveSession Class
   const SaveSession(
-      {Key? key,
-      required this.distance,
+      {required this.distance,
       required this.startTime,
       required this.endTime,
       required this.callback,
-      required this.initialPosition})
+      required this.initialPosition,
+      final Key? key})
       : super(key: key);
   final double distance;
   final DateTime startTime;
@@ -56,16 +55,16 @@ class _SaveSession extends State<SaveSession> {
 
   String sessionType = "Fitness";
   String sessionOptions = "Friends";
-  void setType(String type) {
+  void setType(final String type) {
     sessionType = type;
   }
 
-  void setOptions(String options) {
+  void setOptions(final String options) {
     sessionOptions = options;
   }
 
   @override // Override existing build method
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     Provider.of<BottomBarVisibilityProvider>(context, listen: false)
         .hide(); // Hide The Navbar
 // This function is used to create a session and send information to the server
@@ -99,7 +98,7 @@ class _SaveSession extends State<SaveSession> {
 
     return PopScope(
         canPop: true,
-        onPopInvokedWithResult: (bool didPop, result) {
+        onPopInvokedWithResult: (final bool didPop, final result) {
           if (didPop) {
             Provider.of<BottomBarVisibilityProvider>(context, listen: false)
                 .show(); // Show The Navbar
@@ -338,7 +337,7 @@ class _SaveSession extends State<SaveSession> {
                             height: 16,
                           ), // Vertically centre Widget with remaining space
                           TextButton(
-                            onPressed: () => sendInfo(),
+                            onPressed: sendInfo,
                             child: Text(
                                 AppLocalizations.of(context)!.saveSession,
                                 style: TextStyle(color: swatch[701])),
@@ -350,11 +349,10 @@ class _SaveSession extends State<SaveSession> {
 }
 
 class SessionType extends StatefulWidget {
-  final Function callback;
-
   // Constructor for the ShareOptions widget
   // Takes in a required `id` property to distinguish between two ShareOptions widgets
-  const SessionType({super.key, required this.callback});
+  const SessionType({required this.callback, super.key});
+  final Function callback;
 
   // Returns the state object associated with this widget
   @override
@@ -366,74 +364,9 @@ class _SessionTypeState extends State<SessionType> {
   String dropdownValue = sessionType.first;
 
   @override
-  Widget build(BuildContext context) {
-    return DropdownButton<String>(
-        iconEnabledColor: swatch[200],
-        value: dropdownValue,
-        // Icon to display at the right of the dropdown button
-        icon: const Icon(Icons.arrow_downward),
-
-        // Elevation of the dropdown when it's open
-        elevation: 16,
-
-        // Style for the text inside the dropdown button
-        style: TextStyle(color: swatch[701]),
-
-        // Style for the line under the dropdown button
-        underline: Container(
-          height: 2,
-          color: swatch[200],
-        ),
-        dropdownColor: swatch[900],
-
-        // Callback function called when an item is selected
-        onChanged: (String? value) {
-          mounted
-              ? setState(() {
-                  // Update the selected value in the corresponding `dropdownValue`
-                  // depending on the value of `widget.id`
-                  dropdownValue = value!;
-                })
-              : null;
-          widget.callback(value);
-        },
-
-        // Items to show in the dropdown
-        items: sessionType.map<DropdownMenuItem<String>>((String value) {
-          // Create a dropdown item for each value in `sessionType`
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList()
-        // Create a dropdown item for each value in `sessionOptions`
-        );
-  }
-}
-
-class ShareOptions extends StatefulWidget {
-  final Function callback;
-  // Constructor for the ShareOptions widget
-  // Takes in a required `id` property to distinguish between two ShareOptions widgets
-  const ShareOptions({super.key, required this.callback});
-
-  // Returns the state object associated with this widget
-  @override
-  State<ShareOptions> createState() => _ShareOptionsState();
-}
-
-class _ShareOptionsState extends State<ShareOptions> {
-  // `dropdownValueB` holds the selected value for the second dropdown
-  String dropdownValue = sessionOptions.first;
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<String>(
+  Widget build(final BuildContext context) => DropdownButton<String>(
       iconEnabledColor: swatch[200],
-      // Set the value of the dropdown to `dropdownValueA` if `widget.id` is 1,
-      // otherwise set it to `dropdownValueB`
       value: dropdownValue,
-
       // Icon to display at the right of the dropdown button
       icon: const Icon(Icons.arrow_downward),
 
@@ -449,8 +382,9 @@ class _ShareOptionsState extends State<ShareOptions> {
         color: swatch[200],
       ),
       dropdownColor: swatch[900],
+
       // Callback function called when an item is selected
-      onChanged: (String? value) {
+      onChanged: (final String? value) {
         mounted
             ? setState(() {
                 // Update the selected value in the corresponding `dropdownValue`
@@ -462,12 +396,73 @@ class _ShareOptionsState extends State<ShareOptions> {
       },
 
       // Items to show in the dropdown
-      items: sessionOptions.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
-  }
+      items: sessionType
+          .map<DropdownMenuItem<String>>(
+              (final String value) => DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  ))
+          .toList()
+      // Create a dropdown item for each value in `sessionOptions`
+      );
+}
+
+class ShareOptions extends StatefulWidget {
+  // Constructor for the ShareOptions widget
+  // Takes in a required `id` property to distinguish between two ShareOptions widgets
+  const ShareOptions({required this.callback, super.key});
+  final Function callback;
+
+  // Returns the state object associated with this widget
+  @override
+  State<ShareOptions> createState() => _ShareOptionsState();
+}
+
+class _ShareOptionsState extends State<ShareOptions> {
+  // `dropdownValueB` holds the selected value for the second dropdown
+  String dropdownValue = sessionOptions.first;
+
+  @override
+  Widget build(final BuildContext context) => DropdownButton<String>(
+        iconEnabledColor: swatch[200],
+        // Set the value of the dropdown to `dropdownValueA` if `widget.id` is 1,
+        // otherwise set it to `dropdownValueB`
+        value: dropdownValue,
+
+        // Icon to display at the right of the dropdown button
+        icon: const Icon(Icons.arrow_downward),
+
+        // Elevation of the dropdown when it's open
+        elevation: 16,
+
+        // Style for the text inside the dropdown button
+        style: TextStyle(color: swatch[701]),
+
+        // Style for the line under the dropdown button
+        underline: Container(
+          height: 2,
+          color: swatch[200],
+        ),
+        dropdownColor: swatch[900],
+        // Callback function called when an item is selected
+        onChanged: (final String? value) {
+          mounted
+              ? setState(() {
+                  // Update the selected value in the corresponding `dropdownValue`
+                  // depending on the value of `widget.id`
+                  dropdownValue = value!;
+                })
+              : null;
+          widget.callback(value);
+        },
+
+        // Items to show in the dropdown
+        items: sessionOptions
+            .map<DropdownMenuItem<String>>(
+                (final String value) => DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    ))
+            .toList(),
+      );
 }

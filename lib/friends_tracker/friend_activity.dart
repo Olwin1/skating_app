@@ -1,23 +1,19 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:patinka/misc/default_profile.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/api/config.dart';
-import 'package:patinka/common_logger.dart';
-
-import '../api/social.dart';
-import '../swatch.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/material.dart";
+import "package:flutter_map/flutter_map.dart";
+import "package:latlong2/latlong.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/misc/default_profile.dart";
+import "package:patinka/swatch.dart";
+import "package:shimmer/shimmer.dart";
 
 class FriendActivity extends StatefulWidget {
-  final List<Map<String, dynamic>> sessions;
   // Create FriendActivity widget
   const FriendActivity(
-      {super.key,
-      required this.mapController,
-      required this.searchOpened,
-      required this.sessions}); // Take 2 arguments optional key and title of post
+      {required this.mapController, required this.searchOpened, required this.sessions, super.key});
+  final List<Map<String, dynamic>> sessions; // Take 2 arguments optional key and title of post
   final bool searchOpened;
   final MapController mapController;
   @override
@@ -27,8 +23,7 @@ class FriendActivity extends StatefulWidget {
 
 class _FriendActivity extends State<FriendActivity> {
   @override // Override existing build method
-  Widget build(BuildContext context) {
-    return widget.searchOpened
+  Widget build(final BuildContext context) => widget.searchOpened
         ? Container(
             alignment: Alignment.topCenter,
             padding: const EdgeInsets.only(top: 32),
@@ -38,23 +33,20 @@ class _FriendActivity extends State<FriendActivity> {
               // This next line does the trick.
               scrollDirection: Axis.horizontal,
               children: widget.sessions
-                  .map((session) => FriendActivityProfile(
+                  .map((final session) => FriendActivityProfile(
                       session: session, mapController: widget.mapController))
                   .toList(),
             ))
         : Container();
-  }
 }
 
 class FriendActivityProfile extends StatefulWidget {
-  final Map<String, dynamic> session;
-  final MapController mapController;
 
   // Create FriendActivity widget
   const FriendActivityProfile(
-      {super.key,
-      required this.mapController,
-      required this.session}); // Take 2 arguments optional key and title of post
+      {required this.mapController, required this.session, super.key});
+  final Map<String, dynamic> session;
+  final MapController mapController; // Take 2 arguments optional key and title of post
   @override
   State<FriendActivityProfile> createState() =>
       _FriendActivityProfile(); //Create state for widget
@@ -69,7 +61,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
   void initState() {
     super.initState();
     // Call the SocialAPI.getUser function to retrieve user information and update the state
-    SocialAPI.getUser(widget.session["author_id"]).then((value) => mounted
+    SocialAPI.getUser(widget.session["author_id"]).then((final value) => mounted
         ? setState(() {
             userCache = value;
             avatar = value["avatar_id"];
@@ -78,8 +70,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
   }
 
   @override // Override the existing build method to create the user profile
-  Widget build(BuildContext context) {
-    return Column(children: [
+  Widget build(final BuildContext context) => Column(children: [
       // Create a button with an icon that represents the user
       TextButton(
         onPressed: () => {
@@ -100,7 +91,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
             : avatar != "default"
                 ? CachedNetworkImage(
                     imageUrl: '${Config.uri}/image/${userCache!["avatar_id"]}',
-                    imageBuilder: (context, imageProvider) => Container(
+                    imageBuilder: (final context, final imageProvider) => Container(
                       height: 64,
                       width: 64,
                       decoration: BoxDecoration(
@@ -119,5 +110,4 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
         style: TextStyle(color: swatch[900], fontWeight: FontWeight.bold),
       )
     ]);
-  }
 }

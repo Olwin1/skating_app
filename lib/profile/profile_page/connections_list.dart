@@ -1,19 +1,19 @@
-import 'package:flutter/material.dart';
-import 'package:patinka/api/messages.dart';
-import 'package:patinka/profile/friends_list.dart';
-import 'package:patinka/profile/lists.dart';
-import 'package:patinka/swatch.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:patinka/api/messages.dart";
+import "package:patinka/profile/friends_list.dart";
+import "package:patinka/profile/lists.dart";
+import "package:patinka/swatch.dart";
 
 class ConnectionLists extends StatelessWidget {
-  final Map<String, dynamic>? user;
 
   const ConnectionLists({super.key, this.user});
+  final Map<String, dynamic>? user;
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     String? self = "";
     if (user != null) {
-      MessagesAPI.getUserId().then((value) => self = value);
+      MessagesAPI.getUserId().then((final value) => self = value);
     }
     return Expanded(
         child: Container(
@@ -28,7 +28,7 @@ class ConnectionLists extends StatelessWidget {
                       // Send to edit profile page
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FriendsList(
+                          builder: (final context) => FriendsList(
                                 user: user?["user_id"] != self ? user : null,
                               ))),
                   child: Column(children: [
@@ -45,7 +45,7 @@ class ConnectionLists extends StatelessWidget {
                       // Send to edit profile page
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Lists(
+                          builder: (final context) => Lists(
                                 index: 0,
                                 user: user?["user_id"] != self ? user : null,
                               ))),
@@ -63,7 +63,7 @@ class ConnectionLists extends StatelessWidget {
                       // Send to edit profile page
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Lists(
+                          builder: (final context) => Lists(
                                 index: 1,
                                 user: user?["user_id"] != self ? user : null,
                               ))),

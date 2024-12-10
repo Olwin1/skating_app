@@ -1,30 +1,25 @@
 // Import necessary packages and files
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:patinka/api/config.dart';
-import 'package:patinka/api/social.dart';
-import 'package:patinka/misc/default_profile.dart';
-import 'package:patinka/services/role.dart';
-import 'package:patinka/swatch.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:timeago/timeago.dart' as timeago;
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/material.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/misc/default_profile.dart";
+import "package:patinka/services/role.dart";
+import "package:patinka/swatch.dart";
+import "package:shimmer/shimmer.dart";
+import "package:timeago/timeago.dart" as timeago;
 
 // Message Widget class for displaying individual comments
 class ReportMessage extends StatefulWidget {
+
+  // Constructor for Message widget
+  const ReportMessage(
+      {required this.index, required this.focus, required this.message, required this.status, super.key});
   final Map<String, dynamic> message;
   final int index;
   final FocusNode focus;
   final Status status;
-
-  // Constructor for Message widget
-  const ReportMessage(
-      {super.key,
-      required this.index,
-      required this.focus,
-      required this.message,
-      required this.status});
 
   @override
   State<ReportMessage> createState() =>
@@ -39,7 +34,7 @@ class _ReportMessageState extends State<ReportMessage> {
   // Initialize state variables and fetch user information
   @override
   void initState() {
-    SocialAPI.getUser(widget.message["sender_id"]).then((value) => mounted
+    SocialAPI.getUser(widget.message["sender_id"]).then((final value) => mounted
         ? setState(() {
             user = value;
             avatar = value["avatar_id"];
@@ -50,8 +45,7 @@ class _ReportMessageState extends State<ReportMessage> {
 
   // Build method to create the UI of the Message widget
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(final BuildContext context) => Container(
       // Container for each message
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: swatch[401]!)),
@@ -82,7 +76,7 @@ class _ReportMessageState extends State<ReportMessage> {
                       ? CachedNetworkImage(
                           imageUrl:
                               '${Config.uri}/image/thumbnail/${user!["avatar_id"]}',
-                          placeholder: (context, url) => Shimmer.fromColors(
+                          placeholder: (final context, final url) => Shimmer.fromColors(
                             baseColor: shimmer["base"]!,
                             highlightColor: shimmer["highlight"]!,
                             child: CircleAvatar(
@@ -90,7 +84,7 @@ class _ReportMessageState extends State<ReportMessage> {
                               backgroundColor: swatch[900],
                             ),
                           ),
-                          imageBuilder: (context, imageProvider) => Container(
+                          imageBuilder: (final context, final imageProvider) => Container(
                             width: 50,
                             height: 50,
                             decoration: BoxDecoration(
@@ -127,7 +121,7 @@ class _ReportMessageState extends State<ReportMessage> {
                           text: timeago
                               .format(
                                   DateTime.parse(widget.message["timestamp"]))
-                              .toString(),
+                              ,
                           style: TextStyle(color: swatch[501]),
                         ),
                       ],
@@ -147,14 +141,13 @@ class _ReportMessageState extends State<ReportMessage> {
         ),
       ),
     );
-  }
 
   // Helper method to create message action buttons
   Widget _buildCommentActionButton({
-    required VoidCallback onPressed,
-    required String label,
+    required final VoidCallback onPressed,
+    required final String label,
   }) {
-    Widget txt = Text(
+    final Widget txt = Text(
       label,
       textAlign: TextAlign.end,
       style: TextStyle(

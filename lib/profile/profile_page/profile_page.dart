@@ -1,67 +1,61 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_overlay/flutter_overlay.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/profile/profile_page/options_menu.dart';
-import 'package:patinka/profile/profile_page/page_structure.dart';
-import 'package:patinka/profile/profile_page/post_footer.dart';
-import 'package:patinka/services/navigation_service.dart';
-import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/api/social.dart';
-
-import '../../api/config.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../../swatch.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/material.dart";
+import "package:flutter/scheduler.dart";
+import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:flutter_overlay/flutter_overlay.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/profile/profile_page/options_menu.dart";
+import "package:patinka/profile/profile_page/page_structure.dart";
+import "package:patinka/profile/profile_page/post_footer.dart";
+import "package:patinka/services/navigation_service.dart";
+import "package:patinka/swatch.dart";
+import "package:provider/provider.dart";
+import "package:shimmer/shimmer.dart";
 
 // Define item type for popup menu
 enum DropdownPage { editProfile, settings, saved }
 
 String? currentImage;
-void setCurrentImage(img) {
+void setCurrentImage(final String img) {
   currentImage = img;
 }
 
 // Define a new StatelessWidget called ProfilePage
 class ProfilePage extends StatelessWidget {
+  // Constructor for ProfilePage, which calls the constructor for its superclass (StatelessWidget)
+  const ProfilePage(
+      {required this.userId, required this.navbar, super.key, this.friend});
   final String userId;
   final bool navbar;
   final bool? friend;
 
-  // Constructor for ProfilePage, which calls the constructor for its superclass (StatelessWidget)
-  const ProfilePage(
-      {super.key, required this.userId, required this.navbar, this.friend});
-
   // Override the build method of StatelessWidget to return a Consumer widget
   @override
-  Widget build(BuildContext context) {
-    // Use the Consumer widget to listen for changes to the CurrentPage object
-    return navbar
-        ? Consumer<NavigationService>(
-      builder: (context, navigationService, _) {
-        int a = NavigationService.getCurrentIndex();
-        commonLogger.d("Profile paege i: $a");
-        return a == 4
-                    ? Profile(userId: userId)
-                    :
-                    // Otherwise, return an empty SizedBox widget
-                    const SizedBox.shrink();})
-          
-        : Profile(
-            userId: userId,
-            friend: friend,
-          );
-  }
+  Widget build(final BuildContext context) => navbar
+      ? Consumer<NavigationService>(
+          builder: (final context, final navigationService, final _) {
+          final int a = NavigationService.getCurrentIndex();
+          commonLogger.d("Profile paege i: $a");
+          return a == 4
+              ? Profile(userId: userId)
+              :
+              // Otherwise, return an empty SizedBox widget
+              const SizedBox.shrink();
+        })
+      : Profile(
+          userId: userId,
+          friend: friend,
+        );
 }
 
 // Creates a ProfilePage widget
 class Profile extends StatefulWidget {
   const Profile(
-      {super.key,
-      required this.userId,
+      {required this.userId,
+      super.key,
       this.user,
       this.friend}); // Take 2 arguments: optional key and required title of the post
   final String userId;
@@ -84,24 +78,24 @@ class _Profile extends State<Profile> {
   String comments = "0";
   final backgroundColor = const Color(0xbb000000);
 
-
-  void setCommentState(int count) {
+  void setCommentState(final int count) {
     if (mounted) {
       setState(() => comments = count.toString());
     }
   }
 
-  Function setAllStates = (bool saved, bool liked, int count, Map<String, dynamic> postData) {};
+  Function setAllStates = (final bool saved, final bool liked, final int count,
+      final Map<String, dynamic> postData) {};
 
   ///
 
-  void _show(Map<String, dynamic> post) async {
+  void _show(final Map<String, dynamic> post) async {
     // Fetch post data
     final postData = await SocialAPI.getPost(post["post_id"]);
 
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      setAllStates(
-          postData["saved"], postData["liked"], postData["comment_count"], postData);
+    SchedulerBinding.instance.addPostFrameCallback((final _) async {
+      setAllStates(postData["saved"], postData["liked"],
+          postData["comment_count"], postData);
     });
 
     // Show dialog with updated information
@@ -109,16 +103,16 @@ class _Profile extends State<Profile> {
       HiOverlay.show(
         context,
         child: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return _dialogContent(setState);
-          },
+          builder: (final BuildContext context, final StateSetter setState) =>
+              _dialogContent(setState),
         ),
       );
     }
   }
 
-  Widget _dialogContent(StateSetter setState) {
-    setAllStates = (bool saved, bool liked, int count, Map<String, dynamic> postData) {
+  Widget _dialogContent(final StateSetter setState) {
+    setAllStates = (final bool saved, final bool liked, final int count,
+        final Map<String, dynamic> postData) {
       if (mounted) {
         setState(() {
           savedState = saved;
@@ -130,8 +124,9 @@ class _Profile extends State<Profile> {
     };
     return GestureDetector(
       onTap: () {
-        setAllStates = (bool saved, bool liked, int count, Map<String, dynamic> postData) {};
-        Navigator.pop(context, 'close');
+        setAllStates = (final bool saved, final bool liked, final int count,
+            final Map<String, dynamic> postData) {};
+        Navigator.pop(context, "close");
       },
       child: currentImage != null
           ? Container(
@@ -140,23 +135,33 @@ class _Profile extends State<Profile> {
               child: Column(
                 children: [
                   SizedBox(
-                    width: 300,
-                    height: 300,
-                    child: Stack(children: [Column(children: [const SizedBox(height: 290,), Container(height: 10, width: 300, color: backgroundColor)]), CachedNetworkImage(
-                      imageUrl: '${Config.uri}/image/$currentImage',
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(8)),
-                          image: DecorationImage(
-                              image: imageProvider, fit: BoxFit.contain),
+                      width: 300,
+                      height: 300,
+                      child: Stack(children: [
+                        Column(children: [
+                          const SizedBox(
+                            height: 290,
+                          ),
+                          Container(
+                              height: 10, width: 300, color: backgroundColor)
+                        ]),
+                        CachedNetworkImage(
+                          imageUrl: "${Config.uri}/image/$currentImage",
+                          imageBuilder: (final context, final imageProvider) =>
+                              Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(8)),
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.contain),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),])
-                  ),
+                      ])),
                   PostFooter(
                     likedState: likedState,
                     savedState: savedState,
-                    setSavedState: (bool val) {
+                    setSavedState: (final bool val) {
                       setState(() => savedState = val);
                     },
                     post: post,
@@ -176,7 +181,7 @@ class _Profile extends State<Profile> {
   @override
   void initState() {
     if (widget.user == null) {
-      SocialAPI.getUser(widget.userId).then((value) => {
+      SocialAPI.getUser(widget.userId).then((final value) => {
             if (mounted)
               {
                 setState(() {
@@ -189,12 +194,12 @@ class _Profile extends State<Profile> {
     super.initState();
   }
 
-  void findWidgetMetaData(List<Map<String, dynamic>> page) {
+  void findWidgetMetaData(final List<Map<String, dynamic>> page) {
     posts.addAll(page);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (widget.user != null) {
       user = widget.user;
       if (widget.user!["avatar_id"] != null && avatar == null) {
@@ -224,7 +229,7 @@ class _Profile extends State<Profile> {
                   baseColor: shimmer["base"]!,
                   highlightColor: shimmer["highlight"]!,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                    padding: EdgeInsets.zero,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,

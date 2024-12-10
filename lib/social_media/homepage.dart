@@ -1,31 +1,31 @@
-import 'dart:io';
+import "dart:io";
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:patinka/api/config.dart';
-import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/social_media/private_messages/private_message_list.dart';
-import 'package:patinka/social_media/search_bar.dart';
-import '../api/fcm_token.dart';
-import '../api/messages.dart';
-import '../api/social.dart';
-import '../components/list_error.dart';
-import '../misc/navbar_provider.dart';
-import '../swatch.dart';
-import 'post_widget.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:firebase_messaging/firebase_messaging.dart";
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:flutter_svg/flutter_svg.dart";
+import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/fcm_token.dart";
+import "package:patinka/api/messages.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/components/list_error.dart";
+import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/social_media/post_widget.dart";
+import "package:patinka/social_media/private_messages/private_message_list.dart";
+import "package:patinka/social_media/search_bar.dart";
+import "package:patinka/swatch.dart";
+import "package:provider/provider.dart";
+import "package:shimmer/shimmer.dart";
 
 // HomePage Class
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ScrollController scrollController = ScrollController();
 
     // Show the Navbar
@@ -74,7 +74,7 @@ class HomePage extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   settings: const RouteSettings(name: "/PrivateMessageList"),
-                  builder: (context) => const PrivateMessageList(
+                  builder: (final context) => const PrivateMessageList(
                     user: "user",
                     index: 1,
                   ),
@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
 }
 
 Widget _loadSkeleton() {
-  Widget child = Shimmer.fromColors(
+  final Widget child = Shimmer.fromColors(
       baseColor: shimmer["base"]!,
       highlightColor: shimmer["highlight"]!,
       child: Container(
@@ -111,7 +111,7 @@ Widget _loadSkeleton() {
             color: const Color(0xcc000000),
             borderRadius: BorderRadius.circular(8)),
         height: 314,
-        padding: const EdgeInsets.all(0), // Add padding so doesn't touch edges
+        padding: EdgeInsets.zero, // Add padding so doesn't touch edges
 
         child: Row(
           // Create a row
@@ -142,7 +142,7 @@ Widget _loadSkeleton() {
 
 // Posts List View Widget
 class PostsListView extends StatefulWidget {
-  const PostsListView({super.key, required this.scrollController});
+  const PostsListView({required this.scrollController, super.key});
 
   final ScrollController scrollController;
 
@@ -160,9 +160,9 @@ class _PostsListViewState extends State<PostsListView> {
   @override
   void initState() {
     // Initialize State
-    MessagesAPI.getUserId().then((userId) {
+    MessagesAPI.getUserId().then((final userId) {
       if (userId != null) {
-        SocialAPI.getUser(userId).then((userA) {
+        SocialAPI.getUser(userId).then((final userA) {
           user = userA;
         });
       }
@@ -172,32 +172,32 @@ class _PostsListViewState extends State<PostsListView> {
     if (!(Platform.isWindows || Platform.isLinux)) {
       FirebaseMessaging.instance
           .getToken()
-          .then((fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
+          .then((final fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
     }
 
     // Add Page Request Listener
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
 
     super.initState();
   }
 
   // Fetches the data for the given pageKey and appends it to the list of items
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(final int pageKey) async {
     try {
       commonLogger.t("Fetching page");
       final page = await SocialAPI.getPosts(pageKey);
 
       // Loops through each item in the page and adds its ID to the `seenPosts` list
       for (int i = 0; i < page.length; i++) {
-        Map<String, dynamic> item = page[i];
-        seenPosts.add(item['post_id']);
+        final Map<String, dynamic> item = page[i];
+        seenPosts.add(item["post_id"]);
       }
 
       // Determines if the page being fetched is the last page
       final isLastPage = page.isEmpty;
-      if (!mounted) return;
+      if (!mounted) {
+  return;
+}
       if (isLastPage) {
         if ((_pagingController.itemList == null ||
                 _pagingController.itemList!.isEmpty) &&
@@ -210,7 +210,7 @@ class _PostsListViewState extends State<PostsListView> {
           ]);
         }
       } else {
-        final nextPageKey = pageKey += 1;
+        final nextPageKey = pageKey + 1;
         _pagingController.appendPage(page, nextPageKey);
       }
     } catch (error) {
@@ -225,9 +225,9 @@ class _PostsListViewState extends State<PostsListView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+  Widget build(final BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
     double size = height >= width ? width : height;
     if (size > 1080) {
       size = 1080;
@@ -237,19 +237,19 @@ class _PostsListViewState extends State<PostsListView> {
       children: [
         RefreshIndicator(
           edgeOffset: 94,
-          onRefresh: () => refreshPage(),
+          onRefresh: refreshPage,
           child: PagedListView<int, Object>(
             clipBehavior: Clip.none,
             cacheExtent: 1024,
             pagingController: _pagingController,
             scrollController: widget.scrollController,
             builderDelegate: PagedChildBuilderDelegate<Object>(
-              firstPageProgressIndicatorBuilder: (context) => _loadSkeleton(),
-              noItemsFoundIndicatorBuilder: (context) => ListError(
+              firstPageProgressIndicatorBuilder: (final context) => _loadSkeleton(),
+              noItemsFoundIndicatorBuilder: (final context) => ListError(
                 title: AppLocalizations.of(context)!.noPostsFound,
                 body: AppLocalizations.of(context)!.makeFriends,
               ),
-              itemBuilder: (context, dynamic item, index) =>
+              itemBuilder: (final context, final dynamic item, final index) =>
                   item["last"] == true
                       ? const SizedBox(
                           height: 72,

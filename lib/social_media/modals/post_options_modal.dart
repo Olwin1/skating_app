@@ -1,32 +1,27 @@
-import 'package:flutter/material.dart';
-import 'package:patinka/social_media/report_content_type.dart';
-import 'package:patinka/social_media/user_reports/buttons.dart';
+import "package:flutter/material.dart";
+import "package:patinka/social_media/report_content_type.dart";
+import "package:patinka/social_media/user_reports/buttons.dart";
 
 class PostOptionsBottomSheet extends StatelessWidget {
+
+  const PostOptionsBottomSheet({
+    required this.post, required this.savedState, required this.setSavedState, super.key,
+  });
   final dynamic post; // Replace with your actual post model type
   final bool savedState;
   final Function(bool) setSavedState;
 
-  const PostOptionsBottomSheet({
-    super.key,
-    required this.post,
-    required this.savedState,
-    required this.setSavedState,
-  });
-
   @override
-  Widget build(BuildContext context) {
-    return Column(
+  Widget build(final BuildContext context) => Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         SaveButton(
             post: post, savedState: savedState, setSavedState: setSavedState),
-        QRCodeButton(),
+        const QRCodeButton(),
         ReportButton(
             reportContentType: ReportContentType.post,
             contentId: post["post_id"],
             reportedUserId: post["author_id"]),
       ],
     );
-  }
 }

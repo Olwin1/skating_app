@@ -37,6 +37,61 @@ linter:
     - avoid_print
     - unnecessary_null_checks
 
+    - always_put_control_body_on_new_line
+    - always_put_required_named_parameters_first
+    #- always_specify_types
+    #- avoid_annotating_with_dynamic
+    - always_use_package_imports
+    - cascade_invocations
+    - cast_nullable_to_non_nullable
+    - conditional_uri_does_not_exist
+    - deprecated_consistency
+    #- diagnostic_describe_all_properties
+    - directives_ordering
+    #######- discarded_futures
+    - eol_at_end_of_file
+    - join_return_with_assignment
+    - leading_newlines_in_multiline_strings
+    - library_names
+    - library_prefixes
+    - matching_super_parameters
+    - literal_only_boolean_expressions
+    - no_literal_bool_comparisons
+    - no_self_assignments
+    - no_runtimeType_toString
+    - noop_primitive_operations
+    - package_prefixed_library_names
+    - prefer_asserts_in_initializer_lists
+    - parameter_assignments
+    - prefer_asserts_with_message
+    - prefer_const_constructors
+    - prefer_const_literals_to_create_immutables
+    - prefer_double_quotes
+    - prefer_expression_function_bodies
+    - prefer_final_in_for_each
+    - prefer_final_locals
+    - prefer_final_parameters
+    - prefer_foreach
+    - prefer_mixin
+    - prefer_null_aware_method_calls
+    - prefer_void_to_null
+    #- public_member_api_docs
+    - sized_box_for_whitespace
+    - sort_constructors_first
+    - sort_pub_dependencies
+    - sort_unnamed_constructors_first
+    - throw_in_finally
+    - type_annotate_public_apis
+    #######- unawaited_futures
+    #######- unnecessary_await_in_return
+    - unnecessary_breaks
+    - unnecessary_lambdas
+    - unnecessary_parenthesis
+    - unnecessary_raw_strings
+    - use_colored_box
+    - use_decorated_box
+    - use_enums
+    - use_named_constants
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 

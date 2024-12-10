@@ -1,20 +1,19 @@
-import 'dart:io';
+import "dart:io";
 
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:patinka/services/navigation_service.dart';
-import 'package:photo_gallery/photo_gallery.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/new_post/edit_post.dart';
-import 'package:patinka/new_post/send_post.dart';
-import 'package:transparent_image/transparent_image.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-
-import '../api/config.dart';
-import '../swatch.dart';
+import "package:device_info_plus/device_info_plus.dart";
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/new_post/edit_post.dart";
+import "package:patinka/new_post/send_post.dart";
+import "package:patinka/services/navigation_service.dart";
+import "package:patinka/swatch.dart";
+import "package:permission_handler/permission_handler.dart";
+import "package:photo_gallery/photo_gallery.dart";
+import "package:provider/provider.dart";
+import "package:transparent_image/transparent_image.dart";
 
 // Define the NewPost widget which extends StatefulWidget
 
@@ -27,18 +26,13 @@ class NewPost extends StatelessWidget {
 
   // Override the build method of StatelessWidget to return a Consumer widget
   @override
-  Widget build(BuildContext context) {
-    // Use the Consumer widget to listen for changes to the CurrentPage object
-    return
-        // If the CurrentPage's tab value is 2 (New Post Page), return a NewPostPage widget
-        Consumer<NavigationService>(builder: (context, navigationService, _) {
-      return NavigationService.getCurrentIndex() == 2
-          ? const NewPostPage()
-          :
-          // Otherwise, return an empty SizedBox widget
-          const SizedBox.shrink();
-    });
-  }
+  Widget build(final BuildContext context) => Consumer<NavigationService>(
+      builder: (final context, final navigationService, final _) =>
+          NavigationService.getCurrentIndex() == 2
+              ? const NewPostPage()
+              :
+              // Otherwise, return an empty SizedBox widget
+              const SizedBox.shrink());
 }
 
 class NewPostPage extends StatefulWidget {
@@ -69,7 +63,7 @@ class _NewPostPage extends State<NewPostPage> {
     initAsync(); // Call the initAsync function.
   }
 
-  void _update(String id) {
+  void _update(final String id) {
     mounted ? setState(() => _selectedImage = id) : null;
   }
 
@@ -80,16 +74,17 @@ class _NewPostPage extends State<NewPostPage> {
       commonLogger.d("Permissions confirmed runnning rest");
 
       // Check if the user has granted permission to access the device's photo gallery.
-      List<Album> albums = await PhotoGallery.listAlbums(
+      final List<Album> albums = await PhotoGallery.listAlbums(
           mediumType: MediumType.image); // Load all albums that contain images.
       commonLogger.d("Available albulms are: $albums");
 
-      MediaPage imagePage = await albums[0].listMedia(
+      final MediaPage imagePage = await albums[0].listMedia(
         skip: 0,
         take: 1,
       ); // Load the first page of images from the first album.
-      commonLogger.d("Available images are: $imagePage");
-      commonLogger.d("Still mounted? $mounted");
+      commonLogger
+        ..d("Available images are: $imagePage")
+        ..d("Still mounted? $mounted");
 
       mounted
           ? setState(() {
@@ -113,9 +108,9 @@ class _NewPostPage extends State<NewPostPage> {
     commonLogger.t("Prompting image permissions");
     // Check if the device is iOS and both the storage and photos permissions have been granted,
     // or if the device is Android and the storage permission has been granted.
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid || Platform.isIOS) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       if (Platform.isIOS &&
               await Permission.storage.request().isGranted &&
               await Permission.photos.request().isGranted ||
@@ -136,7 +131,7 @@ class _NewPostPage extends State<NewPostPage> {
     return false; // Return false if the permissions have not been granted.
   }
 
-  void callback(image) {
+  void callback(final Uint8List image) {
     commonLogger.t("Navigating to send post page");
 
     selectedImage = image;
@@ -144,15 +139,18 @@ class _NewPostPage extends State<NewPostPage> {
       // Root navigator hides navbar
       // Send to Send Post page
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => SendPost(
+        pageBuilder:
+            (final context, final animation, final secondaryAnimation) =>
+                SendPost(
           image: selectedImage!,
         ),
         opaque: false,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        transitionsBuilder: (final context, final animation,
+            final secondaryAnimation, final child) {
           const begin = 0.0;
           const end = 1.0;
-          var tween = Tween(begin: begin, end: end);
-          var fadeAnimation = tween.animate(animation);
+          final tween = Tween(begin: begin, end: end);
+          final fadeAnimation = tween.animate(animation);
           return FadeTransition(
             opacity: fadeAnimation,
             child: child,
@@ -169,71 +167,69 @@ class _NewPostPage extends State<NewPostPage> {
 
   @override
   // Build the UI for the NewPost widget
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: swatch[701]),
-        elevation: 8,
-        shadowColor: Colors.green.shade900,
-        backgroundColor: Config.appbarColour,
-        foregroundColor: Colors.transparent,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
+  Widget build(final BuildContext context) => Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: swatch[701]),
+          elevation: 8,
+          shadowColor: Colors.green.shade900,
+          backgroundColor: Config.appbarColour,
+          foregroundColor: Colors.transparent,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          ),
+          title: Text(
+            "New Post",
+            style: TextStyle(color: swatch[701]),
+          ),
+          actions: [
+            IconButton(
+                onPressed: () => _selectedImage != null
+                    ? {
+                        mounted
+                            ? setState(
+                                () => selected = true,
+                              )
+                            : null,
+                        if (selectedImage != null)
+                          {commonLogger.i("No image has been selected")}
+                      }
+                    : commonLogger.i("No image has been selected."),
+                icon: const Icon(Icons.arrow_forward))
+          ],
         ),
-        title: Text(
-          "New Post",
-          style: TextStyle(color: swatch[701]),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () => _selectedImage != null
-                  ? {
-                      mounted
-                          ? setState(
-                              () => selected = true,
-                            )
-                          : null,
-                      if (selectedImage != null)
-                        {commonLogger.i("No image has been selected")}
-                    }
-                  : commonLogger.i("No image has been selected."),
-              icon: const Icon(Icons.arrow_forward))
-        ],
-      ),
-      body: _loading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : Container(
-              padding: const EdgeInsets.only(top: 8),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // A container that displays the selected image
-                    _selectedImage == null
-                        ? const SizedBox.shrink()
-                        : Center(
-                            child: EditPost(
-                              selected: selected,
-                              selectedImage: _selectedImage!,
-                              callback: callback,
+        body: _loading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Container(
+                padding: const EdgeInsets.only(top: 8),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // A container that displays the selected image
+                      _selectedImage == null
+                          ? const SizedBox.shrink()
+                          : Center(
+                              child: EditPost(
+                                selected: selected,
+                                selectedImage: _selectedImage!,
+                                callback: callback,
+                              ),
                             ),
-                          ),
-                    Expanded(
-                        flex: 6,
-                        child: PhotosGridView(
-                          update: _update,
-                        ))
-                  ])),
-    );
-  }
+                      Expanded(
+                          flex: 6,
+                          child: PhotosGridView(
+                            update: _update,
+                          ))
+                    ])),
+      );
 }
 
 class PhotosGridView extends StatefulWidget {
-  const PhotosGridView({super.key, required this.update});
+  const PhotosGridView({required this.update, super.key});
   final ValueChanged<String> update;
 
   @override
@@ -250,16 +246,14 @@ class _PhotosGridViewState extends State<PhotosGridView> {
   @override
   void initState() {
     // addPageRequestListener is called whenever the user scrolls near the end of the list
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 
   // Fetches the data for the given pageKey and appends it to the list of items
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(final int pageKey) async {
     try {
-      Medium padderItem = Medium.fromJson(const {
+      final Medium padderItem = Medium.fromJson(const {
         "id": "0",
         "filename": "a",
         "title": "a",
@@ -277,7 +271,9 @@ class _PhotosGridViewState extends State<PhotosGridView> {
         );
         final newItems = page.items;
         final isLastPage = newItems.length < _pageSize;
-        if (!mounted) return;
+        if (!mounted) {
+          return;
+        }
         if (isLastPage) {
           // appendLastPage is called if there are no more items to load
           if ((_pagingController.itemList == null ||
@@ -285,10 +281,10 @@ class _PhotosGridViewState extends State<PhotosGridView> {
               newItems.isEmpty) {
             _pagingController.appendLastPage(newItems);
           } else {
-            int rem = 5 -
+            final int rem = 5 -
                 ((_pagingController.itemList?.length ?? 0) + newItems.length) %
                     4;
-            List<Medium> spacers = [];
+            final List<Medium> spacers = [];
             for (int i = 0; i < rem; i++) {
               spacers.add(padderItem);
             }
@@ -307,7 +303,7 @@ class _PhotosGridViewState extends State<PhotosGridView> {
   }
 
   @override
-  Widget build(BuildContext context) => PagedGridView<int, Medium>(
+  Widget build(final BuildContext context) => PagedGridView<int, Medium>(
         // Uses the SliverGridDelegateWithMaxCrossAxisExtent to layout the grid
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           childAspectRatio: 1, // Ratio of width to height of grid items
@@ -318,36 +314,37 @@ class _PhotosGridViewState extends State<PhotosGridView> {
         ),
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Medium>(
-          itemBuilder: (context, item, index) => item.id == "0" &&
-                  item.filename == "a" &&
-                  item.title == "a" &&
-                  item.width == 1 &&
-                  item.height == 1 &&
-                  item.size == 1 &&
-                  item.orientation == 1
-              ? const SizedBox(
-                  height: 72,
-                )
-              : GestureDetector(
-                  onTap: () => widget.update(
-                      // Updates the selected image when an image is tapped
-                      item.id),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(5.0),
-                    child: Container(
-                      color: shimmer["base"],
-                      child: FadeInImage(
-                        fit: BoxFit.cover,
-                        placeholder: MemoryImage(kTransparentImage),
-                        // Uses the ThumbnailProvider to display the grid image
-                        image: ThumbnailProvider(
-                          mediumId: item.id,
-                          mediumType: item.mediumType,
-                          highQuality: false,
+          itemBuilder: (final context, final item, final index) =>
+              item.id == "0" &&
+                      item.filename == "a" &&
+                      item.title == "a" &&
+                      item.width == 1 &&
+                      item.height == 1 &&
+                      item.size == 1 &&
+                      item.orientation == 1
+                  ? const SizedBox(
+                      height: 72,
+                    )
+                  : GestureDetector(
+                      onTap: () => widget.update(
+                          // Updates the selected image when an image is tapped
+                          item.id),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5.0),
+                        child: Container(
+                          color: shimmer["base"],
+                          child: FadeInImage(
+                            fit: BoxFit.cover,
+                            placeholder: MemoryImage(kTransparentImage),
+                            // Uses the ThumbnailProvider to display the grid image
+                            image: ThumbnailProvider(
+                              mediumId: item.id,
+                              mediumType: item.mediumType,
+                              highQuality: false,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )),
+                      )),
         ),
       );
 

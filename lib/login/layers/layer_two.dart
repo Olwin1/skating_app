@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
-import '../config.dart';
+import "package:flutter/material.dart";
+import "package:patinka/login/config.dart";
 
 class LayerTwo extends StatelessWidget {
   const LayerTwo({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(final BuildContext context) => Container(
       width: 399,
       height: 584,
       decoration: BoxDecoration(
@@ -18,5 +17,4 @@ class LayerTwo extends StatelessWidget {
         ),
       ),
     );
-  }
 }

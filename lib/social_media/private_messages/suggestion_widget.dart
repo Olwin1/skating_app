@@ -1,23 +1,20 @@
 // Import necessary packages and files
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/common_logger.dart';
-
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/common_logger.dart";
 // Import custom components and configurations
-import '../../misc/default_profile.dart';
-import '../../swatch.dart';
-import '../../api/config.dart';
-import 'private_message.dart';
+import "package:patinka/misc/default_profile.dart";
+import "package:patinka/social_media/private_messages/private_message.dart";
+import "package:patinka/swatch.dart";
+import "package:shimmer/shimmer.dart";
 
 // SuggestionListWidget class creates a stateful widget that displays a list of user suggestions
 class SuggestionListWidget extends StatefulWidget {
   // Constructor for SuggestionListWidget
   const SuggestionListWidget({
-    super.key,
-    required this.user,
-    required this.callback,
+    required this.user, required this.callback, super.key,
   });
 
   // Properties for user details and callback function
@@ -33,16 +30,16 @@ class SuggestionListWidget extends StatefulWidget {
 class _SuggestionListWidget extends State<SuggestionListWidget> {
   // Handles the press event on the suggestion item
   void handlePress() async {
-    String currentUser = widget.user["user_id"];
+    final String currentUser = widget.user["user_id"];
     sendUser(currentUser);
   }
 
   // Navigates to the PrivateMessage screen with the selected user
-  void sendUser(String currentUser) {
+  void sendUser(final String currentUser) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PrivateMessage(
+        builder: (final context) => PrivateMessage(
           initSelf: false,
           user: widget.user,
           callback: widget.callback,
@@ -54,9 +51,8 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
 
   // Builds the suggestion item widget
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => handlePress(),
+  Widget build(final BuildContext context) => GestureDetector(
+      onTap: handlePress,
       child: Container(
         // Container styling
         decoration: BoxDecoration(
@@ -85,7 +81,7 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
                           // Cached network image for user avatar
                           imageUrl:
                               '${Config.uri}/image/thumbnail/${widget.user["avatar_id"]}',
-                          imageBuilder: (context, imageProvider) => Container(
+                          imageBuilder: (final context, final imageProvider) => Container(
                             height: 52,
                             width: 52,
                             decoration: BoxDecoration(
@@ -117,5 +113,4 @@ class _SuggestionListWidget extends State<SuggestionListWidget> {
         ),
       ),
     );
-  }
 }

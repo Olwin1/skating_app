@@ -1,17 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:patinka/api/connections.dart';
-import 'package:patinka/api/messages.dart';
-import 'package:patinka/common_logger.dart';
+import "package:flutter/material.dart";
+import "package:flutter_svg/flutter_svg.dart";
+import "package:patinka/api/connections.dart";
+import "package:patinka/api/messages.dart";
+import "package:patinka/common_logger.dart";
 
-import '../swatch.dart';
+import "package:patinka/swatch.dart";
 
 class FriendIconButton extends StatefulWidget {
-  final Map<String, dynamic>? user;
-  final bool? friend;
 
   // StatefulWidget that defines an options menu
-  const FriendIconButton({super.key, required this.user, this.friend});
+  const FriendIconButton({required this.user, super.key, this.friend});
+  final Map<String, dynamic>? user;
+  final bool? friend;
 
   @override
   State<FriendIconButton> createState() => _FriendIconButtonState();
@@ -28,7 +28,7 @@ class _FriendIconButtonState extends State<FriendIconButton> {
       loading = true;
       if (friend == FriendState.requestedIncoming) {
         ConnectionsAPI.friendUserRequest(widget.user!["user_id"], true)
-            .then((value) => {
+            .then((final value) => {
                   // Logs the response from `followUser`
                   commonLogger.t("Friend accept success $value"),
                   // If follow request is successful, update `type` to "requested"
@@ -36,7 +36,7 @@ class _FriendIconButtonState extends State<FriendIconButton> {
                   loading = false
                 });
       } else if (friend != FriendState.no && friend != FriendState.self) {
-        ConnectionsAPI.unfriendUser(widget.user!["user_id"]).then((value) => {
+        ConnectionsAPI.unfriendUser(widget.user!["user_id"]).then((final value) => {
               // Logs the response from `followUser`
               commonLogger.t("Unfriend success $value"),
               // If follow request is successful, update `type` to "requested"
@@ -44,7 +44,7 @@ class _FriendIconButtonState extends State<FriendIconButton> {
               loading = false
             });
       } else if (friend != FriendState.self) {
-        ConnectionsAPI.friendUser(widget.user!["user_id"]).then((value) => {
+        ConnectionsAPI.friendUser(widget.user!["user_id"]).then((final value) => {
               // Logs the response from `followUser`
               commonLogger.t("Friend success $value"),
               // If follow request is successful, update `type` to "requested"
@@ -100,13 +100,13 @@ class _FriendIconButtonState extends State<FriendIconButton> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (!changed && widget.user != null) {
       if (widget.user != null) {
         if (widget.friend == true) {
           friend = FriendState.yes;
         } else {
-          MessagesAPI.getUserId().then((value) {
+          MessagesAPI.getUserId().then((final value) {
             if (value == widget.user!["user_id"]) {
               setState(() {
                 friend = FriendState.self;
@@ -140,6 +140,6 @@ class _FriendIconButtonState extends State<FriendIconButton> {
                 color: Color.fromARGB(125, 0, 0, 0),
                 borderRadius: BorderRadius.all(Radius.circular(8))),
             child: TextButton(
-                onPressed: () => _handlePressed(), child: getIcon()));
+                onPressed: _handlePressed, child: getIcon()));
   }
 }

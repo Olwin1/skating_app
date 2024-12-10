@@ -1,19 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:like_button/like_button.dart';
-import 'package:patinka/social_media/comments.dart';
-import 'package:patinka/social_media/handle_buttons.dart';
-import 'package:patinka/social_media/post_widget.dart';
+import "package:flutter/material.dart";
+import "package:like_button/like_button.dart";
+import "package:patinka/social_media/comments.dart";
+import "package:patinka/social_media/handle_buttons.dart";
+import "package:patinka/social_media/post_widget.dart";
 
 class PostFooter extends StatefulWidget {
   const PostFooter({
-    super.key,
-    required this.likedState,
-    required this.savedState,
-    required this.setSavedState,
-    required this.post,
-    required this.comments,
-    required this.user,
-    required this.backgroundColor
+    required this.likedState, required this.savedState, required this.setSavedState, required this.post, required this.comments, required this.user, required this.backgroundColor, super.key
   });
 
   final bool likedState;
@@ -36,10 +29,10 @@ class _PostFooterState extends State<PostFooter> {
   void initState() {
     super.initState();
     likedState = widget.likedState;
-    likeCount = widget.post?['like_count'] ?? 0;
+    likeCount = widget.post?["like_count"] ?? 0;
   }
 
-  Future<bool> handleLikePressedState(bool isLiked) async {
+  Future<bool> handleLikePressedState(final bool isLiked) async {
     setState(() {
       likedState = isLiked;
       likeCount = likedState ? likeCount + 1 : likeCount - 1;
@@ -49,8 +42,7 @@ class _PostFooterState extends State<PostFooter> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(final BuildContext context) => Container(
       padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
       decoration: BoxDecoration(color: widget.backgroundColor, borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8))),
       height: 73,
@@ -60,7 +52,7 @@ class _PostFooterState extends State<PostFooter> {
           // Like button with animation
           LikeButton(
             isLiked: likedState,
-            onTap: (isLiked) => handleLikePressed(isLiked, handleLikePressedState, widget.post),
+            onTap: (final isLiked) => handleLikePressed(isLiked, handleLikePressedState, widget.post),
             padding: const EdgeInsets.only(bottom: 0, top: 12),
             countPostion: CountPostion.bottom,
             size: 28.0,
@@ -69,16 +61,14 @@ class _PostFooterState extends State<PostFooter> {
               dotPrimaryColor: unselected,
               dotSecondaryColor: secondary,
             ),
-            likeBuilder: (bool isLiked) {
-              return Icon(
+            likeBuilder: (final bool isLiked) => Icon(
                 Icons.thumb_up,
                 color: isLiked ? selected : unselected,
                 size: 32.0,
-              );
-            },
+              ),
             likeCount: likeCount,
-            countBuilder: (int? count, bool isLiked, String text) {
-              var color = isLiked ? selected : unselected;
+            countBuilder: (final int? count, final bool isLiked, final String text) {
+              final color = isLiked ? selected : unselected;
               return Center(
                 child: Text(
                   count == 0 ? "Like" : text,
@@ -99,16 +89,16 @@ class _PostFooterState extends State<PostFooter> {
                 onPressed: () => Navigator.of(context).push(
                   // Navigate to comments page
                   PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
+                    pageBuilder: (final context, final animation, final secondaryAnimation) =>
                         Comments(
                             post: widget.post?["post_id"], user: widget.user),
                     opaque: false,
                     transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
+                        (final context, final animation, final secondaryAnimation, final child) {
                       const begin = 0.0;
                       const end = 1.0;
-                      var tween = Tween(begin: begin, end: end);
-                      var fadeAnimation = tween.animate(animation);
+                      final tween = Tween(begin: begin, end: end);
+                      final fadeAnimation = tween.animate(animation);
                       return FadeTransition(
                         opacity: fadeAnimation,
                         child: child,
@@ -134,7 +124,7 @@ class _PostFooterState extends State<PostFooter> {
           // Save button
           LikeButton(
             isLiked: widget.savedState,
-            onTap: (isSaved) =>
+            onTap: (final isSaved) =>
                 handleSavePressed(isSaved, widget.setSavedState, widget.post),
             padding: const EdgeInsets.only(bottom: 0, top: 4),
             countPostion: CountPostion.bottom,
@@ -144,13 +134,11 @@ class _PostFooterState extends State<PostFooter> {
               dotPrimaryColor: unselected,
               dotSecondaryColor: secondary,
             ),
-            likeBuilder: (bool isSaved) {
-              return Icon(
+            likeBuilder: (final bool isSaved) => Icon(
                 Icons.save,
                 color: isSaved ? selected : unselected,
                 size: 28.0,
-              );
-            },
+              ),
           ),
           const Spacer(),
           widget.user == null
@@ -168,5 +156,4 @@ class _PostFooterState extends State<PostFooter> {
         ],
       ),
     );
-  }
 }

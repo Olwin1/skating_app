@@ -1,27 +1,31 @@
-import 'dart:math' as math;
+import "dart:math" as math;
 
-import 'package:flutter/material.dart';
-import 'package:in_app_notification/in_app_notification.dart';
-import 'package:patinka/api/messages.dart';
-import 'package:patinka/api/social.dart';
-import 'package:patinka/social_media/post_widget.dart';
-import 'package:patinka/swatch.dart';
-
-import 'private_message.dart';
+import "package:flutter/material.dart";
+import "package:in_app_notification/in_app_notification.dart";
+import "package:patinka/api/messages.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/social_media/post_widget.dart";
+import "package:patinka/social_media/private_messages/private_message.dart";
+import "package:patinka/swatch.dart";
 
 int dur = 3;
 Map<String, dynamic>? user;
 Map<String, dynamic>? channel;
-void handleTap(context, Map<String, dynamic>? user,
-    Map<String, dynamic>? channel, String currentUser, String channelId) async {
+void handleTap(
+    final BuildContext context,
+    final Map<String, dynamic>? user,
+    final Map<String, dynamic>? channel,
+    final String currentUser,
+    final String channelId) async {
   // Navigate to PrivateMessage page when the list item is clicked
-  Map<String, dynamic>? userV = user ?? await SocialAPI.getUser(currentUser);
-  Map<String, dynamic>? channelV =
+  final Map<String, dynamic> userV =
+      user ?? await SocialAPI.getUser(currentUser);
+  final Map<String, dynamic> channelV =
       channel ?? await MessagesAPI.getChannel(channelId);
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => PrivateMessage(
+      builder: (final context) => PrivateMessage(
         initSelf: false,
         channel: channelV,
         user: userV,
@@ -31,7 +35,8 @@ void handleTap(context, Map<String, dynamic>? user,
   );
 }
 
-void showNotification(context, Map<String, dynamic> data, String currentUser) {
+void showNotification(final BuildContext context,
+    final Map<String, dynamic> data, final String currentUser) {
   InAppNotification.show(
       onTap: () =>
           handleTap(context, user, channel, currentUser, data["channel"]),
@@ -48,6 +53,14 @@ void showNotification(context, Map<String, dynamic> data, String currentUser) {
 }
 
 class NotificationBody extends StatelessWidget {
+  const NotificationBody(
+      {required this.senderId,
+      required this.content,
+      required this.channelId,
+      required this.currentUser,
+      super.key,
+      this.count = 0,
+      this.minHeight = 0.0});
   final int count;
   final double minHeight;
   final String senderId;
@@ -55,24 +68,15 @@ class NotificationBody extends StatelessWidget {
   final String channelId;
   final String currentUser;
 
-  const NotificationBody(
-      {super.key,
-      this.count = 0,
-      this.minHeight = 0.0,
-      required this.senderId,
-      required this.content,
-      required this.channelId,
-      required this.currentUser});
-
   void init() {
     // Get the current user's identifier and set the state
 
-    SocialAPI.getUser(currentUser).then((value) => user = value);
-    MessagesAPI.getChannel(channelId).then((value) => channel = value);
+    SocialAPI.getUser(currentUser).then((final value) => user = value);
+    MessagesAPI.getChannel(channelId).then((final value) => channel = value);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     init();
 
     final minHeight = math.min(
@@ -165,19 +169,17 @@ class AnimatedLineState extends State<AnimatedLine>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.maxFinite,
-      height: 2, // Height of the line
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: FractionallySizedBox(
-          widthFactor: _animation.value,
-          child: Container(
-            color: swatch[601],
+  Widget build(final BuildContext context) => SizedBox(
+        width: double.maxFinite,
+        height: 2, // Height of the line
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: FractionallySizedBox(
+            widthFactor: _animation.value,
+            child: Container(
+              color: swatch[601],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

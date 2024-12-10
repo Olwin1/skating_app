@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_overlay/flutter_overlay.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:patinka/api/social.dart';
-import 'package:patinka/common_logger.dart';
-import '../api/config.dart';
-
-import '../components/list_error.dart';
-import '../swatch.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_overlay/flutter_overlay.dart";
+import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/components/list_error.dart";
+import "package:patinka/swatch.dart";
+import "package:shimmer/shimmer.dart";
 
 // Variable to store the currently viewed image
 String? currentImage;
@@ -21,20 +20,19 @@ class SavedPosts extends StatelessWidget {
 
   // Override the build method of StatelessWidget to return a Consumer widget
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Function to create a dialog widget for image viewing
-    GestureDetector dialog() {
-      return GestureDetector(
+    GestureDetector dialog() => GestureDetector(
         onTap: () {
-          Navigator.pop(context, 'close');
+          Navigator.pop(context, "close");
         },
         child: currentImage != null
             ? Container(
                 color: const Color(0x55000000),
                 padding: const EdgeInsets.all(4),
                 child: CachedNetworkImage(
-                  imageUrl: '${Config.uri}/image/$currentImage',
-                  imageBuilder: (context, imageProvider) => Container(
+                  imageUrl: "${Config.uri}/image/$currentImage",
+                  imageBuilder: (final context, final imageProvider) => Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       image: DecorationImage(
@@ -47,15 +45,14 @@ class SavedPosts extends StatelessWidget {
               )
             : const SizedBox.shrink(),
       );
-    }
 
     // Function to show the overlay with the image dialog
     void show() {
       HiOverlay.show(
         context,
         child: dialog(),
-      ).then((value) {
-        commonLogger.t('Received value: $value');
+      ).then((final value) {
+        commonLogger.t("Received value: $value");
       });
     }
 
@@ -82,11 +79,10 @@ class SavedPosts extends StatelessWidget {
 
 // Function to create a grid tile widget from an image URL
 Widget _createGridTileWidget(
-  Map<String, dynamic> post,
-  dynamic imageViewerController,
-  Function refreshPage,
-) {
-  return Builder(builder: (context) {
+  final Map<String, dynamic> post,
+  final dynamic imageViewerController,
+  final Function refreshPage,
+) => Builder(builder: (final context) {
     // Function to pop the navigator
     void popNavigator() {
       Navigator.of(context).pop();
@@ -98,11 +94,10 @@ Widget _createGridTileWidget(
         await showDialog(
           useRootNavigator: false,
           context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
+          builder: (final BuildContext context) => AlertDialog(
               backgroundColor: swatch[800],
               title: Text(
-                'Are you sure you want to unsave this post?',
+                "Are you sure you want to unsave this post?",
                 style: TextStyle(color: swatch[701]),
               ),
               content: SizedBox(
@@ -117,24 +112,21 @@ Widget _createGridTileWidget(
                         popNavigator();
                       },
                       child: Text(
-                        'Unsave',
+                        "Unsave",
                         style: TextStyle(color: swatch[901]),
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
-                        popNavigator();
-                      },
+                      onPressed: popNavigator,
                       child: Text(
-                        'Cancel',
+                        "Cancel",
                         style: TextStyle(color: swatch[901]),
                       ),
                     ),
                   ],
                 ),
               ),
-            );
-          },
+            ),
         );
       },
       onTap: () => {
@@ -144,7 +136,7 @@ Widget _createGridTileWidget(
       child: CachedNetworkImage(
         imageUrl: '${Config.uri}/image/thumbnail/${post["image"]}',
         fit: BoxFit.cover,
-        imageBuilder: (context, imageProvider) => Container(
+        imageBuilder: (final context, final imageProvider) => Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             image: DecorationImage(
@@ -156,12 +148,11 @@ Widget _createGridTileWidget(
       ),
     );
   });
-}
 
 // Class representing the SavedPostsList widget
 class SavedPostsList extends StatefulWidget {
+  const SavedPostsList({required this.imageViewerController, super.key});
   final dynamic imageViewerController;
-  const SavedPostsList({super.key, required this.imageViewerController});
 
   @override
   State<SavedPostsList> createState() => _SavedPostsListState();
@@ -177,7 +168,7 @@ class _SavedPostsListState extends State<SavedPostsList> {
 
   // Function to create loading widgets for the grid
   Widget _createGridLoadingWidgets() {
-    Widget child = Shimmer.fromColors(
+    final Widget child = Shimmer.fromColors(
       baseColor: shimmer["base"]!,
       highlightColor: shimmer["highlight"]!,
       child: ClipRRect(
@@ -194,16 +185,14 @@ class _SavedPostsListState extends State<SavedPostsList> {
         crossAxisSpacing: 2,
         maxCrossAxisExtent: MediaQuery.of(context).size.width / 3,
       ),
-      children: List.generate(12, (index) => child),
+      children: List.generate(12, (final index) => child),
     );
   }
 
   @override
   void initState() {
     // Add a listener to the PagingController that fetches the next page when requested
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 
@@ -213,7 +202,7 @@ class _SavedPostsListState extends State<SavedPostsList> {
   }
 
   // Function to fetch a page of posts
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(final int pageKey) async {
     try {
       // Fetch the next page of posts from the user's account
       final page = await SocialAPI.getSavedPosts(pageKey);
@@ -228,10 +217,10 @@ class _SavedPostsListState extends State<SavedPostsList> {
             page.isEmpty) {
           _pagingController.appendLastPage(page);
         } else {
-          int rem =
+          final int rem =
               4 - ((_pagingController.itemList?.length ?? 0) + page.length) % 3;
-          List<Map<String, dynamic>> spacers =
-              List.generate(rem, (index) => {"last": true});
+          final List<Map<String, dynamic>> spacers =
+              List.generate(rem, (final index) => {"last": true});
           _pagingController.appendLastPage([...page, ...spacers]);
         }
       } else if (mounted) {
@@ -247,8 +236,7 @@ class _SavedPostsListState extends State<SavedPostsList> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return PagedGridView<int, Map<String, dynamic>>(
+  Widget build(final BuildContext context) => PagedGridView<int, Map<String, dynamic>>(
       shrinkWrap: true,
       physics: const ScrollPhysics(),
       pagingController: _pagingController,
@@ -259,12 +247,12 @@ class _SavedPostsListState extends State<SavedPostsList> {
         maxCrossAxisExtent: MediaQuery.of(context).size.width / 3,
       ),
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-        firstPageProgressIndicatorBuilder: (context) =>
+        firstPageProgressIndicatorBuilder: (final context) =>
             _createGridLoadingWidgets(),
-        noItemsFoundIndicatorBuilder: (context) =>
+        noItemsFoundIndicatorBuilder: (final context) =>
             const ListError(title: "No Posts Saved", body: ""),
         // Build each grid tile
-        itemBuilder: (context, item, index) => item["last"] == true
+        itemBuilder: (final context, final item, final index) => item["last"] == true
             ? const SizedBox(
                 height: 72,
               )
@@ -272,7 +260,6 @@ class _SavedPostsListState extends State<SavedPostsList> {
                 item["posts"], widget.imageViewerController, refreshPage),
       ),
     );
-  }
 
   @override
   void dispose() {

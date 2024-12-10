@@ -1,31 +1,27 @@
 // Import necessary packages and files
-import 'package:comment_box/comment/comment.dart';
-import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:patinka/api/config.dart';
-import 'package:patinka/api/support.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/components/list_error.dart';
-import 'package:patinka/profile/settings/list_type.dart';
-import 'package:patinka/services/role.dart';
-import 'package:patinka/swatch.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'report_message.dart';
+import "package:comment_box/comment/comment.dart";
+import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/support.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/components/list_error.dart";
+import "package:patinka/profile/settings/list_type.dart";
+import "package:patinka/profile/settings/report_message.dart";
+import "package:patinka/services/role.dart";
+import "package:patinka/swatch.dart";
 
 // Initialize an empty list to store new messages
 List<Map<String, dynamic>> newMessages = [];
 
 // Messages Widget - Represents the page where messages are displayed
 class Messages extends StatefulWidget {
-  final String feedbackId;
-  final SupportListType reportType;
 
   const Messages(
-      {super.key,
-      required this.feedbackId,
-      required this.user,
-      required this.reportType,
-      required this.status});
+      {required this.feedbackId, required this.user, required this.reportType, required this.status, super.key});
+  final String feedbackId;
+  final SupportListType reportType;
 
   final Map<String, dynamic>? user;
   final Status status;
@@ -45,12 +41,12 @@ class _Messages extends State<Messages> {
   @override
   void initState() {
     // Initialize the state and set up the focus node and message controller
-    storage.getId().then((value) => userId = value ?? "0");
+    storage.getId().then((final value) => userId = value ?? "0");
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Create a new focus node every time the widget is built
     focus = FocusNode();
     if (widget.status != Status.closed) {
@@ -63,14 +59,14 @@ class _Messages extends State<Messages> {
               : '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
         ),
         labelText: AppLocalizations.of(context)!.message,
-        errorText: 'Message cannot be blank',
+        errorText: "Message cannot be blank",
         withBorder: false,
         commentController: commentController,
         sendButtonMethod: () {
           // Post a message when the send button is pressed
           if (commentController.text.isNotEmpty) {
             SupportAPI.postMessage(widget.feedbackId, commentController.text)
-                .then((value) => _pagingController.refresh());
+                .then((final value) => _pagingController.refresh());
 
             commentController.clear();
           }
@@ -129,20 +125,15 @@ class _Messages extends State<Messages> {
 
 // MessagesListView Widget - Represents the list view of messages
 class MessagesListView extends StatefulWidget {
+
+  const MessagesListView({
+    required this.focus, required this.post, required this.pagingController, required this.reportType, required this.status, super.key,
+  });
   final FocusNode focus;
   final String post;
   final PagingController<int, Map<String, dynamic>> pagingController;
   final SupportListType reportType;
   final Status status;
-
-  const MessagesListView({
-    super.key,
-    required this.focus,
-    required this.post,
-    required this.pagingController,
-    required this.reportType,
-    required this.status,
-  });
 
   @override
   State<MessagesListView> createState() => _MessagesListViewState();
@@ -154,13 +145,11 @@ class _MessagesListViewState extends State<MessagesListView> {
   @override
   void initState() {
     // Add a listener for page requests, and call _fetchPage() when a page is requested
-    widget.pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    widget.pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(final int pageKey) async {
     try {
       // Fetch the page of messages using the getComments() function
       final page = [
@@ -170,13 +159,15 @@ class _MessagesListViewState extends State<MessagesListView> {
 
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
       if (isLastPage) {
         // If this is the last page, append it to the list of pages
         widget.pagingController.appendLastPage(page);
       } else {
         // If this is not the last page, append it to the list of pages and request the next page
-        final nextPageKey = pageKey += 1;
+        final nextPageKey = pageKey + 1;
         widget.pagingController.appendPage(page, nextPageKey);
       }
     } catch (error) {
@@ -186,8 +177,8 @@ class _MessagesListViewState extends State<MessagesListView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height - 350;
+  Widget build(final BuildContext context) {
+    final double height = MediaQuery.of(context).size.height - 350;
     if (newMessages.isNotEmpty) {
       // If there are new messages, refresh the list view
       widget.pagingController.refresh();
@@ -197,9 +188,9 @@ class _MessagesListViewState extends State<MessagesListView> {
     return PagedListView<int, Map<String, dynamic>>(
       pagingController: widget.pagingController,
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-        noItemsFoundIndicatorBuilder: (context) =>
+        noItemsFoundIndicatorBuilder: (final context) =>
             const ListError(title: "", body: "Awaiting Response"),
-        itemBuilder: (context, item, index) =>
+        itemBuilder: (final context, final item, final index) =>
             buildCommentWidget(index, item, height),
       ),
     );
@@ -218,8 +209,7 @@ class _MessagesListViewState extends State<MessagesListView> {
 
   // Build the Message widget for the given index and item
   Widget buildCommentWidget(
-      int index, Map<String, dynamic> item, double height) {
-    return index == 0
+      final int index, final Map<String, dynamic> item, final double height) => index == 0
         ? Padding(
             padding: EdgeInsets.only(top: height),
             child: ReportMessage(
@@ -233,5 +223,4 @@ class _MessagesListViewState extends State<MessagesListView> {
             focus: widget.focus,
             message: item,
             status: widget.status);
-  }
 }

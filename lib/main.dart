@@ -1,37 +1,37 @@
-import 'dart:async';
-import 'dart:io';
+import "dart:async";
+import "dart:io";
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:flutter/services.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:convex_bottom_bar/convex_bottom_bar.dart";
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:flutter_phoenix/flutter_phoenix.dart";
 //import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get_it/get_it.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:patinka/api/image.dart';
-import 'package:patinka/caching/manager.dart';
-import 'package:patinka/login/login.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/api/websocket.dart';
-import 'package:patinka/api/token.dart';
-import 'api/config.dart';
-import 'api/social.dart';
-import 'common_logger.dart';
-import 'misc/default_profile.dart';
-import 'services/navigation_service.dart';
-import 'swatch.dart';
-import 'tab_navigator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
-import './misc/navbar_provider.dart';
-import './friends_tracker/caching/map_cache.dart'
-    if (dart.library.io) './friends_tracker/caching/map_cache_mobile.dart'
-    if (dart.library.html) './friends_tracker/caching/map_cache_web.dart';
-import './window_manager/window_manager.dart';
-import 'package:patinka/firebase/init_firebase.dart';
-import 'package:path/path.dart' as path;
-import 'package:in_app_notification/in_app_notification.dart';
+import "package:get_it/get_it.dart";
+import "package:in_app_notification/in_app_notification.dart";
+import "package:path/path.dart" as path;
+import "package:path_provider/path_provider.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/image.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/api/token.dart";
+import "package:patinka/api/websocket.dart";
+import "package:patinka/caching/manager.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/firebase/init_firebase.dart";
+import "package:patinka/friends_tracker/caching/map_cache.dart"
+    if (dart.library.io) "./friends_tracker/caching/map_cache_mobile.dart"
+    if (dart.library.html) "./friends_tracker/caching/map_cache_web.dart";
+import "package:patinka/login/login.dart";
+import "package:patinka/misc/default_profile.dart";
+import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/services/navigation_service.dart";
+import "package:patinka/swatch.dart";
+import "package:patinka/tab_navigator.dart";
+import "package:patinka/window_manager/window_manager.dart";
+import "package:provider/provider.dart";
+import "package:shimmer/shimmer.dart";
 // AndroidNotificationChannel channel = const AndroidNotificationChannel(
 //   'ChannelId', // id
 //   'ChannelId', // title
@@ -65,7 +65,7 @@ Future<void> main() async {
   // Run the app with the MyApp widget
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<BottomBarVisibilityProvider>(
-      create: (_) => BottomBarVisibilityProvider(),
+      create: (final _) => BottomBarVisibilityProvider(),
     ),
   ], child: Phoenix(child: const InAppNotification(child: MyApp()))));
 }
@@ -83,9 +83,9 @@ class _MyAppState extends State<MyApp> {
   int selectedpage = 0;
   bool loggedIn = false;
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Retrieve token from storage
-    storage.getToken().then((token) => {
+    storage.getToken().then((final token) => {
           // Check if token exists and user is not already logged in
           if (token != null && !loggedIn)
             {
@@ -95,13 +95,13 @@ class _MyAppState extends State<MyApp> {
         });
 
 // Function to set the logged in state of the user
-    void setLoggedIn(value) {
+    void setLoggedIn(final value) {
       // Update state to reflect whether the user is logged in or not
       mounted ? setState(() => loggedIn = value) : null;
     }
 
     return MaterialApp(
-      title: 'Patinka',
+      title: "Patinka",
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       themeMode: ThemeMode.dark,
@@ -130,34 +130,30 @@ class _MyAppState extends State<MyApp> {
 
 // This is a stateless widget called StateManagement
 class StateManagement extends StatelessWidget {
+
+  // Constructor for this widget that initializes its properties
+  const StateManagement({
+    required this.loggedIn, required this.setLoggedIn, super.key,
+  });
   // This widget requires two parameters, a boolean named `loggedIn`
   // and a dynamic named `setLoggedIn`
   final bool loggedIn;
   final dynamic setLoggedIn;
 
-  // Constructor for this widget that initializes its properties
-  const StateManagement({
-    super.key,
-    required this.loggedIn,
-    required this.setLoggedIn,
-  });
-
   // Build method of this widget that returns a ChangeNotifierProvider widget
   // with a CurrentPage object as the notifier and a child MyHomePage widget.
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<NavigationService>(
-      create: (_) => NavigationService.instance,
+  Widget build(final BuildContext context) => ChangeNotifierProvider<NavigationService>(
+      create: (final _) => NavigationService.instance,
       child: MyHomePage(
         loggedIn: loggedIn,
         setLoggedIn: setLoggedIn,
       ),
     );
-  }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.loggedIn, this.setLoggedIn});
+  const MyHomePage({required this.loggedIn, super.key, this.setLoggedIn});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -185,22 +181,22 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    void getImage(String filePath) {
-      getApplicationDocumentsDirectory().then((applicationDocumentsDirectory) {
-        File file = File(path
+    void getImage(final String filePath) {
+      getApplicationDocumentsDirectory().then((final applicationDocumentsDirectory) {
+        final File file = File(path
             .join(applicationDocumentsDirectory.path, path.basename(filePath))
             .replaceAll('"',
-                '')); // Replace all " because it breaks it for some weird reason
+                "")); // Replace all " because it breaks it for some weird reason
         commonLogger.d(file.existsSync());
-        FileImage fileImage = FileImage(file);
+        final FileImage fileImage = FileImage(file);
         setState(() => backgroundImage = fileImage);
       });
     }
 
-    storage.getId().then((value) => {
+    storage.getId().then((final value) => {
           value != null
               ? {
-                  SocialAPI.getUser(value).then((user) => {
+                  SocialAPI.getUser(value).then((final user) => {
                         mounted
                             ? setState(() {
                                 avatar = user["avatar_id"];
@@ -215,24 +211,24 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         });
     NetworkManager.instance
         .getLocalData(name: "current-background", type: CacheTypes.background)
-        .then((filePath) {
+        .then((final filePath) {
       if (filePath != null) {
         getImage(filePath);
       } else {
         if (mounted) {
-          MediaQueryData mediaQuery = MediaQuery.of(context);
+          final MediaQueryData mediaQuery = MediaQuery.of(context);
           final physicalPixelWidth =
               mediaQuery.size.width * mediaQuery.devicePixelRatio;
           final physicalPixelHeight =
               mediaQuery.size.height * mediaQuery.devicePixelRatio;
           downloadBackgroundImage(physicalPixelWidth, physicalPixelHeight)
-              .then((value) {
+              .then((final value) {
             if (value) {
               commonLogger.d("Downloading Value is true");
               NetworkManager.instance
                   .getLocalData(
                       name: "current-background", type: CacheTypes.background)
-                  .then((filePath) {
+                  .then((final filePath) {
                 if (filePath != null) {
                   commonLogger.d("File path aint none");
                   getImage(filePath);
@@ -246,8 +242,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     super.initState();
   }
 
-  List<TabItem<Widget>> tabItems() {
-    return ([
+  List<TabItem<Widget>> tabItems() => [
       TabItem<Widget>(
         //icon: Icons.home,
         icon: Image.asset(
@@ -282,8 +277,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             // If there is cached user information and an avatar image, use the cached image
             : avatar != "default"
                 ? CachedNetworkImage(
-                    imageUrl: '${Config.uri}/image/thumbnail/$avatar',
-                    placeholder: (context, url) => Shimmer.fromColors(
+                    imageUrl: "${Config.uri}/image/thumbnail/$avatar",
+                    placeholder: (final context, final url) => Shimmer.fromColors(
                         baseColor: shimmer["base"]!,
                         highlightColor: shimmer["highlight"]!,
                         child: CircleAvatar(
@@ -291,7 +286,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           radius: 36, // Set radius to 36
                           backgroundColor: swatch[900],
                         )),
-                    imageBuilder: (context, imageProvider) => Container(
+                    imageBuilder: (final context, final imageProvider) => Container(
                       decoration: BoxDecoration(
                         shape: BoxShape
                             .circle, // Set the shape of the container to a circle
@@ -302,10 +297,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   )
                 : const DefaultProfile(radius: 36),
       ), // Create Profile Button Object
-    ]);
-  }
+    ];
 
-  Future<void> handlePop(bool didPop, Object? result) async {
+  Future<void> handlePop(final bool didPop, final Object? result) async {
     if (didPop) {
       return;
     }
@@ -328,7 +322,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -338,10 +332,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 // This code returns a Consumer widget that rebuilds its child widget
 // whenever the CurrentPage object changes.
     if (!gottenAvatar) {
-      storage.getId().then((value) => {
+      storage.getId().then((final value) => {
             value != null
                 ? {
-                    SocialAPI.getUser(value).then((user) => {
+                    SocialAPI.getUser(value).then((final user) => {
                           mounted
                               ? setState(() {
                                   avatar = user["avatar_id"];
@@ -357,15 +351,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return PopScope(
         canPop: false,
         // Handle user swiping back inside application
-        onPopInvokedWithResult: (bool didPop, Object? result) =>
-            handlePop(didPop, result),
+        onPopInvokedWithResult: handlePop,
         child: Scaffold(
             extendBody: true,
             bottomNavigationBar: Consumer<BottomBarVisibilityProvider>(
-              builder: (context, bottomBarVisibilityProvider, child) {
-                return AnimatedBuilder(
+              builder: (final context, final bottomBarVisibilityProvider, final child) => AnimatedBuilder(
                   animation: bottomBarVisibilityProvider.animationController,
-                  builder: (context, child) {
+                  builder: (final context, final child) {
                     final translateY = Tween<double>(
                       begin: bottomBarVisibilityProvider.isVisible ? 0.0 : 1.0,
                       end: bottomBarVisibilityProvider.isVisible ? 1.0 : 0.0,
@@ -392,7 +384,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                         //initialActiveIndex: NavigationService.getCurrentIndex(), // Set initial selection to main page
                                         initialActiveIndex:
                                             0, // Set initial selection to main page
-                                        onTap: (int i) => {
+                                        onTap: (final int i) => {
                                           //When a navbar button is pressed set the current tab to the tabitem that was pressed
                                           mounted
                                               ? setState(() {
@@ -419,8 +411,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                 )),
                     );
                   },
-                );
-              },
+                ),
             ),
             body: Stack(
               children: [
@@ -457,15 +448,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             ));
   }
 
-  Widget _buildOffstageNavigator(int tabItemIndex) {
-    return Offstage(
+  Widget _buildOffstageNavigator(final int tabItemIndex) => Offstage(
       offstage: NavigationService.getCurrentIndex() != tabItemIndex,
       child: TabNavigator(
         tabItemIndex: tabItemIndex,
         tabitems: tabItems(),
       ),
     );
-  }
 }
 
 class Style extends StyleHook {
@@ -478,7 +467,5 @@ class Style extends StyleHook {
   double get activeIconSize => 60;
 
   @override
-  TextStyle textStyle(Color color, String? fontFamily) {
-    return TextStyle(fontSize: 20, color: color);
-  }
+  TextStyle textStyle(final Color color, final String? fontFamily) => TextStyle(fontSize: 20, color: color);
 }

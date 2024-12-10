@@ -1,20 +1,20 @@
 // Import necessary libraries and modules
-import 'package:patinka/api/response_handler.dart';
-import 'package:http/http.dart' as http;
-import 'package:patinka/social_media/report_content_type.dart';
-import 'config.dart';
+import "package:http/http.dart" as http;
+import "package:patinka/api/config.dart";
+import "package:patinka/api/response_handler.dart";
+import "package:patinka/social_media/report_content_type.dart";
 
 // The ReportAPI class provides methods to handle various report-related actions, such as reporting users,
 // modifying report statuses, and fetching reports. It interacts with an API backend using HTTP requests.
 class ReportAPI {
   // Define API endpoints for different report actions
-  static final Uri _reportUrl = Uri.parse('${Config.uri}/support/report');
+  static final Uri _reportUrl = Uri.parse("${Config.uri}/support/report");
   static final Uri _reportDataUrl =
-      Uri.parse('${Config.uri}/support/report_data');
-  static final Uri _reportModifyUrl = Uri.parse('$_reportUrl/modify');
-  static final Uri _reportListUrl = Uri.parse('$_reportUrl/list');
-  static final Uri _reportListFromUrl = Uri.parse('$_reportListUrl/from');
-  static final Uri _reportListAgainstUrl = Uri.parse('$_reportListUrl/against');
+      Uri.parse("${Config.uri}/support/report_data");
+  static final Uri _reportModifyUrl = Uri.parse("$_reportUrl/modify");
+  static final Uri _reportListUrl = Uri.parse("$_reportUrl/list");
+  static final Uri _reportListFromUrl = Uri.parse("$_reportListUrl/from");
+  static final Uri _reportListAgainstUrl = Uri.parse("$_reportListUrl/against");
 
   // Submits a new report to the server
   // Parameters:
@@ -24,20 +24,20 @@ class ReportAPI {
   // - reportType: Type of the report (e.g., spam, harassment, etc.)
   // Returns: A map containing the server's response
   static Future<Map<String, dynamic>> postReport(
-      ReportContentType reportContentType,
-      String contentId,
-      String reportedUserId,
-      String reportType) async {
+      final ReportContentType reportContentType,
+      final String contentId,
+      final String reportedUserId,
+      final String reportType) async {
     try {
-      var response = await http.post(
+      final response = await http.post(
         _reportUrl,
         headers: await Config.getDefaultHeadersAuth,
         body: {
-          'reported_content': reportContentType.name,
-          'reported_content_id': contentId,
-          'reported_user_id': reportedUserId,
-          'report_type': reportType,
-          'description': "" // Optional description of the report
+          "reported_content": reportContentType.name,
+          "reported_content_id": contentId,
+          "reported_user_id": reportedUserId,
+          "report_type": reportType,
+          "description": "" // Optional description of the report
         },
       );
 
@@ -52,14 +52,14 @@ class ReportAPI {
   // Parameters:
   // - reportId: ID of the report to retrieve
   // Returns: A map containing the details of the report
-  static Future<Map<String, dynamic>> getReport(String reportId) async {
+  static Future<Map<String, dynamic>> getReport(final String reportId) async {
     try {
-      var response = await http.get(
+      final response = await http.get(
         _reportUrl,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer ${await storage.getToken()}',
-          'report_id': reportId
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer ${await storage.getToken()}",
+          "report_id": reportId
         },
       );
 
@@ -76,14 +76,14 @@ class ReportAPI {
   // - type: Type of content being reported (e.g., message, post, etc.)
   // Returns: A map containing the content data of the report
   static Future<dynamic> getReportData(
-      String reportId, ReportContentType type) async {
+      final String reportId, final ReportContentType type) async {
     try {
-      var response = await http.get(
+      final response = await http.get(
         _reportDataUrl,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer ${await storage.getToken()}',
-          'report_id': reportId
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer ${await storage.getToken()}",
+          "report_id": reportId
         },
       );
 
@@ -104,12 +104,12 @@ class ReportAPI {
   // - reportStatus: New status for the report (e.g., resolved, dismissed)
   // Returns: A map containing the updated report information
   static Future<Map<String, dynamic>> modifyReportStatus(
-      String reportId, String reportStatus) async {
+      final String reportId, final String reportStatus) async {
     try {
-      var response = await http.post(
+      final response = await http.post(
         _reportModifyUrl,
         headers: await Config.getDefaultHeadersAuth,
-        body: {'report_id': reportId, 'report_status': reportStatus},
+        body: {"report_id": reportId, "report_status": reportStatus},
       );
 
       return handleResponse(response, Resp.stringResponse);
@@ -123,14 +123,14 @@ class ReportAPI {
   // Parameters:
   // - page: Page number for pagination
   // Returns: A map containing a list of reports
-  static Future<List<Map<String, dynamic>>> getReports(int page) async {
+  static Future<List<Map<String, dynamic>>> getReports(final int page) async {
     try {
-      var response = await http.get(
+      final response = await http.get(
         _reportListUrl,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer ${await storage.getToken()}',
-          'page': page.toString()
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer ${await storage.getToken()}",
+          "page": page.toString()
         },
       );
 
@@ -147,16 +147,16 @@ class ReportAPI {
   // - userId: Optional user ID to filter reports (if null, defaults to the requesting user)
   // Returns: A map containing a list of reports
   static Future<List<Map<String, dynamic>>> getReportsFrom(
-      int page, String? userId) async {
+      final int page, final String? userId) async {
     try {
-      var response = await http.get(
+      final response = await http.get(
         _reportListFromUrl,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer ${await storage.getToken()}',
-          'page': page.toString(),
-          'user':
-              userId ?? '' // Default to current user if no userId is provided
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer ${await storage.getToken()}",
+          "page": page.toString(),
+          "user":
+              userId ?? "" // Default to current user if no userId is provided
         },
       );
 
@@ -173,15 +173,15 @@ class ReportAPI {
   // - userId: ID of the user the reports are filed against
   // Returns: A map containing a list of reports
   static Future<List<Map<String, dynamic>>> getReportsAgainst(
-      int page, String userId) async {
+      final int page, final String userId) async {
     try {
-      var response = await http.get(
+      final response = await http.get(
         _reportListAgainstUrl,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer ${await storage.getToken()}',
-          'page': page.toString(),
-          'user': userId
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer ${await storage.getToken()}",
+          "page": page.toString(),
+          "user": userId
         },
       );
 

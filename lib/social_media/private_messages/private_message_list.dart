@@ -1,24 +1,24 @@
 // Import necessary packages and files
-import 'dart:async';
+import "dart:async";
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:patinka/misc/navbar_provider.dart';
-import 'package:patinka/social_media/private_messages/new_channel.dart';
-import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:uuid/uuid.dart';
-import '../../api/config.dart';
-import '../../api/websocket.dart';
-import '../../components/list_error.dart';
-import '../../swatch.dart';
-import 'list_widget.dart';
-import '../../api/messages.dart';
-import 'package:get_it/get_it.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'session_notification.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:get_it/get_it.dart";
+import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/messages.dart";
+import "package:patinka/api/websocket.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/components/list_error.dart";
+import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/social_media/private_messages/list_widget.dart";
+import "package:patinka/social_media/private_messages/new_channel.dart";
+import "package:patinka/social_media/private_messages/session_notification.dart";
+import "package:patinka/swatch.dart";
+import "package:provider/provider.dart";
+import "package:shimmer/shimmer.dart";
+import "package:uuid/uuid.dart";
 
 // Initialize GetIt for dependency injection
 GetIt getIt = GetIt.instance;
@@ -26,9 +26,7 @@ GetIt getIt = GetIt.instance;
 // Define the main widget class
 class PrivateMessageList extends StatefulWidget {
   const PrivateMessageList({
-    super.key,
-    required this.user,
-    required this.index,
+    required this.user, required this.index, super.key,
   });
 
   final String user; // User's identifier
@@ -46,7 +44,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
   void initState() {
     // Get the current user's identifier and set the state
     MessagesAPI.getUserId().then(
-      (value) => mounted
+      (final value) => mounted
           ? setState(() => currentUser = value ?? const Uuid().v1())
           : null,
     );
@@ -58,13 +56,13 @@ class _PrivateMessageList extends State<PrivateMessageList> {
       PagingController(firstPageKey: 0);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Hide the bottom navigation bar
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
 
     return PopScope(
       canPop: true,
-      onPopInvokedWithResult: (bool didPop, result) {
+      onPopInvokedWithResult: (final bool didPop, final result) {
         // Show the bottom navigation bar when navigating back
         if (didPop) {
           Provider.of<BottomBarVisibilityProvider>(context, listen: false)
@@ -96,17 +94,17 @@ class _PrivateMessageList extends State<PrivateMessageList> {
               onPressed: () => Navigator.of(context, rootNavigator: false).push(
                 // Navigate to the new channel page
                 PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
+                  pageBuilder: (final context, final animation, final secondaryAnimation) =>
                       NewChannelPage(
                     callback: _pagingController.refresh,
                   ),
                   opaque: false,
                   transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
+                      (final context, final animation, final secondaryAnimation, final child) {
                     const begin = 0.0;
                     const end = 1.0;
-                    var tween = Tween(begin: begin, end: end);
-                    var fadeAnimation = tween.animate(animation);
+                    final tween = Tween(begin: begin, end: end);
+                    final fadeAnimation = tween.animate(animation);
                     return FadeTransition(
                       opacity: fadeAnimation,
                       child: child,
@@ -122,7 +120,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
           decoration: const BoxDecoration(
             color: Color(0x57000000),
           ),
-          padding: const EdgeInsets.all(0),
+          padding: EdgeInsets.zero,
           child: Column(
             children: [
               Expanded(
@@ -144,7 +142,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
 
 // Widget for the loading skeleton
 Widget _loadingSkeleton() {
-  Widget child = Shimmer.fromColors(
+  final Widget child = Shimmer.fromColors(
     baseColor: shimmer["base"]!,
     highlightColor: shimmer["highlight"]!,
     child: Padding(
@@ -201,7 +199,7 @@ Widget _loadingSkeleton() {
     height: 30,
     child: ListView(
       physics: const NeverScrollableScrollPhysics(),
-      children: List.generate(9, (index) => child),
+      children: List.generate(9, (final index) => child),
     ),
   );
 }
@@ -209,10 +207,7 @@ Widget _loadingSkeleton() {
 // Widget for the list of channels
 class ChannelsListView extends StatefulWidget {
   const ChannelsListView({
-    super.key,
-    required this.currentUser,
-    required this.pagingController,
-    required this.refreshList,
+    required this.currentUser, required this.pagingController, required this.refreshList, super.key,
   });
 
   final String currentUser;
@@ -235,16 +230,14 @@ class _ChannelsListViewState extends State<ChannelsListView> {
   @override
   void initState() {
     _pagingController = widget.pagingController;
-    _pagingController?.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController?.addPageRequestListener(_fetchPage);
 
     if (getIt<WebSocketConnection>().socket.disconnected) {
       getIt<WebSocketConnection>().socket.connect();
     }
 
     subscriptionMessages =
-        getIt<WebSocketConnection>().streamMessages.listen((data) {
+        getIt<WebSocketConnection>().streamMessages.listen((final data) {
       mounted
           ? setState(() {
               channelsData[data["channel"]] = data["content"];
@@ -256,20 +249,20 @@ class _ChannelsListViewState extends State<ChannelsListView> {
     super.initState();
   }
 
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(final int pageKey) async {
     try {
       commonLogger.d("Fwtching Page");
       final page = await MessagesAPI.getChannels(
         pageKey,
       );
 
-      var newChannels = [];
+      final newChannels = [];
 
       for (int i = 0; i < page.length; i++) {
-        Map<String, dynamic> item = page[i];
-        title.add(item['channel_id']);
-        channel.add(item['channel_id']);
-        newChannels.add(item['channel_id']);
+        final Map<String, dynamic> item = page[i];
+        title.add(item["channel_id"]);
+        channel.add(item["channel_id"]);
+        newChannels.add(item["channel_id"]);
         channelsData.addAll({item["channel_id"]: item["creation_date"]});
       }
 
@@ -278,7 +271,9 @@ class _ChannelsListViewState extends State<ChannelsListView> {
           .emit("joinChannel", newChannels.toString());
 
       final isLastPage = page.length < _pageSize;
-      if (!mounted) return;
+      if (!mounted) {
+  return;
+}
 
       if (isLastPage) {
         if ((_pagingController == null ||
@@ -293,7 +288,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
           ]);
         }
       } else {
-        final nextPageKey = pageKey += 1;
+        final nextPageKey = pageKey + 1;
         _pagingController?.appendPage(page, nextPageKey);
       }
     } catch (error) {
@@ -302,16 +297,16 @@ class _ChannelsListViewState extends State<ChannelsListView> {
   }
 
   @override
-  Widget build(BuildContext context) => _pagingController != null
+  Widget build(final BuildContext context) => _pagingController != null
       ? PagedListView<int, Map<String, dynamic>>(
           pagingController: _pagingController!,
           builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-            noItemsFoundIndicatorBuilder: (context) => ListError(
+            noItemsFoundIndicatorBuilder: (final context) => ListError(
               title: AppLocalizations.of(context)!.noMessagesFound,
               body: AppLocalizations.of(context)!.makeFriends,
             ),
-            firstPageProgressIndicatorBuilder: (context) => _loadingSkeleton(),
-            itemBuilder: (context, item, index) => item["last"] == true
+            firstPageProgressIndicatorBuilder: (final context) => _loadingSkeleton(),
+            itemBuilder: (final context, final item, final index) => item["last"] == true
                 ? const SizedBox(
                     height: 72,
                   )

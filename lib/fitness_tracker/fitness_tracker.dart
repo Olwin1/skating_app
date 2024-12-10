@@ -1,20 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/fitness_tracker/save_session.dart';
-import 'package:patinka/fitness_tracker/speedometer.dart';
-import 'package:patinka/services/navigation_service.dart';
-import 'package:solar_calculator/solar_calculator.dart';
-import '../api/config.dart';
-import '../swatch.dart';
-import 'distance_travelled.dart';
-import 'signal_strength_info.dart';
-import 'package:patinka/fitness_tracker/timer.dart';
-import 'check_permission.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
-import 'package:patinka/caching/manager.dart';
+import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:geolocator/geolocator.dart";
+import "package:intl/intl.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/caching/manager.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/fitness_tracker/check_permission.dart";
+import "package:patinka/fitness_tracker/distance_travelled.dart";
+import "package:patinka/fitness_tracker/save_session.dart";
+import "package:patinka/fitness_tracker/signal_strength_info.dart";
+import "package:patinka/fitness_tracker/speedometer.dart";
+import "package:patinka/fitness_tracker/timer.dart";
+import "package:patinka/services/navigation_service.dart";
+import "package:patinka/swatch.dart";
+import "package:provider/provider.dart";
+import "package:solar_calculator/solar_calculator.dart";
 
 String sunsetTime = "00:00";
 
@@ -32,9 +32,9 @@ class _SunsetTimeState extends State<SunsetTime> {
   void initState() {
     NetworkManager.instance
         .getLocalData(name: "cache-sunset", type: CacheTypes.misc)
-        .then((String? localData) {
+        .then((final String? localData) {
       if (localData != null) {
-        String tmpTime = localData.substring(1, localData.length - 1);
+        final String tmpTime = localData.substring(1, localData.length - 1);
         mounted ? setState(() => time = tmpTime) : time = tmpTime;
       }
     });
@@ -42,30 +42,25 @@ class _SunsetTimeState extends State<SunsetTime> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     bool setted = false;
     void setSetted() {
       setted = true;
     }
 
     return Consumer<NavigationService>(
-        builder: (context, navigationService, _) {
-      return NavigationService.getCurrentIndex() == 1
+        builder: (final context, final navigationService, final _) => NavigationService.getCurrentIndex() == 1
           ? SunsetTimeWidget(time: time, setted: setted, setSetted: setSetted)
-          : const Text("0:00");
-    });
+          : const Text("0:00"));
   }
 }
 
 class SunsetTimeWidget extends StatefulWidget {
+  const SunsetTimeWidget(
+      {required this.time, required this.setted, required this.setSetted, super.key});
   final String time;
   final bool setted;
   final VoidCallback setSetted;
-  const SunsetTimeWidget(
-      {super.key,
-      required this.time,
-      required this.setted,
-      required this.setSetted});
   @override
   State<SunsetTimeWidget> createState() =>
       _SunsetTimeWidget(); //Create state for widget
@@ -76,9 +71,9 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
   @override
   void initState() {
     if (!widget.setted) {
-      hasLocationPermission().then((value) => {
+      hasLocationPermission().then((final value) => {
             Geolocator.getCurrentPosition()
-                .then((position) => {getSunsetTime(position)})
+                .then((final position) => {getSunsetTime(position)})
           });
       widget.setSetted();
     }
@@ -87,7 +82,7 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
   }
 
   // This function calculates and retrieves the sunset time at a given position
-  void getSunsetTime(Position value) {
+  void getSunsetTime(final Position value) {
     if (!mounted) {
       return;
     }
@@ -102,10 +97,10 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
     calc = SolarCalculator(instant, value.latitude, value.longitude);
 
     // Retrieve the sunset time from the SolarCalculator instance and convert it to a DateTime object in the local timezone
-    DateTime time = calc.sunsetTime.toUtcDateTime().toLocal();
+    final DateTime time = calc.sunsetTime.toUtcDateTime().toLocal();
 
     // Format the sunset time as a string with the format 'HH:mm' (hours:minutes)
-    String formattedTime = DateFormat('HH:mm').format(time);
+    final String formattedTime = DateFormat("HH:mm").format(time);
     NetworkManager.instance.saveData(
         name: "cache-sunset", type: CacheTypes.misc, data: formattedTime);
 
@@ -114,7 +109,7 @@ class _SunsetTimeWidget extends State<SunsetTimeWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (sunsetTime == "0:00") {
       sunsetTime = widget.time;
     }
@@ -137,7 +132,7 @@ class _FitnessTracker extends State<FitnessTracker> {
   Position? previousPosition;
   late DateTime startTime;
 
-  void callback(double distance) {
+  void callback(final double distance) {
     if (!stoppedTracking) {
       totalDistance = distance;
     }
@@ -147,7 +142,7 @@ class _FitnessTracker extends State<FitnessTracker> {
   String buttonMessage = "Start";
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (active) {
       buttonMessage = AppLocalizations.of(context)!.stop;
       startTime = DateTime.now().toUtc();
@@ -177,7 +172,7 @@ class _FitnessTracker extends State<FitnessTracker> {
                             Navigator.of(context, rootNavigator: true).push(
                                 // Send to signal info page
                                 MaterialPageRoute(
-                                    builder: (context) =>
+                                    builder: (final context) =>
                                         const SignalStrengthInfo())),
                         icon: const Icon(
                             Icons.signal_cellular_4_bar)), // placeholder icon
@@ -296,15 +291,15 @@ class _FitnessTracker extends State<FitnessTracker> {
                             // Send to speedometer page
                             PageRouteBuilder(
                               pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
+                                  (final context, final animation, final secondaryAnimation) =>
                                       const SpeedometerPage(),
                               opaque: false,
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
+                              transitionsBuilder: (final context, final animation,
+                                  final secondaryAnimation, final child) {
                                 const begin = 0.0;
                                 const end = 1.0;
-                                var tween = Tween(begin: begin, end: end);
-                                var fadeAnimation = tween.animate(animation);
+                                final tween = Tween(begin: begin, end: end);
+                                final fadeAnimation = tween.animate(animation);
                                 return FadeTransition(
                                   opacity: fadeAnimation,
                                   child: child,
@@ -339,7 +334,7 @@ class _FitnessTracker extends State<FitnessTracker> {
                             // Root navigator hides navbar
                             // Send to Save Session page
                             MaterialPageRoute(
-                                builder: (context) => SaveSession(
+                                builder: (final context) => SaveSession(
                                       distance: totalDistance,
                                       startTime: startTime,
                                       endTime: DateTime.now(),
@@ -350,7 +345,7 @@ class _FitnessTracker extends State<FitnessTracker> {
                     else
                       {
                         Geolocator.getCurrentPosition()
-                            .then((value) => initialPosition = value)
+                            .then((final value) => initialPosition = value)
                       }
                   },
                   child: Text(buttonMessage,

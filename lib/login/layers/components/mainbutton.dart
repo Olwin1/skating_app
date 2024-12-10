@@ -1,23 +1,19 @@
-import 'package:flutter/material.dart';
-import '../../config.dart';
+import "package:flutter/material.dart";
+import "package:patinka/login/config.dart";
 
 class MainButton extends StatelessWidget {
   const MainButton(
-      {super.key,
-      required this.top,
-      required this.label,
-      required this.callback});
+      {required this.top, required this.label, required this.callback, super.key});
   final double top;
   final String label;
   final Function callback;
 
   @override
-  Widget build(BuildContext context) {
-    return Positioned(
+  Widget build(final BuildContext context) => Positioned(
         top: top,
         right: MediaQuery.of(context).size.width / 4,
         child: InkWell(
-          onTap: () => callback(),
+          onTap: callback as GestureTapCallback,
           child: Container(
             width: 199,
             height: 35,
@@ -36,12 +32,11 @@ class MainButton extends StatelessWidget {
                 style: TextStyle(
                   color: signInText,
                   fontSize: 18,
-                  fontFamily: 'Poppins-Medium',
+                  fontFamily: "Poppins-Medium",
                   fontWeight: FontWeight.w400,
                 ),
               ),
             ),
           ),
         ));
-  }
 }

@@ -1,31 +1,27 @@
 // Import necessary packages and files
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:timeago/timeago.dart' as timeago;
-
-import '../api/config.dart';
-import '../api/social.dart';
-import '../misc/default_profile.dart';
-import '../swatch.dart';
-import 'modals/comment_options_modal.dart';
-import 'user_reports/report_user.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/misc/default_profile.dart";
+import "package:patinka/social_media/modals/comment_options_modal.dart";
+import "package:patinka/social_media/user_reports/report_user.dart";
+import "package:patinka/swatch.dart";
+import "package:shimmer/shimmer.dart";
+import "package:timeago/timeago.dart" as timeago;
 
 // Comment Widget class for displaying individual comments
 class Comment extends StatefulWidget {
-  final Map<String, dynamic> comment;
-  final int index;
-  final FocusNode focus;
 
   // Constructor for Comment widget
   const Comment({
-    super.key,
-    required this.index,
-    required this.focus,
-    required this.comment,
+    required this.index, required this.focus, required this.comment, super.key,
   });
+  final Map<String, dynamic> comment;
+  final int index;
+  final FocusNode focus;
 
   @override
   State<Comment> createState() =>
@@ -40,7 +36,7 @@ class _CommentState extends State<Comment> {
   // Initialize state variables and fetch user information
   @override
   void initState() {
-    SocialAPI.getUser(widget.comment["sender_id"]).then((value) => mounted
+    SocialAPI.getUser(widget.comment["sender_id"]).then((final value) => mounted
         ? setState(() {
             user = value;
             avatar = value["avatar_id"];
@@ -51,8 +47,7 @@ class _CommentState extends State<Comment> {
 
   // Build method to create the UI of the Comment widget
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(final BuildContext context) => Container(
       // Container for each comment
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: swatch[401]!)),
@@ -64,7 +59,7 @@ class _CommentState extends State<Comment> {
         onLongPress: () {
           ModalBottomSheet.show(
             context: context,
-            builder: (context) => CommentOptionsBottomSheet(
+            builder: (final context) => CommentOptionsBottomSheet(
               comment: widget.comment,
             ),
             startSize: 0.2,
@@ -91,7 +86,7 @@ class _CommentState extends State<Comment> {
                       ? CachedNetworkImage(
                           imageUrl:
                               '${Config.uri}/image/thumbnail/${user!["avatar_id"]}',
-                          placeholder: (context, url) => Shimmer.fromColors(
+                          placeholder: (final context, final url) => Shimmer.fromColors(
                             baseColor: shimmer["base"]!,
                             highlightColor: shimmer["highlight"]!,
                             child: CircleAvatar(
@@ -99,7 +94,7 @@ class _CommentState extends State<Comment> {
                               backgroundColor: swatch[900],
                             ),
                           ),
-                          imageBuilder: (context, imageProvider) => Container(
+                          imageBuilder: (final context, final imageProvider) => Container(
                             width: 50,
                             height: 50,
                             decoration: BoxDecoration(
@@ -136,7 +131,7 @@ class _CommentState extends State<Comment> {
                           text: timeago
                               .format(
                                   DateTime.parse(widget.comment["timestamp"]))
-                              .toString(),
+                              ,
                           style: TextStyle(color: swatch[501]),
                         ),
                       ],
@@ -173,14 +168,12 @@ class _CommentState extends State<Comment> {
         ),
       ),
     );
-  }
 
   // Helper method to create comment action buttons
   Widget _buildCommentActionButton({
-    required VoidCallback onPressed,
-    required String label,
-  }) {
-    return Padding(
+    required final VoidCallback onPressed,
+    required final String label,
+  }) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: TextButton(
         onPressed: onPressed,
@@ -195,5 +188,4 @@ class _CommentState extends State<Comment> {
         ),
       ),
     );
-  }
 }

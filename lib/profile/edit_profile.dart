@@ -1,25 +1,24 @@
-import 'dart:ui';
+import "dart:ui";
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:country_picker/country_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/api/social.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/profile/upload_avatar.dart';
-import 'package:patinka/swatch.dart';
-
-import '../api/config.dart';
-import '../misc/default_profile.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:country_picker/country_picker.dart";
+import "package:flutter/material.dart";
+import "package:flutter/scheduler.dart";
+import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/misc/default_profile.dart";
+import "package:patinka/profile/upload_avatar.dart";
+import "package:patinka/swatch.dart";
+import "package:shimmer/shimmer.dart";
 
 // Define the EditProfile widget which extends StatefulWidget
 class EditProfile extends StatefulWidget {
-  final Map<String, dynamic>? user;
 
-  const EditProfile({super.key, required this.user});
+  const EditProfile({required this.user, super.key});
+  final Map<String, dynamic>? user;
   // title is a required parameter
 
   @override
@@ -47,31 +46,29 @@ class _EditProfile extends State<EditProfile> {
     super.initState();
   }
 
-  Future<bool> _onWillPop(bool didPop) async {
+  Future<bool> _onWillPop(final bool didPop) async {
     if (didPop) {
       String? previousText = widget.user?["description"];
       previousText ??= "";
       if (aboutMeController.text == previousText) {
         return true;
       }
-      SchedulerBinding.instance.addPostFrameCallback((_) async {
+      SchedulerBinding.instance.addPostFrameCallback((final _) async {
         showDialog(
           useRootNavigator: false,
           context: context,
           barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
+          builder: (final BuildContext context) => AlertDialog(
               backgroundColor: swatch[800],
               title: Text(
-                'Processing',
+                "Processing",
                 style: TextStyle(color: swatch[701]),
               ),
               content: Text(
-                'Please wait...',
+                "Please wait...",
                 style: TextStyle(color: swatch[901]),
               ),
-            );
-          },
+            ),
         );
         await SocialAPI.setDescription(aboutMeController.text);
 
@@ -94,9 +91,9 @@ class _EditProfile extends State<EditProfile> {
       context: context, // The current build context
       useSafeArea:
           true, // Ensure the picker is displayed within the safe area of the screen
-      onSelect: (Country country) {
+      onSelect: (final Country country) {
         // Callback function when a country is selected
-        commonLogger.t('Select country: ${country.displayName}');
+        commonLogger.t("Select country: ${country.displayName}");
         countryController.text = country.name;
       },
       countryListTheme: CountryListThemeData(
@@ -134,10 +131,9 @@ class _EditProfile extends State<EditProfile> {
 
   @override
   // Build the UI for the EditProfile widget
-  Widget build(BuildContext context) {
-    return PopScope(
+  Widget build(final BuildContext context) => PopScope(
         canPop: true,
-        onPopInvokedWithResult: (bool didPop, result) => _onWillPop(didPop),
+        onPopInvokedWithResult: (final bool didPop, final result) => _onWillPop(didPop),
         child: Scaffold(
             backgroundColor: Colors.transparent,
             resizeToAvoidBottomInset: false,
@@ -161,7 +157,7 @@ class _EditProfile extends State<EditProfile> {
             ),
             // Define the body of the Scaffold
             body: Stack(fit: StackFit.expand, children: [
-              Container(
+              ColoredBox(
                 color: Colors.black
                     .withOpacity(0.5), // Adjust the opacity as needed
                 child: BackdropFilter(
@@ -193,7 +189,7 @@ class _EditProfile extends State<EditProfile> {
                               ? CachedNetworkImage(
                                   imageUrl:
                                       '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
-                                  imageBuilder: (context, imageProvider) =>
+                                  imageBuilder: (final context, final imageProvider) =>
                                       Container(
                                     height: 72,
                                     width: 72,
@@ -214,16 +210,16 @@ class _EditProfile extends State<EditProfile> {
                                 // Root navigator hides navbar
                                 // Send to Save Session page
                                 PageRouteBuilder(
-                                  pageBuilder: (context, animation,
-                                          secondaryAnimation) =>
+                                  pageBuilder: (final context, final animation,
+                                          final secondaryAnimation) =>
                                       const ChangeAvatarPage(),
                                   opaque: false,
-                                  transitionsBuilder: (context, animation,
-                                      secondaryAnimation, child) {
+                                  transitionsBuilder: (final context, final animation,
+                                      final secondaryAnimation, final child) {
                                     const begin = 0.0;
                                     const end = 1.0;
-                                    var tween = Tween(begin: begin, end: end);
-                                    var fadeAnimation =
+                                    final tween = Tween(begin: begin, end: end);
+                                    final fadeAnimation =
                                         tween.animate(animation);
                                     return FadeTransition(
                                       opacity: fadeAnimation,
@@ -373,7 +369,6 @@ class _EditProfile extends State<EditProfile> {
                 ]),
               ),
             ])));
-  }
 
   @override
   void dispose() {

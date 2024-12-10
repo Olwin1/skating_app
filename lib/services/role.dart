@@ -10,7 +10,7 @@ enum Status {
   closed
 }
 class RoleServices {
-  static UserRole convertToEnum(String role) {
+  static UserRole convertToEnum(final String role) {
     switch(role) {
       case "moderator":
         return UserRole.moderator;
@@ -20,7 +20,7 @@ class RoleServices {
         return UserRole.regular;
     }
   }
-    static Status convertToStatus(String role) {
+    static Status convertToStatus(final String role) {
     switch(role) {
       case "open":
         return Status.open;

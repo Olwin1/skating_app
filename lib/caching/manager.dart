@@ -1,12 +1,16 @@
-import 'dart:convert';
+import "dart:convert";
 
-import 'package:patinka/api/config.dart';
+import "package:patinka/api/config.dart";
 
-import './ifile_manager.dart';
-import './local_file.dart';
-import './models/base_model.dart';
+import "package:patinka/caching/ifile_manager.dart";
+import "package:patinka/caching/local_file.dart";
+import "package:patinka/caching/models/base_model.dart";
 
 class NetworkManager {
+
+  NetworkManager._init() {
+    fileManager = LocalFile();
+  }
   IFileManager? fileManager;
 
   static NetworkManager? _instance;
@@ -15,14 +19,10 @@ class NetworkManager {
     return _instance!;
   }
 
-  NetworkManager._init() {
-    fileManager = LocalFile();
-  }
-
   Future<bool> saveData<T extends BaseModel>(
-      {required String name,
-      required CacheTypes type,
-      required dynamic data}) async {
+      {required final String name,
+      required final CacheTypes type,
+      required final dynamic data}) async {
     try {
       fileManager!.writeUserRequestDataWithTime("cached-$name", type.toString(),
           jsonEncode(data), const Duration(hours: 1));
@@ -33,7 +33,7 @@ class NetworkManager {
   }
 
   Future<String?> getLocalData(
-      {required String name, required CacheTypes type}) async {
+      {required final String name, required final CacheTypes type}) async {
     if (fileManager != null) {
       final data = await fileManager!
           .getUserRequestDataOnString("cached-$name", type.toString());
@@ -43,7 +43,7 @@ class NetworkManager {
   }
 
   Future<bool> deleteLocalData(
-      {required String name, required CacheTypes type}) async {
+      {required final String name, required final CacheTypes type}) async {
     try {
       if (fileManager != null) {
         await fileManager!

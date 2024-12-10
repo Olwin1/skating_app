@@ -1,21 +1,21 @@
 // Import necessary libraries and modules
-import 'package:patinka/api/response_handler.dart';
-import 'package:patinka/caching/manager.dart';
-import 'package:http/http.dart' as http;
-import 'config.dart';
+import "package:http/http.dart" as http;
+import "package:patinka/api/config.dart";
+import "package:patinka/api/response_handler.dart";
+import "package:patinka/caching/manager.dart";
 
 // Define a class called SupportAPI' for handling various support-related actions
 class SupportAPI {
   // Define static URIs for different support actions
-  static final Uri _supportUrl = Uri.parse('${Config.uri}/support/support');
-  static final Uri _bugUrl = Uri.parse('${Config.uri}/support/bug');
-  static final Uri _feedbackUrl = Uri.parse('${Config.uri}/support/feedback');
-  static final Uri _messagesUrl = Uri.parse('${Config.uri}/support/messages');
-  static final Uri _messageUrl = Uri.parse('${Config.uri}/support/message');
+  static final Uri _supportUrl = Uri.parse("${Config.uri}/support/support");
+  static final Uri _bugUrl = Uri.parse("${Config.uri}/support/bug");
+  static final Uri _feedbackUrl = Uri.parse("${Config.uri}/support/feedback");
+  static final Uri _messagesUrl = Uri.parse("${Config.uri}/support/messages");
+  static final Uri _messageUrl = Uri.parse("${Config.uri}/support/message");
 
   // Define a static method to submit a support request
   static Future<Map<String, dynamic>> submitSupportRequest(
-      String subject, String content) async {
+      final String subject, final String content) async {
     try {
       // Call the generic submit method with support-specific parameters
       return await _submit(_supportUrl, subject, content, "support-requests");
@@ -27,7 +27,7 @@ class SupportAPI {
 
   // Define a static method to submit a feature request
   static Future<Map<String, dynamic>> submitFeatureRequest(
-      String subject, String content) async {
+      final String subject, final String content) async {
     try {
       // Call the generic submit method with feature-specific parameters
       return await _submit(_feedbackUrl, subject, content, "feature-requests");
@@ -39,7 +39,7 @@ class SupportAPI {
 
   // Define a static method to submit a bug report
   static Future<Map<String, dynamic>> submitBugReport(
-      String subject, String content) async {
+      final String subject, final String content) async {
     try {
       // Call the generic submit method with bug-specific parameters
       return await _submit(_bugUrl, subject, content, "bug-reports");
@@ -50,7 +50,7 @@ class SupportAPI {
   }
 
   // Define a static method to get a list of bug reports
-  static Future<List<Map<String, dynamic>>> getBugReports(int page) async {
+  static Future<List<Map<String, dynamic>>> getBugReports(final int page) async {
     try {
       // Call the generic get method with bug-specific parameters
       return await _get(_bugUrl, "bug-reports", page);
@@ -61,7 +61,7 @@ class SupportAPI {
   }
 
   // Define a static method to get a list of support requests
-  static Future<List<Map<String, dynamic>>> getSupportRequests(int page) async {
+  static Future<List<Map<String, dynamic>>> getSupportRequests(final int page) async {
     try {
       // Call the generic get method with support-specific parameters
       return await _get(_supportUrl, "support-requests", page);
@@ -72,7 +72,7 @@ class SupportAPI {
   }
 
   // Define a static method to get a list of feature requests
-  static Future<List<Map<String, dynamic>>> getFeatureRequests(int page) async {
+  static Future<List<Map<String, dynamic>>> getFeatureRequests(final int page) async {
     try {
       // Call the generic get method with feature-specific parameters
       return await _get(_feedbackUrl, "feature-requests", page);
@@ -84,12 +84,12 @@ class SupportAPI {
 
   // Define a generic submit method to handle common functionality for different requests
   static dynamic _submit(
-      Uri url, String subject, String content, String type) async {
+      final Uri url, final String subject, final String content, final String type) async {
     // Send a POST request to the specified URL with user information
-    var response = await http
+    final response = await http
         .post(url, headers: await Config.getDefaultHeadersAuth, body: {
-      'subject': subject,
-      'content': content,
+      "subject": subject,
+      "content": content,
     });
 
     // Delete local cached data related to the submitted type
@@ -101,12 +101,12 @@ class SupportAPI {
 
   // Define a generic get method to handle common functionality for different requests
   static Future<List<Map<String, dynamic>>> _get(
-      Uri url, String type, int page) async {
+      final Uri url, final String type, final int page) async {
     // Send GET request to retrieve user suggestions
-    var response = await http.get(url, headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${await storage.getToken()}',
-      'page': page.toString(),
+    final response = await http.get(url, headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": "Bearer ${await storage.getToken()}",
+      "page": page.toString(),
     });
 
     // Handle the response using a custom response handler and return the result
@@ -126,15 +126,15 @@ class SupportAPI {
   /// Throws:
   /// An [Exception] if there is an error during the HTTP request.
   static Future<List<Map<String, dynamic>>> getMessages(
-      String feedbackId, int page) async {
+      final String feedbackId, final int page) async {
     try {
-      var response = await http.get(
+      final response = await http.get(
         _messagesUrl,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer ${await storage.getToken()}',
-          'feedback_id': feedbackId,
-          'page': page.toString(),
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer ${await storage.getToken()}",
+          "feedback_id": feedbackId,
+          "page": page.toString(),
         },
       );
       return handleResponse(response, Resp.listResponse);
@@ -156,11 +156,11 @@ class SupportAPI {
   /// Throws:
   /// An [Exception] if there is an error during the HTTP request.
   static Future<Map<String, dynamic>> postMessage(
-      String feedbackId, String content) async {
+      final String feedbackId, final String content) async {
     try {
-      var response = await http.post(_messageUrl,
+      final response = await http.post(_messageUrl,
           headers: await Config.getDefaultHeadersAuth,
-          body: {'feedback_id': feedbackId, 'content': content});
+          body: {"feedback_id": feedbackId, "content": content});
 
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {

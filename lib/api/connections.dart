@@ -1,26 +1,26 @@
 // Import necessary libraries and modules
-import 'package:patinka/api/response_handler.dart';
-import 'package:patinka/caching/manager.dart';
-import 'package:http/http.dart' as http;
-import 'config.dart';
-import '../common_logger.dart';
+import "package:http/http.dart" as http;
+import "package:patinka/api/config.dart";
+import "package:patinka/api/response_handler.dart";
+import "package:patinka/caching/manager.dart";
+import "package:patinka/common_logger.dart";
 
 // Define a class called 'ConnectionsAPI'
 class ConnectionsAPI {
   // Define static URIs for various connection actions
-  static final Uri _followUrl = Uri.parse('${Config.uri}/connections/follow');
+  static final Uri _followUrl = Uri.parse("${Config.uri}/connections/follow");
   static final Uri _unfollowUrl =
-      Uri.parse('${Config.uri}/connections/unfollow');
+      Uri.parse("${Config.uri}/connections/unfollow");
   static final Uri _unfollowerUrl =
-      Uri.parse('${Config.uri}/connections/unfollower');
-  static final Uri _friendUrl = Uri.parse('${Config.uri}/connections/friend');
+      Uri.parse("${Config.uri}/connections/unfollower");
+  static final Uri _friendUrl = Uri.parse("${Config.uri}/connections/friend");
   static final Uri _unfriendUrl =
-      Uri.parse('${Config.uri}/connections/unfriend');
-  static final Uri _doesFollowUrl = Uri.parse('${Config.uri}/user/follows');
-  static final Uri _doesFriendUrl = Uri.parse('${Config.uri}/user/friends');
+      Uri.parse("${Config.uri}/connections/unfriend");
+  static final Uri _doesFollowUrl = Uri.parse("${Config.uri}/user/follows");
+  static final Uri _doesFriendUrl = Uri.parse("${Config.uri}/user/friends");
 
   // Define a static method to follow a user
-  static Future<Map<String, dynamic>> followUser(String user) async {
+  static Future<Map<String, dynamic>> followUser(final String user) async {
     try {
       // Delete local cached data related to the user being followed
       NetworkManager.instance
@@ -28,7 +28,7 @@ class ConnectionsAPI {
       NetworkManager.instance
           .deleteLocalData(name: user, type: CacheTypes.user);
 
-      String? ownerUser = await storage.getId();
+      final String? ownerUser = await storage.getId();
       if (ownerUser != null) {
         if (ownerUser != user) {
           NetworkManager.instance.deleteLocalData(
@@ -39,9 +39,9 @@ class ConnectionsAPI {
       }
 
       // Send a POST request to the follow URL with user information
-      var response = await http
+      final response = await http
           .post(_followUrl, headers: await Config.getDefaultHeadersAuth, body: {
-        'user': user,
+        "user": user,
       });
 
       // Handle and return the response
@@ -53,7 +53,7 @@ class ConnectionsAPI {
   }
 
   // Define a static method to unfollow a user
-  static Future<Map<String, dynamic>> unfollowUser(String user) async {
+  static Future<Map<String, dynamic>> unfollowUser(final String user) async {
     try {
       // Delete local cached data related to the user being unfollowed
       NetworkManager.instance
@@ -61,7 +61,7 @@ class ConnectionsAPI {
       NetworkManager.instance
           .deleteLocalData(name: user, type: CacheTypes.user);
 
-      String? ownerUser = await storage.getId();
+      final String? ownerUser = await storage.getId();
       if (ownerUser != null) {
         if (ownerUser != user) {
           NetworkManager.instance.deleteLocalData(
@@ -72,10 +72,10 @@ class ConnectionsAPI {
       }
 
       // Send a POST request to the unfollow URL with user information
-      var response = await http.post(_unfollowUrl,
+      final response = await http.post(_unfollowUrl,
           headers: await Config.getDefaultHeadersAuth,
           body: {
-            'user': user,
+            "user": user,
           });
 
       // Handle and return the response
@@ -87,7 +87,7 @@ class ConnectionsAPI {
   }
 
   // Define a static method to unfollow a user
-  static Future<Map<String, dynamic>> unfollowerUser(String user) async {
+  static Future<Map<String, dynamic>> unfollowerUser(final String user) async {
     try {
       // Delete local cached data related to the user being unfollowed
       NetworkManager.instance
@@ -95,7 +95,7 @@ class ConnectionsAPI {
       NetworkManager.instance
           .deleteLocalData(name: user, type: CacheTypes.user);
 
-      String? ownerUser = await storage.getId();
+      final String? ownerUser = await storage.getId();
       if (ownerUser != null) {
         if (ownerUser != user) {
           NetworkManager.instance.deleteLocalData(
@@ -106,10 +106,10 @@ class ConnectionsAPI {
       }
 
       // Send a POST request to the unfollow URL with user information
-      var response = await http.post(_unfollowerUrl,
+      final response = await http.post(_unfollowerUrl,
           headers: await Config.getDefaultHeadersAuth,
           body: {
-            'user': user,
+            "user": user,
           });
 
       // Handle and return the response
@@ -121,7 +121,7 @@ class ConnectionsAPI {
   }
 
   // Define a static method to send a friend request
-  static Future<Map<String, dynamic>> friendUser(String user) async {
+  static Future<Map<String, dynamic>> friendUser(final String user) async {
     try {
       // Delete local cached data related to the user's friends
       NetworkManager.instance
@@ -129,7 +129,7 @@ class ConnectionsAPI {
       NetworkManager.instance
           .deleteLocalData(name: user, type: CacheTypes.user);
 
-      String? ownerUser = await storage.getId();
+      final String? ownerUser = await storage.getId();
       if (ownerUser != null) {
         if (ownerUser != user) {
           NetworkManager.instance.deleteLocalData(
@@ -140,9 +140,9 @@ class ConnectionsAPI {
       }
 
       // Send a POST request to the friend URL with user information
-      var response = await http
+      final response = await http
           .post(_friendUrl, headers: await Config.getDefaultHeadersAuth, body: {
-        'user': user,
+        "user": user,
       });
 
       // Handle and return the response
@@ -154,7 +154,7 @@ class ConnectionsAPI {
   }
 
   // Define a static method to unfriend a user
-  static Future<Map<String, dynamic>> unfriendUser(String user) async {
+  static Future<Map<String, dynamic>> unfriendUser(final String user) async {
     try {
       // Delete local cached data related to the user's friends
       NetworkManager.instance
@@ -162,7 +162,7 @@ class ConnectionsAPI {
       NetworkManager.instance
           .deleteLocalData(name: user, type: CacheTypes.user);
 
-      String? ownerUser = await storage.getId();
+      final String? ownerUser = await storage.getId();
       if (ownerUser != null) {
         if (ownerUser != user) {
           NetworkManager.instance.deleteLocalData(
@@ -173,10 +173,10 @@ class ConnectionsAPI {
       }
 
       // Send a POST request to the unfriend URL with user information
-      var response = await http.post(_unfriendUrl,
+      final response = await http.post(_unfriendUrl,
           headers: await Config.getDefaultHeadersAuth,
           body: {
-            'user': user,
+            "user": user,
           });
 
       // Handle and return the response
@@ -189,7 +189,7 @@ class ConnectionsAPI {
 
   // Define a static method to respond to a follow request
   static Future<Map<String, dynamic>> followUserRequest(
-      String user, bool accepted) async {
+      final String user, final bool accepted) async {
     try {
       // Delete local cached data related to the user's follow requests
       NetworkManager.instance
@@ -198,9 +198,9 @@ class ConnectionsAPI {
           .deleteLocalData(name: user, type: CacheTypes.user);
 
       // Send a PATCH request to the follow URL with user information and acceptance status
-      var response = await http.patch(_followUrl,
+      final response = await http.patch(_followUrl,
           headers: await Config.getDefaultHeadersAuth,
-          body: {'user': user, 'accepted': accepted.toString()});
+          body: {"user": user, "accepted": accepted.toString()});
 
       // Handle and return the response
       return handleResponse(response, Resp.stringResponse);
@@ -212,7 +212,7 @@ class ConnectionsAPI {
 
   // Define a static method to respond to a friend request
   static Future<Map<String, dynamic>> friendUserRequest(
-      String user, bool accepted) async {
+      final String user, final bool accepted) async {
     try {
       // Delete local cached data related to the user's friend requests
       NetworkManager.instance
@@ -221,9 +221,9 @@ class ConnectionsAPI {
           .deleteLocalData(name: user, type: CacheTypes.user);
 
       // Send a PATCH request to the friend URL with user information and acceptance status
-      var response = await http.patch(_friendUrl,
+      final response = await http.patch(_friendUrl,
           headers: await Config.getDefaultHeadersAuth,
-          body: {'user': user, 'accepted': accepted.toString()});
+          body: {"user": user, "accepted": accepted.toString()});
 
       // Handle and return the response
       return handleResponse(response, Resp.stringResponse);
@@ -234,13 +234,13 @@ class ConnectionsAPI {
   }
 
   // Define a static method to check if the user follows another user
-  static Future<Map<String, dynamic>> doesFollow(String user) async {
+  static Future<Map<String, dynamic>> doesFollow(final String user) async {
     try {
       // Send a GET request to the follow check URL with user information
-      var response = await http.get(_doesFollowUrl, headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${await storage.getToken()}',
-        'user': user
+      final response = await http.get(_doesFollowUrl, headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": "Bearer ${await storage.getToken()}",
+        "user": user
       });
 
       // Check the response status code
@@ -257,13 +257,13 @@ class ConnectionsAPI {
   }
 
   // Define a static method to check if the user is friends with another user
-  static Future<Map<String, dynamic>> doesFriend(String user) async {
+  static Future<Map<String, dynamic>> doesFriend(final String user) async {
     try {
       // Send a GET request to the friend check URL with user information
-      var response = await http.get(_doesFriendUrl, headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${await storage.getToken()}',
-        'user': user
+      final response = await http.get(_doesFriendUrl, headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": "Bearer ${await storage.getToken()}",
+        "user": user
       });
 
       // Check the response status code

@@ -1,25 +1,25 @@
-import 'dart:io'; // Import the dart:io library for accessing the file system.
-import 'dart:typed_data'; // Import the dart:typed_data library for working with low-level byte data.
+import "dart:io"; // Import the dart:io library for accessing the file system.
+import "dart:typed_data"; // Import the dart:typed_data library for working with low-level byte data.
 
-import 'package:cropperx/cropperx.dart'; // Import the CropperX package for image cropping functionality.
-import 'package:flutter/material.dart'; // Import the Flutter Material library for building UI components.
-import 'package:flutter/services.dart'; // Import the Flutter Services library for platform-specific services.
-import 'package:photo_gallery/photo_gallery.dart'; // Import the Photo Gallery package for working with device photo galleries.
+import "package:cropperx/cropperx.dart"; // Import the CropperX package for image cropping functionality.
+import "package:flutter/material.dart"; // Import the Flutter Material library for building UI components.
+import "package:flutter/services.dart"; // Import the Flutter Services library for platform-specific services.
+import "package:photo_gallery/photo_gallery.dart"; // Import the Photo Gallery package for working with device photo galleries.
 
 // Define the EditPost widget which extends StatefulWidget
 class EditPost extends StatefulWidget {
-  final Function
-      callback; // A function to be called when the image has been edited and confirmed.
-  final bool
-      selected; // A boolean indicating whether this widget is currently selected (in focus).
+  // A boolean indicating whether this widget is currently selected (in focus).
 
   // Constructor for the EditPost widget.
   const EditPost({
-    super.key, // A key to identify this widget.
     required this.selectedImage, // The ID of the selected image.
     required this.selected, // Whether this widget is currently selected.
     required this.callback, // The function to call when editing is complete.
+    super.key, // A key to identify this widget., super.key,
   });
+  final Function
+      callback; // A function to be called when the image has been edited and confirmed.
+  final bool selected;
 
   // The ID of the selected image.
   final String selectedImage;
@@ -42,7 +42,7 @@ class _EditPost extends State<EditPost> {
     provider = PhotoProvider(
         mediumId:
             widget.selectedImage); // Set the provider for the selected image.
-    getAssetImage().then((value) => {
+    getAssetImage().then((final value) => {
           mounted
               ? setState(() {
                   initialSelection = widget.selectedImage;
@@ -55,17 +55,17 @@ class _EditPost extends State<EditPost> {
   }
 
   final GlobalKey _cropperKey =
-      GlobalKey(debugLabel: 'cropperKey'); // The key for the Cropper widget.
+      GlobalKey(debugLabel: "cropperKey"); // The key for the Cropper widget.
   final OverlayType _overlayType =
       OverlayType.rectangle; // The type of overlay for the Cropper.
   final int _rotationTurns = 0; // The number of turns to rotate the image.
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Build the UI for the widget.
     if (initialSelection != widget.selectedImage) {
       // If the selection has changed,
-      getAssetImage().then((value) => {
+      getAssetImage().then((final value) => {
             mounted
                 ? setState(() {
                     initialSelection = widget.selectedImage;
@@ -79,7 +79,7 @@ class _EditPost extends State<EditPost> {
       // If this widget is currently selected,
       Cropper.crop(
         cropperKey: _cropperKey, // Set the key for the Cropper widget.
-      ).then((imageBytes) => {
+      ).then((final imageBytes) => {
             if (imageBytes != null)
               {
                 _croppedImage = imageBytes,
@@ -98,36 +98,35 @@ class _EditPost extends State<EditPost> {
             // A SizedBox with a fixed height that contains the image cropper widget.
             // If _imageToCrop is not null, then the Cropper widget is displayed;
             // otherwise, a pink ColoredBox is displayed.
-            OrientationBuilder(builder: (context, orientation) {
-              return SizedBox(
-                width: orientation == Orientation.portrait
-                    ? MediaQuery.of(context).size.height * 0.4
-                    : MediaQuery.of(context).size.height,
-                height: orientation == Orientation.portrait
-                    ? MediaQuery.of(context).size.height * 0.4
-                    : MediaQuery.of(context)
-                        .size
-                        .height, // Adjust the height as needed
-                child: _imageToCrop != null
-                    ? Cropper(
-                        backgroundColor: Colors.transparent,
-                        cropperKey: _cropperKey,
-                        overlayType: _overlayType,
-                        rotationTurns: _rotationTurns,
-                        image: Image.memory(_imageToCrop!),
-                        onScaleStart: (details) {
-                          // todo: define started action.
-                        },
-                        onScaleUpdate: (details) {
-                          // todo: define updated action.
-                        },
-                        onScaleEnd: (details) {
-                          // todo: define ended action.
-                        },
-                      )
-                    : const ColoredBox(color: Colors.transparent),
-              );
-            }),
+            OrientationBuilder(
+                builder: (final context, final orientation) => SizedBox(
+                      width: orientation == Orientation.portrait
+                          ? MediaQuery.of(context).size.height * 0.4
+                          : MediaQuery.of(context).size.height,
+                      height: orientation == Orientation.portrait
+                          ? MediaQuery.of(context).size.height * 0.4
+                          : MediaQuery.of(context)
+                              .size
+                              .height, // Adjust the height as needed
+                      child: _imageToCrop != null
+                          ? Cropper(
+                              backgroundColor: Colors.transparent,
+                              cropperKey: _cropperKey,
+                              overlayType: _overlayType,
+                              rotationTurns: _rotationTurns,
+                              image: Image.memory(_imageToCrop!),
+                              onScaleStart: (final details) {
+                                // todo: define started action.
+                              },
+                              onScaleUpdate: (final details) {
+                                // todo: define updated action.
+                              },
+                              onScaleEnd: (final details) {
+                                // todo: define ended action.
+                              },
+                            )
+                          : const ColoredBox(color: Colors.transparent),
+                    )),
             const SizedBox(
               height: 16,
             )
@@ -138,7 +137,7 @@ class _EditPost extends State<EditPost> {
   }
 
 // A method that sets the provider and updates the state of the widget.
-  void setProvider(ImageProvider provider) {
+  void setProvider(final ImageProvider provider) {
     this.provider = provider;
     mounted ? setState(() {}) : null;
   }

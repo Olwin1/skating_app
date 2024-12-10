@@ -1,21 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/login/layers/components/pagebutton.dart';
-import 'package:patinka/login/layers/components/section.dart';
-import '../../config.dart';
-import '../../page_type.dart';
-import 'mainbutton.dart';
+import "package:flutter/material.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/login/config.dart";
+import "package:patinka/login/layers/components/mainbutton.dart";
+import "package:patinka/login/layers/components/pagebutton.dart";
+import "package:patinka/login/layers/components/section.dart";
+import "package:patinka/login/page_type.dart";
 
 class VerifyComponent extends StatelessWidget {
-  const VerifyComponent({super.key, required this.callback});
+  const VerifyComponent({required this.callback, super.key});
   final Function callback;
   void handleVerify() {
     commonLogger.d("Handle Verify");
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(final BuildContext context) => SizedBox(
         height: 584,
         width: MediaQuery.of(context).size.width,
         child: Stack(
@@ -61,5 +60,4 @@ class VerifyComponent extends StatelessWidget {
                 )),
           ],
         ));
-  }
 }

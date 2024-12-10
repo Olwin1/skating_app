@@ -1,31 +1,28 @@
 // Import necessary packages and files
-import 'package:comment_box/comment/comment.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/misc/navbar_provider.dart';
-import 'package:patinka/social_media/comment.dart';
-import 'package:patinka/swatch.dart';
-import 'package:provider/provider.dart';
-
-import '../api/config.dart';
-import '../api/social.dart';
-import '../components/list_error.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:comment_box/comment/comment.dart";
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/components/list_error.dart";
+import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/social_media/comment.dart";
+import "package:patinka/swatch.dart";
+import "package:provider/provider.dart";
 
 // Initialize an empty list to store new comments
 List<Map<String, dynamic>> newComments = [];
 
 // Comments Widget - Represents the page where comments are displayed
 class Comments extends StatefulWidget {
-  final String post;
 
   const Comments({
-    super.key,
-    required this.post,
-    required this.user,
+    required this.post, required this.user, super.key,
   });
+  final String post;
 
   final Map<String, dynamic>? user;
 
@@ -44,12 +41,12 @@ class _Comments extends State<Comments> {
   @override
   void initState() {
     // Initialize the state and set up the focus node and comment controller
-    storage.getId().then((value) => userId = value ?? "0");
+    storage.getId().then((final value) => userId = value ?? "0");
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Hide the bottom navigation bar when entering the comment screen
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
 
@@ -58,7 +55,7 @@ class _Comments extends State<Comments> {
 
     return PopScope(
       canPop: true,
-      onPopInvokedWithResult: (bool didPop, result) {
+      onPopInvokedWithResult: (final bool didPop, final result) {
         // Show the bottom navigation bar when leaving the comment screen
         if (didPop) {
           Provider.of<BottomBarVisibilityProvider>(context, listen: false)
@@ -80,14 +77,14 @@ class _Comments extends State<Comments> {
                 : '${Config.uri}/image/thumbnail/${widget.user!["avatar_id"]}',
           ),
           labelText: AppLocalizations.of(context)!.writeComment,
-          errorText: 'Comment cannot be blank',
+          errorText: "Comment cannot be blank",
           withBorder: false,
           commentController: commentController,
           sendButtonMethod: () {
             // Post a comment when the send button is pressed
             if (commentController.text.isNotEmpty) {
               SocialAPI.postComment(widget.post, commentController.text)
-                  .then((value) => _pagingController.refresh());
+                  .then((final value) => _pagingController.refresh());
 
               commentController.clear();
             }
@@ -114,8 +111,7 @@ class _Comments extends State<Comments> {
   }
 
   // Build the app bar for the comments screen
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
+  AppBar buildAppBar(final BuildContext context) => AppBar(
       iconTheme: IconThemeData(color: swatch[701]),
       elevation: 8,
       shadowColor: Colors.green.shade900,
@@ -136,20 +132,16 @@ class _Comments extends State<Comments> {
         ),
       ),
     );
-  }
 }
 
 // CommentsListView Widget - Represents the list view of comments
 class CommentsListView extends StatefulWidget {
+
+  const CommentsListView(
+      {required this.focus, required this.post, required this.pagingController, super.key});
   final FocusNode focus;
   final String post;
   final PagingController<int, Map<String, dynamic>> pagingController;
-
-  const CommentsListView(
-      {super.key,
-      required this.focus,
-      required this.post,
-      required this.pagingController});
 
   @override
   State<CommentsListView> createState() => _CommentsListViewState();
@@ -161,13 +153,11 @@ class _CommentsListViewState extends State<CommentsListView> {
   @override
   void initState() {
     // Add a listener for page requests, and call _fetchPage() when a page is requested
-    widget.pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    widget.pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(final int pageKey) async {
     try {
       // Fetch the page of comments using the getComments() function
       final page = [
@@ -177,13 +167,15 @@ class _CommentsListViewState extends State<CommentsListView> {
 
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
-      if (!mounted) return;
+      if (!mounted) {
+  return;
+}
       if (isLastPage) {
         // If this is the last page, append it to the list of pages
         widget.pagingController.appendLastPage(page);
       } else {
         // If this is not the last page, append it to the list of pages and request the next page
-        final nextPageKey = pageKey += 1;
+        final nextPageKey = pageKey + 1;
         widget.pagingController.appendPage(page, nextPageKey);
       }
     } catch (error) {
@@ -193,7 +185,7 @@ class _CommentsListViewState extends State<CommentsListView> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (newComments.isNotEmpty) {
       // If there are new comments, refresh the list view
       widget.pagingController.refresh();
@@ -203,9 +195,9 @@ class _CommentsListViewState extends State<CommentsListView> {
     return PagedListView<int, Map<String, dynamic>>(
       pagingController: widget.pagingController,
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-        noItemsFoundIndicatorBuilder: (context) => ListError(
+        noItemsFoundIndicatorBuilder: (final context) => ListError(
             title: AppLocalizations.of(context)!.noCommentsFound, body: ""),
-        itemBuilder: (context, item, index) => buildCommentWidget(index, item),
+        itemBuilder: (final context, final item, final index) => buildCommentWidget(index, item),
       ),
     );
   }
@@ -222,12 +214,10 @@ class _CommentsListViewState extends State<CommentsListView> {
   }
 
   // Build the Comment widget for the given index and item
-  Widget buildCommentWidget(int index, Map<String, dynamic> item) {
-    return index == 0
+  Widget buildCommentWidget(final int index, final Map<String, dynamic> item) => index == 0
         ? Padding(
             padding: const EdgeInsets.only(top: 12),
             child: Comment(index: index, focus: widget.focus, comment: item),
           )
         : Comment(index: index, focus: widget.focus, comment: item);
-  }
 }

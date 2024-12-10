@@ -1,21 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart';
-import 'package:patinka/api/image.dart';
-import 'package:patinka/api/social.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/misc/navbar_provider.dart';
-import 'package:patinka/services/navigation_service.dart';
-import 'package:patinka/swatch.dart';
-import 'package:provider/provider.dart';
-
-import '../api/config.dart';
+import "package:flutter/material.dart";
+import "package:flutter/scheduler.dart";
+import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:http/http.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/image.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/services/navigation_service.dart";
+import "package:patinka/swatch.dart";
+import "package:provider/provider.dart";
 
 // Define a widget for sending a post with an image
 class SendPost extends StatefulWidget {
-  const SendPost({super.key, required this.image});
+  const SendPost({required this.image, super.key});
   final Uint8List image;
 
   @override
@@ -35,7 +34,7 @@ class _SendPost extends State<SendPost> {
 
   // Override the existing build method to create the widget UI
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     Provider.of<BottomBarVisibilityProvider>(context, listen: false)
         .hide(); // Hide The Navbar
     // Define a function to send the post information
@@ -45,8 +44,8 @@ class _SendPost extends State<SendPost> {
           sending = true;
 
           // Upload the image file
-          StreamedResponse? response = await uploadFile(widget.image);
-          String? id = await response?.stream.bytesToString();
+          final StreamedResponse? response = await uploadFile(widget.image);
+          final String? id = await response?.stream.bytesToString();
           if (id != null) {
             return id.substring(1, id.length - 1);
           }
@@ -67,28 +66,26 @@ class _SendPost extends State<SendPost> {
           useRootNavigator: false,
           context: context,
           barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
+          builder: (final BuildContext context) => AlertDialog(
               backgroundColor: swatch[800],
               title: Text(
-                'Processing',
+                "Processing",
                 style: TextStyle(color: swatch[701]),
               ),
               content: Text(
-                'Please wait...',
+                "Please wait...",
                 style: TextStyle(color: swatch[901]),
               ),
-            );
-          },
+            ),
         );
 
         // Call the "sendImage" function and wait for it to complete
-        sendImage().then((value) => {
+        sendImage().then((final value) => {
               // When "sendImage" completes successfully, call "postPost"
               // with the text from "descriptionController" and the returned value
               SocialAPI.postPost(descriptionController.text, value!)
                   // Wait for "postPost" to complete successfully
-                  .then((value) => {
+                  .then((final value) => {
                         // When "postPost" completes successfully, close the current screen
                         NavigationService.currentNavigatorKey.currentState
                             ?.pop(),
@@ -96,9 +93,9 @@ class _SendPost extends State<SendPost> {
                             ?.pop(),
                         NavigationService.setCurrentIndex(0),
                         SchedulerBinding.instance
-                            .addPostFrameCallback((_) async {
+                            .addPostFrameCallback((final _) async {
                           SchedulerBinding.instance
-                              .addPostFrameCallback((_) async {
+                              .addPostFrameCallback((final _) async {
                             commonLogger.d("Showing Navbar");
                             Provider.of<BottomBarVisibilityProvider>(context,
                                     listen: false)
@@ -115,7 +112,7 @@ class _SendPost extends State<SendPost> {
     // Return the scaffold with the app bar and body
     return PopScope(
         canPop: true,
-        onPopInvokedWithResult: (bool didPop, result) {},
+        onPopInvokedWithResult: (final bool didPop, final result) {},
         child: Scaffold(
           backgroundColor: Colors.transparent,
           extendBodyBehindAppBar: true,
@@ -146,7 +143,7 @@ class _SendPost extends State<SendPost> {
             ),
             actions: [
               TextButton(
-                  onPressed: () => sendInfo(),
+                  onPressed: sendInfo,
                   child: Text(
                     AppLocalizations.of(context)!.send,
                     style: TextStyle(

@@ -1,16 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:patinka/swatch.dart';
-import '../../config.dart';
+import "package:flutter/material.dart";
+import "package:patinka/login/config.dart";
+import "package:patinka/swatch.dart";
 
 class InputSection extends StatelessWidget {
   const InputSection(
-      {super.key,
+      {required this.top, required this.label, required this.hint, required this.controller, super.key,
       this.left,
       this.right,
-      required this.top,
-      required this.label,
-      required this.hint,
-      required this.controller,
       this.hidden});
   final double? left;
   final double? right;
@@ -21,15 +17,14 @@ class InputSection extends StatelessWidget {
   final bool? hidden;
 
   @override
-  Widget build(BuildContext context) {
-    return Stack(children: [
+  Widget build(final BuildContext context) => Stack(children: [
       Positioned(
         left: left,
         top: top,
         child: Text(
           label,
           style: TextStyle(
-              fontFamily: 'Poppins-Medium',
+              fontFamily: "Poppins-Medium",
               fontSize: 24,
               fontWeight: FontWeight.w500,
               color: labelColour),
@@ -58,5 +53,4 @@ class InputSection extends StatelessWidget {
                 obscureText: hidden ?? false),
           )),
     ]);
-  }
 }

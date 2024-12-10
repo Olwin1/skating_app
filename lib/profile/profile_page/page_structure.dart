@@ -1,22 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/profile/follow_button.dart';
-import 'package:patinka/profile/friend_icon_button.dart';
-import 'package:patinka/profile/profile_page/profile_banner.dart';
-import 'package:patinka/swatch.dart';
-
-import 'user_posts_list.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/profile/follow_button.dart";
+import "package:patinka/profile/friend_icon_button.dart";
+import "package:patinka/profile/profile_page/profile_banner.dart";
+import "package:patinka/profile/profile_page/user_posts_list.dart";
+import "package:patinka/swatch.dart";
 
 class PageStructure extends StatelessWidget {
   const PageStructure(
-      {super.key,
+      {required this.user, required this.userId, required this.show, required this.findWidgetMetaData, required this.setCurrentImage, super.key,
       this.avatar,
-      required this.user,
-      required this.userId,
-      required this.show,
-      required this.findWidgetMetaData,
-      required this.setCurrentImage,
       this.friend});
 
   final String? avatar;
@@ -27,8 +21,7 @@ class PageStructure extends StatelessWidget {
   final Function setCurrentImage;
   final bool? friend;
   @override
-  Widget build(BuildContext context) {
-    return ListView(shrinkWrap: true, children: [
+  Widget build(final BuildContext context) => ListView(shrinkWrap: true, children: [
       ProfileBanner(
         avatar: avatar,
         user: user,
@@ -53,7 +46,7 @@ class PageStructure extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               child: Text(
                   textAlign: TextAlign.justify,
-                  (user!["description"]).toString(),
+                  user!["description"].toString(),
                   style: TextStyle(color: swatch[801])),
             )
           : const SizedBox.shrink(),
@@ -90,5 +83,4 @@ class PageStructure extends StatelessWidget {
           metadata: findWidgetMetaData,
           setCurrentImage: setCurrentImage)
     ]);
-  }
 }

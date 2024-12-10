@@ -1,27 +1,26 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:patinka/api/support.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/components/list_error.dart';
-import 'package:patinka/profile/settings/report.dart';
-import 'package:patinka/services/role.dart';
-import 'package:patinka/social_media/post_widget.dart';
-import 'create_report.dart';
-
-import '../../api/config.dart';
-import '../../swatch.dart';
-import 'list_type.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/support.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/components/list_error.dart";
+import "package:patinka/profile/settings/create_report.dart";
+import "package:patinka/profile/settings/list_type.dart";
+import "package:patinka/profile/settings/report.dart";
+import "package:patinka/services/role.dart";
+import "package:patinka/social_media/post_widget.dart";
+import "package:patinka/swatch.dart";
 
 // FollowingList widget
 
 class SupportList extends StatelessWidget {
+  const SupportList({required this.type, required this.user, super.key});
   final SupportListType type;
   final Map<String, dynamic>? user;
-  const SupportList({super.key, required this.type, required this.user});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     String title = "Reports";
     switch (type) {
       case SupportListType.suggestion:
@@ -63,10 +62,9 @@ class SupportList extends StatelessWidget {
 }
 
 class SupportListView extends StatefulWidget {
+  const SupportListView({required this.type, required this.user, super.key});
   final SupportListType type;
   final Map<String, dynamic>? user;
-
-  const SupportListView({super.key, required this.type, required this.user});
 
   @override
   State<SupportListView> createState() => _SupportListViewState();
@@ -83,13 +81,11 @@ class _SupportListViewState extends State<SupportListView> {
   @override
   void initState() {
     // Add a listener for page requests, and call _fetchPage() when a page is requested
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(final int pageKey) async {
     try {
       List<Map<String, dynamic>> page;
       // Fetch the page of comments using the getComments() function
@@ -109,13 +105,15 @@ class _SupportListViewState extends State<SupportListView> {
 
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
       if (isLastPage) {
         // If this is the last page, append it to the list of pages
         _pagingController.appendLastPage(page);
       } else {
         // If this is not the last page, append it to the list of pages and request the next page
-        final nextPageKey = pageKey += 1;
+        final nextPageKey = pageKey + 1;
         _pagingController.appendPage(page, nextPageKey);
       }
     } catch (error) {
@@ -125,41 +123,39 @@ class _SupportListViewState extends State<SupportListView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Build a paginated list view of comments using the PagedListView widget
-    return Stack(children: [
-      PagedListView<int, Map<String, dynamic>>(
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-          // Use the Comment widget to build each item in the list view
-          itemBuilder: (context, item, index) => UserListWidget(
-            item: item,
-            listType: widget.type,
-            refreshPage: _pagingController.refresh,
-            user: widget.user,
-          ),
-          noItemsFoundIndicatorBuilder: (context) =>
-              const ListError(title: "No reports", body: "Try creating one!"),
-        ),
-      ),
-      Positioned(
-          bottom: 64,
-          right: 32,
-          child: FloatingActionButton(
-            backgroundColor: const Color(0x7711cc11),
-            onPressed: () => Navigator.of(context).push(
-                // Send to signal info page
-                MaterialPageRoute(
-                    builder: (context) => SupportReportCreator(
-                          defaultType: widget.type,
-                        ))),
-            child: const Icon(
-              Icons.add,
-              color: Color(0xb8ffffff),
+  Widget build(final BuildContext context) => Stack(children: [
+        PagedListView<int, Map<String, dynamic>>(
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+            // Use the Comment widget to build each item in the list view
+            itemBuilder: (final context, final item, final index) =>
+                UserListWidget(
+              item: item,
+              listType: widget.type,
+              refreshPage: _pagingController.refresh,
+              user: widget.user,
             ),
-          ))
-    ]);
-  }
+            noItemsFoundIndicatorBuilder: (final context) =>
+                const ListError(title: "No reports", body: "Try creating one!"),
+          ),
+        ),
+        Positioned(
+            bottom: 64,
+            right: 32,
+            child: FloatingActionButton(
+              backgroundColor: const Color(0x7711cc11),
+              onPressed: () => Navigator.of(context).push(
+                  // Send to signal info page
+                  MaterialPageRoute(
+                      builder: (final context) => SupportReportCreator(
+                            defaultType: widget.type,
+                          ))),
+              child: const Icon(
+                Icons.add,
+                color: Color(0xb8ffffff),
+              ),
+            ))
+      ]);
 
   @override
   void dispose() {
@@ -177,11 +173,11 @@ class _SupportListViewState extends State<SupportListView> {
 class UserListWidget extends StatefulWidget {
   // Constructor for UserListWidget
   const UserListWidget(
-      {super.key,
-      required this.item,
+      {required this.item,
       required this.listType,
       required this.refreshPage,
-      required this.user});
+      required this.user,
+      super.key});
 
   // Title for the widget
   final Map<String, dynamic> item;
@@ -199,7 +195,8 @@ class _UserListWidget extends State<UserListWidget> {
   @override
   void initState() {
     if (widget.user != null) {
-      UserRole tmp = RoleServices.convertToEnum(widget.user!["user_role"]);
+      final UserRole tmp =
+          RoleServices.convertToEnum(widget.user!["user_role"]);
       if (tmp != UserRole.regular) {
         setState(() {
           userRole = tmp;
@@ -212,17 +209,20 @@ class _UserListWidget extends State<UserListWidget> {
   void handlePress() {
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => ReportPage(
-            report: widget.item,
-            user: widget.user,
-            reportType: widget.listType,
-            userRole: userRole),
+        pageBuilder:
+            (final context, final animation, final secondaryAnimation) =>
+                ReportPage(
+                    report: widget.item,
+                    user: widget.user,
+                    reportType: widget.listType,
+                    userRole: userRole),
         opaque: true,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        transitionsBuilder: (final context, final animation,
+            final secondaryAnimation, final child) {
           const begin = 0.0;
           const end = 1.0;
-          var tween = Tween(begin: begin, end: end);
-          var fadeAnimation = tween.animate(animation);
+          final tween = Tween(begin: begin, end: end);
+          final fadeAnimation = tween.animate(animation);
           return FadeTransition(
             opacity: fadeAnimation,
             child: child,
@@ -234,7 +234,7 @@ class _UserListWidget extends State<UserListWidget> {
 
   // Builds the widget
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     bool isOwnReport = true;
     bool isAssignedToUser = false;
     if (widget.user!["user_id"] != widget.item["user_id"]) {
@@ -243,14 +243,14 @@ class _UserListWidget extends State<UserListWidget> {
         isAssignedToUser = true;
       }
     }
-    Color statusColour = widget.item["status"] == "closed"
+    final Color statusColour = widget.item["status"] == "closed"
         ? Colors.red.shade700
         : widget.item["status"] == "open"
             ? swatch[100]!
             : swatch[500]!;
     // Returns a row with a CircleAvatar, a text widget, and a TextButton
     return GestureDetector(
-        onTap: () => handlePress(),
+        onTap: handlePress,
         child: Container(
             decoration: BoxDecoration(
               color: const Color(0xbb000000),

@@ -1,8 +1,8 @@
 // Import necessary packages and files
-import 'package:flutter/material.dart';
-import 'package:patinka/social_media/search_results.dart';
-import '../swatch.dart'; // File containing color definitions
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:patinka/social_media/search_results.dart";
+import "package:patinka/swatch.dart"; // File containing color definitions
 
 // Define a StatefulWidget class for the search bar
 class SearchBarr extends StatefulWidget {
@@ -20,8 +20,7 @@ class _SearchBarState extends State<SearchBarr> {
 
   // Override the build method to define the widget's UI
   @override
-  Widget build(BuildContext context) {
-    return Expanded(
+  Widget build(final BuildContext context) => Expanded(
       child: Container(
         padding: const EdgeInsets.all(8),
         child: TextField(
@@ -70,20 +69,20 @@ class _SearchBarState extends State<SearchBarr> {
           style: TextStyle(color: swatch[901]),
 
           // Callback function when the user submits the search query
-          onSubmitted: (value) {
+          onSubmitted: (final value) {
             // Navigate to the search results page
             Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
+                pageBuilder: (final context, final animation, final secondaryAnimation) =>
                     SearchResults(query: controller.text),
                 opaque: false,
                 transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
+                    (final context, final animation, final secondaryAnimation, final child) {
                   const begin = 0.0;
                   const end = 1.0;
-                  var tween = Tween(begin: begin, end: end);
-                  var fadeAnimation = tween.animate(animation);
+                  final tween = Tween(begin: begin, end: end);
+                  final fadeAnimation = tween.animate(animation);
                   return FadeTransition(
                     opacity: fadeAnimation,
                     child: child,
@@ -95,5 +94,4 @@ class _SearchBarState extends State<SearchBarr> {
         ),
       ),
     );
-  }
 }

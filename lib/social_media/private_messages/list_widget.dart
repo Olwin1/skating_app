@@ -1,24 +1,18 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:patinka/api/messages.dart';
-import 'package:shimmer/shimmer.dart';
-
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/material.dart";
 // Importing external configurations and utility widgets
-import '../../api/config.dart';
-import '../../misc/default_profile.dart';
-import '../../swatch.dart';
-import 'private_message.dart';
+import "package:patinka/api/config.dart";
+import "package:patinka/api/messages.dart";
+import "package:patinka/misc/default_profile.dart";
+import "package:patinka/social_media/private_messages/private_message.dart";
+import "package:patinka/swatch.dart";
+import "package:shimmer/shimmer.dart";
 
 // StatefulWidget to represent a list item in the UI
 class ListWidget extends StatefulWidget {
   // Constructor to initialize the widget with required properties
   const ListWidget({
-    super.key,
-    required this.index,
-    required this.channel,
-    required this.desc,
-    required this.currentUser,
-    required this.refreshPage,
+    required this.index, required this.channel, required this.desc, required this.currentUser, required this.refreshPage, super.key,
   });
 
   // Properties of the ListWidget
@@ -35,12 +29,12 @@ class ListWidget extends StatefulWidget {
 // State class for ListWidget
 class _ListWidget extends State<ListWidget> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Variable to store information about the user associated with the channel
     Map<String, dynamic>? user;
 
     // Iterate through participants to find the user associated with the channel
-    for (var participant in widget.channel["participants"]) {
+    for (final participant in widget.channel["participants"]) {
       if (participant["users"]["user_id"] != widget.currentUser) {
         user = participant["users"];
         break;
@@ -69,11 +63,10 @@ class _ListWidget extends State<ListWidget> {
             await showDialog(
               useRootNavigator: false,
               context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
+              builder: (final BuildContext context) => AlertDialog(
                   backgroundColor: swatch[800],
                   title: Text(
-                    'Are you sure you want to delete this channel?',
+                    "Are you sure you want to delete this channel?",
                     style: TextStyle(color: swatch[701]),
                   ),
                   content: SizedBox(
@@ -89,25 +82,21 @@ class _ListWidget extends State<ListWidget> {
                             popNavigator();
                           },
                           child: Text(
-                            'Delete',
+                            "Delete",
                             style: TextStyle(color: swatch[901]),
                           ),
                         ),
                         TextButton(
-                          onPressed: () {
-                            // Close the dialog without deleting the channel
-                            popNavigator();
-                          },
+                          onPressed: popNavigator,
                           child: Text(
-                            'Cancel',
+                            "Cancel",
                             style: TextStyle(color: swatch[901]),
                           ),
                         ),
                       ],
                     ),
                   ),
-                );
-              },
+                ),
             );
           },
           onPressed: () {
@@ -115,7 +104,7 @@ class _ListWidget extends State<ListWidget> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PrivateMessage(
+                builder: (final context) => PrivateMessage(
                   initSelf: false,
                   channel: widget.channel,
                   user: user,
@@ -144,7 +133,7 @@ class _ListWidget extends State<ListWidget> {
                               imageUrl:
                                   '${Config.uri}/image/${user["avatar_id"]}',
                               httpHeaders: const {"thumbnail": "true"},
-                              placeholder: (context, url) => Shimmer.fromColors(
+                              placeholder: (final context, final url) => Shimmer.fromColors(
                                 baseColor: shimmer["base"]!,
                                 highlightColor: shimmer["highlight"]!,
                                 child: CircleAvatar(
@@ -152,7 +141,7 @@ class _ListWidget extends State<ListWidget> {
                                   backgroundColor: swatch[900],
                                 ),
                               ),
-                              imageBuilder: (context, imageProvider) =>
+                              imageBuilder: (final context, final imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,

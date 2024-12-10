@@ -1,20 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:patinka/login/layers/components/pagebutton.dart';
-import 'package:patinka/login/layers/components/section.dart';
-import '../../../api/auth.dart';
-import '../../../api/config.dart';
-import '../../../api/social.dart';
-import '../../../common_logger.dart';
-import '../../config.dart';
-import '../../page_type.dart';
-import 'mainbutton.dart';
+import "package:flutter/material.dart";
+import "package:patinka/api/auth.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/login/config.dart";
+import "package:patinka/login/layers/components/mainbutton.dart";
+import "package:patinka/login/layers/components/pagebutton.dart";
+import "package:patinka/login/layers/components/section.dart";
+import "package:patinka/login/page_type.dart";
 
 class LoginComponent extends StatefulWidget {
   const LoginComponent(
-      {super.key,
-      required this.loggedIn,
-      this.setLoggedIn,
-      required this.callback});
+      {required this.loggedIn, required this.callback, super.key,
+      this.setLoggedIn});
   final bool loggedIn;
   final dynamic setLoggedIn;
   final Function callback;
@@ -36,10 +34,10 @@ class _LoginComponent extends State<LoginComponent> {
     // When the user taps the sign-in button, try to log them in
     try {
       // Call the login function with the username and password provided
-      var res = await login(usernameController.text, passwordController.text);
+      final res = await login(usernameController.text, passwordController.text);
       // If login is successful, save the user's token to local storage
       await storage.setToken(res);
-      SocialAPI.getUser("0").then((value) => storage.setId(value["user_id"]));
+      SocialAPI.getUser("0").then((final value) => storage.setId(value["user_id"]));
       // Load the home screen
       loadHome();
       commonLogger.d("Result: $res");
@@ -54,8 +52,7 @@ class _LoginComponent extends State<LoginComponent> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(final BuildContext context) => SizedBox(
         height: 584,
         width: MediaQuery.of(context).size.width,
         child: Stack(
@@ -111,5 +108,4 @@ class _LoginComponent extends State<LoginComponent> {
                 )),
           ],
         ));
-  }
 }

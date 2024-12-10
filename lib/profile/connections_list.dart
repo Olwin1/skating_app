@@ -1,16 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:patinka/api/social.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/components/list_error.dart';
-import 'package:patinka/profile/list_type.dart';
-import 'package:patinka/profile/user_list_widget.dart';
+import "package:flutter/material.dart";
+import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/components/list_error.dart";
+import "package:patinka/profile/list_type.dart";
+import "package:patinka/profile/user_list_widget.dart";
 
 class ConnectionsListView extends StatefulWidget {
+  const ConnectionsListView({required this.type, super.key, this.user});
   final ListType type;
   final Map<String, dynamic>? user;
-
-  const ConnectionsListView({super.key, required this.type, this.user});
 
   @override
   State<ConnectionsListView> createState() => _ConnectionsListViewState();
@@ -27,13 +26,11 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
   @override
   void initState() {
     // Add a listener for page requests, and call _fetchPage() when a page is requested
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(final int pageKey) async {
     try {
       List<Map<String, dynamic>> page;
       // Fetch the page of comments using the getComments() function
@@ -53,13 +50,15 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       }
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
       if (isLastPage) {
         // If this is the last page, append it to the list of pages
         _pagingController.appendLastPage(page);
       } else {
         // If this is not the last page, append it to the list of pages and request the next page
-        final nextPageKey = pageKey += 1;
+        final nextPageKey = pageKey + 1;
         _pagingController.appendPage(page, nextPageKey);
       }
     } catch (error) {
@@ -69,22 +68,21 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Build a paginated list view of comments using the PagedListView widget
-    return PagedListView<int, Map<String, dynamic>>(
-      pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-        // Use the Comment widget to build each item in the list view
-        itemBuilder: (context, item, index) => UserListWidget(
-            user: item,
-            listType: widget.type,
-            ownerUser: widget.user,
-            refreshPage: _pagingController.refresh),
-        noItemsFoundIndicatorBuilder: (context) =>
-            const ListError(title: "No Follower", body: ""),
-      ),
-    );
-  }
+  Widget build(final BuildContext context) =>
+      PagedListView<int, Map<String, dynamic>>(
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+          // Use the Comment widget to build each item in the list view
+          itemBuilder: (final context, final item, final index) =>
+              UserListWidget(
+                  user: item,
+                  listType: widget.type,
+                  ownerUser: widget.user,
+                  refreshPage: _pagingController.refresh),
+          noItemsFoundIndicatorBuilder: (final context) =>
+              const ListError(title: "No Follower", body: ""),
+        ),
+      );
 
   @override
   void dispose() {

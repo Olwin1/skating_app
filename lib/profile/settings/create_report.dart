@@ -1,20 +1,19 @@
 // ignore_for_file: use_super_parameters
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:patinka/api/support.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/misc/navbar_provider.dart';
-import 'package:patinka/profile/settings/list_type.dart';
-import 'package:patinka/swatch.dart';
-import 'package:provider/provider.dart';
-
-import '../../api/config.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/support.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/profile/settings/list_type.dart";
+import "package:patinka/swatch.dart";
+import "package:provider/provider.dart";
 
 class SupportReportCreator extends StatefulWidget {
-  final SupportListType? defaultType;
   // Create SupportReportCreator Class
-  const SupportReportCreator({Key? key, this.defaultType}) : super(key: key);
+  const SupportReportCreator({final Key? key, this.defaultType}) : super(key: key);
+  final SupportListType? defaultType;
   @override
   State<SupportReportCreator> createState() =>
       _SupportReportCreator(); //Create state for widget
@@ -31,14 +30,14 @@ class _SupportReportCreator extends State<SupportReportCreator> {
   }
 
   SupportListType? reportType;
-  void setType(SupportListType type) {
+  void setType(final SupportListType type) {
     setState(() {
       reportType = type;
     });
   }
 
   @override // Override existing build method
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     String reportTitle = "Report Title";
     String reportTitleHint = "";
     String reportDescription = "Report Description";
@@ -233,7 +232,7 @@ class _SupportReportCreator extends State<SupportReportCreator> {
                         height: 16,
                       ), // Vertically centre Widget with remaining space
                       TextButton(
-                        onPressed: () => sendInfo(),
+                        onPressed: sendInfo,
                         child: Text("Submit Support Report",
                             style: TextStyle(color: swatch[701])),
                       ), // Save Session Infobox
@@ -244,12 +243,12 @@ class _SupportReportCreator extends State<SupportReportCreator> {
 }
 
 class SupportListTypeOptions extends StatefulWidget {
-  final Function callback;
-  final SupportListType? defaultValue;
   // Constructor for the SupportListTypeOptions widget
   // Takes in a required `id` property to distinguish between two SupportListTypeOptions widgets
   const SupportListTypeOptions(
-      {super.key, required this.callback, required this.defaultValue});
+      {required this.callback, required this.defaultValue, super.key});
+  final Function callback;
+  final SupportListType? defaultValue;
 
   // Returns the state object associated with this widget
   @override
@@ -259,7 +258,7 @@ class SupportListTypeOptions extends StatefulWidget {
 class _SupportListTypeOptionsState extends State<SupportListTypeOptions> {
   // `dropdownValueB` holds the selected value for the second dropdown
   SupportListType? dropdownValue;
-  String? sdropdownValue(SupportListType? type) {
+  String? sdropdownValue(final SupportListType? type) {
     switch (type) {
       case SupportListType.suggestion:
         return "Feature Request";
@@ -280,7 +279,7 @@ class _SupportListTypeOptionsState extends State<SupportListTypeOptions> {
     super.initState();
   }
 
-  SupportListType rdropdownValue(String value) {
+  SupportListType rdropdownValue(final String value) {
     switch (value) {
       case "Feature Request":
         return SupportListType.suggestion;
@@ -294,8 +293,7 @@ class _SupportListTypeOptionsState extends State<SupportListTypeOptions> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return DropdownButton<String>(
+  Widget build(final BuildContext context) => DropdownButton<String>(
       hint: const Text("Select A Report Type"),
       iconEnabledColor: swatch[200],
       // Set the value of the dropdown to `dropdownValueA` if `widget.id` is 1,
@@ -320,7 +318,7 @@ class _SupportListTypeOptionsState extends State<SupportListTypeOptions> {
       ),
       dropdownColor: swatch[900],
       // Callback function called when an item is selected
-      onChanged: (String? value) {
+      onChanged: (final String? value) {
         SupportListType val = SupportListType.bug;
         switch (value) {
           case "Feature Request":
@@ -345,12 +343,9 @@ class _SupportListTypeOptionsState extends State<SupportListTypeOptions> {
         sdropdownValue(SupportListType.bug)!,
         sdropdownValue(SupportListType.suggestion)!,
         sdropdownValue(SupportListType.support)!
-      ].map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
+      ].map<DropdownMenuItem<String>>((final String value) => DropdownMenuItem<String>(
           value: value,
           child: Text(value),
-        );
-      }).toList(),
+        )).toList(),
     );
-  }
 }

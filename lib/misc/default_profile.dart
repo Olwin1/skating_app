@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
-import '../swatch.dart';
+import "package:patinka/swatch.dart";
 
 class DefaultProfile extends StatelessWidget {
-  const DefaultProfile({super.key, required this.radius});
+  const DefaultProfile({required this.radius, super.key});
   final double radius;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Build a paginated list view of comments using the PagedListView widget
     return CircleAvatar(
       // Create a circular avatar icon

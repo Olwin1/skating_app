@@ -1,17 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:patinka/api/messages.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/misc/navbar_provider.dart';
-import 'package:patinka/social_media/private_messages/suggestion_widget.dart';
-import 'package:provider/provider.dart';
-import '../../api/config.dart';
-import '../../components/list_error.dart';
-import '../../swatch.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/messages.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/components/list_error.dart";
+import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/social_media/private_messages/suggestion_widget.dart";
+import "package:patinka/swatch.dart";
+import "package:provider/provider.dart";
 
 class NewChannelPage extends StatefulWidget {
-  const NewChannelPage({super.key, required this.callback});
+  const NewChannelPage({required this.callback, super.key});
 
   final Function callback;
 
@@ -21,14 +21,14 @@ class NewChannelPage extends StatefulWidget {
 
 class _NewChannelPageState extends State<NewChannelPage> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Hide the bottom navigation bar
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
 
     // Build the page with a paginated list view
     return PopScope(
       canPop: true,
-      onPopInvokedWithResult: (bool didPop, result) {
+      onPopInvokedWithResult: (final bool didPop, final result) {
         if (didPop) {
           // Show the bottom navigation bar when popping
           Provider.of<BottomBarVisibilityProvider>(context, listen: false)
@@ -57,7 +57,7 @@ class _NewChannelPageState extends State<NewChannelPage> {
         ),
         body: Container(
           decoration: const BoxDecoration(color: Color(0x38000000)),
-          padding: const EdgeInsets.all(0),
+          padding: EdgeInsets.zero,
           child: NewChannelListView(callback: widget.callback),
         ),
       ),
@@ -66,7 +66,7 @@ class _NewChannelPageState extends State<NewChannelPage> {
 }
 
 class NewChannelListView extends StatefulWidget {
-  const NewChannelListView({super.key, required this.callback});
+  const NewChannelListView({required this.callback, super.key});
   final Function callback;
 
   @override
@@ -84,29 +84,29 @@ class _NewChannelListViewState extends State<NewChannelListView> {
   @override
   void initState() {
     // Add a listener for page requests, and call _fetchPage() when a page is requested
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(final int pageKey) async {
     try {
       // Fetch a page of suggestions from the API
-      List<Map<String, dynamic>> page =
+      final List<Map<String, dynamic>> page =
           await MessagesAPI.getSuggestions(pageKey);
 
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
 
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       if (isLastPage) {
         // If this is the last page, append it to the list of pages
         _pagingController.appendLastPage(page);
       } else {
         // If this is not the last page, append it to the list of pages and request the next page
-        final nextPageKey = pageKey += 1;
+        final nextPageKey = pageKey + 1;
         _pagingController.appendPage(page, nextPageKey);
       }
     } catch (error) {
@@ -116,24 +116,23 @@ class _NewChannelListViewState extends State<NewChannelListView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Build a paginated list view of suggestions using the PagedListView widget
-    return PagedListView<int, Map<String, dynamic>>(
-      pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-        // Use the SuggestionListWidget to build each item in the list view
-        itemBuilder: (context, item, index) => SuggestionListWidget(
-          user: item,
-          callback: widget.callback,
+  Widget build(final BuildContext context) =>
+      PagedListView<int, Map<String, dynamic>>(
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+          // Use the SuggestionListWidget to build each item in the list view
+          itemBuilder: (final context, final item, final index) =>
+              SuggestionListWidget(
+            user: item,
+            callback: widget.callback,
+          ),
+          // Display an error message when there are no suggested messages
+          noItemsFoundIndicatorBuilder: (final context) => const ListError(
+            title: "No suggested messages",
+            body: "",
+          ),
         ),
-        // Display an error message when there are no suggested messages
-        noItemsFoundIndicatorBuilder: (context) => const ListError(
-          title: "No suggested messages",
-          body: "",
-        ),
-      ),
-    );
-  }
+      );
 
   @override
   void dispose() {

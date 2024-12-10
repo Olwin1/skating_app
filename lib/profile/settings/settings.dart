@@ -1,21 +1,20 @@
 // Importing necessary packages and files
-import 'dart:ui';
+import "dart:ui";
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:patinka/misc/navbar_provider.dart';
-import 'package:patinka/profile/settings/list_type.dart';
-import 'package:patinka/profile/settings/support_list.dart';
-import 'package:provider/provider.dart';
-import 'package:settings_ui/settings_ui.dart';
-import 'package:patinka/profile/settings/settings_overlays.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:patinka/swatch.dart';
-
-import '../../api/config.dart';
-import '../../api/token.dart';
-import 'report_list.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:flutter_phoenix/flutter_phoenix.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/token.dart";
+import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/profile/settings/list_type.dart";
+import "package:patinka/profile/settings/report_list.dart";
+import "package:patinka/profile/settings/settings_overlays.dart";
+import "package:patinka/profile/settings/support_list.dart";
+import "package:patinka/swatch.dart";
+import "package:provider/provider.dart";
+import "package:settings_ui/settings_ui.dart";
 
 // Creating an instance of SecureStorage for handling secure data storage
 SecureStorage storage = SecureStorage();
@@ -23,7 +22,7 @@ SecureStorage storage = SecureStorage();
 // Settings widget
 class Settings extends StatefulWidget {
   // Constructor for the Settings widget
-  const Settings({super.key, required this.user});
+  const Settings({required this.user, super.key});
 
   // User data passed to the widget
   final Map<String, dynamic>? user;
@@ -48,14 +47,14 @@ class _Settings extends State<Settings> {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Hide the bottom navigation bar
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
 
     // Building the UI of the Settings widget
     return PopScope(
       // Handle when the user navigates back
-      onPopInvokedWithResult: (popped, result) {
+      onPopInvokedWithResult: (final popped, final result) {
         if (popped) {
           // Show the bottom navigation bar
           Provider.of<BottomBarVisibilityProvider>(context, listen: false)
@@ -88,7 +87,7 @@ class _Settings extends State<Settings> {
         body: Stack(
           children: [
             // Background overlay with blur and color filter
-            Container(
+            ColoredBox(
               color: Colors.black.withOpacity(0.5),
               child: BackdropFilter(
                 filter: ImageFilter.blur(
@@ -126,16 +125,17 @@ class _Settings extends State<Settings> {
                         SettingsTile.navigation(
                           leading: const Icon(Icons.next_plan_outlined),
                           title: const Text("Planned Features"),
-                          onPressed: (e) => {overlaySettings.features(context)},
+                          onPressed: (final e) =>
+                              {overlaySettings.features(context)},
                         ),
                         SettingsTile.navigation(
                           leading: const Icon(Icons.egg_alt_rounded),
                           title: const Text("Suggest a Feature"),
-                          onPressed: (context) {
+                          onPressed: (final context) {
                             Navigator.of(context).push(
                                 // Send to signal info page
                                 MaterialPageRoute(
-                                    builder: (context) => SupportList(
+                                    builder: (final context) => SupportList(
                                           type: SupportListType.suggestion,
                                           user: widget.user,
                                         )));
@@ -159,14 +159,15 @@ class _Settings extends State<Settings> {
                         SettingsTile.navigation(
                           leading: const Icon(Icons.password),
                           title: Text(AppLocalizations.of(context)!.password),
-                          value: const Text('••••••••'),
-                          onPressed: (e) => overlaySettings.password(context),
+                          value: const Text("••••••••"),
+                          onPressed: (final e) =>
+                              overlaySettings.password(context),
                           enabled: false,
                         ),
                         // Switch tile for biometric settings
                         SettingsTile.switchTile(
                           activeSwitchColor: swatch[401],
-                          onToggle: (value) {},
+                          onToggle: (final value) {},
                           initialValue: true,
                           leading: const Icon(Icons.fingerprint),
                           title: Text(AppLocalizations.of(context)!.biometrics),
@@ -176,9 +177,9 @@ class _Settings extends State<Settings> {
                         SettingsTile.navigation(
                           leading: const Icon(Icons.logout),
                           title: Text(AppLocalizations.of(context)!.logout),
-                          onPressed: (e) => {
+                          onPressed: (final e) => {
                             // Remove stored tokens and restart app
-                            storage.logout().then((value) => {
+                            storage.logout().then((final value) => {
                                   if (mounted) {Phoenix.rebirth(context)}
                                 })
                           },
@@ -192,7 +193,7 @@ class _Settings extends State<Settings> {
                         // Switch tile for push notifications
                         SettingsTile.switchTile(
                           activeSwitchColor: swatch[401],
-                          onToggle: (value) {},
+                          onToggle: (final value) {},
                           initialValue: true,
                           leading: const Icon(Icons.notifications),
                           title: Text(
@@ -202,10 +203,10 @@ class _Settings extends State<Settings> {
                         // Switch tile for email notifications
                         SettingsTile.switchTile(
                           activeSwitchColor: swatch[401],
-                          onToggle: (value) {},
+                          onToggle: (final value) {},
                           initialValue: true,
                           leading: const Icon(Icons.mail_lock),
-                          title: const Text('Email Notifications'),
+                          title: const Text("Email Notifications"),
                           enabled: false,
                         ),
                       ],
@@ -218,14 +219,15 @@ class _Settings extends State<Settings> {
                         SettingsTile.navigation(
                           leading: const Icon(Icons.language),
                           title: Text(AppLocalizations.of(context)!.language),
-                          value: const Text('English'),
-                          onPressed: (e) => overlaySettings.languages(context),
+                          value: const Text("English"),
+                          onPressed: (final e) =>
+                              overlaySettings.languages(context),
                           enabled: false,
                         ),
                         // Switch tile for large text settings
                         SettingsTile.switchTile(
                           activeSwitchColor: swatch[401],
-                          onToggle: (value) {},
+                          onToggle: (final value) {},
                           initialValue: true,
                           leading: const Icon(Icons.text_decrease),
                           title: Text(AppLocalizations.of(context)!.largeText),
@@ -234,7 +236,7 @@ class _Settings extends State<Settings> {
                         // Switch tile for dyslexia font settings
                         SettingsTile.switchTile(
                           activeSwitchColor: swatch[401],
-                          onToggle: (value) {},
+                          onToggle: (final value) {},
                           initialValue: true,
                           leading: const Icon(Icons.font_download),
                           title:
@@ -245,8 +247,9 @@ class _Settings extends State<Settings> {
                         SettingsTile.navigation(
                           leading: const Icon(Icons.theater_comedy),
                           title: Text(AppLocalizations.of(context)!.theme),
-                          value: const Text('Default'),
-                          onPressed: (e) => overlaySettings.theme(context),
+                          value: const Text("Default"),
+                          onPressed: (final e) =>
+                              overlaySettings.theme(context),
                           enabled: false,
                         ),
                       ],
@@ -260,11 +263,11 @@ class _Settings extends State<Settings> {
                           leading: const Icon(Icons.format_quote),
                           title: Text(AppLocalizations.of(context)!.faq),
                           enabled: false,
-                          onPressed: (context) {
+                          onPressed: (final context) {
                             Navigator.of(context).push(
                                 // Send to signal info page
                                 MaterialPageRoute(
-                                    builder: (context) => SupportList(
+                                    builder: (final context) => SupportList(
                                           type: SupportListType.support,
                                           user: widget.user,
                                         )));
@@ -275,11 +278,11 @@ class _Settings extends State<Settings> {
                             leading: const Icon(Icons.support),
                             title: Text(
                                 AppLocalizations.of(context)!.contactSupport),
-                            onPressed: (context) {
+                            onPressed: (final context) {
                               Navigator.of(context).push(
                                   // Send to signal info page
                                   MaterialPageRoute(
-                                      builder: (context) => SupportList(
+                                      builder: (final context) => SupportList(
                                             type: SupportListType.support,
                                             user: widget.user,
                                           )));
@@ -291,18 +294,19 @@ class _Settings extends State<Settings> {
                                 widget.user!["user_role"] == "administrator"
                             ? SettingsTile.navigation(
                                 leading: const Icon(Icons.policy),
-                                title: Text("Review Reports"),
-                                onPressed: (context) {
+                                title: const Text("Review Reports"),
+                                onPressed: (final context) {
                                   Navigator.of(context).push(
                                       // Send to signal info page
                                       MaterialPageRoute(
-                                          builder: (context) => ReportList(
+                                          builder: (final context) =>
+                                              ReportList(
                                                 user: widget.user,
                                               )));
                                 })
                             : SettingsTile.navigation(
                                 leading: const Icon(Icons.construction),
-                                title: Text("WIP"),
+                                title: const Text("WIP"),
                                 enabled: false,
                               ),
 
@@ -310,11 +314,11 @@ class _Settings extends State<Settings> {
                         SettingsTile.navigation(
                           leading: const Icon(Icons.bug_report),
                           title: const Text("Report a bug"),
-                          onPressed: (context) {
+                          onPressed: (final context) {
                             Navigator.of(context).push(
                                 // Send to signal info page
                                 MaterialPageRoute(
-                                    builder: (context) => SupportList(
+                                    builder: (final context) => SupportList(
                                           type: SupportListType.bug,
                                           user: widget.user,
                                         )));

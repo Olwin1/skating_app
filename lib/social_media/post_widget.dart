@@ -1,29 +1,24 @@
-import 'package:flutter/material.dart';
-import 'package:like_button/like_button.dart';
-import 'package:patinka/api/token.dart';
-import 'package:patinka/misc/default_profile.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/api/social.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/profile/profile_page/profile_page.dart';
-import 'package:patinka/swatch.dart';
-import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
-import 'comments.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import '../api/config.dart';
-import 'package:timeago/timeago.dart' as timeago;
-
-import 'handle_buttons.dart';
-import 'modals/post_options_modal.dart';
-import 'user_reports/report_user.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/material.dart";
+import "package:like_button/like_button.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/misc/default_profile.dart";
+import "package:patinka/profile/profile_page/profile_page.dart";
+import "package:patinka/social_media/comments.dart";
+import "package:patinka/social_media/handle_buttons.dart";
+import "package:patinka/social_media/modals/post_options_modal.dart";
+import "package:patinka/social_media/user_reports/report_user.dart";
+import "package:patinka/swatch.dart";
+import "package:shimmer/shimmer.dart";
+import "package:timeago/timeago.dart" as timeago;
+import "package:zoom_pinch_overlay/zoom_pinch_overlay.dart";
 
 // Widget representing a post
 class PostWidget extends StatefulWidget {
   const PostWidget({
-    super.key,
-    required this.post,
-    required this.index,
-    required this.user,
+    required this.post, required this.index, required this.user, super.key,
   });
 
   final dynamic post; // Post data
@@ -46,7 +41,7 @@ class _PostWidget extends State<PostWidget> {
   }
 
   /// SET STATES
-  void setLikedState(bool val) {
+  void setLikedState(final bool val) {
     if (!likedState!) {
       if (mounted) {
         setState(() => likedState = val);
@@ -54,16 +49,16 @@ class _PostWidget extends State<PostWidget> {
     }
   }
 
-  void setSavedState(bool val) {
+  void setSavedState(final bool val) {
     if (savedState! && mounted) {
       setState(() => savedState = val);
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Extract comment count from post data
-    String comments = widget.post['comment_count'] ?? "0";
+    final String comments = widget.post["comment_count"] ?? "0";
 
     // Widget structure for a post
     return GestureDetector(
@@ -71,7 +66,7 @@ class _PostWidget extends State<PostWidget> {
         onLongPress: () {
           ModalBottomSheet.show(
             context: context,
-            builder: (context) => PostOptionsBottomSheet(
+            builder: (final context) => PostOptionsBottomSheet(
               post: widget.post,
               savedState: savedState!,
               setSavedState: setSavedState,
@@ -94,7 +89,7 @@ class _PostWidget extends State<PostWidget> {
                   ),
                   Container(
                     color: Colors.transparent,
-                    padding: const EdgeInsets.all(0),
+                    padding: EdgeInsets.zero,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -113,12 +108,12 @@ class _PostWidget extends State<PostWidget> {
                               // Post image loaded from the network
                               imageUrl:
                                   "${Config.uri}/image/${widget.post['image']}",
-                              placeholder: (context, url) => Shimmer.fromColors(
+                              placeholder: (final context, final url) => Shimmer.fromColors(
                                   baseColor: shimmer["base"]!,
                                   highlightColor: shimmer["highlight"]!,
                                   child: Image.asset(
                                       "assets/placeholders/1080.png")),
-                              imageBuilder: (context, imageProvider) =>
+                              imageBuilder: (final context, final imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.only(
@@ -128,7 +123,7 @@ class _PostWidget extends State<PostWidget> {
                                       image: imageProvider, fit: BoxFit.cover),
                                 ),
                               ),
-                              errorWidget: (context, url, error) =>
+                              errorWidget: (final context, final url, final error) =>
                                   const Icon(Icons.error),
                               fit: BoxFit.contain,
                             ),
@@ -138,7 +133,7 @@ class _PostWidget extends State<PostWidget> {
                         SizedBox(
                           width: 72,
                           height: double.maxFinite,
-                          child: Container(
+                          child: DecoratedBox(
                             decoration: BoxDecoration(
                               image: DecorationImage(
                                   image: const AssetImage(
@@ -156,7 +151,7 @@ class _PostWidget extends State<PostWidget> {
                                 // Like button with animation
                                 LikeButton(
                                   isLiked: likedState ?? widget.post["liked"],
-                                  onTap: (isLiked) => handleLikePressed(
+                                  onTap: (final isLiked) => handleLikePressed(
                                       isLiked, setLikedState, widget.post),
                                   padding:
                                       const EdgeInsets.only(bottom: 0, top: 18),
@@ -168,18 +163,16 @@ class _PostWidget extends State<PostWidget> {
                                     dotPrimaryColor: unselected,
                                     dotSecondaryColor: secondary,
                                   ),
-                                  likeBuilder: (bool isLiked) {
-                                    return Icon(
+                                  likeBuilder: (final bool isLiked) => Icon(
                                       Icons.thumb_up,
                                       color: isLiked ? selected : unselected,
                                       size: 32.0,
-                                    );
-                                  },
+                                    ),
                                   likeCount: int.parse(
-                                      widget.post['total_likes'] ?? "0"),
+                                      widget.post["total_likes"] ?? "0"),
                                   countBuilder:
-                                      (int? count, bool isLiked, String text) {
-                                    var color = isLiked ? selected : unselected;
+                                      (final int? count, final bool isLiked, final String text) {
+                                    final color = isLiked ? selected : unselected;
                                     Widget result;
                                     if (count == 0) {
                                       result = Center(
@@ -211,21 +204,21 @@ class _PostWidget extends State<PostWidget> {
                                           Navigator.of(context).push(
                                         // Navigate to comments page
                                         PageRouteBuilder(
-                                          pageBuilder: (context, animation,
-                                                  secondaryAnimation) =>
+                                          pageBuilder: (final context, final animation,
+                                                  final secondaryAnimation) =>
                                               Comments(
                                                   post: widget.post["post_id"],
                                                   user: widget.user),
                                           opaque: false,
-                                          transitionsBuilder: (context,
-                                              animation,
-                                              secondaryAnimation,
-                                              child) {
+                                          transitionsBuilder: (final context,
+                                              final animation,
+                                              final secondaryAnimation,
+                                              final child) {
                                             const begin = 0.0;
                                             const end = 1.0;
-                                            var tween =
+                                            final tween =
                                                 Tween(begin: begin, end: end);
-                                            var fadeAnimation =
+                                            final fadeAnimation =
                                                 tween.animate(animation);
                                             return FadeTransition(
                                               opacity: fadeAnimation,
@@ -249,7 +242,7 @@ class _PostWidget extends State<PostWidget> {
                                 // Save button
                                 LikeButton(
                                   isLiked: savedState ?? widget.post["saved"],
-                                  onTap: (isSaved) => handleSavePressed(
+                                  onTap: (final isSaved) => handleSavePressed(
                                       isSaved, setSavedState, widget.post),
                                   padding:
                                       const EdgeInsets.only(bottom: 0, top: 18),
@@ -261,13 +254,11 @@ class _PostWidget extends State<PostWidget> {
                                     dotPrimaryColor: unselected,
                                     dotSecondaryColor: secondary,
                                   ),
-                                  likeBuilder: (bool isSaved) {
-                                    return Icon(
+                                  likeBuilder: (final bool isSaved) => Icon(
                                       Icons.save,
                                       color: isSaved ? selected : unselected,
                                       size: 28.0,
-                                    );
-                                  },
+                                    ),
                                 ),
                                 const Spacer(),
                                 widget.user == null
@@ -301,8 +292,7 @@ class _PostWidget extends State<PostWidget> {
 // Widget for displaying user avatar
 class Avatar extends StatefulWidget {
   const Avatar({
-    super.key,
-    required this.user,
+    required this.user, super.key,
   });
 
   final String user; // User ID
@@ -315,7 +305,7 @@ class _Avatar extends State<Avatar> {
   @override
   void initState() {
     // Load user data forthe given user ID
-    SocialAPI.getUser(widget.user).then((userCache) => {
+    SocialAPI.getUser(widget.user).then((final userCache) => {
           if (mounted)
             {
               setState(() {
@@ -332,14 +322,13 @@ class _Avatar extends State<Avatar> {
   String? profile;
 
   @override
-  Widget build(BuildContext context) {
-    return TextButton(
+  Widget build(final BuildContext context) => TextButton(
         style: TextButton.styleFrom(padding: EdgeInsets.zero),
         onPressed: () => profile != null
             ? Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ProfilePage(
+                    builder: (final context) => ProfilePage(
                           userId: profile!,
                           navbar: false,
                         )))
@@ -354,15 +343,15 @@ class _Avatar extends State<Avatar> {
                 ))
             : image != "default"
                 ? CachedNetworkImage(
-                    imageUrl: '${Config.uri}/image/thumbnail/$image',
-                    placeholder: (context, url) => Shimmer.fromColors(
+                    imageUrl: "${Config.uri}/image/thumbnail/$image",
+                    placeholder: (final context, final url) => Shimmer.fromColors(
                         baseColor: shimmer["base"]!,
                         highlightColor: shimmer["highlight"]!,
                         child: CircleAvatar(
                           radius: 36,
                           backgroundColor: swatch[900],
                         )),
-                    imageBuilder: (context, imageProvider) => Container(
+                    imageBuilder: (final context, final imageProvider) => Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
@@ -370,14 +359,12 @@ class _Avatar extends State<Avatar> {
                           ),
                         ))
                 : const DefaultProfile(radius: 36));
-  }
 }
 
 // Widget for displaying post caption and handling collapse/expand
 class CaptionWrapper extends StatefulWidget {
   const CaptionWrapper({
-    super.key,
-    required this.post,
+    required this.post, super.key,
   });
 
   final Map<String, dynamic> post; // Post data
@@ -394,14 +381,13 @@ class _CaptionWrapper extends State<CaptionWrapper> {
   void initState() {
     // Load user data for the author of the post
     SocialAPI.getUser(widget.post["author_id"]).then(
-        (user) => mounted ? setState(() => username = user["username"]) : null);
+        (final user) => mounted ? setState(() => username = user["username"]) : null);
 
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(final BuildContext context) => GestureDetector(
       onTap: () => setState(() {
         collapsed = !collapsed;
       }),
@@ -411,28 +397,25 @@ class _CaptionWrapper extends State<CaptionWrapper> {
           timestamp: DateTime.parse(widget.post["timestamp"]),
           collapsed: collapsed),
     );
-  }
 }
 
 // Widget for displaying post caption
 class Caption extends StatelessWidget {
+
+  const Caption({
+    required this.collapsed, required this.timestamp, super.key,
+    this.username,
+    this.description,
+  });
   final String? username;
   final String? description;
   final bool collapsed;
   final DateTime timestamp;
 
-  const Caption({
-    super.key,
-    this.username,
-    this.description,
-    required this.collapsed,
-    required this.timestamp,
-  });
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Format the timestamp as relative time
-    String timeAgo = timeago.format(timestamp);
+    final String timeAgo = timeago.format(timestamp);
     if (username == null || description == null) {
       // If username or description is null, return an empty container
       return Container(

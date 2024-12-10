@@ -1,9 +1,9 @@
-import 'dart:ui';
+import "dart:ui";
 
-import 'package:patinka/api/social.dart';
-import 'package:patinka/common_logger.dart';
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
 // Export login and signup functions from auth.dart
-export 'package:patinka/social_media/handle_buttons.dart';
+export "package:patinka/social_media/handle_buttons.dart";
 
 const String errorCode409 =
     "Error during post: Exception: Error during request: Received status code 409";
@@ -17,7 +17,7 @@ bool waitingSave = false; // Flag for ongoing operations
 
 // Handle the like button press
 Future<bool> handleLikePressed(
-    bool isLiked, Function setLikedState, Map<String, dynamic>? post) async {
+    final bool isLiked, final Function setLikedState, final Map<String, dynamic>? post) async {
   if (post == null) {
     return isLiked;
   }
@@ -67,7 +67,7 @@ Future<bool> handleLikePressed(
 
 // Handle the like button press
 Future<bool> handleSavePressed(
-    bool isSaved, Function setSavedState, Map<String, dynamic>? post) async {
+    final bool isSaved, final Function setSavedState, final Map<String, dynamic>? post) async {
   if (post == null) {
     return isSaved;
   }

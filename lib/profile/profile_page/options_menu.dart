@@ -1,17 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/profile/edit_profile.dart';
-import 'package:patinka/profile/profile_page/profile_page.dart';
-import 'package:patinka/profile/saved_posts.dart';
-import 'package:patinka/profile/settings/settings.dart';
-import 'package:patinka/swatch.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/profile/edit_profile.dart";
+import "package:patinka/profile/profile_page/profile_page.dart";
+import "package:patinka/profile/saved_posts.dart";
+import "package:patinka/profile/settings/settings.dart";
+import "package:patinka/swatch.dart";
 
 class OptionsMenu extends StatefulWidget {
-  final Map<String, dynamic>? user;
 
   // StatefulWidget that defines an options menu
-  const OptionsMenu({super.key, required this.user});
+  const OptionsMenu({required this.user, super.key});
+  final Map<String, dynamic>? user;
 
   @override
   State<OptionsMenu> createState() => _OptionsMenuState();
@@ -19,8 +19,7 @@ class OptionsMenu extends StatefulWidget {
 
 class _OptionsMenuState extends State<OptionsMenu> {
   @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<DropdownPage>(
+  Widget build(final BuildContext context) => PopupMenuButton<DropdownPage>(
       color: const Color(0x66000000),
       icon: Icon(
         Icons.more_vert,
@@ -29,7 +28,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
       // Offset to set the position of the menu relative to the button
       offset: const Offset(0, 64),
       // Callback function that will be called when a menu item is selected
-      onSelected: (DropdownPage item) {
+      onSelected: (final DropdownPage item) {
         // In this case, it just prints "selected" to the console
         commonLogger.i("selected");
         if (item == DropdownPage.editProfile) {
@@ -38,17 +37,17 @@ class _OptionsMenuState extends State<OptionsMenu> {
             // Send to edit profile page
             context,
             PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
+              pageBuilder: (final context, final animation, final secondaryAnimation) =>
                   EditProfile(
                 user: widget.user,
               ),
               opaque: false,
               transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
+                  (final context, final animation, final secondaryAnimation, final child) {
                 const begin = 0.0;
                 const end = 1.0;
-                var tween = Tween(begin: begin, end: end);
-                var fadeAnimation = tween.animate(animation);
+                final tween = Tween(begin: begin, end: end);
+                final fadeAnimation = tween.animate(animation);
                 return FadeTransition(
                   opacity: fadeAnimation,
                   child: child,
@@ -63,15 +62,15 @@ class _OptionsMenuState extends State<OptionsMenu> {
             // Send to settings page
             context,
             PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
+              pageBuilder: (final context, final animation, final secondaryAnimation) =>
                   Settings(user: widget.user),
               opaque: false,
               transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
+                  (final context, final animation, final secondaryAnimation, final child) {
                 const begin = 0.0;
                 const end = 1.0;
-                var tween = Tween(begin: begin, end: end);
-                var fadeAnimation = tween.animate(animation);
+                final tween = Tween(begin: begin, end: end);
+                final fadeAnimation = tween.animate(animation);
                 return FadeTransition(
                   opacity: fadeAnimation,
                   child: child,
@@ -86,15 +85,15 @@ class _OptionsMenuState extends State<OptionsMenu> {
             // Send to settings page
             context,
             PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
+              pageBuilder: (final context, final animation, final secondaryAnimation) =>
                   const SavedPosts(),
               opaque: false,
               transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
+                  (final context, final animation, final secondaryAnimation, final child) {
                 const begin = 0.0;
                 const end = 1.0;
-                var tween = Tween(begin: begin, end: end);
-                var fadeAnimation = tween.animate(animation);
+                final tween = Tween(begin: begin, end: end);
+                final fadeAnimation = tween.animate(animation);
                 return FadeTransition(
                   opacity: fadeAnimation,
                   child: child,
@@ -105,7 +104,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
         }
       },
       // Define the items in the menu using PopupMenuItem widgets
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<DropdownPage>>[
+      itemBuilder: (final BuildContext context) => <PopupMenuEntry<DropdownPage>>[
         // First menu item
         PopupMenuItem<DropdownPage>(
           // Value of the menu item, an instance of the DropdownPage enumeration
@@ -132,5 +131,4 @@ class _OptionsMenuState extends State<OptionsMenu> {
         ),
       ],
     );
-  }
 }

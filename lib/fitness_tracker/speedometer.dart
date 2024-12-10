@@ -1,19 +1,19 @@
 // Import necessary packages and files
-import 'dart:async';
-import 'dart:math';
+import "dart:async";
+import "dart:math";
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:kdgaugeview/kdgaugeview.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/fitness_tracker/check_permission.dart';
-import 'package:patinka/misc/navbar_provider.dart';
-import 'package:patinka/swatch.dart';
-import 'package:provider/provider.dart';
-import '../api/config.dart';
-import 'package:sensors_plus/sensors_plus.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:geolocator/geolocator.dart";
+import "package:kdgaugeview/kdgaugeview.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/fitness_tracker/check_permission.dart";
+import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/swatch.dart";
+import "package:provider/provider.dart";
+import "package:sensors_plus/sensors_plus.dart";
 
 // Define a StatefulWidget for the Speedometer page
 class SpeedometerPage extends StatefulWidget {
@@ -29,7 +29,7 @@ class _SpeedometerPage extends State<SpeedometerPage> {
   StreamSubscription? stream;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     Provider.of<BottomBarVisibilityProvider>(context, listen: false)
         .hide(); // Hide The Navbar
     // Check if location permission is granted and listen to position updates
@@ -37,21 +37,20 @@ class _SpeedometerPage extends State<SpeedometerPage> {
       stream =
           accelerometerEventStream(samplingPeriod: SensorInterval.uiInterval)
               .listen(
-        (AccelerometerEvent event) {
-          double speed = double.parse((sqrt(pow(event.x, 2) +
+        (final AccelerometerEvent event) {
+          final double speed = double.parse((sqrt(pow(event.x, 2) +
                       pow(event.y, 2) +
                       pow(double.parse(event.z.toStringAsFixed(2)) - 9.81, 2)) /
                   1000)
               .toStringAsFixed(2));
-          commonLogger.d("Speed: $speed");
           key.currentState
               ?.updateSpeed(speed, animate: true, duration: Duration.zero);
         },
-        onError: (error) {
+        onError: (final error) {
           // Logic to handle error
           // Needed for Android in case sensor is not available
-          hasLocationPermission().then((value) => {
-                stream = Geolocator.getPositionStream().listen((position) {
+          hasLocationPermission().then((final value) => {
+                stream = Geolocator.getPositionStream().listen((final position) {
                   key.currentState?.updateSpeed(position.speed,
                       animate: true,
                       duration: const Duration(milliseconds: 800));
@@ -66,7 +65,7 @@ class _SpeedometerPage extends State<SpeedometerPage> {
     // Return a Scaffold with an AppBar and a KdGaugeView widget
     return PopScope(
         canPop: true,
-        onPopInvokedWithResult: (bool didPop, result) {
+        onPopInvokedWithResult: (final bool didPop, final result) {
           if (didPop) {
             Provider.of<BottomBarVisibilityProvider>(context, listen: false)
                 .show(); // Show The Navbar

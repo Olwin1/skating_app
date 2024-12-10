@@ -1,7 +1,7 @@
 // Import necessary Dart and Flutter packages
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:window_manager/window_manager.dart';
+import "dart:io";
+import "package:flutter/material.dart";
+import "package:window_manager/window_manager.dart";
 
 // Function to initialize the window manager
 Future<void> initialiseWindowManager() async {
@@ -11,7 +11,7 @@ Future<void> initialiseWindowManager() async {
     await windowManager.ensureInitialized();
 
     // Define window options for the application
-    WindowOptions windowOptions = const WindowOptions(
+    const WindowOptions windowOptions = WindowOptions(
       size: Size(560, 1000), // Initial window size
       maximumSize: Size(560, 1000), // Maximum window size
       minimumSize: Size(380, 680), // Minimum window size

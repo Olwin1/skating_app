@@ -1,21 +1,19 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:patinka/profile/list_type.dart';
-
-import '../api/config.dart';
-import '../swatch.dart';
-import 'connections_list.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/profile/connections_list.dart";
+import "package:patinka/profile/list_type.dart";
+import "package:patinka/swatch.dart";
 
 // FollowingList widget
 
 class FriendsList extends StatelessWidget {
-  final Map<String, dynamic>? user;
 
   const FriendsList({super.key, this.user});
+  final Map<String, dynamic>? user;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(final BuildContext context) => Scaffold(
         backgroundColor: const Color(0x34000000),
         resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
@@ -38,5 +36,4 @@ class FriendsList extends StatelessWidget {
           type: ListType.friendsList,
           user: user,
         ));
-  }
 }

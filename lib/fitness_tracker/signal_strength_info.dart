@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'signal_strength_object.dart';
+import "package:flutter/material.dart";
+import "package:patinka/fitness_tracker/signal_strength_object.dart";
 
 class SignalStrengthInfo extends StatefulWidget {
   // Create HomePage Class
@@ -12,8 +12,7 @@ class SignalStrengthInfo extends StatefulWidget {
 
 class _SignalStrengthInfo extends State<SignalStrengthInfo> {
   @override // Override existing build method
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(final BuildContext context) => Scaffold(
       appBar: AppBar(
         // Create appBar
         leadingWidth: 48, // Remove extra leading space
@@ -26,7 +25,8 @@ class _SignalStrengthInfo extends State<SignalStrengthInfo> {
       ),
       body: const Column(children: [
         Text(// Placeholder page purpose description
-            """Your GPS signal strength is visible throughout your sessions.
+            """
+Your GPS signal strength is visible throughout your sessions.
             The stronger the signal the more accurate the tracking can be.
             Use this info to understand how accurate your tracking is."""),
         SignalStrengthObject(
@@ -60,5 +60,4 @@ class _SignalStrengthInfo extends State<SignalStrengthInfo> {
         ),
       ]),
     );
-  }
 }

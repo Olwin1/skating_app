@@ -1,18 +1,19 @@
 // Importing necessary packages
-import 'dart:async';
-import 'dart:math';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:patinka/common_logger.dart';
-import '../swatch.dart';
-import 'check_permission.dart';
+import "dart:async";
+import "dart:math";
+
+import "package:flutter/material.dart";
+import "package:geolocator/geolocator.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/fitness_tracker/check_permission.dart";
+import "package:patinka/swatch.dart";
 
 // Creating a stateful widget called DistanceTravelled
 Position? previousPosition; // Initializing previous position as null
 
 class DistanceTravelled extends StatefulWidget {
   const DistanceTravelled(
-      {super.key, required this.active, required this.callback});
+      {required this.active, required this.callback, super.key});
   final bool active;
   final Function callback;
   @override
@@ -27,13 +28,13 @@ class _DistanceTravelled extends State<DistanceTravelled> {
   bool listening = true;
 
 // Method to round off the value to specified number of decimal places
-  double dp(double val, int places) {
-    num mod = pow(10.0, places);
-    return ((val * mod).round().toDouble() / mod);
+  double dp(final double val, final int places) {
+    final num mod = pow(10.0, places);
+    return (val * mod).round().toDouble() / mod;
   }
 
-  void updateDistance(difference) {
-    double newDiff = totalDistance + difference;
+  void updateDistance(final double difference) {
+    final double newDiff = totalDistance + difference;
     widget.callback(newDiff);
     mounted
         ? setState(() {
@@ -45,12 +46,12 @@ class _DistanceTravelled extends State<DistanceTravelled> {
 
   void createStream() {
     totalDistance = 0;
-    hasLocationPermission().then((value) => {
+    hasLocationPermission().then((final value) => {
 // Getting the position stream and listening for any changes in the location
-          stream = Geolocator.getPositionStream().listen((position) {
+          stream = Geolocator.getPositionStream().listen((final position) {
             if (previousPosition != null) {
 // Calculating the distance travelled from the previous location
-              double difference = Geolocator.distanceBetween(
+              final double difference = Geolocator.distanceBetween(
                   previousPosition!.latitude,
                   previousPosition!.longitude,
                   position.latitude,
@@ -71,7 +72,7 @@ class _DistanceTravelled extends State<DistanceTravelled> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (widget.active) {
       if (stream == null) {
         createStream();
@@ -85,7 +86,7 @@ class _DistanceTravelled extends State<DistanceTravelled> {
       );
     }
     stream?.cancel().then(
-          (value) => {stream = null, commonLogger.t("Cancelling stream")},
+          (final value) => {stream = null, commonLogger.t("Cancelling stream")},
         );
     previousPosition = null;
     return Text("0 Km", style: TextStyle(color: swatch[401]));
@@ -101,9 +102,8 @@ class _DistanceTravelled extends State<DistanceTravelled> {
 
 // Creating a stateful widget called DistanceTravelled
 class DistanceTravelledText extends StatefulWidget {
+  const DistanceTravelledText({required this.totalDistance, super.key});
   final double totalDistance;
-
-  const DistanceTravelledText({super.key, required this.totalDistance});
   @override
   State<DistanceTravelledText> createState() =>
       _DistanceTravelledText(); //Creating state for the widget
@@ -112,17 +112,15 @@ class DistanceTravelledText extends StatefulWidget {
 // Creating a private state for the DistanceTravelled widget
 class _DistanceTravelledText extends State<DistanceTravelledText> {
 // Method to round off the value to specified number of decimal places
-  double dp(double val, int places) {
-    num mod = pow(10.0, places);
-    return ((val * mod).round().toDouble() / mod);
+  double dp(final double val, final int places) {
+    final num mod = pow(10.0, places);
+    return (val * mod).round().toDouble() / mod;
   }
   //widget.callback(totalDistance);
 
   @override
-  Widget build(BuildContext context) {
-    return Text(
-      "${dp(widget.totalDistance / 1000, 2)} Km",
-      style: TextStyle(color: swatch[401]),
-    );
-  }
+  Widget build(final BuildContext context) => Text(
+        "${dp(widget.totalDistance / 1000, 2)} Km",
+        style: TextStyle(color: swatch[401]),
+      );
 }

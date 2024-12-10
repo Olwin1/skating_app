@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 class StatusColour {
-  static Color getColour(String status) {
+  static Color getColour(final String status) {
     Color statusColour;
     switch (status) {
       case "pending_review":
@@ -41,8 +41,7 @@ class StatusColour {
     return statusColour;
   }
 
-  static List<String> getStatusList() {
-    return [
+  static List<String> getStatusList() => [
       "pending_review",
       "invalid",
       "valid_no_action",
@@ -54,5 +53,4 @@ class StatusColour {
       "resolved",
       "closed_no_resolution"
     ];
-  }
 }

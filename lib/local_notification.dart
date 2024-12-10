@@ -1,18 +1,19 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:patinka/api/config.dart';
-import 'package:patinka/api/fcm_token.dart';
-import 'package:patinka/api/messages.dart';
-import 'package:patinka/api/social.dart';
-import 'package:patinka/services/navigation_service.dart';
-import 'package:patinka/social_media/private_messages/private_message.dart';
-import 'package:patinka/social_media/private_messages/session_notification.dart';
-import 'common_logger.dart';
+import "package:firebase_core/firebase_core.dart";
+import "package:firebase_messaging/firebase_messaging.dart";
+import "package:flutter/material.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/fcm_token.dart";
+import "package:patinka/api/messages.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/services/navigation_service.dart";
+import "package:patinka/social_media/private_messages/private_message.dart";
+import "package:patinka/social_media/private_messages/session_notification.dart";
 
 // Entry point for handling Firebase background messages
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+@pragma("vm:entry-point")
+Future<void> _firebaseMessagingBackgroundHandler(
+    final RemoteMessage message) async {
   await Firebase.initializeApp(); // Ensure Firebase is initialized
   if (message.notification != null) {
     print(Config.uri);
@@ -21,22 +22,22 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 Future<void> _firebaseMessagingMessageOpenedHandler(
-    RemoteMessage message) async {
-  if (message.data.containsKey('channelId') &&
+    final RemoteMessage message) async {
+  if (message.data.containsKey("channelId") &&
       message.data.containsKey("click_action")) {
     if (message.data["click_action"] == "FLUTTER_NOTIFICATION_CLICK") {
-      Map<String, dynamic> user =
+      final Map<String, dynamic> user =
           await SocialAPI.getUser(message.data["senderId"]);
-      Map<String, dynamic> channel =
+      final Map<String, dynamic> channel =
           await MessagesAPI.getChannel(message.data["channelId"]);
-      String? userId = await storage.getId();
+      final String? userId = await storage.getId();
       if (userId == null) {
         return;
       }
       Navigator.push(
         NavigationService.currentNavigatorKey.currentContext!,
         MaterialPageRoute(
-          builder: (context) => PrivateMessage(
+          builder: (final context) => PrivateMessage(
             initSelf: true,
             channel: channel,
             user: user,
@@ -50,26 +51,25 @@ Future<void> _firebaseMessagingMessageOpenedHandler(
 
 // Manages notifications and handles Firebase messaging events
 class NotificationManager extends ChangeNotifier {
+  factory NotificationManager() => _instance;
+
+  // Private constructor
+  NotificationManager._privateConstructor();
   final messaging = FirebaseMessaging.instance;
 
   final List<CustomNotification> _notifications = [];
 
   static final NotificationManager _instance =
       NotificationManager._privateConstructor();
-
-  factory NotificationManager() => _instance;
   static NotificationManager get instance => _instance;
-
-  // Private constructor
-  NotificationManager._privateConstructor();
 
   List<CustomNotification> get notifications => _notifications;
 
   // Adds a new message/notification to the list
-  void addMessage(RemoteMessage message) {
+  void addMessage(final RemoteMessage message) {
     if (message.notification != null) {
       _notifications.add(CustomNotification(
-        title: message.notification!.title ?? '',
+        title: message.notification!.title ?? "",
         body: message.notification!.body,
       ));
     }
@@ -77,7 +77,7 @@ class NotificationManager extends ChangeNotifier {
   }
 
   // Dismisses a specific message/notification
-  void dismissMessage(CustomNotification message) {
+  void dismissMessage(final CustomNotification message) {
     _notifications.remove(message);
     notifyListeners();
   }
@@ -95,7 +95,7 @@ class NotificationManager extends ChangeNotifier {
     commonLogger.i(fcmToken);
 
     // Requests permission to show notifications
-    var settings = await messaging.requestPermission(
+    final settings = await messaging.requestPermission(
       alert: true,
       announcement: false,
       badge: true,
@@ -116,51 +116,50 @@ class NotificationManager extends ChangeNotifier {
       );
 
       // Listens for incoming messages while the app is in the foreground
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      FirebaseMessaging.onMessage.listen((final RemoteMessage message) async {
         if (message.notification != null) {
           print("AAAAAAA RECIEVED COW");
-          String? userId = await storage.getId();
+          final String? userId = await storage.getId();
           if (userId == null) {
             return;
           }
-          Map<String, dynamic> data = {
+          final Map<String, dynamic> data = {
             "sender": message.data["senderId"],
             "content": message.notification?.body ?? "",
             "channel": message.data["channelId"],
           };
-
-          showNotification(NavigationService.currentNavigatorKey.currentContext,
-              data, userId);
-          addMessage(message);
+          if (NavigationService.currentNavigatorKey.currentContext != null) {
+            showNotification(
+                NavigationService.currentNavigatorKey.currentContext!,
+                data,
+                userId);
+            addMessage(message);
+          }
         }
       });
 
       // Sets the background message handler
       FirebaseMessaging.onBackgroundMessage(
           _firebaseMessagingBackgroundHandler);
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        _firebaseMessagingMessageOpenedHandler(message);
-      });
+      FirebaseMessaging.onMessageOpenedApp
+          .listen(_firebaseMessagingMessageOpenedHandler);
 
       // Listens for token refresh events
-      FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-        updateToken(newToken);
-      });
+      FirebaseMessaging.instance.onTokenRefresh.listen(updateToken);
     }
   }
 }
 
 // Represents a custom notification with title, body, route, and icon information
 class CustomNotification {
-  String title;
-  String? body;
-  String? route;
-  String? iconPath;
-
   CustomNotification({
     required this.title,
     this.body,
     this.route,
     this.iconPath,
   });
+  String title;
+  String? body;
+  String? route;
+  String? iconPath;
 }

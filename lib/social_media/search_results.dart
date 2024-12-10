@@ -1,23 +1,23 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:patinka/api/social.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/profile/profile_page/profile_page.dart';
-import '../api/config.dart';
-import '../misc/default_profile.dart';
-import '../swatch.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/social.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/misc/default_profile.dart";
+import "package:patinka/profile/profile_page/profile_page.dart";
+import "package:patinka/swatch.dart";
+import "package:shimmer/shimmer.dart";
 
 // Flag to track if the user is entering a search query
 bool entering = false;
 
 class SearchResults extends StatefulWidget {
-  final String query;
 
   // Constructor for the SearchResults widget
-  const SearchResults({super.key, required this.query});
+  const SearchResults({required this.query, super.key});
+  final String query;
 
   @override
   State<SearchResults> createState() => _SearchResults();
@@ -38,8 +38,7 @@ class _SearchResults extends State<SearchResults> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(final BuildContext context) => Scaffold(
       backgroundColor: const Color(0x84000000),
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
@@ -91,7 +90,7 @@ class _SearchResults extends State<SearchResults> {
                   const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             ),
             style: TextStyle(color: swatch[901]),
-            onSubmitted: (value) {
+            onSubmitted: (final value) {
               entering = false; // Set entering flag to false
               mounted
                   ? setState(() {
@@ -108,13 +107,12 @@ class _SearchResults extends State<SearchResults> {
             : SearchResultsList(query: currentQuery!),
       ),
     );
-  }
 }
 
 class SearchResultsList extends StatefulWidget {
-  final String query;
 
-  const SearchResultsList({super.key, required this.query});
+  const SearchResultsList({required this.query, super.key});
+  final String query;
 
   @override
   State<SearchResultsList> createState() => _SearchResultsList();
@@ -126,7 +124,7 @@ class _SearchResultsList extends State<SearchResultsList> {
   TextEditingController controller = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Check if entering is true, and if so, return the Results widget with the current results
     if (entering) {
       return Results(results: results);
@@ -139,7 +137,7 @@ class _SearchResultsList extends State<SearchResultsList> {
     commonLogger.t("searching users ${widget.query}");
 
     // Call the searchUsers function with the query and handle the returned value
-    SocialAPI.searchUsers(widget.query).then((value) => mounted
+    SocialAPI.searchUsers(widget.query).then((final value) => mounted
         ? setState(
             () {
               commonLogger.d("eeeeeeeeeeeeeeeeeeeee $value");
@@ -154,14 +152,13 @@ class _SearchResultsList extends State<SearchResultsList> {
 }
 
 class Results extends StatelessWidget {
-  const Results({super.key, required this.results});
+  const Results({required this.results, super.key});
   final List<Map<String, dynamic>> results;
 
   @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
+  Widget build(final BuildContext context) => ListView.builder(
       itemCount: results.length,
-      itemBuilder: (BuildContext context, int index) => Padding(
+      itemBuilder: (final BuildContext context, final int index) => Padding(
         padding: const EdgeInsets.only(top: 8),
         child: Container(
           decoration: const BoxDecoration(
@@ -175,7 +172,7 @@ class Results extends StatelessWidget {
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ProfilePage(
+                builder: (final context) => ProfilePage(
                   userId: results[index]["user_id"],
                   navbar: false,
                 ),
@@ -191,7 +188,7 @@ class Results extends StatelessWidget {
                         child: CachedNetworkImage(
                           imageUrl:
                               '${Config.uri}/image/thumbnail/${results[index]["avatar_id"]}',
-                          placeholder: (context, url) => Shimmer.fromColors(
+                          placeholder: (final context, final url) => Shimmer.fromColors(
                             baseColor: shimmer["base"]!,
                             highlightColor: shimmer["highlight"]!,
                             child: CircleAvatar(
@@ -199,7 +196,7 @@ class Results extends StatelessWidget {
                               backgroundColor: swatch[900],
                             ),
                           ),
-                          imageBuilder: (context, imageProvider) => Container(
+                          imageBuilder: (final context, final imageProvider) => Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
@@ -241,5 +238,4 @@ class Results extends StatelessWidget {
         ),
       ),
     );
-  }
 }

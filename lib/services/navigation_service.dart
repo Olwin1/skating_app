@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:patinka/common_logger.dart';
+import "package:flutter/material.dart";
+import "package:patinka/common_logger.dart";
 
 class NavigationService extends ChangeNotifier {
   static final Map<String, GlobalKey<NavigatorState>> navigatorKeys = {
@@ -14,7 +14,7 @@ class NavigationService extends ChangeNotifier {
   static int _currentIndex = 0;
 
   // Set the current index
-  static void setCurrentIndex(int index) {
+  static void setCurrentIndex(final int index) {
     if (index >= 0 && index < navigatorKeys.length) {
       _currentIndex = index;
       commonLogger.d("Setting current navigator to $index");
@@ -37,7 +37,7 @@ class NavigationService extends ChangeNotifier {
     return navigatorKeys[_currentIndex.toString()]!;
   }
 
-  static GlobalKey<NavigatorState>? navigatorKey(String index) {
+  static GlobalKey<NavigatorState>? navigatorKey(final String index) {
     commonLogger.d("Getting Navigator of $index");
     return navigatorKeys[index];
   }

@@ -1,20 +1,20 @@
-import 'dart:ui';
+import "dart:ui";
 
-import 'package:flutter/material.dart';
-import 'package:patinka/api/image.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/login/config.dart';
-import 'package:patinka/login/page_type.dart';
-import './layers/layer_one.dart';
-import './layers/layer_three.dart';
-import './layers/layer_two.dart';
+import "package:flutter/material.dart";
+import "package:patinka/api/image.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/login/config.dart";
+import "package:patinka/login/layers/layer_one.dart";
+import "package:patinka/login/layers/layer_three.dart";
+import "package:patinka/login/layers/layer_two.dart";
+import "package:patinka/login/page_type.dart";
 
 enum BackgroundProgress { notDownloading, downloading, downloaded }
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({required this.loggedIn, super.key, this.setLoggedIn});
   final bool loggedIn;
   final dynamic setLoggedIn;
-  const LoginPage({super.key, required this.loggedIn, this.setLoggedIn});
 
   @override
   State<LoginPage> createState() => _LoginPage();
@@ -26,14 +26,14 @@ class _LoginPage extends State<LoginPage> {
   List<String> texts = ["Login"];
   BackgroundProgress backgroundProgress = BackgroundProgress.notDownloading;
 
-  void switchPage(PageType page) {
+  void switchPage(final PageType page) {
     setState(() {
       currentPage = page;
     });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     commonLogger.d(currentPage.toString());
 
     if (backgroundProgress == BackgroundProgress.notDownloading) {
@@ -43,7 +43,7 @@ class _LoginPage extends State<LoginPage> {
       final physicalPixelHeight =
           mediaQuery.size.height * mediaQuery.devicePixelRatio;
       downloadBackgroundImage(physicalPixelWidth, physicalPixelHeight)
-          .then((value) => {
+          .then((final value) => {
                 if (value) {backgroundProgress = BackgroundProgress.downloaded}
               });
       if (backgroundProgress == BackgroundProgress.notDownloading) {
@@ -101,7 +101,7 @@ class TextMorphingAnimationState extends State<TextMorphingAnimation> {
   double top = 0; // Initial top position
 
   // Update the top position based on the page
-  void updateAlignment(PageType page) {
+  void updateAlignment(final PageType page) {
     setState(() {
       switch (page) {
         case PageType.signup:
@@ -128,22 +128,19 @@ class TextMorphingAnimationState extends State<TextMorphingAnimation> {
   }
 
   @override
-  void didUpdateWidget(covariant TextMorphingAnimation oldWidget) {
+  void didUpdateWidget(covariant final TextMorphingAnimation oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Update the alignment when the widget receives a new page
     updateAlignment(widget.page);
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(final BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: AnimatedSwitcher(
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return FadeTransition(opacity: animation, child: child);
-              },
+              transitionBuilder: (final Widget child, final Animation<double> animation) => FadeTransition(opacity: animation, child: child),
               duration: const Duration(seconds: 1),
               child: Text(
                 getTextForPage(widget.page),
@@ -160,9 +157,8 @@ class TextMorphingAnimationState extends State<TextMorphingAnimation> {
                 ),
               ),
             )));
-  }
 
-  String getTextForPage(PageType page) {
+  String getTextForPage(final PageType page) {
     switch (page) {
       case PageType.signup:
         return "Signup";
@@ -177,8 +173,8 @@ class TextMorphingAnimationState extends State<TextMorphingAnimation> {
 }
 
 class TextMorphingAnimation extends StatefulWidget {
+  const TextMorphingAnimation({required this.page, super.key});
   final PageType page;
-  const TextMorphingAnimation({super.key, required this.page});
 
   @override
   TextMorphingAnimationState createState() => TextMorphingAnimationState();

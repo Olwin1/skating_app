@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:patinka/services/navigation_service.dart';
-import 'package:provider/provider.dart';
-
-import '../../misc/navbar_provider.dart';
+import "package:flutter/material.dart";
+import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/services/navigation_service.dart";
+import "package:provider/provider.dart";
 
 // Enum to define different animation styles for the modal bottom sheet
 enum AnimationStyle { defaultStyle, custom, none }
@@ -10,16 +9,20 @@ enum AnimationStyle { defaultStyle, custom, none }
 class ModalBottomSheet {
   // Static method to show the modal bottom sheet
   static void show(
-      {required BuildContext context, // The BuildContext for navigation
-      required Widget Function(BuildContext)
+      {required final BuildContext context, // The BuildContext for navigation
+      required final Widget Function(BuildContext)
           builder, // The builder to create the content of the modal
-      AnimationStyle animationStyle = AnimationStyle
+      final AnimationStyle animationStyle = AnimationStyle
           .defaultStyle, // The animation style for the modal (default: defaultStyle)
-      double startSize = 0.4, bool hideNavbar = true}) {
+      final double startSize = 0.4,
+      final bool hideNavbar = true}) {
     // The initial size of the modal (default: 40% of the screen height)
 
     // Hide the bottom navbar before showing the modal
-    hideNavbar?Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide():null;
+    hideNavbar
+        ? Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+            .hide()
+        : null;
 
     // Show the modal bottom sheet with customized options
     showModalBottomSheet<void>(
@@ -33,21 +36,18 @@ class ModalBottomSheet {
             top: Radius.circular(16.0), // Rounded top corners for the modal
           ),
         ),
-        builder: (BuildContext context) {
-          // DraggableScrollableSheet allows the user to drag and resize the modal
-          return DraggableScrollableSheet(
-              initialChildSize:
-                  startSize, // Initial size of the modal as a percentage of screen height
-              minChildSize:
-                  0.2, // Minimum height of the modal (20% of screen height)
-              maxChildSize:
-                  0.9, // Maximum height of the modal (90% of screen height)
-              expand: false, // Prevents the modal from expanding to full screen
-              snap: false, // Disables snapping behavior when dragging the modal
-              builder:
-                  (BuildContext context, ScrollController scrollController) {
-                // Wrap the modal content in a SingleChildScrollView to allow scrolling
-                return SingleChildScrollView(
+        builder: (final BuildContext context) => DraggableScrollableSheet(
+            initialChildSize:
+                startSize, // Initial size of the modal as a percentage of screen height
+            minChildSize:
+                0.2, // Minimum height of the modal (20% of screen height)
+            maxChildSize:
+                0.9, // Maximum height of the modal (90% of screen height)
+            expand: false, // Prevents the modal from expanding to full screen
+            snap: false, // Disables snapping behavior when dragging the modal
+            builder: (final BuildContext context,
+                    final ScrollController scrollController) =>
+                SingleChildScrollView(
                     controller:
                         scrollController, // Attach the scrollController for scrolling functionality
                     child: Column(
@@ -72,13 +72,11 @@ class ModalBottomSheet {
                             child: builder(
                                 context)), // Call the builder to display the modal content
                       ],
-                    ));
-              });
-        }).whenComplete(() {
+                    )))).whenComplete(() {
       // Once the modal is dismissed, show the bottom navbar again
-      if (hideNavbar&&NavigationService.currentNavigatorKey.currentState != null &&
-          NavigationService.currentNavigatorKey.currentState!.mounted !=
-              false) {
+      if (hideNavbar &&
+          NavigationService.currentNavigatorKey.currentState != null &&
+          NavigationService.currentNavigatorKey.currentState!.mounted) {
         // Ensure the current context is still mounted and then show the navbar
         Provider.of<BottomBarVisibilityProvider>(
                 NavigationService.currentNavigatorKey.currentState!.context,

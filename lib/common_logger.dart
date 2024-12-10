@@ -1,10 +1,8 @@
-import 'package:logger/logger.dart';
+import "package:logger/logger.dart";
 
 class MyFilter extends LogFilter {
   @override
-  bool shouldLog(LogEvent event) {
-    return true;
-  }
+  bool shouldLog(final LogEvent event) => true;
 }
 
 final Logger commonLogger = Logger(filter: MyFilter());

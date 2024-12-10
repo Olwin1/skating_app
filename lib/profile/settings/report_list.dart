@@ -1,26 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:patinka/api/reports.dart';
-import 'package:patinka/common_logger.dart';
-import 'package:patinka/components/list_error.dart';
-import 'package:patinka/profile/settings/status_colour.dart';
-import 'package:patinka/services/role.dart';
-import 'package:patinka/social_media/post_widget.dart';
-
-import '../../api/config.dart';
-import '../../swatch.dart';
-import 'report_user.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/reports.dart";
+import "package:patinka/common_logger.dart";
+import "package:patinka/components/list_error.dart";
+import "package:patinka/profile/settings/report_user.dart";
+import "package:patinka/profile/settings/status_colour.dart";
+import "package:patinka/services/role.dart";
+import "package:patinka/social_media/post_widget.dart";
+import "package:patinka/swatch.dart";
 
 // FollowingList widget
 
 class ReportList extends StatelessWidget {
+  const ReportList({required this.user, super.key});
   final Map<String, dynamic>? user;
-  const ReportList({super.key, required this.user});
 
   @override
-  Widget build(BuildContext context) {
-    String title = "Reports";
+  Widget build(final BuildContext context) {
+    const String title = "Reports";
 
     return Scaffold(
         backgroundColor: const Color(0x34000000),
@@ -48,9 +47,8 @@ class ReportList extends StatelessWidget {
 }
 
 class ReportListView extends StatefulWidget {
+  const ReportListView({required this.user, super.key});
   final Map<String, dynamic>? user;
-
-  const ReportListView({super.key, required this.user});
 
   @override
   State<ReportListView> createState() => _ReportListViewState();
@@ -67,13 +65,11 @@ class _ReportListViewState extends State<ReportListView> {
   @override
   void initState() {
     // Add a listener for page requests, and call _fetchPage() when a page is requested
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(final int pageKey) async {
     try {
       List<Map<String, dynamic>> page;
       // Fetch the page of comments using the getComments() function
@@ -81,13 +77,15 @@ class _ReportListViewState extends State<ReportListView> {
 
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
       if (isLastPage) {
         // If this is the last page, append it to the list of pages
         _pagingController.appendLastPage(page);
       } else {
         // If this is not the last page, append it to the list of pages and request the next page
-        final nextPageKey = pageKey += 1;
+        final nextPageKey = pageKey + 1;
         _pagingController.appendPage(page, nextPageKey);
       }
     } catch (error) {
@@ -97,24 +95,22 @@ class _ReportListViewState extends State<ReportListView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Build a paginated list view of comments using the PagedListView widget
-    return Stack(children: [
-      PagedListView<int, Map<String, dynamic>>(
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-          // Use the Comment widget to build each item in the list view
-          itemBuilder: (context, item, index) => ReportListWidget(
-            item: item,
-            refreshPage: _pagingController.refresh,
-            user: widget.user,
+  Widget build(final BuildContext context) => Stack(children: [
+        PagedListView<int, Map<String, dynamic>>(
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+            // Use the Comment widget to build each item in the list view
+            itemBuilder: (final context, final item, final index) =>
+                ReportListWidget(
+              item: item,
+              refreshPage: _pagingController.refresh,
+              user: widget.user,
+            ),
+            noItemsFoundIndicatorBuilder: (final context) =>
+                const ListError(title: "No reports", body: "Well thats nice."),
           ),
-          noItemsFoundIndicatorBuilder: (context) =>
-              const ListError(title: "No reports", body: "Well thats nice."),
-        ),
-      )
-    ]);
-  }
+        )
+      ]);
 
   @override
   void dispose() {
@@ -132,10 +128,10 @@ class _ReportListViewState extends State<ReportListView> {
 class ReportListWidget extends StatefulWidget {
   // Constructor for UserListWidget
   const ReportListWidget(
-      {super.key,
-      required this.item,
+      {required this.item,
       required this.refreshPage,
-      required this.user});
+      required this.user,
+      super.key});
 
   // Title for the widget
   final Map<String, dynamic> item;
@@ -152,7 +148,8 @@ class _ReportListWidget extends State<ReportListWidget> {
   @override
   void initState() {
     if (widget.user != null) {
-      UserRole tmp = RoleServices.convertToEnum(widget.user!["user_role"]);
+      final UserRole tmp =
+          RoleServices.convertToEnum(widget.user!["user_role"]);
       if (tmp != UserRole.regular) {
         setState(() {
           userRole = tmp;
@@ -165,14 +162,17 @@ class _ReportListWidget extends State<ReportListWidget> {
   void handlePress() {
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => UserReportPage(
-            report: widget.item, user: widget.user, userRole: userRole),
+        pageBuilder:
+            (final context, final animation, final secondaryAnimation) =>
+                UserReportPage(
+                    report: widget.item, user: widget.user, userRole: userRole),
         opaque: true,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        transitionsBuilder: (final context, final animation,
+            final secondaryAnimation, final child) {
           const begin = 0.0;
           const end = 1.0;
-          var tween = Tween(begin: begin, end: end);
-          var fadeAnimation = tween.animate(animation);
+          final tween = Tween(begin: begin, end: end);
+          final fadeAnimation = tween.animate(animation);
           return FadeTransition(
             opacity: fadeAnimation,
             child: child,
@@ -184,11 +184,11 @@ class _ReportListWidget extends State<ReportListWidget> {
 
   // Builds the widget
   @override
-  Widget build(BuildContext context) {
-    Color statusColour = StatusColour.getColour(widget.item["status"]);
+  Widget build(final BuildContext context) {
+    final Color statusColour = StatusColour.getColour(widget.item["status"]);
     // Returns a row with a CircleAvatar, a text widget, and a TextButton
     return GestureDetector(
-        onTap: () => handlePress(),
+        onTap: handlePress,
         child: Container(
             decoration: BoxDecoration(
               color: const Color(0xbb000000),
@@ -215,7 +215,7 @@ class _ReportListWidget extends State<ReportListWidget> {
                       const SizedBox(
                         width: 50,
                       ),
-                      Text("Subject:"),
+                      const Text("Subject:"),
                       Container(
                           margin: const EdgeInsets.only(left: 8),
                           height: 28,
@@ -240,7 +240,10 @@ class _ReportListWidget extends State<ReportListWidget> {
                               width: 110,
                               child: Text(
                                 widget.item["status"],
-                                style: TextStyle(overflow: TextOverflow.fade, backgroundColor: Colors.black.withAlpha(150)),
+                                style: TextStyle(
+                                    overflow: TextOverflow.fade,
+                                    backgroundColor:
+                                        Colors.black.withAlpha(150)),
                               ))),
                       const SizedBox(
                         width: 45,

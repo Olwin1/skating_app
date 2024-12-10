@@ -1,6 +1,7 @@
-part of '../local_preferences.dart';
+part of "../local_preferences.dart";
 
 class LocalManager {
+  LocalManager._init();
   static LocalManager get instance {
     _instance ??= LocalManager._init();
 
@@ -8,7 +9,6 @@ class LocalManager {
   }
 
   static LocalManager? _instance;
-  LocalManager._init();
   SharedPreferences? _preferences;
   Future<SharedPreferences> get preferences async {
     _preferences ??= await SharedPreferences.getInstance();
@@ -16,9 +16,9 @@ class LocalManager {
   }
 
   Future<bool> writeModelInJson(
-      dynamic body, String url, Duration duration) async {
+      final dynamic body, final String url, final Duration duration) async {
     final pref = await preferences;
-    BaseLocal local =
+    final BaseLocal local =
         BaseLocal(model: body, time: DateTime.now().add(duration));
     final json = jsonEncode(local.toJson());
     if (body != null && json.isNotEmpty) {
@@ -27,7 +27,7 @@ class LocalManager {
     return false;
   }
 
-  Future<String?> getModelString(String url) async {
+  Future<String?> getModelString(final String url) async {
     final pref = await preferences;
     final jsonString = pref.getString(url);
     if (jsonString != null) {
@@ -43,17 +43,17 @@ class LocalManager {
     return null;
   }
 
-  Future<bool> removeAllLocalData(String? url) async {
+  Future<bool> removeAllLocalData(final String? url) async {
     final pref = await preferences;
     if (url == null) {
       pref.clear();
       return true;
     }
-    pref.getKeys().removeWhere((element) => element.contains(url));
+    pref.getKeys().removeWhere((final element) => element.contains(url));
     return true;
   }
 
-  Future<bool> removeModel(String url) async {
+  Future<bool> removeModel(final String url) async {
     final pref = await preferences;
     return await pref.remove(url);
   }

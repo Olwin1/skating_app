@@ -302,6 +302,7 @@ class _Settings extends State<Settings> {
                                           builder: (final context) =>
                                               ReportList(
                                                 user: widget.user,
+                                                isSelf: false,
                                               )));
                                 })
                             : SettingsTile.navigation(
@@ -309,6 +310,18 @@ class _Settings extends State<Settings> {
                                 title: const Text("WIP"),
                                 enabled: false,
                               ),
+                        SettingsTile.navigation(
+                            leading: const Icon(Icons.policy),
+                            title: const Text("My Reports"),
+                            onPressed: (final context) {
+                              Navigator.of(context).push(
+                                  // Send to signal info page
+                                  MaterialPageRoute(
+                                      builder: (final context) => ReportList(
+                                            user: widget.user,
+                                            isSelf: true,
+                                          )));
+                            }),
 
                         // Navigation tile for reporting a bug
                         SettingsTile.navigation(

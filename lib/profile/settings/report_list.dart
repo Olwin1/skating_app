@@ -14,8 +14,9 @@ import "package:patinka/swatch.dart";
 // FollowingList widget
 
 class ReportList extends StatelessWidget {
-  const ReportList({required this.user, super.key});
+  const ReportList({required this.user, this.isSelf = true, super.key});
   final Map<String, dynamic>? user;
+  final bool isSelf;
 
   @override
   Widget build(final BuildContext context) {
@@ -42,13 +43,15 @@ class ReportList extends StatelessWidget {
             )),
         body: ReportListView(
           user: user,
+          isSelf: isSelf,
         ));
   }
 }
 
 class ReportListView extends StatefulWidget {
-  const ReportListView({required this.user, super.key});
+  const ReportListView({required this.user, required this.isSelf, super.key});
   final Map<String, dynamic>? user;
+  final bool isSelf;
 
   @override
   State<ReportListView> createState() => _ReportListViewState();
@@ -73,7 +76,7 @@ class _ReportListViewState extends State<ReportListView> {
     try {
       List<Map<String, dynamic>> page;
       // Fetch the page of comments using the getComments() function
-      page = await ReportAPI.getReports(pageKey);
+      page = await ReportAPI.getReports(pageKey, widget.isSelf);
 
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
@@ -105,6 +108,7 @@ class _ReportListViewState extends State<ReportListView> {
               item: item,
               refreshPage: _pagingController.refresh,
               user: widget.user,
+              isSelf: widget.isSelf,
             ),
             noItemsFoundIndicatorBuilder: (final context) =>
                 const ListError(title: "No reports", body: "Well thats nice."),
@@ -131,12 +135,14 @@ class ReportListWidget extends StatefulWidget {
       {required this.item,
       required this.refreshPage,
       required this.user,
+      required this.isSelf,
       super.key});
 
   // Title for the widget
   final Map<String, dynamic> item;
   final Map<String, dynamic>? user;
   final VoidCallback refreshPage;
+  final bool isSelf;
   // Creates the state for the UserListWidget
   @override
   State<ReportListWidget> createState() => _ReportListWidget();
@@ -165,7 +171,10 @@ class _ReportListWidget extends State<ReportListWidget> {
         pageBuilder:
             (final context, final animation, final secondaryAnimation) =>
                 UserReportPage(
-                    report: widget.item, user: widget.user, userRole: userRole),
+                    report: widget.item,
+                    user: widget.user,
+                    userRole: userRole,
+                    isSelf: widget.isSelf),
         opaque: true,
         transitionsBuilder: (final context, final animation,
             final secondaryAnimation, final child) {

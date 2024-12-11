@@ -12,6 +12,8 @@ class ReportAPI {
   static final Uri _reportDataUrl =
       Uri.parse("${Config.uri}/support/report_data");
   static final Uri _reportModifyUrl = Uri.parse("$_reportUrl/modify");
+  static final Uri _reportMessageUrl = Uri.parse("$_reportUrl/message");
+  static final Uri _reportMessagesUrl = Uri.parse("${_reportMessagesUrl}s");
   static final Uri _reportListUrl = Uri.parse("$_reportUrl/list");
   static final Uri _reportListFromUrl = Uri.parse("$_reportListUrl/from");
   static final Uri _reportListAgainstUrl = Uri.parse("$_reportListUrl/against");
@@ -123,14 +125,16 @@ class ReportAPI {
   // Parameters:
   // - page: Page number for pagination
   // Returns: A map containing a list of reports
-  static Future<List<Map<String, dynamic>>> getReports(final int page) async {
+  static Future<List<Map<String, dynamic>>> getReports(
+      final int page, final bool isSelf) async {
     try {
       final response = await http.get(
         _reportListUrl,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           "Authorization": "Bearer ${await storage.getToken()}",
-          "page": page.toString()
+          "page": page.toString(),
+          "is_self": isSelf.toString()
         },
       );
 
@@ -189,6 +193,40 @@ class ReportAPI {
     } catch (e) {
       // Handle any errors during the reports retrieval process
       throw Exception("Error while getting reports: $e");
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> getReportMessages(
+      final int page, final String reportId) async {
+    try {
+      final response = await http.get(
+        _reportMessagesUrl,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer ${await storage.getToken()}",
+          "page": page.toString(),
+          "report_id": reportId
+        },
+      );
+
+      return handleResponse(response, Resp.listResponse);
+    } catch (e) {
+      // Handle any errors during the reports retrieval process
+      throw Exception("Error while getting reports: $e");
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> postReportMessage(
+      final String reportId, final String message) async {
+    try {
+      final response = await http.post(_reportMessageUrl,
+          headers: await Config.getDefaultHeadersAuth,
+          body: {"report_id": reportId, "content": message});
+
+      return handleResponse(response, Resp.stringResponse);
+    } catch (e) {
+      // Handle any errors during the reports retrieval process
+      throw Exception("Error while posting report message: $e");
     }
   }
 }

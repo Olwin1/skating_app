@@ -34,7 +34,7 @@ class _LoginComponent extends State<LoginComponent> {
     // When the user taps the sign-in button, try to log them in
     try {
       // Call the login function with the username and password provided
-      final res = await login(usernameController.text, passwordController.text);
+      final res = await AuthenticationAPI.login(usernameController.text, passwordController.text);
       // If login is successful, save the user's token to local storage
       await storage.setToken(res);
       SocialAPI.getUser("0").then((final value) => storage.setId(value["user_id"]));

@@ -12,6 +12,7 @@ import "package:get_it/get_it.dart";
 import "package:in_app_notification/in_app_notification.dart";
 import "package:path/path.dart" as path;
 import "package:path_provider/path_provider.dart";
+import "package:patinka/api/auth.dart";
 import "package:patinka/api/config.dart";
 import "package:patinka/api/image.dart";
 import "package:patinka/api/social.dart";
@@ -27,11 +28,13 @@ import "package:patinka/login/login.dart";
 import "package:patinka/misc/default_profile.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/services/navigation_service.dart";
+import "package:patinka/social_media/utils/utils.dart";
 import "package:patinka/swatch.dart";
 import "package:patinka/tab_navigator.dart";
 import "package:patinka/window_manager/window_manager.dart";
 import "package:provider/provider.dart";
 import "package:shimmer/shimmer.dart";
+
 // AndroidNotificationChannel channel = const AndroidNotificationChannel(
 //   'ChannelId', // id
 //   'ChannelId', // title
@@ -122,12 +125,94 @@ class _MyAppState extends State<MyApp> {
             brightness: Brightness.dark),
       ),
       home: loggedIn
-          ? StateManagement(setLoggedIn: setLoggedIn, loggedIn: loggedIn)
+          ? PunishmentEnforcer(setLoggedIn: setLoggedIn, loggedIn: loggedIn)
           : LoginPage(setLoggedIn: setLoggedIn, loggedIn: loggedIn),
     );
   }
 }
 
+class PunishmentEnforcer extends StatefulWidget {
+  const PunishmentEnforcer({required this.setLoggedIn, required this.loggedIn, super.key});
+
+  final dynamic setLoggedIn;
+  final bool loggedIn;
+
+  @override
+  State<PunishmentEnforcer> createState() => _PunishmentEnforcer();
+}
+
+
+class _PunishmentEnforcer extends State<PunishmentEnforcer> {
+  Map<String, dynamic>? punishmentData;
+    ImageProvider backgroundImage =
+      const AssetImage("assets/backgrounds/graffiti_low_res.png");
+
+  @override
+  void initState() {
+    AuthenticationAPI.isRestricted().then((final response) => setState(() => punishmentData = response));
+
+    void getImage(final String filePath) {
+      Utils.getImage(filePath, (final fileImage) => setState(() => backgroundImage = fileImage));
+    }
+    Utils.loadImage(getImage);
+
+    super.initState();
+  }
+
+  //const result = await AuthenticationAPI.isPunished();
+  @override
+  Widget build(final BuildContext context) {
+    if(punishmentData == null) {
+      return const SizedBox(child: Text("loading"));
+    }
+    commonLogger.i("Running the punishment enforcer");
+    if(punishmentData!["is_banned"]) {
+    // Display a special screen if the user is banned that cannot be exitied out of.  
+    return Scaffold(body: Stack(
+              children: [
+                SingleChildScrollView(
+                    clipBehavior: Clip.none,
+                    physics: const ClampingScrollPhysics(
+                        parent: NeverScrollableScrollPhysics()),
+                    child: Container(
+                        constraints: BoxConstraints(
+                            minHeight: MediaQuery.of(context).size.height,
+                            minWidth: MediaQuery.of(context).size.width),
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: backgroundImage,
+                              fit: BoxFit.cover,
+                              alignment: Alignment.center,
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.4),
+                                  BlendMode.srcOver)),
+                        ),
+                        padding: const EdgeInsets.all(16))),
+                        Center(child: Container(color:Colors.blueGrey.shade900, padding: const EdgeInsets.all(8), child: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: [Text("Looks like you've been taken off the rink!", style: TextStyle(fontSize: 28, color: Colors.red.shade500), textAlign: TextAlign.center,), RichText(
+                          text: const TextSpan(
+                            text: "You have been banned for ",
+                            style: TextStyle(),
+                            children: <TextSpan>[
+                              TextSpan(text: "6 days", style: TextStyle(fontWeight: FontWeight.bold)),
+                              TextSpan(text: " once this time has elapsed then you will be able to access the app as normal."),
+                            ],
+                          ),
+                        )]))),
+                        Positioned(top:55, right: 20, child: DecoratedBox(decoration: BoxDecoration(borderRadius: BorderRadius.circular(32), color: Colors.grey.shade900), child: IconButton(onPressed: () => {
+                            // Remove stored tokens and restart app
+                            storage.logout().then((final value) => {
+                                  if (mounted) {Phoenix.rebirth(context)}
+                                })
+                          }, icon: const Icon(Icons.logout), color: Colors.red.shade700,)))
+              ],
+            ));
+    } else {
+    return StateManagement(setLoggedIn: widget.setLoggedIn, loggedIn: widget.loggedIn);
+    }
+}
+}
 // This is a stateless widget called StateManagement
 class StateManagement extends StatelessWidget {
 
@@ -182,15 +267,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     void getImage(final String filePath) {
-      getApplicationDocumentsDirectory().then((final applicationDocumentsDirectory) {
-        final File file = File(path
-            .join(applicationDocumentsDirectory.path, path.basename(filePath))
-            .replaceAll('"',
-                "")); // Replace all " because it breaks it for some weird reason
-        commonLogger.d(file.existsSync());
-        final FileImage fileImage = FileImage(file);
-        setState(() => backgroundImage = fileImage);
-      });
+      Utils.getImage(filePath, (final fileImage) => setState(() => backgroundImage = fileImage));
     }
 
     storage.getId().then((final value) => {
@@ -209,36 +286,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   avatar = null;
                 })
         });
-    NetworkManager.instance
-        .getLocalData(name: "current-background", type: CacheTypes.background)
-        .then((final filePath) {
-      if (filePath != null) {
-        getImage(filePath);
-      } else {
-        if (mounted) {
-          final MediaQueryData mediaQuery = MediaQuery.of(context);
-          final physicalPixelWidth =
-              mediaQuery.size.width * mediaQuery.devicePixelRatio;
-          final physicalPixelHeight =
-              mediaQuery.size.height * mediaQuery.devicePixelRatio;
-          downloadBackgroundImage(physicalPixelWidth, physicalPixelHeight)
-              .then((final value) {
-            if (value) {
-              commonLogger.d("Downloading Value is true");
-              NetworkManager.instance
-                  .getLocalData(
-                      name: "current-background", type: CacheTypes.background)
-                  .then((final filePath) {
-                if (filePath != null) {
-                  commonLogger.d("File path aint none");
-                  getImage(filePath);
-                }
-              });
-            }
-          });
-        }
-      }
-    });
+    Utils.loadImage(getImage);
     super.initState();
   }
 

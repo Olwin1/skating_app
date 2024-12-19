@@ -26,7 +26,7 @@ class _SignupComponent extends State<SignupComponent> {
     // When the user taps the sign-in button, try to log them in
     try {
       // Call the login function with the username and password provided
-      await signup(usernameController.text, passwordController.text,
+      await AuthenticationAPI.signup(usernameController.text, passwordController.text,
           emailController.text);
       widget.callback(PageType.login);
     } catch (e) {

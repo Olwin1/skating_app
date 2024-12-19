@@ -11,7 +11,9 @@ import "package:patinka/login/page_type.dart";
 
 class LoginComponent extends StatefulWidget {
   const LoginComponent(
-      {required this.loggedIn, required this.callback, super.key,
+      {required this.loggedIn,
+      required this.callback,
+      super.key,
       this.setLoggedIn});
   final bool loggedIn;
   final dynamic setLoggedIn;
@@ -34,10 +36,12 @@ class _LoginComponent extends State<LoginComponent> {
     // When the user taps the sign-in button, try to log them in
     try {
       // Call the login function with the username and password provided
-      final res = await AuthenticationAPI.login(usernameController.text, passwordController.text);
+      final res = await AuthenticationAPI.login(
+          usernameController.text, passwordController.text);
       // If login is successful, save the user's token to local storage
       await storage.setToken(res);
-      SocialAPI.getUser("0").then((final value) => storage.setId(value["user_id"]));
+      SocialAPI.getUser("0")
+          .then((final value) => storage.setId(value["user_id"]));
       // Load the home screen
       loadHome();
       commonLogger.d("Result: $res");
@@ -53,59 +57,59 @@ class _LoginComponent extends State<LoginComponent> {
 
   @override
   Widget build(final BuildContext context) => SizedBox(
-        height: 584,
-        width: MediaQuery.of(context).size.width,
-        child: Stack(
-          children: <Widget>[
-            InputSection(
+      height: 584,
+      width: MediaQuery.of(context).size.width,
+      child: Stack(
+        children: <Widget>[
+          InputSection(
+            left: 59,
+            top: 99,
+            label: "Username",
+            hint: "Enter your username",
+            controller: usernameController,
+          ),
+          InputSection(
+            left: 59,
+            top: 199,
+            label: "Password",
+            hint: "Enter your password",
+            controller: passwordController,
+            hidden: true,
+          ),
+          errorText
+              ? const Positioned(
+                  top: 280,
+                  left: 74,
+                  child: Text(
+                    "Incorrect Password",
+                    style: TextStyle(color: Colors.amber),
+                  ))
+              : const SizedBox.shrink(),
+          PageButton(
+            left: 87,
+            top: 296,
+            label: "Signup",
+            callback: () => widget.callback(PageType.signup),
+          ),
+          PageButton(
+            right: 60,
+            top: 296,
+            label: "Forgot Password",
+            callback: () => widget.callback(PageType.forgotPassword),
+          ),
+          MainButton(
+            top: 365,
+            label: "Sign In",
+            callback: handleSignin,
+          ),
+          Positioned(
+              top: 432,
               left: 59,
-              top: 99,
-              label: "Username",
-              hint: "Enter your username",
-              controller: usernameController,
-            ),
-            InputSection(
-              left: 59,
-              top: 199,
-              label: "Password",
-              hint: "Enter your password",
-              controller: passwordController,
-              hidden: true,
-            ),
-            errorText
-                ? const Positioned(
-                    top: 280,
-                    left: 74,
-                    child: Text(
-                      "Incorrect Password",
-                      style: TextStyle(color: Colors.amber),
-                    ))
-                : const SizedBox.shrink(),
-            PageButton(
-              left: 87,
-              top: 296,
-              label: "Signup",
-              callback: () => widget.callback(PageType.signup),
-            ),
-            PageButton(
-              right: 60,
-              top: 296,
-              label: "Forgot Password",
-              callback: () => widget.callback(PageType.forgotPassword),
-            ),
-            MainButton(
-              top: 365,
-              label: "Sign In",
-              callback: handleSignin,
-            ),
-            Positioned(
-                top: 432,
-                left: 59,
-                child: Container(
-                  height: 0.5,
-                  width: 310,
-                  color: inputBorder,
-                )),
-          ],
-        ));
+              child: Container(
+                height: 0.5,
+                width: 310,
+                color: inputBorder,
+              )),
+        ],
+      ));
 }

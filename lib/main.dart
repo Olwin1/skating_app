@@ -1,5 +1,4 @@
 import "dart:async";
-import "dart:io";
 
 import "package:cached_network_image/cached_network_image.dart";
 import "package:convex_bottom_bar/convex_bottom_bar.dart";
@@ -10,15 +9,11 @@ import "package:flutter_phoenix/flutter_phoenix.dart";
 //import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import "package:get_it/get_it.dart";
 import "package:in_app_notification/in_app_notification.dart";
-import "package:path/path.dart" as path;
-import "package:path_provider/path_provider.dart";
 import "package:patinka/api/auth.dart";
 import "package:patinka/api/config.dart";
-import "package:patinka/api/image.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/api/token.dart";
 import "package:patinka/api/websocket.dart";
-import "package:patinka/caching/manager.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/firebase/init_firebase.dart";
 import "package:patinka/friends_tracker/caching/map_cache.dart"

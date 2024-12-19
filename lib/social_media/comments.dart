@@ -42,11 +42,17 @@ class _Comments extends State<Comments> {
   void initState() {
     // Initialize the state and set up the focus node and comment controller
     storage.getId().then((final value) => userId = value ?? "0");
+    storage.getMuted().then((final result) => setState(() => mutedData = result));
     super.initState();
   }
 
+  Map<String, dynamic>? mutedData;
+
   @override
   Widget build(final BuildContext context) {
+    bool isMuted = mutedData?["isMuted"] ?? false;
+
+
     // Hide the bottom navigation bar when entering the comment screen
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
 
@@ -82,16 +88,17 @@ class _Comments extends State<Comments> {
           commentController: commentController,
           sendButtonMethod: () {
             // Post a comment when the send button is pressed
-            if (commentController.text.isNotEmpty) {
+            if (!isMuted && commentController.text.isNotEmpty) {
               SocialAPI.postComment(widget.post, commentController.text)
                   .then((final value) => _pagingController.refresh());
 
               commentController.clear();
             }
+            // TODO: Add handler to tell user they are muted
           },
           backgroundColor: swatch[50],
           textColor: swatch[801],
-          sendWidget: Icon(Icons.send_sharp, size: 30, color: swatch[801]),
+          sendWidget: Icon(Icons.send_sharp, size: 30, color: !isMuted?swatch[801]:Colors.grey.shade800),
           child: CommentsListView(
               key: commentsListKey,
               post: widget.post,

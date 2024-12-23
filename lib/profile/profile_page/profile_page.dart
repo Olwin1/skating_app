@@ -16,7 +16,7 @@ import "package:provider/provider.dart";
 import "package:shimmer/shimmer.dart";
 
 // Define item type for popup menu
-enum DropdownPage { editProfile, settings, saved }
+enum DropdownPage { editProfile, settings, saved, blockUser }
 
 String? currentImage;
 void setCurrentImage(final String img) {
@@ -242,14 +242,14 @@ class _Profile extends State<Profile> {
                       ],
                     ),
                   )), // Set title
-          actions: widget.userId == "0"
-              ? [
+          actions: [
                   // Define icon buttons
                   OptionsMenu(
                     user: user,
+                    isSelf: widget.userId == "0"
+              ? true : false
                   )
                 ]
-              : null,
         ),
         // Basic list layout element
         body: PageStructure(

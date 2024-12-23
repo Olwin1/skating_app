@@ -168,8 +168,7 @@ class _PostWidget extends State<PostWidget> {
                                       color: isLiked ? selected : unselected,
                                       size: 32.0,
                                     ),
-                                  likeCount: int.parse(
-                                      widget.post["total_likes"] ?? "0"),
+                                  likeCount: widget.post["total_likes"] is int?(widget.post["total_likes"]):int.parse(widget.post["total_likes"] ?? "0"),
                                   countBuilder:
                                       (final int? count, final bool isLiked, final String text) {
                                     final color = isLiked ? selected : unselected;

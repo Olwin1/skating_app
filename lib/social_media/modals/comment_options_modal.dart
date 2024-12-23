@@ -13,7 +13,7 @@ class CommentOptionsBottomSheet extends StatelessWidget { // Replace with actual
   Widget build(final BuildContext context) => Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ReportButton(reportContentType: ReportContentType.comment, contentId: comment["comment_id"], reportedUserId: comment["sender_id"]),
+        ReportButton(reportContentType: ReportContentType.comment, contentId: comment["comment_id"], reportedUserId: comment["sender_id"], isBlocked: false,),
         BlockButton(blockUserId: comment["sender_id"])
       ],
     );

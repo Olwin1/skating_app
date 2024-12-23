@@ -12,6 +12,8 @@ class SupportAPI {
   static final Uri _feedbackUrl = Uri.parse("${Config.uri}/support/feedback");
   static final Uri _messagesUrl = Uri.parse("${Config.uri}/support/messages");
   static final Uri _messageUrl = Uri.parse("${Config.uri}/support/message");
+  static final Uri _blockUrl = Uri.parse("${Config.uri}/user/block");
+  static final Uri _unblockUrl = Uri.parse("${Config.uri}/user/unblock");
 
   // Define a static method to submit a support request
   static Future<Map<String, dynamic>> submitSupportRequest(
@@ -165,6 +167,35 @@ class SupportAPI {
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
       throw Exception("Error during postMessage: $e");
+    }
+  }
+
+
+
+
+    static Future<Map<String, dynamic>> postBlockUser(
+      final String targetUser) async {
+    try {
+      final response = await http.post(_blockUrl,
+          headers: await Config.getDefaultHeadersAuth,
+          body: {"user": targetUser});
+
+      return handleResponse(response, Resp.stringResponse);
+    } catch (e) {
+      throw Exception("Error during block: $e");
+    }
+  }
+
+      static Future<Map<String, dynamic>> postUnblockUser(
+      final String targetUser) async {
+    try {
+      final response = await http.post(_unblockUrl,
+          headers: await Config.getDefaultHeadersAuth,
+          body: {"user": targetUser});
+
+      return handleResponse(response, Resp.stringResponse);
+    } catch (e) {
+      throw Exception("Error during unblock: $e");
     }
   }
 }

@@ -21,7 +21,9 @@ class PostOptionsBottomSheet extends StatelessWidget {
         ReportButton(
             reportContentType: ReportContentType.post,
             contentId: post["post_id"],
-            reportedUserId: post["author_id"]),
+            reportedUserId: post["author_id"],
+            isBlocked: false,
+            ),
       ],
     );
 }

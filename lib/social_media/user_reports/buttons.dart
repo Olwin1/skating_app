@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:patinka/api/support.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/handle_buttons.dart";
 import "package:patinka/social_media/report_content_type.dart";
@@ -53,10 +54,12 @@ class ReportButton extends StatelessWidget {
       {required this.reportContentType,
       required this.contentId,
       required this.reportedUserId,
+      required this.isBlocked,
       super.key});
   final ReportContentType reportContentType;
   final String contentId;
   final String reportedUserId;
+  final bool isBlocked;
 
   @override
   Widget build(final BuildContext context) {
@@ -87,7 +90,9 @@ class ReportButton extends StatelessWidget {
             builder: (final context) => ReportReasonBottomSheet(
                 reportContentType: reportContentType,
                 contentId: contentId,
-                reportedUserId: reportedUserId),
+                reportedUserId: reportedUserId,
+                isBlocked: isBlocked,
+                ),
             startSize: 0.65);
       },
     );
@@ -97,18 +102,19 @@ class ReportButton extends StatelessWidget {
 class BlockButton extends StatelessWidget {
   const BlockButton({required this.blockUserId, super.key});
   final String blockUserId;
-
+  //TODO: Check if is blocked
   @override
   Widget build(final BuildContext context) => ButtonBuilders.createTextButton(
         Icons.block,
         "Block User",
         Colors.red.shade700,
-        () {
+        () async {
           Navigator.pop(context);
           WidgetsBinding.instance.addPostFrameCallback((final _) {
             Provider.of<BottomBarVisibilityProvider>(context, listen: false)
                 .hide();
           });
+          SupportAPI.postBlockUser(blockUserId);
           // ModalBottomSheet.show(
           //     context: context,
           //     builder: (context) => BlockedBottomSheet(reportContentType: reportContentType),

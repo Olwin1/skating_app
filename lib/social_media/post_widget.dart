@@ -18,7 +18,10 @@ import "package:zoom_pinch_overlay/zoom_pinch_overlay.dart";
 // Widget representing a post
 class PostWidget extends StatefulWidget {
   const PostWidget({
-    required this.post, required this.index, required this.user, super.key,
+    required this.post,
+    required this.index,
+    required this.user,
+    super.key,
   });
 
   final dynamic post; // Post data
@@ -32,17 +35,21 @@ class PostWidget extends StatefulWidget {
 class _PostWidget extends State<PostWidget> {
   bool? likedState; // Flag for the liked state of the post
   bool? savedState; // Flag for the liked state of the post
+  int totalLikes = 0;
 
   @override
   void initState() {
     likedState = widget.post["liked"]; // Set initial liked state
     savedState = widget.post["saved"];
+    totalLikes = widget.post["total_likes"] is int
+        ? (widget.post["total_likes"])
+        : int.parse(widget.post["total_likes"] ?? "0");
     super.initState();
   }
 
   /// SET STATES
   void setLikedState(final bool val) {
-    if (!likedState!) {
+    if (likedState != null) {
       if (mounted) {
         setState(() => likedState = val);
       }
@@ -50,7 +57,7 @@ class _PostWidget extends State<PostWidget> {
   }
 
   void setSavedState(final bool val) {
-    if (savedState! && mounted) {
+    if (savedState != null && mounted) {
       setState(() => savedState = val);
     }
   }
@@ -108,13 +115,15 @@ class _PostWidget extends State<PostWidget> {
                               // Post image loaded from the network
                               imageUrl:
                                   "${Config.uri}/image/${widget.post['image']}",
-                              placeholder: (final context, final url) => Shimmer.fromColors(
-                                  baseColor: shimmer["base"]!,
-                                  highlightColor: shimmer["highlight"]!,
-                                  child: Image.asset(
-                                      "assets/placeholders/1080.png")),
-                              imageBuilder: (final context, final imageProvider) =>
-                                  Container(
+                              placeholder: (final context, final url) =>
+                                  Shimmer.fromColors(
+                                      baseColor: shimmer["base"]!,
+                                      highlightColor: shimmer["highlight"]!,
+                                      child: Image.asset(
+                                          "assets/placeholders/1080.png")),
+                              imageBuilder:
+                                  (final context, final imageProvider) =>
+                                      Container(
                                 decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(8),
@@ -123,8 +132,9 @@ class _PostWidget extends State<PostWidget> {
                                       image: imageProvider, fit: BoxFit.cover),
                                 ),
                               ),
-                              errorWidget: (final context, final url, final error) =>
-                                  const Icon(Icons.error),
+                              errorWidget:
+                                  (final context, final url, final error) =>
+                                      const Icon(Icons.error),
                               fit: BoxFit.contain,
                             ),
                           ),
@@ -164,14 +174,15 @@ class _PostWidget extends State<PostWidget> {
                                     dotSecondaryColor: secondary,
                                   ),
                                   likeBuilder: (final bool isLiked) => Icon(
-                                      Icons.thumb_up,
-                                      color: isLiked ? selected : unselected,
-                                      size: 32.0,
-                                    ),
-                                  likeCount: widget.post["total_likes"] is int?(widget.post["total_likes"]):int.parse(widget.post["total_likes"] ?? "0"),
-                                  countBuilder:
-                                      (final int? count, final bool isLiked, final String text) {
-                                    final color = isLiked ? selected : unselected;
+                                    Icons.thumb_up,
+                                    color: isLiked ? selected : unselected,
+                                    size: 32.0,
+                                  ),
+                                  likeCount: totalLikes,
+                                  countBuilder: (final int? count,
+                                      final bool isLiked, final String text) {
+                                    final color =
+                                        isLiked ? selected : unselected;
                                     Widget result;
                                     if (count == 0) {
                                       result = Center(
@@ -203,7 +214,8 @@ class _PostWidget extends State<PostWidget> {
                                           Navigator.of(context).push(
                                         // Navigate to comments page
                                         PageRouteBuilder(
-                                          pageBuilder: (final context, final animation,
+                                          pageBuilder: (final context,
+                                                  final animation,
                                                   final secondaryAnimation) =>
                                               Comments(
                                                   post: widget.post["post_id"],
@@ -254,10 +266,10 @@ class _PostWidget extends State<PostWidget> {
                                     dotSecondaryColor: secondary,
                                   ),
                                   likeBuilder: (final bool isSaved) => Icon(
-                                      Icons.save,
-                                      color: isSaved ? selected : unselected,
-                                      size: 28.0,
-                                    ),
+                                    Icons.save,
+                                    color: isSaved ? selected : unselected,
+                                    size: 28.0,
+                                  ),
                                 ),
                                 const Spacer(),
                                 widget.user == null
@@ -291,7 +303,8 @@ class _PostWidget extends State<PostWidget> {
 // Widget for displaying user avatar
 class Avatar extends StatefulWidget {
   const Avatar({
-    required this.user, super.key,
+    required this.user,
+    super.key,
   });
 
   final String user; // User ID
@@ -322,48 +335,50 @@ class _Avatar extends State<Avatar> {
 
   @override
   Widget build(final BuildContext context) => TextButton(
-        style: TextButton.styleFrom(padding: EdgeInsets.zero),
-        onPressed: () => profile != null
-            ? Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (final context) => ProfilePage(
-                          userId: profile!,
-                          navbar: false,
-                        )))
-            : commonLogger.w("User not found"),
-        child: image == null
-            ? Shimmer.fromColors(
-                baseColor: shimmer["base"]!,
-                highlightColor: shimmer["highlight"]!,
-                child: CircleAvatar(
-                  radius: 36,
-                  backgroundColor: swatch[900],
-                ))
-            : image != "default"
-                ? CachedNetworkImage(
-                    imageUrl: "${Config.uri}/image/thumbnail/$image",
-                    placeholder: (final context, final url) => Shimmer.fromColors(
-                        baseColor: shimmer["base"]!,
-                        highlightColor: shimmer["highlight"]!,
-                        child: CircleAvatar(
-                          radius: 36,
-                          backgroundColor: swatch[900],
-                        )),
-                    imageBuilder: (final context, final imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                image: imageProvider, fit: BoxFit.cover),
-                          ),
-                        ))
-                : const DefaultProfile(radius: 36));
+      style: TextButton.styleFrom(padding: EdgeInsets.zero),
+      onPressed: () => profile != null
+          ? Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (final context) => ProfilePage(
+                        userId: profile!,
+                        navbar: false,
+                      )))
+          : commonLogger.w("User not found"),
+      child: image == null
+          ? Shimmer.fromColors(
+              baseColor: shimmer["base"]!,
+              highlightColor: shimmer["highlight"]!,
+              child: CircleAvatar(
+                radius: 36,
+                backgroundColor: swatch[900],
+              ))
+          : image != "default"
+              ? CachedNetworkImage(
+                  imageUrl: "${Config.uri}/image/thumbnail/$image",
+                  placeholder: (final context, final url) => Shimmer.fromColors(
+                      baseColor: shimmer["base"]!,
+                      highlightColor: shimmer["highlight"]!,
+                      child: CircleAvatar(
+                        radius: 36,
+                        backgroundColor: swatch[900],
+                      )),
+                  imageBuilder: (final context, final imageProvider) =>
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: imageProvider, fit: BoxFit.cover),
+                        ),
+                      ))
+              : const DefaultProfile(radius: 36));
 }
 
 // Widget for displaying post caption and handling collapse/expand
 class CaptionWrapper extends StatefulWidget {
   const CaptionWrapper({
-    required this.post, super.key,
+    required this.post,
+    super.key,
   });
 
   final Map<String, dynamic> post; // Post data
@@ -379,30 +394,31 @@ class _CaptionWrapper extends State<CaptionWrapper> {
   @override
   void initState() {
     // Load user data for the author of the post
-    SocialAPI.getUser(widget.post["author_id"]).then(
-        (final user) => mounted ? setState(() => username = user["username"]) : null);
+    SocialAPI.getUser(widget.post["author_id"]).then((final user) =>
+        mounted ? setState(() => username = user["username"]) : null);
 
     super.initState();
   }
 
   @override
   Widget build(final BuildContext context) => GestureDetector(
-      onTap: () => setState(() {
-        collapsed = !collapsed;
-      }),
-      child: Caption(
-          username: username,
-          description: widget.post["description"],
-          timestamp: DateTime.parse(widget.post["timestamp"]),
-          collapsed: collapsed),
-    );
+        onTap: () => setState(() {
+          collapsed = !collapsed;
+        }),
+        child: Caption(
+            username: username,
+            description: widget.post["description"],
+            timestamp: DateTime.parse(widget.post["timestamp"]),
+            collapsed: collapsed),
+      );
 }
 
 // Widget for displaying post caption
 class Caption extends StatelessWidget {
-
   const Caption({
-    required this.collapsed, required this.timestamp, super.key,
+    required this.collapsed,
+    required this.timestamp,
+    super.key,
     this.username,
     this.description,
   });

@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:patinka/api/config.dart";
+import "package:patinka/common_logger.dart";
 import "package:patinka/profile/settings/list_type.dart";
 import "package:patinka/profile/settings/report_messages.dart";
 import "package:patinka/profile/settings/status_dropdown.dart";
@@ -9,9 +10,12 @@ import "package:patinka/swatch.dart";
 
 // Define a StatefulWidget for the Report page
 class ReportPage extends StatefulWidget {
-
   const ReportPage(
-      {required this.report, required this.user, required this.reportType, required this.userRole, super.key});
+      {required this.report,
+      required this.user,
+      required this.reportType,
+      required this.userRole,
+      super.key});
   final Map<String, dynamic> report;
   final Map<String, dynamic>? user;
   final SupportListType reportType;
@@ -26,7 +30,8 @@ class _ReportPage extends State<ReportPage> {
 
   @override
   void initState() {
-    final Status tmpStatus = RoleServices.convertToStatus(widget.report["status"]);
+    final Status tmpStatus =
+        RoleServices.convertToStatus(widget.report["status"]);
     if (tmpStatus != Status.closed) {
       setState(() {
         status = tmpStatus;
@@ -41,7 +46,7 @@ class _ReportPage extends State<ReportPage> {
       return StatusDropdown(
           report: widget.report,
           onStatusChanged: (final a) {
-            print("Update request status");
+            commonLogger.d("Update request status");
           });
     }
     return Container(

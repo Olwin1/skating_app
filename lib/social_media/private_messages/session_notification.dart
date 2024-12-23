@@ -22,17 +22,19 @@ void handleTap(
       user ?? await SocialAPI.getUser(currentUser);
   final Map<String, dynamic> channelV =
       channel ?? await MessagesAPI.getChannel(channelId);
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (final context) => PrivateMessage(
-        initSelf: false,
-        channel: channelV,
-        user: userV,
-        currentUser: currentUser,
+  if (context.mounted) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (final context) => PrivateMessage(
+          initSelf: false,
+          channel: channelV,
+          user: userV,
+          currentUser: currentUser,
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 void showNotification(final BuildContext context,

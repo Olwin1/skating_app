@@ -180,7 +180,7 @@ class _Settings extends State<Settings> {
                           onPressed: (final e) => {
                             // Remove stored tokens and restart app
                             storage.logout().then((final value) => {
-                                  if (mounted) {Phoenix.rebirth(context)}
+                                  if (context.mounted) {Phoenix.rebirth(context)}
                                 })
                           },
                         ),

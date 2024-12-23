@@ -66,7 +66,7 @@ class _UserReportPage extends State<UserReportPage> {
       return StatusDropdown(
           report: widget.report,
           onStatusChanged: (final a) {
-            print("Update request status");
+            commonLogger.d("Update request status");
           });
     }
     return Container(

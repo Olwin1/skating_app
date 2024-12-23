@@ -18,9 +18,10 @@ List<Map<String, dynamic>> newComments = [];
 
 // Comments Widget - Represents the page where comments are displayed
 class Comments extends StatefulWidget {
-
   const Comments({
-    required this.post, required this.user, super.key,
+    required this.post,
+    required this.user,
+    super.key,
   });
   final String post;
 
@@ -42,7 +43,9 @@ class _Comments extends State<Comments> {
   void initState() {
     // Initialize the state and set up the focus node and comment controller
     storage.getId().then((final value) => userId = value ?? "0");
-    storage.getMuted().then((final result) => setState(() => mutedData = result));
+    storage
+        .getMuted()
+        .then((final result) => setState(() => mutedData = result));
     super.initState();
   }
 
@@ -50,8 +53,7 @@ class _Comments extends State<Comments> {
 
   @override
   Widget build(final BuildContext context) {
-    bool isMuted = mutedData?["isMuted"] ?? false;
-
+    final bool isMuted = mutedData?["isMuted"] ?? false;
 
     // Hide the bottom navigation bar when entering the comment screen
     Provider.of<BottomBarVisibilityProvider>(context, listen: false).hide();
@@ -98,7 +100,8 @@ class _Comments extends State<Comments> {
           },
           backgroundColor: swatch[50],
           textColor: swatch[801],
-          sendWidget: Icon(Icons.send_sharp, size: 30, color: !isMuted?swatch[801]:Colors.grey.shade800),
+          sendWidget: Icon(Icons.send_sharp,
+              size: 30, color: !isMuted ? swatch[801] : Colors.grey.shade800),
           child: CommentsListView(
               key: commentsListKey,
               post: widget.post,
@@ -119,33 +122,35 @@ class _Comments extends State<Comments> {
 
   // Build the app bar for the comments screen
   AppBar buildAppBar(final BuildContext context) => AppBar(
-      iconTheme: IconThemeData(color: swatch[701]),
-      elevation: 8,
-      shadowColor: Colors.green.shade900,
-      backgroundColor: Config.appbarColour,
-      foregroundColor: Colors.transparent,
-      systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-      ),
-      leadingWidth: 48,
-      centerTitle: false,
-      title: Title(
-        title: AppLocalizations.of(context)!.commentsTitle,
-        color: const Color(0xFFDDDDDD),
-        child: Text(
-          AppLocalizations.of(context)!.commentsTitle,
-          style: TextStyle(color: swatch[601]),
+        iconTheme: IconThemeData(color: swatch[701]),
+        elevation: 8,
+        shadowColor: Colors.green.shade900,
+        backgroundColor: Config.appbarColour,
+        foregroundColor: Colors.transparent,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
         ),
-      ),
-    );
+        leadingWidth: 48,
+        centerTitle: false,
+        title: Title(
+          title: AppLocalizations.of(context)!.commentsTitle,
+          color: const Color(0xFFDDDDDD),
+          child: Text(
+            AppLocalizations.of(context)!.commentsTitle,
+            style: TextStyle(color: swatch[601]),
+          ),
+        ),
+      );
 }
 
 // CommentsListView Widget - Represents the list view of comments
 class CommentsListView extends StatefulWidget {
-
   const CommentsListView(
-      {required this.focus, required this.post, required this.pagingController, super.key});
+      {required this.focus,
+      required this.post,
+      required this.pagingController,
+      super.key});
   final FocusNode focus;
   final String post;
   final PagingController<int, Map<String, dynamic>> pagingController;
@@ -175,8 +180,8 @@ class _CommentsListViewState extends State<CommentsListView> {
       // Determine if this is the last page
       final isLastPage = page.length < _pageSize;
       if (!mounted) {
-  return;
-}
+        return;
+      }
       if (isLastPage) {
         // If this is the last page, append it to the list of pages
         widget.pagingController.appendLastPage(page);
@@ -204,7 +209,8 @@ class _CommentsListViewState extends State<CommentsListView> {
       builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
         noItemsFoundIndicatorBuilder: (final context) => ListError(
             title: AppLocalizations.of(context)!.noCommentsFound, body: ""),
-        itemBuilder: (final context, final item, final index) => buildCommentWidget(index, item),
+        itemBuilder: (final context, final item, final index) =>
+            buildCommentWidget(index, item),
       ),
     );
   }
@@ -221,10 +227,11 @@ class _CommentsListViewState extends State<CommentsListView> {
   }
 
   // Build the Comment widget for the given index and item
-  Widget buildCommentWidget(final int index, final Map<String, dynamic> item) => index == 0
-        ? Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Comment(index: index, focus: widget.focus, comment: item),
-          )
-        : Comment(index: index, focus: widget.focus, comment: item);
+  Widget buildCommentWidget(final int index, final Map<String, dynamic> item) =>
+      index == 0
+          ? Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Comment(index: index, focus: widget.focus, comment: item),
+            )
+          : Comment(index: index, focus: widget.focus, comment: item);
 }

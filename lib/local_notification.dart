@@ -16,7 +16,7 @@ Future<void> _firebaseMessagingBackgroundHandler(
     final RemoteMessage message) async {
   await Firebase.initializeApp(); // Ensure Firebase is initialized
   if (message.notification != null) {
-    print(Config.uri);
+    commonLogger.d("Current URI is: ${Config.uri}");
     NotificationManager.instance.addMessage(message);
   }
 }
@@ -118,7 +118,7 @@ class NotificationManager extends ChangeNotifier {
       // Listens for incoming messages while the app is in the foreground
       FirebaseMessaging.onMessage.listen((final RemoteMessage message) async {
         if (message.notification != null) {
-          print("AAAAAAA RECIEVED COW");
+          commonLogger.d("Recieved Notification");
           final String? userId = await storage.getId();
           if (userId == null) {
             return;

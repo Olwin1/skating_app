@@ -127,7 +127,7 @@ class _PrivateMessage extends State<PrivateMessage> {
   void _onTypingStarted() {
     isTyping = true;
 
-    print("User started typing");
+    commonLogger.d("User started typing");
     channelId == null
         ? null
         : getIt<WebSocketConnection>()
@@ -137,7 +137,7 @@ class _PrivateMessage extends State<PrivateMessage> {
 
   void _onTypingStopped() {
     isTyping = false;
-    print("User stopped typing");
+    commonLogger.d("User stopped typing");
     channelId == null
         ? null
         : getIt<WebSocketConnection>()
@@ -149,7 +149,7 @@ class _PrivateMessage extends State<PrivateMessage> {
     _typingTimer?.cancel(); // Cancel any existing timer
     _keepaliveTimer = Timer.periodic(typingDelay, (final timer) {
       if (isTyping) {
-        print("User is still typing...");
+        commonLogger.d("User is still typing...");
         channelId == null
             ? null
             : getIt<WebSocketConnection>()

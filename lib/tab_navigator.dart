@@ -46,7 +46,6 @@ class TabNavigator extends StatelessWidget {
         //       ?.pushReplacementNamed("/");
         // });
         // NavigationService.setCurrentIndex(0);
-        print("cos");
 
         // return route.didPop(result);
       },

@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:patinka/api/support.dart";
+import "package:patinka/common_logger.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/handle_buttons.dart";
 import "package:patinka/social_media/report_content_type.dart";
@@ -44,7 +45,8 @@ class QRCodeButton extends StatelessWidget {
         "Create QR Code",
         swatch[601]!,
         () {
-          print("AAA"); // Placeholder for QR code functionality
+          commonLogger.i(
+              "QR Code Functionality Placeholder"); // Placeholder for QR code functionality
         },
       );
 }
@@ -88,10 +90,10 @@ class ReportButton extends StatelessWidget {
         ModalBottomSheet.show(
             context: context,
             builder: (final context) => ReportReasonBottomSheet(
-                reportContentType: reportContentType,
-                contentId: contentId,
-                reportedUserId: reportedUserId,
-                isBlocked: isBlocked,
+                  reportContentType: reportContentType,
+                  contentId: contentId,
+                  reportedUserId: reportedUserId,
+                  isBlocked: isBlocked,
                 ),
             startSize: 0.65);
       },

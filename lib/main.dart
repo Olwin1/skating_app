@@ -231,7 +231,7 @@ class _PunishmentEnforcer extends State<PunishmentEnforcer> {
                     onPressed: () => {
                       // Remove stored tokens and restart app
                       storage.logout().then((final value) => {
-                            if (mounted) {Phoenix.rebirth(context)}
+                            if (context.mounted) {Phoenix.rebirth(context)}
                           })
                     },
                     icon: const Icon(Icons.logout),
@@ -389,7 +389,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     if (didPop) {
       return;
     }
-    print("Popping with tab ${NavigationService.getCurrentIndex()}");
+    commonLogger.d("Popping with tab ${NavigationService.getCurrentIndex()}");
     //final isFirstRouteInCurrentTabb = ;#
     if (mounted) {
       // let system handle back button if on the first route
@@ -397,9 +397,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       final a = NavigationService.currentNavigatorKey.currentState;
       if (a!.canPop()) {
         a.pop();
-        print("PopPOng");
+        commonLogger.d("Popping");
       } else {
-        print("Cant pop");
+        commonLogger.d("Can't pop");
       }
       //navigator.pop();
     }

@@ -10,6 +10,7 @@ import "package:patinka/api/config.dart";
 import "package:patinka/api/fcm_token.dart";
 import "package:patinka/api/messages.dart";
 import "package:patinka/api/social.dart";
+import "package:patinka/caching/manager.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/components/list_error.dart";
 import "package:patinka/misc/navbar_provider.dart";
@@ -221,6 +222,8 @@ class _PostsListViewState extends State<PostsListView> {
   // Refresh Page Function
   Future<void> refreshPage() async {
     seenPosts = [];
+    await NetworkManager.instance
+          .deleteLocalData(name: "posts", type: CacheTypes.list);
     _pagingController.refresh();
   }
 

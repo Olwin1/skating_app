@@ -16,7 +16,7 @@ import "package:provider/provider.dart";
 import "package:shimmer/shimmer.dart";
 
 // Define item type for popup menu
-enum DropdownPage { editProfile, settings, saved, blockUser }
+enum DropdownPage { editProfile, settings, saved, blockUser, unblockUser }
 
 String? currentImage;
 void setCurrentImage(final String img) {

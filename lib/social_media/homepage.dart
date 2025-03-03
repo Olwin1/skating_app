@@ -88,6 +88,7 @@ class HomePage extends StatelessWidget {
         body: Center(
           child: PostsListView(
             scrollController: scrollController,
+            key: postsListView,
           ),
         ),
       ),
@@ -141,6 +142,8 @@ Widget _loadSkeleton() {
       ));
 }
 
+final GlobalKey<PostsListViewState> postsListView = GlobalKey();
+
 // Posts List View Widget
 class PostsListView extends StatefulWidget {
   const PostsListView({required this.scrollController, super.key});
@@ -148,10 +151,10 @@ class PostsListView extends StatefulWidget {
   final ScrollController scrollController;
 
   @override
-  State<PostsListView> createState() => _PostsListViewState();
+  State<PostsListView> createState() => PostsListViewState();
 }
 
-class _PostsListViewState extends State<PostsListView> {
+class PostsListViewState extends State<PostsListView> {
   // PagingController manages the loading of pages as the user scrolls
   final PagingController<int, Object> _pagingController =
       PagingController(firstPageKey: 0);
@@ -171,9 +174,8 @@ class _PostsListViewState extends State<PostsListView> {
 
     // Get FCM Token (excluding Windows and Linux)
     if (!(Platform.isWindows || Platform.isLinux)) {
-      FirebaseMessaging.instance
-          .getToken()
-          .then((final fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
+      FirebaseMessaging.instance.getToken().then(
+          (final fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
     }
 
     // Add Page Request Listener
@@ -197,8 +199,8 @@ class _PostsListViewState extends State<PostsListView> {
       // Determines if the page being fetched is the last page
       final isLastPage = page.isEmpty;
       if (!mounted) {
-  return;
-}
+        return;
+      }
       if (isLastPage) {
         if ((_pagingController.itemList == null ||
                 _pagingController.itemList!.isEmpty) &&
@@ -223,7 +225,7 @@ class _PostsListViewState extends State<PostsListView> {
   Future<void> refreshPage() async {
     seenPosts = [];
     await NetworkManager.instance
-          .deleteLocalData(name: "posts", type: CacheTypes.list);
+        .deleteLocalData(name: "posts", type: CacheTypes.list);
     _pagingController.refresh();
   }
 
@@ -247,7 +249,8 @@ class _PostsListViewState extends State<PostsListView> {
             pagingController: _pagingController,
             scrollController: widget.scrollController,
             builderDelegate: PagedChildBuilderDelegate<Object>(
-              firstPageProgressIndicatorBuilder: (final context) => _loadSkeleton(),
+              firstPageProgressIndicatorBuilder: (final context) =>
+                  _loadSkeleton(),
               noItemsFoundIndicatorBuilder: (final context) => ListError(
                 title: AppLocalizations.of(context)!.noPostsFound,
                 body: AppLocalizations.of(context)!.makeFriends,

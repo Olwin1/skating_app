@@ -106,11 +106,16 @@ class _OptionsMenuState extends State<OptionsMenu> {
               ),
             );
           }
-          if (item == DropdownPage.blockUser) {
+          if (item == DropdownPage.blockUser || item == DropdownPage.unblockUser) {
             if (widget.user != null) {
               Navigator.popUntil(context, (final route) => route.isFirst);
-
-              SupportAPI.postBlockUser(widget.user!["user_id"]);
+              
+              if(item == DropdownPage.blockUser) {
+                SupportAPI.postBlockUser(widget.user!["user_id"]);
+              } else {
+                SupportAPI.postUnblockUser(widget.user!["user_id"]);
+              }
+              
               //TODO: Handle Caching of user etc...
               // Return to homepage and set to default route
             }
@@ -147,9 +152,9 @@ class _OptionsMenuState extends State<OptionsMenu> {
             : <PopupMenuEntry<DropdownPage>>[
                 PopupMenuItem<DropdownPage>(
                   // Value of the menu item, an instance of the DropdownPage enumeration
-                  value: DropdownPage.blockUser,
+                  value: widget.user?["blocked"]?DropdownPage.unblockUser:DropdownPage.blockUser,
                   // Text widget that displays the text for the menu item
-                  child: Text("Block",
+                  child: Text(widget.user?["blocked"]?"Unblock":"Block",
                       style: TextStyle(color: Colors.red.shade700)),
                 ),
               ],

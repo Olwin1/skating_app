@@ -3,6 +3,7 @@ import "package:http/http.dart" as http;
 import "package:patinka/api/config.dart";
 import "package:patinka/api/response_handler.dart";
 import "package:patinka/caching/manager.dart";
+import "package:patinka/social_media/homepage.dart";
 
 // Define a class called SupportAPI' for handling various support-related actions
 class SupportAPI {
@@ -180,7 +181,10 @@ class SupportAPI {
           headers: await Config.getDefaultHeadersAuth,
           body: {"user": targetUser});
 
+      await NetworkManager.instance.deleteLocalData(name: targetUser, type: CacheTypes.user);
+      postsListView.currentState?.refreshPage();
       return handleResponse(response, Resp.stringResponse);
+
     } catch (e) {
       throw Exception("Error during block: $e");
     }
@@ -193,6 +197,8 @@ class SupportAPI {
           headers: await Config.getDefaultHeadersAuth,
           body: {"user": targetUser});
 
+      await NetworkManager.instance.deleteLocalData(name: targetUser, type: CacheTypes.user);
+      postsListView.currentState?.refreshPage();
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
       throw Exception("Error during unblock: $e");

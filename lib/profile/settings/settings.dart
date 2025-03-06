@@ -8,6 +8,7 @@ import "package:flutter_phoenix/flutter_phoenix.dart";
 import "package:patinka/api/config.dart";
 import "package:patinka/api/token.dart";
 import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/profile/settings/blocked_users.dart";
 import "package:patinka/profile/settings/list_type.dart";
 import "package:patinka/profile/settings/report_list.dart";
 import "package:patinka/profile/settings/settings_overlays.dart";
@@ -154,6 +155,17 @@ class _Settings extends State<Settings> {
                           value: Text(
                               widget.user?["email"] ?? "default@example.com"),
                           enabled: false,
+                        ),
+                        SettingsTile.navigation(
+                          leading: const Icon(Icons.block),
+                          title: const Text("Blocked Users"),
+                          onPressed: (final context) {
+                            Navigator.of(context).push(
+                                // Send to blocked user list page
+                                MaterialPageRoute(
+                                    builder: (final context) => const BlockedUsersList()));
+                          },
+                          enabled: true,
                         ),
                         // Navigation tile for password settings
                         SettingsTile.navigation(

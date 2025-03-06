@@ -41,6 +41,7 @@ class SocialAPI {
   static final Uri _userAvatarUrl = Uri.parse("${Config.uri}/user/avatar");
   static final Uri _savedPostsUrl = Uri.parse("${Config.uri}/post/saved");
 
+
 // Define a function to authenticate user credentials and return a token
   static Future<Map<String, dynamic>> postPost(
       final String description, final String image) async {
@@ -100,8 +101,9 @@ class SocialAPI {
             TypeCasts.stringArrayToJsonArray(localData);
         return cachedPosts;
       }
-      commonLogger..d(localData)
-      ..d("localData");
+      commonLogger
+        ..d(localData)
+        ..d("localData");
     }
     // Define the URL for the HTTP request
 
@@ -212,7 +214,8 @@ class SocialAPI {
   }
 
 // Function to dislike a comment using HTTP POST request
-  static Future<Map<String, dynamic>> dislikeComment(final String comment) async {
+  static Future<Map<String, dynamic>> dislikeComment(
+      final String comment) async {
     // Define the URL for the API endpoint
 
     try {
@@ -230,7 +233,8 @@ class SocialAPI {
   }
 
 // This function is used to unlike a comment on a post.
-  static Future<Map<String, dynamic>> unlikeComment(final String comment) async {
+  static Future<Map<String, dynamic>> unlikeComment(
+      final String comment) async {
     try {
       final response = await http.post(_unlikeCommentUrl,
           headers: await Config.getDefaultHeadersAuth,
@@ -244,7 +248,8 @@ class SocialAPI {
   }
 
 // This function is used to undislike a comment on a post.
-  static Future<Map<String, dynamic>> undislikeComment(final String comment) async {
+  static Future<Map<String, dynamic>> undislikeComment(
+      final String comment) async {
     try {
       final response = await http.post(_undislikeCommentUrl,
           headers: await Config.getDefaultHeadersAuth,
@@ -377,7 +382,8 @@ class SocialAPI {
           .getLocalData(name: id, type: CacheTypes.user);
 
       if (localData != null) {
-        final Map<String, dynamic> cachedUser = TypeCasts.stringToJson(localData);
+        final Map<String, dynamic> cachedUser =
+            TypeCasts.stringToJson(localData);
         return cachedUser;
       }
       final response = await http.get(
@@ -391,7 +397,8 @@ class SocialAPI {
           "id": id,
         },
       );
-      final Map<String, dynamic> data = ResponseHandler.handleResponse(response);
+      final Map<String, dynamic> data =
+          ResponseHandler.handleResponse(response);
       if (data["avatar_id"] == null) {
         data["avatar_id"] = "default";
       }
@@ -573,7 +580,8 @@ class SocialAPI {
   }
 
 // Search
-  static Future<List<Map<String, dynamic>>> searchUsers(final String query) async {
+  static Future<List<Map<String, dynamic>>> searchUsers(
+      final String query) async {
     // Define the URL for the HTTP request
 
     try {
@@ -670,7 +678,8 @@ class SocialAPI {
   }
 
 // Get a list of saved posts
-  static Future<List<Map<String, dynamic>>> getSavedPosts(final int pageKey) async {
+  static Future<List<Map<String, dynamic>>> getSavedPosts(
+      final int pageKey) async {
     if (pageKey == 0) {
       final String? localData = await NetworkManager.instance
           .getLocalData(name: "saved-posts", type: CacheTypes.list);
@@ -680,8 +689,9 @@ class SocialAPI {
             TypeCasts.stringArrayToJsonArray(localData);
         return cachedPosts;
       }
-      commonLogger..d(localData)
-      ..d("localData");
+      commonLogger
+        ..d(localData)
+        ..d("localData");
     }
     // Define the URL for the HTTP request
 

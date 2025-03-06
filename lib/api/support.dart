@@ -16,6 +16,9 @@ class SupportAPI {
   static final Uri _blockUrl = Uri.parse("${Config.uri}/user/block");
   static final Uri _unblockUrl = Uri.parse("${Config.uri}/user/unblock");
 
+  static final Uri _blockedUsers =
+      Uri.parse("${Config.uri}/user/blocked_users");
+
   // Define a static method to submit a support request
   static Future<Map<String, dynamic>> submitSupportRequest(
       final String subject, final String content) async {
@@ -202,6 +205,34 @@ class SupportAPI {
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {
       throw Exception("Error during unblock: $e");
+    }
+  }
+
+    static Future<List<Map<String, dynamic>>> getBlockedUsers(
+      final int page) async {
+    // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
+
+    try {
+      // Using a try-catch block to handle errors
+      final Map<String, String> headers = {
+        "Content-Type":
+            "application/x-www-form-urlencoded", // Specifying the headers for the request
+        "Authorization":
+            "Bearer ${await storage.getToken()}", // Including the authorization token
+        "page": page.toString(),
+      };
+      final response = await http.get(
+          // Creating a variable 'response' and making a post request to the specified URL
+          _blockedUsers,
+          headers: headers);
+      final List<Map<String, dynamic>> data =
+          ResponseHandler.handleListResponse(response);
+
+      return data;
+    } catch (e) {
+      // Handling the error
+      throw Exception(
+          "Error during post: $e"); // Throwing an exception with an error message
     }
   }
 }

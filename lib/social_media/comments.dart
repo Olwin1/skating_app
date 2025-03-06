@@ -215,9 +215,20 @@ class _CommentsListViewState extends State<CommentsListView> {
     );
   }
 
+
+  // To show on back page store the reference
+  BottomBarVisibilityProvider? bottomBarVisibilityProvider;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    bottomBarVisibilityProvider = Provider.of<BottomBarVisibilityProvider>(context, listen: false); // ✅ Safe lookup
+  }
+
   @override
   void dispose() {
     try {
+      // Call the show method stored previously
+      bottomBarVisibilityProvider?.show();
       // Dispose the controller when the widget is disposed
       widget.pagingController.dispose();
     } catch (e) {

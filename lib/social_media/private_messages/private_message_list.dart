@@ -260,10 +260,10 @@ class _ChannelsListViewState extends State<ChannelsListView> {
 
       for (int i = 0; i < page.length; i++) {
         final Map<String, dynamic> item = page[i];
-        title.add(item["channel_id"]);
-        channel.add(item["channel_id"]);
-        newChannels.add(item["channel_id"]);
-        channelsData.addAll({item["channel_id"]: item["creation_date"]});
+        title.add(item["channelId"]);
+        channel.add(item["channelId"]);
+        newChannels.add(item["channelId"]);
+        channelsData.addAll({item["channelId"]: item["creationDate"]});
       }
 
       getIt<WebSocketConnection>()

@@ -67,4 +67,17 @@ class NetworkManager {
     }
     return false;
   }
+
+  Future<bool> deleteUserLocalData({required final String targetUser}) async {
+    try {
+      if(fileManager != null) {
+        await deleteLocalData(name: targetUser, type: CacheTypes.user);
+        await deleteLocalData(name: "channels", type: CacheTypes.list);
+        return true;
+      }
+    } catch (e) {
+      return false;
+    }
+    return false;
+  }
 }

@@ -35,10 +35,14 @@ class _ListWidget extends State<ListWidget> {
 
     // Iterate through participants to find the user associated with the channel
     for (final participant in widget.channel["participants"]) {
-      if (participant["users"]["user_id"] != widget.currentUser) {
-        user = participant["users"];
+      if (participant["user_id"] != widget.currentUser) {
+        user = participant;
         break;
       }
+    }
+    // If there are no participants other than the user themselves then hide the channel
+    if(user == null || user["is_blocked"]) {
+      return const SizedBox.shrink();
     }
 
     // Function to navigate back in the widget tree

@@ -183,8 +183,8 @@ class SupportAPI {
       final response = await http.post(_blockUrl,
           headers: await Config.getDefaultHeadersAuth,
           body: {"user": targetUser});
-
-      await NetworkManager.instance.deleteLocalData(name: targetUser, type: CacheTypes.user);
+      // Delete all cached info that may be relevant to ensure it is up to date
+      await NetworkManager.instance.deleteUserLocalData(targetUser: targetUser);
       postsListView.currentState?.refreshPage();
       return handleResponse(response, Resp.stringResponse);
 
@@ -199,8 +199,8 @@ class SupportAPI {
       final response = await http.post(_unblockUrl,
           headers: await Config.getDefaultHeadersAuth,
           body: {"user": targetUser});
-
-      await NetworkManager.instance.deleteLocalData(name: targetUser, type: CacheTypes.user);
+      // Delete all data that may pertain to blocking a user
+      await NetworkManager.instance.deleteUserLocalData(targetUser: targetUser);
       postsListView.currentState?.refreshPage();
       return handleResponse(response, Resp.stringResponse);
     } catch (e) {

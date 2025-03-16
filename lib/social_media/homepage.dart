@@ -27,6 +27,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    // FOR DEBUG PURPOSES ONLY
+    NetworkManager.instance.deleteAllLocalData();
+    //---------------------
     final ScrollController scrollController = ScrollController();
 
     // Show the Navbar

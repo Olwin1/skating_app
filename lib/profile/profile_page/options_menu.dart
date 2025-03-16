@@ -116,6 +116,8 @@ class _OptionsMenuState extends State<OptionsMenu> {
                 SupportAPI.postUnblockUser(widget.user!["user_id"]);
               }
               
+              //TODO: Fix channel cache not updating to reflect new last message
+
               //TODO: Handle Caching of user etc...
               // Return to homepage and set to default route
             }

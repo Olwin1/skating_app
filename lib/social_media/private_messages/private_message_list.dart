@@ -263,7 +263,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
         title.add(item["channel_id"]);
         channel.add(item["channel_id"]);
         newChannels.add(item["channel_id"]);
-        channelsData.addAll({item["channel_id"]: item["creation_date"]});
+        channelsData.addAll({item["channel_id"]: {"created_at": item["creation_date"], "last_message": item["last_message"]}});
       }
 
       getIt<WebSocketConnection>()

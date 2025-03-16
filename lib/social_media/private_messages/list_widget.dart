@@ -28,6 +28,12 @@ class ListWidget extends StatefulWidget {
 
 // State class for ListWidget
 class _ListWidget extends State<ListWidget> {
+  String lastMessageContent = "";
+  @override
+  void initState() {
+    setState(() => lastMessageContent = widget.channel["last_message"]["message_content"]);
+    super.initState();
+  }
   @override
   Widget build(final BuildContext context) {
     // Variable to store information about the user associated with the channel
@@ -48,6 +54,13 @@ class _ListWidget extends State<ListWidget> {
     // Function to navigate back in the widget tree
     void popNavigator() {
       Navigator.of(context).pop();
+    }
+    
+    // Define function to be used as a callback when new messages are created
+    void updateLastMessage(final String content) {
+      setState(() {
+        lastMessageContent = content;
+      });
     }
 
     // UI structure for each list item
@@ -113,6 +126,7 @@ class _ListWidget extends State<ListWidget> {
                   channel: widget.channel,
                   user: user,
                   currentUser: widget.currentUser,
+                  updateChannelMessage: updateLastMessage
                 ),
               ),
             );
@@ -121,16 +135,7 @@ class _ListWidget extends State<ListWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Display user avatar or default avatar if not available
-              user == null
-                  ? Shimmer.fromColors(
-                      baseColor: shimmer["base"]!,
-                      highlightColor: shimmer["highlight"]!,
-                      child: CircleAvatar(
-                        radius: 26,
-                        backgroundColor: swatch[900],
-                      ),
-                    )
-                  : Flexible(
+              Flexible(
                       child: (user["avatar_id"] != null &&
                               user["avatar_id"] != "default")
                           ? CachedNetworkImage(
@@ -167,14 +172,30 @@ class _ListWidget extends State<ListWidget> {
                     const Padding(padding: EdgeInsets.only(top: 10)),
                     // Display user's name or default text for channels
                     Text(
-                      user?["username"] ?? "Channel",
+                      user["username"] ?? "Channel",
                       style: TextStyle(color: swatch[301]),
                     ),
                     // Display channel description or last message sent
-                    Text(
-                      widget.desc,
-                      style: TextStyle(color: swatch[601], height: 1.5),
-                    ),
+Row(
+  children: [
+    Text(
+        widget.desc,
+        style: TextStyle(color: swatch[601], height: 1.5),
+        overflow: TextOverflow.ellipsis, // Truncate with ...
+        maxLines: 1, // Limit the number of lines
+      ),
+    const SizedBox(width: 4), // Add spacing
+    Expanded(
+      child: Text(
+        lastMessageContent,
+        style: TextStyle(color: swatch[801]),
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+      ),
+    ),
+  ],
+)
+
                   ],
                 ),
               ),

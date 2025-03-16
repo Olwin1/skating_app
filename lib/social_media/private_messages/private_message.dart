@@ -34,10 +34,11 @@ class PrivateMessage extends StatefulWidget {
   const PrivateMessage({
     required this.initSelf,
     required this.currentUser,
+    this.updateChannelMessage,
     super.key,
     this.channel,
     this.user,
-    this.callback,
+    this.callback
   });
 
   final bool initSelf;
@@ -45,6 +46,7 @@ class PrivateMessage extends StatefulWidget {
   final Map<String, dynamic>? user;
   final String currentUser;
   final Function? callback;
+  final Function? updateChannelMessage;
 
   @override
   State<PrivateMessage> createState() => _PrivateMessage();
@@ -261,6 +263,21 @@ class _PrivateMessage extends State<PrivateMessage> {
               );
             })
           : null;
+
+
+
+        //TODO Convert to a widget and function when next available
+
+        // Update last message sent on channel menu
+        if(widget.updateChannelMessage != null) {
+          // ignore: prefer_null_aware_method_calls
+          widget.updateChannelMessage!(data["content"]);
+        }
+        // -------------------
+
+
+
+
       getIt<WebSocketConnection>().emitSeenMessage(
           data["channel"], data["messageNumber"], data["messageId"]);
     } else {
@@ -321,6 +338,7 @@ class _PrivateMessage extends State<PrivateMessage> {
           }
         }
 
+        // Create message on screen
         messages.add(
           types.TextMessage(
             status: messageReaders.isNotEmpty ? Status.seen : Status.delivered,
@@ -609,6 +627,18 @@ class _PrivateMessage extends State<PrivateMessage> {
             _messages.insert(0, message);
           })
         : null;
+        
+
+        
+        //TODO Convert to a widget and function when next available
+
+        // Update last message sent on channel menu
+        if(widget.updateChannelMessage != null && message is types.TextMessage) {
+          // ignore: prefer_null_aware_method_calls
+          widget.updateChannelMessage!(message.text);
+        }
+        // ----------------------------
+
   }
 
   // Function to handle send button press

@@ -73,6 +73,7 @@ class NetworkManager {
       if(fileManager != null) {
         await deleteLocalData(name: targetUser, type: CacheTypes.user);
         await deleteLocalData(name: "channels", type: CacheTypes.list);
+        await deleteLocalData(name: "user-posts-$targetUser", type: CacheTypes.list);
         return true;
       }
     } catch (e) {

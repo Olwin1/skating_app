@@ -128,6 +128,7 @@ class NotificationManager extends ChangeNotifier {
             "content": message.notification?.body ?? "",
             "channel": message.data["channelId"],
           };
+          // TODO create a singleton instance to keep track of which channel is active and thus not show a notification for it.
           if (NavigationService.currentNavigatorKey.currentContext != null) {
             showNotification(
                 NavigationService.currentNavigatorKey.currentContext!,

@@ -26,7 +26,9 @@ GetIt getIt = GetIt.instance;
 // Define the main widget class
 class PrivateMessageList extends StatefulWidget {
   const PrivateMessageList({
-    required this.user, required this.index, super.key,
+    required this.user,
+    required this.index,
+    super.key,
   });
 
   final String user; // User's identifier
@@ -94,13 +96,14 @@ class _PrivateMessageList extends State<PrivateMessageList> {
               onPressed: () => Navigator.of(context, rootNavigator: false).push(
                 // Navigate to the new channel page
                 PageRouteBuilder(
-                  pageBuilder: (final context, final animation, final secondaryAnimation) =>
+                  pageBuilder: (final context, final animation,
+                          final secondaryAnimation) =>
                       NewChannelPage(
                     callback: _pagingController.refresh,
                   ),
                   opaque: false,
-                  transitionsBuilder:
-                      (final context, final animation, final secondaryAnimation, final child) {
+                  transitionsBuilder: (final context, final animation,
+                      final secondaryAnimation, final child) {
                     const begin = 0.0;
                     const end = 1.0;
                     final tween = Tween(begin: begin, end: end);
@@ -207,7 +210,10 @@ Widget _loadingSkeleton() {
 // Widget for the list of channels
 class ChannelsListView extends StatefulWidget {
   const ChannelsListView({
-    required this.currentUser, required this.pagingController, required this.refreshList, super.key,
+    required this.currentUser,
+    required this.pagingController,
+    required this.refreshList,
+    super.key,
   });
 
   final String currentUser;
@@ -236,14 +242,18 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       getIt<WebSocketConnection>().socket.connect();
     }
 
+    // Listen for notifications
     subscriptionMessages =
         getIt<WebSocketConnection>().streamMessages.listen((final data) {
-      mounted
-          ? setState(() {
-              channelsData[data["channel"]] = data["content"];
-            })
-          : null;
-      mounted?showNotification(context, data, widget.currentUser):null;
+      if (!mounted) {
+        return; // Prevent updates when the widget is unmounted or not the active page
+      }
+
+      setState(() {
+        channelsData[data["channel"]] = data["content"];
+      });
+
+      showNotification(context, data, widget.currentUser);
     });
 
     super.initState();
@@ -263,7 +273,12 @@ class _ChannelsListViewState extends State<ChannelsListView> {
         title.add(item["channel_id"]);
         channel.add(item["channel_id"]);
         newChannels.add(item["channel_id"]);
-        channelsData.addAll({item["channel_id"]: {"created_at": item["creation_date"], "last_message": item["last_message"]}});
+        channelsData.addAll({
+          item["channel_id"]: {
+            "created_at": item["creation_date"],
+            "last_message": item["last_message"]
+          }
+        });
       }
 
       getIt<WebSocketConnection>()
@@ -272,8 +287,8 @@ class _ChannelsListViewState extends State<ChannelsListView> {
 
       final isLastPage = page.length < _pageSize;
       if (!mounted) {
-  return;
-}
+        return;
+      }
 
       if (isLastPage) {
         if ((_pagingController == null ||
@@ -305,8 +320,11 @@ class _ChannelsListViewState extends State<ChannelsListView> {
               title: AppLocalizations.of(context)!.noMessagesFound,
               body: AppLocalizations.of(context)!.makeFriends,
             ),
-            firstPageProgressIndicatorBuilder: (final context) => _loadingSkeleton(),
-            itemBuilder: (final context, final item, final index) => item["last"] == true
+            firstPageProgressIndicatorBuilder: (final context) =>
+                _loadingSkeleton(),
+            itemBuilder: (final context, final item, final index) => item[
+                        "last"] ==
+                    true
                 ? const SizedBox(
                     height: 72,
                   )

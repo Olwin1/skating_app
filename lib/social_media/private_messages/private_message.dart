@@ -20,6 +20,7 @@ import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/modals/message_options_modal.dart";
 import "package:patinka/social_media/private_messages/session_notification.dart";
 import "package:patinka/social_media/user_reports/report_user.dart";
+import "package:patinka/social_media/utils/current_channel.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";
 import "package:shimmer/shimmer.dart";
@@ -31,15 +32,14 @@ GetIt getIt = GetIt.instance;
 // Define a StatefulWidget for displaying private messages
 class PrivateMessage extends StatefulWidget {
   // Constructor takes an index and a channel as arguments
-  const PrivateMessage({
-    required this.initSelf,
-    required this.currentUser,
-    this.updateChannelMessage,
-    super.key,
-    this.channel,
-    this.user,
-    this.callback
-  });
+  const PrivateMessage(
+      {required this.initSelf,
+      required this.currentUser,
+      this.updateChannelMessage,
+      super.key,
+      this.channel,
+      this.user,
+      this.callback});
 
   final bool initSelf;
   final Map<String, dynamic>? channel;
@@ -95,6 +95,9 @@ class _PrivateMessage extends State<PrivateMessage> {
 
     channelId = widget.channel?["channel_id"];
     super.initState();
+
+    // Add to stack tracking current pages
+    CurrentMessageChannel.instance.pushToStack = widget.channel?["channel_id"];
 
     // Load initial messages
     loadMessages();
@@ -264,19 +267,14 @@ class _PrivateMessage extends State<PrivateMessage> {
             })
           : null;
 
+      //TODO Convert to a widget and function when next available
 
-
-        //TODO Convert to a widget and function when next available
-
-        // Update last message sent on channel menu
-        if(widget.updateChannelMessage != null) {
-          // ignore: prefer_null_aware_method_calls
-          widget.updateChannelMessage!(data["content"]);
-        }
-        // -------------------
-
-
-
+      // Update last message sent on channel menu
+      if (widget.updateChannelMessage != null) {
+        // ignore: prefer_null_aware_method_calls
+        widget.updateChannelMessage!(data["content"]);
+      }
+      // -------------------
 
       getIt<WebSocketConnection>().emitSeenMessage(
           data["channel"], data["messageNumber"], data["messageId"]);
@@ -627,18 +625,15 @@ class _PrivateMessage extends State<PrivateMessage> {
             _messages.insert(0, message);
           })
         : null;
-        
 
-        
-        //TODO Convert to a widget and function when next available
+    //TODO Convert to a widget and function when next available
 
-        // Update last message sent on channel menu
-        if(widget.updateChannelMessage != null && message is types.TextMessage) {
-          // ignore: prefer_null_aware_method_calls
-          widget.updateChannelMessage!(message.text);
-        }
-        // ----------------------------
-
+    // Update last message sent on channel menu
+    if (widget.updateChannelMessage != null && message is types.TextMessage) {
+      // ignore: prefer_null_aware_method_calls
+      widget.updateChannelMessage!(message.text);
+    }
+    // ----------------------------
   }
 
   // Function to handle send button press
@@ -710,6 +705,9 @@ class _PrivateMessage extends State<PrivateMessage> {
   @override
   void dispose() {
     try {
+      // Pop from top stack
+      CurrentMessageChannel.instance.popStack();
+
       subscriptionMessages.cancel(); // Stop listening to new messages
       subscriptionSeen.cancel(); // Stop listening to new seen
       subscriptionTyping.cancel(); // Stop listening to new typing

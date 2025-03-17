@@ -15,6 +15,7 @@ import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/private_messages/list_widget.dart";
 import "package:patinka/social_media/private_messages/new_channel.dart";
 import "package:patinka/social_media/private_messages/session_notification.dart";
+import "package:patinka/social_media/utils/current_channel.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";
 import "package:shimmer/shimmer.dart";
@@ -242,6 +243,9 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       getIt<WebSocketConnection>().socket.connect();
     }
 
+    // Add to stack tracking current pages
+    CurrentMessageChannel.instance.pushToStack = "list";
+
     // Listen for notifications
     subscriptionMessages =
         getIt<WebSocketConnection>().streamMessages.listen((final data) {
@@ -342,6 +346,9 @@ class _ChannelsListViewState extends State<ChannelsListView> {
   @override
   void dispose() {
     try {
+      // Pop from top stack
+      CurrentMessageChannel.instance.popStack();
+
       _pagingController?.dispose();
       subscriptionMessages.cancel();
       if (getIt<WebSocketConnection>().socket.connected) {

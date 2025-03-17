@@ -6,6 +6,7 @@ import "package:patinka/api/messages.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/social_media/post_widget.dart";
 import "package:patinka/social_media/private_messages/private_message.dart";
+import "package:patinka/social_media/utils/current_channel.dart";
 import "package:patinka/swatch.dart";
 
 int dur = 3;
@@ -39,6 +40,9 @@ void handleTap(
 
 void showNotification(final BuildContext context,
     final Map<String, dynamic> data, final String currentUser) {
+      if(CurrentMessageChannel.instance.getTopStack == data["channel"]) {
+        return;
+      }
   InAppNotification.show(
       onTap: () =>
           handleTap(context, user, channel, currentUser, data["channel"]),

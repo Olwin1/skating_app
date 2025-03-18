@@ -3,15 +3,15 @@ import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 
 /// Default implementation of [PagingController]
 /// that handles the tracking of pagination within the scrollview
-/// 
+///
 /// Usage:
-/// 
+///
 /// 1. Create an instance of [GenericPagingController], passing in a [getPage] function
 // ignore: comment_references
 ///    that fetches the data based on the [pageKey].
 /// 2. Call [initialize()] after the object is created to properly initialize the
 ///    [pagingController].
-/// 
+///
 /// Example:
 /// ```dart
 /// final GenericPagingController<Map<String, dynamic>> genericPagingController =
@@ -19,13 +19,13 @@ import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 ///   getPage: getPage,
 ///   key: const Key("connectionsList"),
 /// );
-/// 
+///
 ///   @override
 ///   void initState() {
-/// 
+///
 ///     // Initialize paging controller
 ///     genericPagingController.initialize(getPage);#
-/// 
+///
 ///     super.initState();
 ///    }
 /// ```
@@ -36,6 +36,7 @@ class GenericPagingController<T> {
   /// and an optional [pageSize] that determines how many items should be
   /// loaded per page (defaults to 20).
   ///
+  // ignore: comment_references
   /// The [getPage] function is used to fetch the data, where the [pageKey]
   /// is passed to retrieve the corresponding page.
   GenericPagingController({
@@ -46,6 +47,7 @@ class GenericPagingController<T> {
   final Key key;
   final int pageSize;
 
+  // ignore: comment_references
   /// A function that fetches a page of data, taking the [pageKey] and returning
   /// a list of of type [T]. It is expected to return a list of
   /// data for a given page or `null` if the page fetch fails.
@@ -58,14 +60,14 @@ class GenericPagingController<T> {
   ///
   /// This method should be called after the [GenericPagingController] instance
   /// is created to properly set up the paging functionality.
-  Future<void> initialize(final Future<List<T>?> Function(int pageKey) callback) async {
+  Future<void> initialize(
+      final Future<List<T>?> Function(int pageKey) callback) async {
     getPage = callback;
     pagingController = PagingController(firstPageKey: 0);
 
     // Add the page request listener here, after the instance is fully created
     pagingController.addPageRequestListener(_fetchPage);
   }
-
 
   /// Fetches the next page of data when requested by the [PagingController].
   ///

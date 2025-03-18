@@ -6,6 +6,7 @@ import "package:patinka/api/config.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/components/list_error.dart";
+import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:shimmer/shimmer.dart";
 
@@ -199,7 +200,8 @@ class _UserPostsListState extends State<UserPostsList> {
             firstPageProgressIndicatorBuilder: (final context) =>
                 _createGridLoadingWidgets(),
             noItemsFoundIndicatorBuilder: (final context) => ListError(
-                title: AppLocalizations.of(context)!.noPostsFound, body: ""),
+                message: Pair<String>(
+                    AppLocalizations.of(context)!.noPostsFound, "")),
             // Specify how to build each grid tile
             itemBuilder: (final context, final item, final index) =>
                 item["last"] == true

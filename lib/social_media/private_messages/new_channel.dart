@@ -7,6 +7,8 @@ import "package:patinka/common_logger.dart";
 import "package:patinka/components/list_error.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/private_messages/suggestion_widget.dart";
+import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
+import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";
 
@@ -116,22 +118,14 @@ class _NewChannelListViewState extends State<NewChannelListView> {
   }
 
   @override
-  Widget build(final BuildContext context) =>
-      PagedListView<int, Map<String, dynamic>>(
+  Widget build(final BuildContext context) => DefaultItemList(
         pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-          // Use the SuggestionListWidget to build each item in the list view
-          itemBuilder: (final context, final item, final index) =>
-              SuggestionListWidget(
-            user: item,
-            callback: widget.callback,
-          ),
-          // Display an error message when there are no suggested messages
-          noItemsFoundIndicatorBuilder: (final context) => const ListError(
-            title: "No suggested messages",
-            body: "",
-          ),
+        itemBuilder: (final context, final item, final index) =>
+            SuggestionListWidget(
+          user: item,
+          callback: widget.callback,
         ),
+        noItemsFoundMessage: Pair<String>("No Suggested Channels", ""),
       );
 
   @override

@@ -10,6 +10,8 @@ import "package:patinka/components/list_error.dart";
 import "package:patinka/profile/settings/list_type.dart";
 import "package:patinka/profile/settings/report_message.dart";
 import "package:patinka/services/role.dart";
+import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
+import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 
 // Initialize an empty list to store new messages
@@ -17,9 +19,12 @@ List<Map<String, dynamic>> newMessages = [];
 
 // Messages Widget - Represents the page where messages are displayed
 class Messages extends StatefulWidget {
-
   const Messages(
-      {required this.feedbackId, required this.user, required this.reportType, required this.status, super.key});
+      {required this.feedbackId,
+      required this.user,
+      required this.reportType,
+      required this.status,
+      super.key});
   final String feedbackId;
   final SupportListType reportType;
 
@@ -125,9 +130,13 @@ class _Messages extends State<Messages> {
 
 // MessagesListView Widget - Represents the list view of messages
 class MessagesListView extends StatefulWidget {
-
   const MessagesListView({
-    required this.focus, required this.post, required this.pagingController, required this.reportType, required this.status, super.key,
+    required this.focus,
+    required this.post,
+    required this.pagingController,
+    required this.reportType,
+    required this.status,
+    super.key,
   });
   final FocusNode focus;
   final String post;
@@ -185,14 +194,11 @@ class _MessagesListViewState extends State<MessagesListView> {
     }
 
     // Build a paginated list view of messages using the PagedListView widget
-    return PagedListView<int, Map<String, dynamic>>(
+    return DefaultItemList(
       pagingController: widget.pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-        noItemsFoundIndicatorBuilder: (final context) =>
-            const ListError(title: "", body: "Awaiting Response"),
-        itemBuilder: (final context, final item, final index) =>
-            buildCommentWidget(index, item, height),
-      ),
+      itemBuilder: (final context, final item, final index) =>
+          buildCommentWidget(index, item, height),
+          noItemsFoundMessage: Pair<String>("No Messages", ""),
     );
   }
 
@@ -208,19 +214,20 @@ class _MessagesListViewState extends State<MessagesListView> {
   }
 
   // Build the Message widget for the given index and item
-  Widget buildCommentWidget(
-      final int index, final Map<String, dynamic> item, final double height) => index == 0
-        ? Padding(
-            padding: EdgeInsets.only(top: height),
-            child: ReportMessage(
-                index: index,
-                focus: widget.focus,
-                message: item,
-                status: widget.status),
-          )
-        : ReportMessage(
-            index: index,
-            focus: widget.focus,
-            message: item,
-            status: widget.status);
+  Widget buildCommentWidget(final int index, final Map<String, dynamic> item,
+          final double height) =>
+      index == 0
+          ? Padding(
+              padding: EdgeInsets.only(top: height),
+              child: ReportMessage(
+                  index: index,
+                  focus: widget.focus,
+                  message: item,
+                  status: widget.status),
+            )
+          : ReportMessage(
+              index: index,
+              focus: widget.focus,
+              message: item,
+              status: widget.status);
 }

@@ -10,6 +10,8 @@ import "package:patinka/profile/settings/list_type.dart";
 import "package:patinka/profile/settings/report.dart";
 import "package:patinka/services/role.dart";
 import "package:patinka/social_media/post_widget.dart";
+import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
+import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 
 // FollowingList widget
@@ -124,21 +126,18 @@ class _SupportListViewState extends State<SupportListView> {
 
   @override
   Widget build(final BuildContext context) => Stack(children: [
-        PagedListView<int, Map<String, dynamic>>(
+        DefaultItemList(
           pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-            // Use the Comment widget to build each item in the list view
-            itemBuilder: (final context, final item, final index) =>
-                UserListWidget(
-              item: item,
-              listType: widget.type,
-              refreshPage: _pagingController.refresh,
-              user: widget.user,
-            ),
-            noItemsFoundIndicatorBuilder: (final context) =>
-                const ListError(title: "No reports", body: "Try creating one!"),
+          itemBuilder: (final context, final item, final index) =>
+              UserListWidget(
+            item: item,
+            listType: widget.type,
+            refreshPage: _pagingController.refresh,
+            user: widget.user,
           ),
+          noItemsFoundMessage: Pair<String>("No Items", ""),
         ),
+        
         Positioned(
             bottom: 64,
             right: 32,

@@ -10,6 +10,8 @@ import "package:patinka/common_logger.dart";
 import "package:patinka/components/list_error.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/comment.dart";
+import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
+import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";
 
@@ -204,24 +206,22 @@ class _CommentsListViewState extends State<CommentsListView> {
     }
 
     // Build a paginated list view of comments using the PagedListView widget
-    return PagedListView<int, Map<String, dynamic>>(
+    return DefaultItemList(
       pagingController: widget.pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-        noItemsFoundIndicatorBuilder: (final context) => ListError(
-            title: AppLocalizations.of(context)!.noCommentsFound, body: ""),
-        itemBuilder: (final context, final item, final index) =>
-            buildCommentWidget(index, item),
-      ),
+      itemBuilder: (final context, final item, final index) =>
+          buildCommentWidget(index, item),
+          noItemsFoundMessage: Pair<String>("No Comments", ""),
     );
   }
-
 
   // To show on back page store the reference
   BottomBarVisibilityProvider? bottomBarVisibilityProvider;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    bottomBarVisibilityProvider = Provider.of<BottomBarVisibilityProvider>(context, listen: false); // ✅ Safe lookup
+    bottomBarVisibilityProvider = Provider.of<BottomBarVisibilityProvider>(
+        context,
+        listen: false); // ✅ Safe lookup
   }
 
   @override

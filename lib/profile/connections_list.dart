@@ -1,10 +1,11 @@
 import "package:flutter/material.dart";
-import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
-import "package:patinka/components/list_error.dart";
 import "package:patinka/profile/list_type.dart";
 import "package:patinka/profile/user_list_widget.dart";
+import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
+import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
+import "package:patinka/social_media/utils/pair.dart";
 
 class ConnectionsListView extends StatefulWidget {
   const ConnectionsListView({required this.type, super.key, this.user});
@@ -16,22 +17,8 @@ class ConnectionsListView extends StatefulWidget {
 }
 
 class _ConnectionsListViewState extends State<ConnectionsListView> {
-  // Number of items per page
-  static const _pageSize = 20;
-
   // The controller that manages pagination
-  final PagingController<int, Map<String, dynamic>> _pagingController =
-      PagingController(firstPageKey: 0);
-
-  @override
-  void initState() {
-    // Add a listener for page requests, and call _fetchPage() when a page is requested
-    _pagingController.addPageRequestListener(_fetchPage);
-    super.initState();
-  }
-
-  Future<void> _fetchPage(final int pageKey) async {
-    try {
+  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
       List<Map<String, dynamic>> page;
       // Fetch the page of comments using the getComments() function
       commonLogger.d("Selecting ${widget.type}");
@@ -48,47 +35,37 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
         commonLogger.d("nothing selected");
         page = [];
       }
-      // Determine if this is the last page
-      final isLastPage = page.length < _pageSize;
-      if (!mounted) {
-        return;
+      if(!mounted) {
+        return null;
       }
-      if (isLastPage) {
-        // If this is the last page, append it to the list of pages
-        _pagingController.appendLastPage(page);
-      } else {
-        // If this is not the last page, append it to the list of pages and request the next page
-        final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(page, nextPageKey);
-      }
-    } catch (error) {
-      // If there's an error fetching the page, set the error on the controller
-      _pagingController.error = error;
-    }
+      return page;
+  }
+    final GenericPagingController<String, dynamic> genericPagingController = GenericPagingController(key: const Key("connectionsList"));
+
+  @override
+  void initState() {
+    genericPagingController.initialize(getPage);
+    super.initState();
   }
 
   @override
   Widget build(final BuildContext context) =>
-      PagedListView<int, Map<String, dynamic>>(
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-          // Use the Comment widget to build each item in the list view
-          itemBuilder: (final context, final item, final index) =>
-              UserListWidget(
-                  user: item,
-                  listType: widget.type,
-                  ownerUser: widget.user,
-                  refreshPage: _pagingController.refresh),
-          noItemsFoundIndicatorBuilder: (final context) =>
-              const ListError(title: "No Follower", body: ""),
-        ),
+      // Create a Paged List View
+      DefaultItemList(
+        pagingController: genericPagingController.pagingController,
+        itemBuilder: (final context, final item, final index) => UserListWidget(
+            user: item,
+            listType: widget.type,
+            ownerUser: widget.user,
+            refreshPage: genericPagingController.pagingController.refresh),
+        noItemsFoundMessage: Pair<String>("No Followers", ""),
       );
 
   @override
   void dispose() {
     try {
       // Dispose the controller when the widget is disposed
-      _pagingController.dispose();
+      genericPagingController.pagingController.dispose();
     } catch (e) {
       commonLogger.e("Error in dispose: $e");
     }

@@ -6,6 +6,8 @@ import "package:patinka/api/support.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/components/list_error.dart";
 import "package:patinka/profile/settings/blocked_user_list_widget.dart";
+import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
+import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 
 class BlockedUsersList extends StatefulWidget {
@@ -77,17 +79,13 @@ class _BlockedUsersListState extends State<BlockedUsersList> {
               "Blocked Users",
               style: TextStyle(color: swatch[701]),
             )),
-        body: PagedListView<int, Map<String, dynamic>>(
+        body: DefaultItemList(
         pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-          // Use the Comment widget to build each item in the list view
           itemBuilder: (final context, final item, final index) =>
               BlockedUserListWidget(
                   user: item,
                   refreshPage: _pagingController.refresh),
-          noItemsFoundIndicatorBuilder: (final context) =>
-              const ListError(title: "No Blocked Users", body: ""),
-        ),
+                  noItemsFoundMessage: Pair<String>("No Blocked Users", ""),
       ));
 
   @override

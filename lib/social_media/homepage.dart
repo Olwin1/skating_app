@@ -17,6 +17,7 @@ import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/post_widget.dart";
 import "package:patinka/social_media/private_messages/private_message_list.dart";
 import "package:patinka/social_media/search_bar.dart";
+import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";
 import "package:shimmer/shimmer.dart";
@@ -255,9 +256,9 @@ class PostsListViewState extends State<PostsListView> {
               firstPageProgressIndicatorBuilder: (final context) =>
                   _loadSkeleton(),
               noItemsFoundIndicatorBuilder: (final context) => ListError(
-                title: AppLocalizations.of(context)!.noPostsFound,
-                body: AppLocalizations.of(context)!.makeFriends,
-              ),
+                  message: Pair<String>(
+                      AppLocalizations.of(context)!.noPostsFound,
+                      AppLocalizations.of(context)!.makeFriends)),
               itemBuilder: (final context, final dynamic item, final index) =>
                   item["last"] == true
                       ? const SizedBox(

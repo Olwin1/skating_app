@@ -15,7 +15,9 @@ import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/private_messages/list_widget.dart";
 import "package:patinka/social_media/private_messages/new_channel.dart";
 import "package:patinka/social_media/private_messages/session_notification.dart";
+import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
 import "package:patinka/social_media/utils/current_channel.dart";
+import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";
 import "package:shimmer/shimmer.dart";
@@ -317,29 +319,25 @@ class _ChannelsListViewState extends State<ChannelsListView> {
 
   @override
   Widget build(final BuildContext context) => _pagingController != null
-      ? PagedListView<int, Map<String, dynamic>>(
+      ? DefaultItemList(
           pagingController: _pagingController!,
-          builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-            noItemsFoundIndicatorBuilder: (final context) => ListError(
-              title: AppLocalizations.of(context)!.noMessagesFound,
-              body: AppLocalizations.of(context)!.makeFriends,
-            ),
-            firstPageProgressIndicatorBuilder: (final context) =>
-                _loadingSkeleton(),
-            itemBuilder: (final context, final item, final index) => item[
-                        "last"] ==
-                    true
-                ? const SizedBox(
-                    height: 72,
-                  )
-                : ListWidget(
-                    index: index,
-                    channel: item,
-                    desc:
-                        "Last Message:", //${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
-                    currentUser: widget.currentUser,
-                    refreshPage: widget.refreshList),
-          ),
+          noItemsFoundMessage: Pair<String>(
+              AppLocalizations.of(context)!.noMessagesFound,
+              AppLocalizations.of(context)!.makeFriends),
+          firstPageProgressIndicatorBuilder: (final context) =>
+              _loadingSkeleton(),
+          itemBuilder: (final context, final item, final index) => item["last"] ==
+                  true
+              ? const SizedBox(
+                  height: 72,
+                )
+              : ListWidget(
+                  index: index,
+                  channel: item,
+                  desc:
+                      "Last Message:", //${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
+                  currentUser: widget.currentUser,
+                  refreshPage: widget.refreshList),
         )
       : const SizedBox.shrink();
 

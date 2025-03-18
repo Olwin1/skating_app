@@ -7,6 +7,7 @@ import "package:patinka/api/config.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/components/list_error.dart";
+import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:shimmer/shimmer.dart";
 
@@ -23,28 +24,29 @@ class SavedPosts extends StatelessWidget {
   Widget build(final BuildContext context) {
     // Function to create a dialog widget for image viewing
     GestureDetector dialog() => GestureDetector(
-        onTap: () {
-          Navigator.pop(context, "close");
-        },
-        child: currentImage != null
-            ? Container(
-                color: const Color(0x55000000),
-                padding: const EdgeInsets.all(4),
-                child: CachedNetworkImage(
-                  imageUrl: "${Config.uri}/image/$currentImage",
-                  imageBuilder: (final context, final imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.contain,
+          onTap: () {
+            Navigator.pop(context, "close");
+          },
+          child: currentImage != null
+              ? Container(
+                  color: const Color(0x55000000),
+                  padding: const EdgeInsets.all(4),
+                  child: CachedNetworkImage(
+                    imageUrl: "${Config.uri}/image/$currentImage",
+                    imageBuilder: (final context, final imageProvider) =>
+                        Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              )
-            : const SizedBox.shrink(),
-      );
+                )
+              : const SizedBox.shrink(),
+        );
 
     // Function to show the overlay with the image dialog
     void show() {
@@ -82,19 +84,20 @@ Widget _createGridTileWidget(
   final Map<String, dynamic> post,
   final dynamic imageViewerController,
   final Function refreshPage,
-) => Builder(builder: (final context) {
-    // Function to pop the navigator
-    void popNavigator() {
-      Navigator.of(context).pop();
-    }
+) =>
+    Builder(builder: (final context) {
+      // Function to pop the navigator
+      void popNavigator() {
+        Navigator.of(context).pop();
+      }
 
-    return GestureDetector(
-      onLongPress: () async {
-        // Show confirmation dialog on long press
-        await showDialog(
-          useRootNavigator: false,
-          context: context,
-          builder: (final BuildContext context) => AlertDialog(
+      return GestureDetector(
+        onLongPress: () async {
+          // Show confirmation dialog on long press
+          await showDialog(
+            useRootNavigator: false,
+            context: context,
+            builder: (final BuildContext context) => AlertDialog(
               backgroundColor: swatch[800],
               title: Text(
                 "Are you sure you want to unsave this post?",
@@ -127,27 +130,27 @@ Widget _createGridTileWidget(
                 ),
               ),
             ),
-        );
-      },
-      onTap: () => {
-        currentImage = post["image"],
-        imageViewerController(),
-      },
-      child: CachedNetworkImage(
-        imageUrl: '${Config.uri}/image/thumbnail/${post["image"]}',
-        fit: BoxFit.cover,
-        imageBuilder: (final context, final imageProvider) => Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.contain,
+          );
+        },
+        onTap: () => {
+          currentImage = post["image"],
+          imageViewerController(),
+        },
+        child: CachedNetworkImage(
+          imageUrl: '${Config.uri}/image/thumbnail/${post["image"]}',
+          fit: BoxFit.cover,
+          imageBuilder: (final context, final imageProvider) => Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ),
-      ),
-    );
-  });
+      );
+    });
 
 // Class representing the SavedPostsList widget
 class SavedPostsList extends StatefulWidget {
@@ -236,30 +239,32 @@ class _SavedPostsListState extends State<SavedPostsList> {
   }
 
   @override
-  Widget build(final BuildContext context) => PagedGridView<int, Map<String, dynamic>>(
-      shrinkWrap: true,
-      physics: const ScrollPhysics(),
-      pagingController: _pagingController,
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        childAspectRatio: 1,
-        mainAxisSpacing: 2,
-        crossAxisSpacing: 2,
-        maxCrossAxisExtent: MediaQuery.of(context).size.width / 3,
-      ),
-      builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-        firstPageProgressIndicatorBuilder: (final context) =>
-            _createGridLoadingWidgets(),
-        noItemsFoundIndicatorBuilder: (final context) =>
-            const ListError(title: "No Posts Saved", body: ""),
-        // Build each grid tile
-        itemBuilder: (final context, final item, final index) => item["last"] == true
-            ? const SizedBox(
-                height: 72,
-              )
-            : _createGridTileWidget(
-                item["posts"], widget.imageViewerController, refreshPage),
-      ),
-    );
+  Widget build(final BuildContext context) =>
+      PagedGridView<int, Map<String, dynamic>>(
+        shrinkWrap: true,
+        physics: const ScrollPhysics(),
+        pagingController: _pagingController,
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          childAspectRatio: 1,
+          mainAxisSpacing: 2,
+          crossAxisSpacing: 2,
+          maxCrossAxisExtent: MediaQuery.of(context).size.width / 3,
+        ),
+        builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+          firstPageProgressIndicatorBuilder: (final context) =>
+              _createGridLoadingWidgets(),
+          noItemsFoundIndicatorBuilder: (final context) =>
+              ListError(message: Pair<String>("No Posts Saved", "")),
+          // Build each grid tile
+          itemBuilder: (final context, final item, final index) =>
+              item["last"] == true
+                  ? const SizedBox(
+                      height: 72,
+                    )
+                  : _createGridTileWidget(
+                      item["posts"], widget.imageViewerController, refreshPage),
+        ),
+      );
 
   @override
   void dispose() {

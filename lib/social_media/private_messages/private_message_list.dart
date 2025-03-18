@@ -10,7 +10,6 @@ import "package:patinka/api/config.dart";
 import "package:patinka/api/messages.dart";
 import "package:patinka/api/websocket.dart";
 import "package:patinka/common_logger.dart";
-import "package:patinka/components/list_error.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/private_messages/list_widget.dart";
 import "package:patinka/social_media/private_messages/new_channel.dart";

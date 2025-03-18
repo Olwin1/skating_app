@@ -40,7 +40,7 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
       }
       return page;
   }
-    final GenericPagingController<String, dynamic> genericPagingController = GenericPagingController(key: const Key("connectionsList"));
+    final GenericPagingController<Map<String, dynamic>> genericPagingController = GenericPagingController(key: const Key("connectionsList"));
 
   @override
   void initState() {

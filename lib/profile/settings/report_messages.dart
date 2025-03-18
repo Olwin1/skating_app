@@ -2,15 +2,14 @@
 import "package:comment_box/comment/comment.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 import "package:patinka/api/config.dart";
 import "package:patinka/api/support.dart";
 import "package:patinka/common_logger.dart";
-import "package:patinka/components/list_error.dart";
 import "package:patinka/profile/settings/list_type.dart";
 import "package:patinka/profile/settings/report_message.dart";
 import "package:patinka/services/role.dart";
 import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
+import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 
@@ -40,8 +39,8 @@ class _Messages extends State<Messages> {
   Key commentsListKey = const Key("supportMessagesList");
   late TextEditingController commentController = TextEditingController();
   String userId = "0";
-  final PagingController<int, Map<String, dynamic>> _pagingController =
-      PagingController(firstPageKey: 0);
+  final GenericPagingController<Map<String, dynamic>> genericPagingController =
+      GenericPagingController(key: const Key("connectionsList"));
 
   @override
   void initState() {
@@ -71,7 +70,8 @@ class _Messages extends State<Messages> {
           // Post a message when the send button is pressed
           if (commentController.text.isNotEmpty) {
             SupportAPI.postMessage(widget.feedbackId, commentController.text)
-                .then((final value) => _pagingController.refresh());
+                .then((final value) =>
+                    genericPagingController.pagingController.refresh());
 
             commentController.clear();
           }
@@ -84,7 +84,7 @@ class _Messages extends State<Messages> {
             key: commentsListKey,
             post: widget.feedbackId,
             focus: focus,
-            pagingController: _pagingController,
+            genericPagingController: genericPagingController,
             reportType: widget.reportType),
       );
     } else {
@@ -94,7 +94,7 @@ class _Messages extends State<Messages> {
             key: commentsListKey,
             post: widget.feedbackId,
             focus: focus,
-            pagingController: _pagingController,
+            genericPagingController: genericPagingController,
             reportType: widget.reportType),
         Positioned(
             right: 0,
@@ -133,14 +133,14 @@ class MessagesListView extends StatefulWidget {
   const MessagesListView({
     required this.focus,
     required this.post,
-    required this.pagingController,
+    required this.genericPagingController,
     required this.reportType,
     required this.status,
     super.key,
   });
   final FocusNode focus;
   final String post;
-  final PagingController<int, Map<String, dynamic>> pagingController;
+  final GenericPagingController<Map<String, dynamic>> genericPagingController;
   final SupportListType reportType;
   final Status status;
 
@@ -149,40 +149,23 @@ class MessagesListView extends StatefulWidget {
 }
 
 class _MessagesListViewState extends State<MessagesListView> {
-  static const _pageSize = 20; // Number of items per page
+  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
+    // Fetch the page of messages using the getComments() function
+    final page = [
+      ...await SupportAPI.getMessages(widget.post, pageKey),
+      ...newMessages
+    ];
+
+    if (!mounted) {
+      return null;
+    }
+    return page;
+  }
 
   @override
   void initState() {
-    // Add a listener for page requests, and call _fetchPage() when a page is requested
-    widget.pagingController.addPageRequestListener(_fetchPage);
+    widget.genericPagingController.initialize(getPage);
     super.initState();
-  }
-
-  Future<void> _fetchPage(final int pageKey) async {
-    try {
-      // Fetch the page of messages using the getComments() function
-      final page = [
-        ...await SupportAPI.getMessages(widget.post, pageKey),
-        ...newMessages
-      ];
-
-      // Determine if this is the last page
-      final isLastPage = page.length < _pageSize;
-      if (!mounted) {
-        return;
-      }
-      if (isLastPage) {
-        // If this is the last page, append it to the list of pages
-        widget.pagingController.appendLastPage(page);
-      } else {
-        // If this is not the last page, append it to the list of pages and request the next page
-        final nextPageKey = pageKey + 1;
-        widget.pagingController.appendPage(page, nextPageKey);
-      }
-    } catch (error) {
-      // If there's an error fetching the page, set the error on the controller
-      widget.pagingController.error = error;
-    }
   }
 
   @override
@@ -190,15 +173,15 @@ class _MessagesListViewState extends State<MessagesListView> {
     final double height = MediaQuery.of(context).size.height - 350;
     if (newMessages.isNotEmpty) {
       // If there are new messages, refresh the list view
-      widget.pagingController.refresh();
+      widget.genericPagingController.pagingController.refresh();
     }
 
     // Build a paginated list view of messages using the PagedListView widget
     return DefaultItemList(
-      pagingController: widget.pagingController,
+      pagingController: widget.genericPagingController.pagingController,
       itemBuilder: (final context, final item, final index) =>
           buildCommentWidget(index, item, height),
-          noItemsFoundMessage: Pair<String>("No Messages", ""),
+      noItemsFoundMessage: Pair<String>("No Messages", ""),
     );
   }
 
@@ -206,7 +189,7 @@ class _MessagesListViewState extends State<MessagesListView> {
   void dispose() {
     try {
       // Dispose the controller when the widget is disposed
-      widget.pagingController.dispose();
+      widget.genericPagingController.pagingController.dispose();
     } catch (e) {
       commonLogger.e("An error has occurred: $e");
     }

@@ -99,6 +99,7 @@ class _UserPostsListState extends State<UserPostsList> {
   // Create a PagingController to manage pagination
   final PagingController<int, Map<String, dynamic>> _pagingController =
       PagingController(firstPageKey: 0);
+      
 
   Widget _createGridLoadingWidgets() {
     final Widget child = Shimmer.fromColors(

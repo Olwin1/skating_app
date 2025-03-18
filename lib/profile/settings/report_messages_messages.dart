@@ -3,14 +3,13 @@ import "package:comment_box/comment/comment.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 import "package:patinka/api/config.dart";
 import "package:patinka/api/reports.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
-import "package:patinka/components/list_error.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
+import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";
@@ -42,8 +41,8 @@ class _ReportMessages extends State<ReportMessages> {
   Key commentsListKey = const Key("commentsList");
   late TextEditingController commentController = TextEditingController();
   String userId = "0";
-  final PagingController<int, Map<String, dynamic>> _pagingController =
-      PagingController(firstPageKey: 0);
+  final GenericPagingController<Map<String, dynamic>> genericPagingController = GenericPagingController(key: const Key("reportmessages"));
+
 
   @override
   void initState() {
@@ -78,7 +77,7 @@ class _ReportMessages extends State<ReportMessages> {
               if (commentController.text.isNotEmpty) {
                 ReportAPI.postReportMessage(
                         widget.report, commentController.text)
-                    .then((final value) => _pagingController.refresh());
+                    .then((final value) => genericPagingController.pagingController.refresh());
 
                 commentController.clear();
               }
@@ -90,13 +89,13 @@ class _ReportMessages extends State<ReportMessages> {
                 key: commentsListKey,
                 report: widget.report,
                 focus: focus,
-                pagingController: _pagingController),
+                genericPagingController: genericPagingController),
           )
         : ReportMessagesListView(
             key: commentsListKey,
             report: widget.report,
             focus: focus,
-            pagingController: _pagingController);
+            genericPagingController: genericPagingController);
   }
 
   @override
@@ -136,63 +135,44 @@ class ReportMessagesListView extends StatefulWidget {
   const ReportMessagesListView(
       {required this.focus,
       required this.report,
-      required this.pagingController,
+      required this.genericPagingController,
       super.key});
   final FocusNode focus;
   final String report;
-  final PagingController<int, Map<String, dynamic>> pagingController;
+  final GenericPagingController<Map<String, dynamic>> genericPagingController;
 
   @override
   State<ReportMessagesListView> createState() => _ReportMessagesListViewState();
 }
 
 class _ReportMessagesListViewState extends State<ReportMessagesListView> {
-  static const _pageSize = 20; // Number of items per page
-
-  @override
-  void initState() {
-    // Add a listener for page requests, and call _fetchPage() when a page is requested
-    widget.pagingController.addPageRequestListener(_fetchPage);
-    super.initState();
-  }
-
-  Future<void> _fetchPage(final int pageKey) async {
-    try {
+  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
       // Fetch the page of comments using the getReportMessages() function
       final page = [
         ...await ReportAPI.getReportMessages(pageKey, widget.report),
         ...newReportMessages
       ];
-
-      // Determine if this is the last page
-      final isLastPage = page.length < _pageSize;
-      if (!mounted) {
-        return;
+      if(!mounted) {
+        return null;
       }
-      if (isLastPage) {
-        // If this is the last page, append it to the list of pages
-        widget.pagingController.appendLastPage(page);
-      } else {
-        // If this is not the last page, append it to the list of pages and request the next page
-        final nextPageKey = pageKey + 1;
-        widget.pagingController.appendPage(page, nextPageKey);
-      }
-    } catch (error) {
-      // If there's an error fetching the page, set the error on the controller
-      widget.pagingController.error = error;
-    }
+      return page;
+  }
+  @override
+  void initState() {
+    widget.genericPagingController.initialize(getPage);
+    super.initState();
   }
 
   @override
   Widget build(final BuildContext context) {
     if (newReportMessages.isNotEmpty) {
       // If there are new comments, refresh the list view
-      widget.pagingController.refresh();
+      widget.genericPagingController.pagingController.refresh();
     }
 
     // Build a paginated list view of comments using the PagedListView widget
     return DefaultItemList(
-      pagingController: widget.pagingController,
+      pagingController: widget.genericPagingController.pagingController,
       itemBuilder: (final context, final item, final index) =>
           buildMessageWidget(index, item),
           noItemsFoundMessage: Pair<String>("No Messages", ""),
@@ -203,7 +183,7 @@ class _ReportMessagesListViewState extends State<ReportMessagesListView> {
   void dispose() {
     try {
       // Dispose the controller when the widget is disposed
-      widget.pagingController.dispose();
+      widget.genericPagingController.pagingController.dispose();
     } catch (e) {
       commonLogger.e("An error has occurred: $e");
     }

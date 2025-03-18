@@ -1,13 +1,12 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 import "package:patinka/api/config.dart";
 import "package:patinka/api/messages.dart";
 import "package:patinka/common_logger.dart";
-import "package:patinka/components/list_error.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/private_messages/suggestion_widget.dart";
 import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
+import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";
@@ -76,50 +75,30 @@ class NewChannelListView extends StatefulWidget {
 }
 
 class _NewChannelListViewState extends State<NewChannelListView> {
-  // Number of items per page
-  static const _pageSize = 20;
-
   // The controller that manages pagination
-  final PagingController<int, Map<String, dynamic>> _pagingController =
-      PagingController(firstPageKey: 0);
+  final GenericPagingController<Map<String, dynamic>> genericPagingController =
+      GenericPagingController(key: const Key("connectionsList"));
+
+  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
+    // Fetch a page of suggestions from the API
+    final List<Map<String, dynamic>> page =
+        await MessagesAPI.getSuggestions(pageKey);
+
+    if (!mounted) {
+      return null;
+    }
+    return page;
+  }
 
   @override
   void initState() {
-    // Add a listener for page requests, and call _fetchPage() when a page is requested
-    _pagingController.addPageRequestListener(_fetchPage);
+    genericPagingController.initialize(getPage);
     super.initState();
-  }
-
-  Future<void> _fetchPage(final int pageKey) async {
-    try {
-      // Fetch a page of suggestions from the API
-      final List<Map<String, dynamic>> page =
-          await MessagesAPI.getSuggestions(pageKey);
-
-      // Determine if this is the last page
-      final isLastPage = page.length < _pageSize;
-
-      if (!mounted) {
-        return;
-      }
-
-      if (isLastPage) {
-        // If this is the last page, append it to the list of pages
-        _pagingController.appendLastPage(page);
-      } else {
-        // If this is not the last page, append it to the list of pages and request the next page
-        final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(page, nextPageKey);
-      }
-    } catch (error) {
-      // If there's an error fetching the page, set the error on the controller
-      _pagingController.error = error;
-    }
   }
 
   @override
   Widget build(final BuildContext context) => DefaultItemList(
-        pagingController: _pagingController,
+        pagingController: genericPagingController.pagingController,
         itemBuilder: (final context, final item, final index) =>
             SuggestionListWidget(
           user: item,
@@ -132,7 +111,7 @@ class _NewChannelListViewState extends State<NewChannelListView> {
   void dispose() {
     try {
       // Dispose the controller when the widget is disposed
-      _pagingController.dispose();
+      genericPagingController.pagingController.dispose();
     } catch (e) {
       commonLogger.e("Error in dispose: $e");
     }

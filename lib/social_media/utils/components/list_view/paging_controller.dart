@@ -7,14 +7,15 @@ import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 /// Usage:
 /// 
 /// 1. Create an instance of [GenericPagingController], passing in a [getPage] function
+// ignore: comment_references
 ///    that fetches the data based on the [pageKey].
 /// 2. Call [initialize()] after the object is created to properly initialize the
 ///    [pagingController].
 /// 
 /// Example:
 /// ```dart
-/// final GenericPagingController<String, dynamic> genericPagingController =
-///     GenericPagingController<String, dynamic>(
+/// final GenericPagingController<Map<String, dynamic>> genericPagingController =
+///     GenericPagingController<Map<String, dynamic>>(
 ///   getPage: getPage,
 ///   key: const Key("connectionsList"),
 /// );
@@ -28,7 +29,7 @@ import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 ///     super.initState();
 ///    }
 /// ```
-class GenericPagingController<T, G> {
+class GenericPagingController<T> {
   /// Creates an instance of [GenericPagingController].
   ///
   /// This constructor accepts a [key], a [getPage] function to fetch data,
@@ -46,18 +47,18 @@ class GenericPagingController<T, G> {
   final int pageSize;
 
   /// A function that fetches a page of data, taking the [pageKey] and returning
-  /// a list of [Map]s of type [T] and [G]. It is expected to return a list of
+  /// a list of of type [T]. It is expected to return a list of
   /// data for a given page or `null` if the page fetch fails.
-  late Future<List<Map<T, G>>?> Function(int pageKey) getPage;
+  late Future<List<T>?> Function(int pageKey) getPage;
 
   /// The actual [PagingController] that handles the pagination logic.
-  late PagingController<int, Map<T, G>> pagingController;
+  late PagingController<int, T> pagingController;
 
   /// Initializes the [pagingController] and adds the page request listener.
   ///
   /// This method should be called after the [GenericPagingController] instance
   /// is created to properly set up the paging functionality.
-  Future<void> initialize(final Future<List<Map<T, G>>?> Function(int pageKey) callback) async {
+  Future<void> initialize(final Future<List<T>?> Function(int pageKey) callback) async {
     getPage = callback;
     pagingController = PagingController(firstPageKey: 0);
 
@@ -78,7 +79,7 @@ class GenericPagingController<T, G> {
   Future<void> _fetchPage(final int pageKey) async {
     try {
       // Fetch a page of suggestions from the API using the getPage function
-      final List<Map<T, G>>? page = await this.getPage(pageKey);
+      final List<T>? page = await this.getPage(pageKey);
 
       if (page == null) {
         return;

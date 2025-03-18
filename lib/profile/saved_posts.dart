@@ -7,6 +7,7 @@ import "package:patinka/api/config.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/components/list_error.dart";
+import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:shimmer/shimmer.dart";
@@ -162,12 +163,9 @@ class SavedPostsList extends StatefulWidget {
 }
 
 class _SavedPostsListState extends State<SavedPostsList> {
-  // Page size used for pagination
-  static const _pageSize = 20;
-
   // PagingController to manage pagination
-  final PagingController<int, Map<String, dynamic>> _pagingController =
-      PagingController(firstPageKey: 0);
+  final GenericPagingController<Map<String, dynamic>> genericPagingController =
+      GenericPagingController(key: const Key("savedposts"));
 
   // Function to create loading widgets for the grid
   Widget _createGridLoadingWidgets() {
@@ -192,50 +190,21 @@ class _SavedPostsListState extends State<SavedPostsList> {
     );
   }
 
+  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
+    // Fetch the next page of posts from the user's account
+    final page = await SocialAPI.getSavedPosts(pageKey);
+    return page;
+  }
+
   @override
   void initState() {
-    // Add a listener to the PagingController that fetches the next page when requested
-    _pagingController.addPageRequestListener(_fetchPage);
+    genericPagingController.initialize(getPage);
     super.initState();
   }
 
   // Function to refresh the page
   void refreshPage() {
-    _pagingController.refresh();
-  }
-
-  // Function to fetch a page of posts
-  Future<void> _fetchPage(final int pageKey) async {
-    try {
-      // Fetch the next page of posts from the user's account
-      final page = await SocialAPI.getSavedPosts(pageKey);
-
-      // Determine if this is the last page of posts
-      final isLastPage = page.length < _pageSize;
-
-      if (isLastPage && mounted) {
-        // If this is the last page of posts, append it to the PagingController as the final page
-        if ((_pagingController.itemList == null ||
-                _pagingController.itemList!.isEmpty) &&
-            page.isEmpty) {
-          _pagingController.appendLastPage(page);
-        } else {
-          final int rem =
-              4 - ((_pagingController.itemList?.length ?? 0) + page.length) % 3;
-          final List<Map<String, dynamic>> spacers =
-              List.generate(rem, (final index) => {"last": true});
-          _pagingController.appendLastPage([...page, ...spacers]);
-        }
-      } else if (mounted) {
-        // If there are more pages of posts, append the current page to the PagingController
-        // and specify the key for the next page
-        final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(page, nextPageKey);
-      }
-    } catch (error) {
-      // If an error occurs while fetching a page, set the PagingController's error state
-      _pagingController.error = error;
-    }
+    genericPagingController.pagingController.refresh();
   }
 
   @override
@@ -243,7 +212,7 @@ class _SavedPostsListState extends State<SavedPostsList> {
       PagedGridView<int, Map<String, dynamic>>(
         shrinkWrap: true,
         physics: const ScrollPhysics(),
-        pagingController: _pagingController,
+        pagingController: genericPagingController.pagingController,
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           childAspectRatio: 1,
           mainAxisSpacing: 2,
@@ -270,7 +239,7 @@ class _SavedPostsListState extends State<SavedPostsList> {
   void dispose() {
     try {
       // Dispose of the PagingController when the state object is disposed
-      _pagingController.dispose();
+      genericPagingController.pagingController.dispose();
     } catch (e) {
       commonLogger.e("An error has occurred: $e");
     }

@@ -1,15 +1,14 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 import "package:patinka/api/config.dart";
 import "package:patinka/api/reports.dart";
 import "package:patinka/common_logger.dart";
-import "package:patinka/components/list_error.dart";
 import "package:patinka/profile/settings/report_user.dart";
 import "package:patinka/profile/settings/status_colour.dart";
 import "package:patinka/services/role.dart";
 import "package:patinka/social_media/post_widget.dart";
 import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
+import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 
@@ -60,57 +59,40 @@ class ReportListView extends StatefulWidget {
 }
 
 class _ReportListViewState extends State<ReportListView> {
-  // Number of items per page
-  static const _pageSize = 20;
-
   // The controller that manages pagination
-  final PagingController<int, Map<String, dynamic>> _pagingController =
-      PagingController(firstPageKey: 0);
+  final GenericPagingController<Map<String, dynamic>> genericPagingController =
+      GenericPagingController(key: const Key("connectionsList"));
+
+  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
+    List<Map<String, dynamic>> page;
+    // Fetch the page of comments using the getComments() function
+    page = await ReportAPI.getReports(pageKey, widget.isSelf);
+
+    if (!mounted) {
+      return null;
+    }
+    return page;
+  }
+
   UserRole userRole = UserRole.regular;
   @override
   void initState() {
-    // Add a listener for page requests, and call _fetchPage() when a page is requested
-    _pagingController.addPageRequestListener(_fetchPage);
+    genericPagingController.initialize(getPage);
     super.initState();
-  }
-
-  Future<void> _fetchPage(final int pageKey) async {
-    try {
-      List<Map<String, dynamic>> page;
-      // Fetch the page of comments using the getComments() function
-      page = await ReportAPI.getReports(pageKey, widget.isSelf);
-
-      // Determine if this is the last page
-      final isLastPage = page.length < _pageSize;
-      if (!mounted) {
-        return;
-      }
-      if (isLastPage) {
-        // If this is the last page, append it to the list of pages
-        _pagingController.appendLastPage(page);
-      } else {
-        // If this is not the last page, append it to the list of pages and request the next page
-        final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(page, nextPageKey);
-      }
-    } catch (error) {
-      // If there's an error fetching the page, set the error on the controller
-      _pagingController.error = error;
-    }
   }
 
   @override
   Widget build(final BuildContext context) => Stack(children: [
         DefaultItemList(
-        pagingController: _pagingController,
+          pagingController: genericPagingController.pagingController,
           itemBuilder: (final context, final item, final index) =>
               ReportListWidget(
-              item: item,
-              refreshPage: _pagingController.refresh,
-              user: widget.user,
-              isSelf: widget.isSelf,
-            ),
-            noItemsFoundMessage: Pair<String>("No Reports Found", ""),
+            item: item,
+            refreshPage: genericPagingController.pagingController.refresh,
+            user: widget.user,
+            isSelf: widget.isSelf,
+          ),
+          noItemsFoundMessage: Pair<String>("No Reports Found", ""),
         )
       ]);
 
@@ -118,7 +100,7 @@ class _ReportListViewState extends State<ReportListView> {
   void dispose() {
     try {
       // Dispose the controller when the widget is disposed
-      _pagingController.dispose();
+      genericPagingController.pagingController.dispose();
     } catch (e) {
       commonLogger.e("Error in dispose: $e");
     }

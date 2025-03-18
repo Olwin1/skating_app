@@ -28,7 +28,7 @@ class NewPost extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => Consumer<NavigationService>(
       builder: (final context, final navigationService, final _) =>
-          NavigationService.getCurrentIndex() == 2
+          NavigationService.getCurrentIndex == 2
               ? const NewPostPage()
               :
               // Otherwise, return an empty SizedBox widget

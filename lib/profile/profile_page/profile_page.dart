@@ -37,7 +37,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(final BuildContext context) => navbar
       ? Consumer<NavigationService>(
           builder: (final context, final navigationService, final _) {
-          final int a = NavigationService.getCurrentIndex();
+          final int a = NavigationService.getCurrentIndex;
           commonLogger.d("Profile paege i: $a");
           return a == 4
               ? Profile(userId: userId)

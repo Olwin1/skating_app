@@ -65,6 +65,7 @@ Future<StreamedResponse?> uploadFile(final Uint8List image) async {
 
       return response;
     } else {
+      // TODO Add a proper error handler
       // Otherwise, print an error message to the console
       commonLogger.e("Response: Non 200 - $response");
 

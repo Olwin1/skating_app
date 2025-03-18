@@ -1,11 +1,9 @@
 import "package:flutter/material.dart";
-import "package:flutter/scheduler.dart";
 import "package:flutter/services.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:http/http.dart";
 import "package:patinka/api/config.dart";
 import "package:patinka/api/image.dart";
-import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/services/navigation_service.dart";
@@ -67,43 +65,43 @@ class _SendPost extends State<SendPost> {
           context: context,
           barrierDismissible: false,
           builder: (final BuildContext context) => AlertDialog(
-              backgroundColor: swatch[800],
-              title: Text(
-                "Processing",
-                style: TextStyle(color: swatch[701]),
-              ),
-              content: Text(
-                "Please wait...",
-                style: TextStyle(color: swatch[901]),
-              ),
+            backgroundColor: swatch[800],
+            title: Text(
+              "Processing",
+              style: TextStyle(color: swatch[701]),
             ),
+            content: Text(
+              "Please wait...",
+              style: TextStyle(color: swatch[901]),
+            ),
+          ),
         );
 
         // Call the "sendImage" function and wait for it to complete
-        sendImage().then((final value) => {
-              // When "sendImage" completes successfully, call "postPost"
-              // with the text from "descriptionController" and the returned value
-              SocialAPI.postPost(descriptionController.text, value!)
-                  // Wait for "postPost" to complete successfully
-                  .then((final value) => {
-                        // When "postPost" completes successfully, close the current screen
-                        NavigationService.currentNavigatorKey.currentState
-                            ?.pop(),
-                        NavigationService.currentNavigatorKey.currentState
-                            ?.pop(),
-                        NavigationService.setCurrentIndex(0),
-                        SchedulerBinding.instance
-                            .addPostFrameCallback((final _) async {
-                          SchedulerBinding.instance
-                              .addPostFrameCallback((final _) async {
-                            commonLogger.d("Showing Navbar");
-                            Provider.of<BottomBarVisibilityProvider>(context,
-                                    listen: false)
-                                .show(); // Show The Navbar
-                          });
-                        })
-                      })
-            });
+        sendImage().then((final value) {
+          // Ensure all pops are completed before changing navigator
+          final navigatorState =
+              NavigationService.currentNavigatorKey.currentState;
+
+          if (navigatorState != null) {
+            navigatorState.popUntil((final route) => route.isFirst);
+          }
+
+          // Delay to ensure the previous pops are completed
+          Future.delayed(Duration.zero, () {
+            commonLogger.d("Showing Navbar");
+
+            // Switch to the desired navigator index
+            NavigationService.setCurrentIndex(0);
+            // Send back to main page
+            NavigationService.currentNavigatorKey.currentState!.popUntil((final route) => route.isFirst);
+
+Future.delayed(const Duration(milliseconds: 250), () {
+                        // Show the Bottom Navigation Bar after a short delay
+            Provider.of<BottomBarVisibilityProvider>(NavigationService.navigatorKey(NavigationService.getCurrentIndex.toString())!.currentContext!, listen: false)
+                .show();});
+          });
+        });
       } catch (e) {
         commonLogger.e("Error creating post: $e");
       }

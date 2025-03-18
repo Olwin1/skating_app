@@ -26,7 +26,7 @@ class NavigationService extends ChangeNotifier {
   }
 
   // Get the current index
-  static int getCurrentIndex() {
+  static int get getCurrentIndex {
     commonLogger.d("Get current index");
     return _currentIndex;
   }

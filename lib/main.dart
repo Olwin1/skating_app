@@ -389,7 +389,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     if (didPop) {
       return;
     }
-    commonLogger.d("Popping with tab ${NavigationService.getCurrentIndex()}");
+    commonLogger.d("Popping with tab ${NavigationService.getCurrentIndex}");
     //final isFirstRouteInCurrentTabb = ;#
     if (mounted) {
       // let system handle back button if on the first route
@@ -438,7 +438,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         canPop: false,
         // Handle user swiping back inside application
         onPopInvokedWithResult: handlePop,
-        child: Scaffold(
+        child: Consumer<NavigationService>(builder: (final context, final navigationService, final child) => Scaffold(
             extendBody: true,
             bottomNavigationBar: Consumer<BottomBarVisibilityProvider>(
               builder: (final context, final bottomBarVisibilityProvider,
@@ -473,12 +473,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                           0, // Set initial selection to main page
                                       onTap: (final int i) => {
                                         //When a navbar button is pressed set the current tab to the tabitem that was pressed
-                                        mounted
-                                            ? setState(() {
-                                                NavigationService
-                                                    .setCurrentIndex(i);
-                                              })
-                                            : null,
+                                        NavigationService
+                                                    .setCurrentIndex(i),
                                         commonLogger
                                             .t("Setting the current page: $i")
                                       }, // When a button is pressed... output to console
@@ -498,7 +494,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   );
                 },
               ),
-            ),
+                  ),
             body: Stack(
               children: [
                 SingleChildScrollView(
@@ -531,11 +527,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             )
 
             // This trailing comma makes auto-formatting nicer for build methods.
-            ));
+    )));
   }
 
   Widget _buildOffstageNavigator(final int tabItemIndex) => Offstage(
-        offstage: NavigationService.getCurrentIndex() != tabItemIndex,
+        offstage: NavigationService.getCurrentIndex != tabItemIndex,
         child: TabNavigator(
           tabItemIndex: tabItemIndex,
           tabitems: tabItems(),

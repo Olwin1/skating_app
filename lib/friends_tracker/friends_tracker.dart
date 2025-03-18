@@ -31,7 +31,7 @@ class FriendsTracker extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => Consumer<NavigationService>(
       builder: (final context, final navigationService, final _) =>
-          NavigationService.getCurrentIndex() == 3
+          NavigationService.getCurrentIndex == 3
               ? const FriendsTrackerPage()
               :
               // Otherwise, return an empty SizedBox widget

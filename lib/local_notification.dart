@@ -9,7 +9,6 @@ import "package:patinka/common_logger.dart";
 import "package:patinka/services/navigation_service.dart";
 import "package:patinka/social_media/private_messages/private_message.dart";
 import "package:patinka/social_media/private_messages/session_notification.dart";
-import "package:patinka/social_media/utils/current_channel.dart";
 
 // Entry point for handling Firebase background messages
 @pragma("vm:entry-point")

@@ -6,6 +6,7 @@ import "package:patinka/api/config.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/components/list_error.dart";
+import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:shimmer/shimmer.dart";
@@ -93,13 +94,9 @@ class UserPostsList extends StatefulWidget {
 }
 
 class _UserPostsListState extends State<UserPostsList> {
-  // Define the page size used for pagination
-  static const _pageSize = 20;
-
   // Create a PagingController to manage pagination
-  final PagingController<int, Map<String, dynamic>> _pagingController =
-      PagingController(firstPageKey: 0);
-      
+  final GenericPagingController<Map<String, dynamic>> genericPagingController =
+      GenericPagingController(key: const Key("userPostsList"));
 
   Widget _createGridLoadingWidgets() {
     final Widget child = Shimmer.fromColors(
@@ -136,52 +133,42 @@ class _UserPostsListState extends State<UserPostsList> {
     );
   }
 
+  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
+    commonLogger.d("Fetching Page");
+
+    // Fetch the next page of posts from the user's account
+    final page = await SocialAPI.getUserPosts(widget.user?["user_id"], pageKey);
+    if (!mounted) {
+      return null;
+    }
+    widget.metadata(page);
+    return page;
+  }
+
+  List<Map<String, dynamic>> handleLastPage(
+      final List<Map<String, dynamic>> page) {
+    if ((genericPagingController.pagingController.itemList == null ||
+            genericPagingController.pagingController.itemList!.isEmpty) &&
+        page.isEmpty) {
+      return page;
+    } else {
+      final int rem = 4 -
+          ((genericPagingController.pagingController.itemList?.length ?? 0) +
+                  page.length) %
+              3;
+      final List<Map<String, dynamic>> spacers = [];
+      for (int i = 0; i < rem; i++) {
+        spacers.add({"last": true});
+      }
+      return [...page, ...spacers];
+    }
+  }
+
   @override
   void initState() {
-    // Add a listener to the PagingController that fetches the next page when requested
-    _pagingController.addPageRequestListener(_fetchPage);
+    // Initialise the paging controller
+    genericPagingController.initialize(getPage, handleLastPage);
     super.initState();
-  }
-
-  void refreshPage() {
-    _pagingController.refresh();
-  }
-
-  Future<void> _fetchPage(final int pageKey) async {
-    try {
-      // Fetch the next page of posts from the user's account
-      final page =
-          await SocialAPI.getUserPosts(widget.user?["user_id"], pageKey);
-      widget.metadata(page);
-
-      // Determine if this is the last page of posts
-      final isLastPage = page.length < _pageSize;
-
-      if (isLastPage && mounted) {
-        // If this is the last page of posts, append it to the PagingController as the final page
-        if ((_pagingController.itemList == null ||
-                _pagingController.itemList!.isEmpty) &&
-            page.isEmpty) {
-          _pagingController.appendLastPage(page);
-        } else {
-          final int rem =
-              4 - ((_pagingController.itemList?.length ?? 0) + page.length) % 3;
-          final List<Map<String, dynamic>> spacers = [];
-          for (int i = 0; i < rem; i++) {
-            spacers.add({"last": true});
-          }
-          _pagingController.appendLastPage([...page, ...spacers]);
-        }
-      } else if (mounted) {
-        // If there are more pages of posts, append the current page to the PagingController
-        // and specify the key for the next page
-        final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(page, nextPageKey);
-      }
-    } catch (error) {
-      // If an error occurs while fetching a page, set the PagingController's error state
-      _pagingController.error = error;
-    }
   }
 
   @override
@@ -189,7 +176,7 @@ class _UserPostsListState extends State<UserPostsList> {
       ? PagedGridView<int, Map<String, dynamic>>(
           shrinkWrap: true,
           physics: const ScrollPhysics(),
-          pagingController: _pagingController,
+          pagingController: genericPagingController.pagingController,
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             // Specify the properties for the grid tiles
             childAspectRatio: 1,
@@ -209,8 +196,11 @@ class _UserPostsListState extends State<UserPostsList> {
                     ? const SizedBox(
                         height: 72,
                       )
-                    : _createGridTileWidget(item, widget.imageViewerController,
-                        refreshPage, widget.setCurrentImage),
+                    : _createGridTileWidget(
+                        item,
+                        widget.imageViewerController,
+                        genericPagingController.pagingController.refresh,
+                        widget.setCurrentImage),
           ),
         )
       : const SizedBox.shrink();
@@ -219,7 +209,7 @@ class _UserPostsListState extends State<UserPostsList> {
   void dispose() {
     try {
       // Dispose of the PagingController when the state object is disposed
-      _pagingController.dispose();
+      genericPagingController.pagingController.dispose();
     } catch (e) {
       commonLogger.e("An error has occured: $e");
     }

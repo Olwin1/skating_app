@@ -77,7 +77,7 @@ class _ReportListViewState extends State<ReportListView> {
   UserRole userRole = UserRole.regular;
   @override
   void initState() {
-    genericPagingController.initialize(getPage);
+    genericPagingController.initialize(getPage, null);
     super.initState();
   }
 

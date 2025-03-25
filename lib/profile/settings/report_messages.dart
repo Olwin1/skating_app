@@ -164,7 +164,7 @@ class _MessagesListViewState extends State<MessagesListView> {
 
   @override
   void initState() {
-    widget.genericPagingController.initialize(getPage);
+    widget.genericPagingController.initialize(getPage, null);
     super.initState();
   }
 

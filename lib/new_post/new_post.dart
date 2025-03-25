@@ -9,6 +9,7 @@ import "package:patinka/common_logger.dart";
 import "package:patinka/new_post/edit_post.dart";
 import "package:patinka/new_post/send_post.dart";
 import "package:patinka/services/navigation_service.dart";
+import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/swatch.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:photo_gallery/photo_gallery.dart";
@@ -239,67 +240,66 @@ class PhotosGridView extends StatefulWidget {
 class _PhotosGridViewState extends State<PhotosGridView> {
   static const _pageSize = 20; // Number of items to load in a single page
 
-  // PagingController manages the loading of pages as the user scrolls
-  final PagingController<int, Medium> _pagingController =
-      PagingController(firstPageKey: 0);
+  // Define method for getPage to run every time a new page needs to be fetched
+  Future<List<Medium>?> getPage(final int pageKey) async {
+    if (!mounted) {
+      return null;
+    }
+
+    if (_albums != null) {
+      // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
+      final page = await _albums![0].listMedia(
+        skip: pageKey,
+        take: _pageSize,
+      );
+      final newItems = page.items;
+
+      return newItems;
+    } else {
+      return null;
+    }
+  }
+
+  // Define getLastPage which will be called only after fetch page and only on the last time.  
+  List<Medium> getLastPage(final List<Medium> page) {
+    final Medium padderItem = Medium.fromJson(const {
+      "id": "0",
+      "filename": "a",
+      "title": "a",
+      "width": 1,
+      "height": 1,
+      "size": 1,
+      "orientation": 1,
+      "mimeType": "image/jpeg"
+    });
+    // appendLastPage is called if there are no more items to load
+    if ((genericPagingController.pagingController.itemList == null ||
+            genericPagingController.pagingController.itemList!.isEmpty) &&
+        page.isEmpty) {
+      return page;
+    } else {
+      // Add padding to bottom row of items.  
+      final int rem = 5 -
+          ((genericPagingController.pagingController.itemList?.length ?? 0) +
+                  page.length) %
+              4;
+      final List<Medium> spacers = [];
+      for (int i = 0; i < rem; i++) {
+        spacers.add(padderItem);
+      }
+      return [...page, ...spacers];
+    }
+  }
+
+  // GenericPagingController manages the loading of pages as the user scrolls
+  final GenericPagingController<Medium> genericPagingController =
+      GenericPagingController(key: const Key("newPost"));
 
   @override
   void initState() {
     // addPageRequestListener is called whenever the user scrolls near the end of the list
-    _pagingController.addPageRequestListener(_fetchPage);
+    genericPagingController.initialize(getPage, getLastPage);
     super.initState();
-  }
-
-  // Fetches the data for the given pageKey and appends it to the list of items
-  Future<void> _fetchPage(final int pageKey) async {
-    try {
-      final Medium padderItem = Medium.fromJson(const {
-        "id": "0",
-        "filename": "a",
-        "title": "a",
-        "width": 1,
-        "height": 1,
-        "size": 1,
-        "orientation": 1,
-        "mimeType": "image/jpeg"
-      });
-      if (_albums != null) {
-        // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
-        final page = await _albums![0].listMedia(
-          skip: pageKey,
-          take: _pageSize,
-        );
-        final newItems = page.items;
-        final isLastPage = newItems.length < _pageSize;
-        if (!mounted) {
-          return;
-        }
-        if (isLastPage) {
-          // appendLastPage is called if there are no more items to load
-          if ((_pagingController.itemList == null ||
-                  _pagingController.itemList!.isEmpty) &&
-              newItems.isEmpty) {
-            _pagingController.appendLastPage(newItems);
-          } else {
-            final int rem = 5 -
-                ((_pagingController.itemList?.length ?? 0) + newItems.length) %
-                    4;
-            final List<Medium> spacers = [];
-            for (int i = 0; i < rem; i++) {
-              spacers.add(padderItem);
-            }
-            _pagingController.appendLastPage([...newItems, ...spacers]);
-          }
-        } else {
-          // appendPage is called to add the newly loaded items to the list of items
-          final nextPageKey = pageKey + newItems.length;
-          _pagingController.appendPage(newItems, nextPageKey);
-        }
-      }
-    } catch (error) {
-      commonLogger.e(error);
-      _pagingController.error = error;
-    }
   }
 
   @override
@@ -312,7 +312,7 @@ class _PhotosGridViewState extends State<PhotosGridView> {
           maxCrossAxisExtent: MediaQuery.of(context).size.width /
               4, // Maximum width of a grid item
         ),
-        pagingController: _pagingController,
+        pagingController: genericPagingController.pagingController,
         builderDelegate: PagedChildBuilderDelegate<Medium>(
           itemBuilder: (final context, final item, final index) =>
               item.id == "0" &&
@@ -351,7 +351,7 @@ class _PhotosGridViewState extends State<PhotosGridView> {
   @override
   void dispose() {
     // Disposes of the PagingController to free up resources
-    _pagingController.dispose();
+    genericPagingController.pagingController.dispose();
     super.dispose();
   }
 }

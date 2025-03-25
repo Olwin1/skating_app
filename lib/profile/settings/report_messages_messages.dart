@@ -159,7 +159,7 @@ class _ReportMessagesListViewState extends State<ReportMessagesListView> {
   }
   @override
   void initState() {
-    widget.genericPagingController.initialize(getPage);
+    widget.genericPagingController.initialize(getPage, null);
     super.initState();
   }
 

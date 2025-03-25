@@ -177,7 +177,7 @@ class _CommentsListViewState extends State<CommentsListView> {
 
   @override
   void initState() {
-    widget.genericPagingController.initialize(getPage);
+    widget.genericPagingController.initialize(getPage, null);
     super.initState();
   }
 

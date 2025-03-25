@@ -29,7 +29,7 @@ class _BlockedUsersListState extends State<BlockedUsersList> {
 
   @override
   void initState() {
-    genericPagingController.initialize(getPage);
+    genericPagingController.initialize(getPage, null);
     super.initState();
   }
 

@@ -24,7 +24,7 @@ import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 ///   void initState() {
 ///
 ///     // Initialize paging controller
-///     genericPagingController.initialize(getPage);#
+///     genericPagingController.initialize(getPage, null);
 ///
 ///     super.initState();
 ///    }
@@ -53,6 +53,10 @@ class GenericPagingController<T> {
   /// data for a given page or `null` if the page fetch fails.
   late Future<List<T>?> Function(int pageKey) getPage;
 
+  /// A function that will only execute when the last page of data is fetched it will take the page
+  /// and will then return it back at the end.  
+  late List<T>? Function(List<T> page)? handleLastPage;
+
   /// The actual [PagingController] that handles the pagination logic.
   late PagingController<int, T> pagingController;
 
@@ -61,9 +65,10 @@ class GenericPagingController<T> {
   /// This method should be called after the [GenericPagingController] instance
   /// is created to properly set up the paging functionality.
   Future<void> initialize(
-      final Future<List<T>?> Function(int pageKey) callback) async {
+      final Future<List<T>?> Function(int pageKey) callback, final List<T>? Function(List<T> page)? handleLastPage) async {
     getPage = callback;
     pagingController = PagingController(firstPageKey: 0);
+    this.handleLastPage = handleLastPage;
 
     // Add the page request listener here, after the instance is fully created
     pagingController.addPageRequestListener(_fetchPage);
@@ -78,6 +83,9 @@ class GenericPagingController<T> {
   ///
   /// If the page is the last one, it appends the last page to the controller,
   /// otherwise, it appends the next page with a new page key.
+  /// 
+  /// There is an optional handler for modifying the data on the last page this is defined upon initialisation
+  /// 
   Future<void> _fetchPage(final int pageKey) async {
     try {
       // Fetch a page of suggestions from the API using the getPage function
@@ -91,8 +99,17 @@ class GenericPagingController<T> {
       final isLastPage = page.length < pageSize;
 
       if (isLastPage) {
+
+        // If there is some alternative handler provided for the last page then execute it
+        List<T> lastPage = page;
+        if(handleLastPage != null) {
+          lastPage = handleLastPage!(page) ?? page;
+        }
+
+
+
         // If this is the last page, append it and mark as the last
-        pagingController.appendLastPage(page);
+        pagingController.appendLastPage(lastPage);
       } else {
         // If not the last page, append the page and prepare for the next request
         final nextPageKey = pageKey + 1;

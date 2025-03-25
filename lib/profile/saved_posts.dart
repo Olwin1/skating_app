@@ -198,7 +198,7 @@ class _SavedPostsListState extends State<SavedPostsList> {
 
   @override
   void initState() {
-    genericPagingController.initialize(getPage);
+    genericPagingController.initialize(getPage, null);
     super.initState();
   }
 

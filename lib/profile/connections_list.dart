@@ -44,7 +44,7 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
 
   @override
   void initState() {
-    genericPagingController.initialize(getPage);
+    genericPagingController.initialize(getPage, null);
     super.initState();
   }
 

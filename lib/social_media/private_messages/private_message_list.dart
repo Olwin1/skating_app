@@ -5,7 +5,6 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:get_it/get_it.dart";
-import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 import "package:patinka/api/config.dart";
 import "package:patinka/api/messages.dart";
 import "package:patinka/api/websocket.dart";
@@ -15,6 +14,7 @@ import "package:patinka/social_media/private_messages/list_widget.dart";
 import "package:patinka/social_media/private_messages/new_channel.dart";
 import "package:patinka/social_media/private_messages/session_notification.dart";
 import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
+import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/current_channel.dart";
 import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
@@ -56,8 +56,8 @@ class _PrivateMessageList extends State<PrivateMessageList> {
   }
 
   // Create a paging controller for infinite scrolling
-  final PagingController<int, Map<String, dynamic>> _pagingController =
-      PagingController(firstPageKey: 0);
+  final GenericPagingController<Map<String, dynamic>> genericPagingController =
+      GenericPagingController(key: const Key("privateMessageList"));
 
   @override
   Widget build(final BuildContext context) {
@@ -101,7 +101,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
                   pageBuilder: (final context, final animation,
                           final secondaryAnimation) =>
                       NewChannelPage(
-                    callback: _pagingController.refresh,
+                    callback: genericPagingController.pagingController.refresh,
                   ),
                   opaque: false,
                   transitionsBuilder: (final context, final animation,
@@ -133,8 +133,7 @@ class _PrivateMessageList extends State<PrivateMessageList> {
                     ? const SizedBox.shrink()
                     : ChannelsListView(
                         currentUser: currentUser!,
-                        pagingController: _pagingController,
-                        refreshList: _pagingController.refresh,
+                        genericPagingController: genericPagingController,
                       ),
               ),
             ],
@@ -213,14 +212,12 @@ Widget _loadingSkeleton() {
 class ChannelsListView extends StatefulWidget {
   const ChannelsListView({
     required this.currentUser,
-    required this.pagingController,
-    required this.refreshList,
+    required this.genericPagingController,
     super.key,
   });
 
   final String currentUser;
-  final PagingController<int, Map<String, dynamic>> pagingController;
-  final VoidCallback refreshList;
+  final GenericPagingController<Map<String, dynamic>> genericPagingController;
 
   @override
   State<ChannelsListView> createState() => _ChannelsListViewState();
@@ -228,18 +225,62 @@ class ChannelsListView extends StatefulWidget {
 
 // State class for ChannelsListView
 class _ChannelsListViewState extends State<ChannelsListView> {
-  static const _pageSize = 20;
   List<String> title = [];
   List<String> channel = [];
   late StreamSubscription subscriptionMessages;
   Map<String, dynamic> channelsData = <String, dynamic>{};
-  PagingController<int, Map<String, dynamic>>? _pagingController;
+  // GenericPagingController manages the loading of pages as the user scrolls
+  late GenericPagingController<Map<String, dynamic>> genericPagingController;
+
+  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
+    commonLogger.d("Fetching Page");
+    final page = await MessagesAPI.getChannels(
+      pageKey,
+    );
+
+    final List<Map<String, dynamic>> newChannels = [];
+
+    for (int i = 0; i < page.length; i++) {
+      final Map<String, dynamic> item = page[i];
+      title.add(item["channel_id"]);
+      channel.add(item["channel_id"]);
+      newChannels.add(item["channel_id"]);
+      channelsData.addAll({
+        item["channel_id"]: {
+          "created_at": item["creation_date"],
+          "last_message": item["last_message"]
+        }
+      });
+    }
+
+    getIt<WebSocketConnection>()
+        .socket
+        .emit("joinChannel", newChannels.toString());
+
+    if (!mounted) {
+      return null;
+    }
+    return newChannels;
+  }
+
+  List<Map<String, dynamic>> handleLastPage(
+      final List<Map<String, dynamic>> page) {
+    if ((genericPagingController.pagingController.itemList == null ||
+            genericPagingController.pagingController.itemList!.isEmpty) &&
+        page.isEmpty) {
+      return page;
+    } else {
+      return [
+        ...page,
+        {"last": true}
+      ];
+    }
+  }
 
   @override
   void initState() {
-    _pagingController = widget.pagingController;
-    _pagingController?.addPageRequestListener(_fetchPage);
-
+    genericPagingController = widget.genericPagingController;
+    genericPagingController.initialize(getPage, handleLastPage);
     if (getIt<WebSocketConnection>().socket.disconnected) {
       getIt<WebSocketConnection>().socket.connect();
     }
@@ -264,81 +305,27 @@ class _ChannelsListViewState extends State<ChannelsListView> {
     super.initState();
   }
 
-  Future<void> _fetchPage(final int pageKey) async {
-    try {
-      commonLogger.d("Fwtching Page");
-      final page = await MessagesAPI.getChannels(
-        pageKey,
-      );
-
-      final newChannels = [];
-
-      for (int i = 0; i < page.length; i++) {
-        final Map<String, dynamic> item = page[i];
-        title.add(item["channel_id"]);
-        channel.add(item["channel_id"]);
-        newChannels.add(item["channel_id"]);
-        channelsData.addAll({
-          item["channel_id"]: {
-            "created_at": item["creation_date"],
-            "last_message": item["last_message"]
-          }
-        });
-      }
-
-      getIt<WebSocketConnection>()
-          .socket
-          .emit("joinChannel", newChannels.toString());
-
-      final isLastPage = page.length < _pageSize;
-      if (!mounted) {
-        return;
-      }
-
-      if (isLastPage) {
-        if ((_pagingController == null ||
-                _pagingController!.itemList == null ||
-                _pagingController!.itemList!.isEmpty) &&
-            page.isEmpty) {
-          _pagingController?.appendLastPage(page);
-        } else {
-          _pagingController?.appendLastPage([
-            ...page,
-            {"last": true}
-          ]);
-        }
-      } else {
-        final nextPageKey = pageKey + 1;
-        _pagingController?.appendPage(page, nextPageKey);
-      }
-    } catch (error) {
-      _pagingController?.error = error;
-    }
-  }
-
   @override
-  Widget build(final BuildContext context) => _pagingController != null
-      ? DefaultItemList(
-          pagingController: _pagingController!,
-          noItemsFoundMessage: Pair<String>(
-              AppLocalizations.of(context)!.noMessagesFound,
-              AppLocalizations.of(context)!.makeFriends),
-          firstPageProgressIndicatorBuilder: (final context) =>
-              _loadingSkeleton(),
-          itemBuilder: (final context, final item, final index) => item["last"] ==
-                  true
-              ? const SizedBox(
-                  height: 72,
-                )
-              : ListWidget(
-                  index: index,
-                  channel: item,
-                  desc:
-                      "Last Message:", //${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
-                  currentUser: widget.currentUser,
-                  refreshPage: widget.refreshList),
-        )
-      : const SizedBox.shrink();
+  Widget build(final BuildContext context) => DefaultItemList(
+        pagingController: genericPagingController.pagingController,
+        noItemsFoundMessage: Pair<String>(
+            AppLocalizations.of(context)!.noMessagesFound,
+            AppLocalizations.of(context)!.makeFriends),
+        firstPageProgressIndicatorBuilder: (final context) =>
+            _loadingSkeleton(),
+        itemBuilder: (final context, final item, final index) => item["last"] ==
+                true
+            ? const SizedBox(
+                height: 72,
+              )
+            : ListWidget(
+                index: index,
+                channel: item,
+                desc:
+                    "Last Message:", //${timeago.format(DateTime.parse(channelsData[item['channel_id']]))}",
+                currentUser: widget.currentUser,
+                refreshPage: genericPagingController.pagingController.refresh),
+      );
 
   @override
   void dispose() {
@@ -346,7 +333,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       // Pop from top stack
       CurrentMessageChannel.instance.popStack();
 
-      _pagingController?.dispose();
+      genericPagingController.pagingController.dispose();
       subscriptionMessages.cancel();
       if (getIt<WebSocketConnection>().socket.connected) {
         getIt<WebSocketConnection>().socket.disconnect();

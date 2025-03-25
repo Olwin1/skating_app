@@ -102,7 +102,7 @@ class _SupportListViewState extends State<SupportListView> {
   UserRole userRole = UserRole.regular;
   @override
   void initState() {
-    genericPagingController.initialize(getPage);
+    genericPagingController.initialize(getPage, null);
     super.initState();
   }
 

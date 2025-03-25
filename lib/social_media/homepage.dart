@@ -17,6 +17,7 @@ import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/post_widget.dart";
 import "package:patinka/social_media/private_messages/private_message_list.dart";
 import "package:patinka/social_media/search_bar.dart";
+import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";
@@ -160,10 +161,39 @@ class PostsListView extends StatefulWidget {
 
 class PostsListViewState extends State<PostsListView> {
   // PagingController manages the loading of pages as the user scrolls
-  final PagingController<int, Object> _pagingController =
-      PagingController(firstPageKey: 0);
+  final GenericPagingController<Object> genericPagingController =
+      GenericPagingController(key: const Key("homepage"));
   List<String> seenPosts = [];
   Map<String, dynamic>? user;
+
+  Future<List<Object>?> getPage(final int pageKey) async {
+    commonLogger.t("Fetching page");
+    final page = await SocialAPI.getPosts(pageKey);
+
+    // Loops through each item in the page and adds its ID to the `seenPosts` list
+    for (int i = 0; i < page.length; i++) {
+      final Map<String, dynamic> item = page[i];
+      seenPosts.add(item["post_id"]);
+    }
+
+    if (!mounted) {
+      return null;
+    }
+    return page;
+  }
+
+  List<Object> handleLastPage(final List<Object> page) {
+    if ((genericPagingController.pagingController.itemList == null ||
+            genericPagingController.pagingController.itemList!.isEmpty) &&
+        page.isEmpty) {
+      return page;
+    } else {
+      return [
+        ...page,
+        {"last": true}
+      ];
+    }
+  }
 
   @override
   void initState() {
@@ -182,47 +212,10 @@ class PostsListViewState extends State<PostsListView> {
           (final fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
     }
 
-    // Add Page Request Listener
-    _pagingController.addPageRequestListener(_fetchPage);
+    // Initialise paging controller
+    genericPagingController.initialize(getPage, handleLastPage);
 
     super.initState();
-  }
-
-  // Fetches the data for the given pageKey and appends it to the list of items
-  Future<void> _fetchPage(final int pageKey) async {
-    try {
-      commonLogger.t("Fetching page");
-      final page = await SocialAPI.getPosts(pageKey);
-
-      // Loops through each item in the page and adds its ID to the `seenPosts` list
-      for (int i = 0; i < page.length; i++) {
-        final Map<String, dynamic> item = page[i];
-        seenPosts.add(item["post_id"]);
-      }
-
-      // Determines if the page being fetched is the last page
-      final isLastPage = page.isEmpty;
-      if (!mounted) {
-        return;
-      }
-      if (isLastPage) {
-        if ((_pagingController.itemList == null ||
-                _pagingController.itemList!.isEmpty) &&
-            page.isEmpty) {
-          _pagingController.appendLastPage(page);
-        } else {
-          _pagingController.appendLastPage([
-            ...page,
-            {"last": true}
-          ]);
-        }
-      } else {
-        final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(page, nextPageKey);
-      }
-    } catch (error) {
-      _pagingController.error = error;
-    }
   }
 
   // Refresh Page Function
@@ -230,7 +223,7 @@ class PostsListViewState extends State<PostsListView> {
     seenPosts = [];
     await NetworkManager.instance
         .deleteLocalData(name: "posts", type: CacheTypes.list);
-    _pagingController.refresh();
+    genericPagingController.pagingController.refresh();
   }
 
   @override
@@ -250,7 +243,7 @@ class PostsListViewState extends State<PostsListView> {
           child: PagedListView<int, Object>(
             clipBehavior: Clip.none,
             cacheExtent: 1024,
-            pagingController: _pagingController,
+            pagingController: genericPagingController.pagingController,
             scrollController: widget.scrollController,
             builderDelegate: PagedChildBuilderDelegate<Object>(
               firstPageProgressIndicatorBuilder: (final context) =>
@@ -297,7 +290,7 @@ class PostsListViewState extends State<PostsListView> {
   @override
   void dispose() {
     // Dispose of the PagingController to free up resources
-    _pagingController.dispose();
+    genericPagingController.pagingController.dispose();
     super.dispose();
   }
 }

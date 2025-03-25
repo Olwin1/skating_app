@@ -238,7 +238,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
       pageKey,
     );
 
-    final List<Map<String, dynamic>> newChannels = [];
+    final List<String> newChannels = [];
 
     for (int i = 0; i < page.length; i++) {
       final Map<String, dynamic> item = page[i];
@@ -260,7 +260,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
     if (!mounted) {
       return null;
     }
-    return newChannels;
+    return page;
   }
 
   List<Map<String, dynamic>> handleLastPage(

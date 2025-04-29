@@ -26,15 +26,12 @@ class SupportList extends StatelessWidget {
     switch (type) {
       case SupportListType.suggestion:
         title = "Your Suggestions";
-        break;
 
       case SupportListType.bug:
         title = "Bug Reports";
-        break;
 
       case SupportListType.support:
         title = "Support Requests";
-        break;
     }
     return Scaffold(
         backgroundColor: const Color(0x34000000),
@@ -82,15 +79,12 @@ class _SupportListViewState extends State<SupportListView> {
     switch (widget.type) {
       case SupportListType.suggestion:
         page = await SupportAPI.getFeatureRequests(pageKey);
-        break;
 
       case SupportListType.bug:
         page = await SupportAPI.getBugReports(pageKey);
-        break;
 
       case SupportListType.support:
         page = await SupportAPI.getSupportRequests(pageKey);
-        break;
     }
 
     if (!mounted) {

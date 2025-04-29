@@ -136,10 +136,8 @@ class _UserReportPage extends State<UserReportPage> {
                     style: const TextStyle(fontSize: 16),
                   ))
             ]);
-            break;
           case "comment":
             reportedContentPreview = Text(content!["content"]);
-            break;
           case "message":
             reportedContentPreview = SizedBox(
                 height: 500,
@@ -179,7 +177,6 @@ class _UserReportPage extends State<UserReportPage> {
                                   style: const TextStyle(
                                       fontSize: 15, color: Colors.pink))),
                         ]))));
-            break;
         }
       }
     }

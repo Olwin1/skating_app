@@ -50,21 +50,18 @@ class _SupportReportCreator extends State<SupportReportCreator> {
         reportDescription = "Report Description";
         reportDescriptionHint =
             "Please include a detailed explanation of the issue you have encountered.";
-        break;
       case SupportListType.suggestion:
         reportTitle = "Feature Request Title";
         reportTitleHint = "Name your suggestion";
         reportDescription = "Feature Description";
         reportDescriptionHint =
             "Please include a detailed description of your proposed feature for the app.";
-        break;
       case SupportListType.support:
         reportTitle = "Support Request Title";
         reportTitleHint = "Breif title for your problem";
         reportDescription = "Extra Info";
         reportDescriptionHint =
             "Please put a description of what you need help with.";
-        break;
       case null:
         enabled = false;
     }
@@ -78,15 +75,12 @@ class _SupportReportCreator extends State<SupportReportCreator> {
           case SupportListType.bug:
             SupportAPI.submitBugReport(
                 titleController.text, descriptionController.text);
-            break;
           case SupportListType.suggestion:
             SupportAPI.submitFeatureRequest(
                 titleController.text, descriptionController.text);
-            break;
           case SupportListType.support:
             SupportAPI.submitSupportRequest(
                 titleController.text, descriptionController.text);
-            break;
           case null:
             return;
         }
@@ -323,10 +317,8 @@ class _SupportListTypeOptionsState extends State<SupportListTypeOptions> {
         switch (value) {
           case "Feature Request":
             val = SupportListType.suggestion;
-            break;
           case "Support Request":
             val = SupportListType.support;
-            break;
         }
         mounted
             ? setState(() {

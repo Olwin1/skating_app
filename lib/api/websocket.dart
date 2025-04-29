@@ -76,13 +76,10 @@ class WebSocketConnection {
         switch (data["typingState"]) {
           case 2:
             typingState = TypingState.started;
-            break;
           case 1:
             typingState = TypingState.typing;
-            break;
           default:
             typingState = TypingState.stopped;
-            break;
         }
         final Map<String, dynamic> e = data;
         e["typingState"] = typingState;
@@ -145,13 +142,10 @@ class WebSocketConnection {
       switch (typingState) {
         case TypingState.started:
           typingStateRaw = 2;
-          break;
         case TypingState.typing:
           typingStateRaw = 1;
-          break;
         case TypingState.stopped:
           typingStateRaw = 0;
-          break;
       }
 
       socket

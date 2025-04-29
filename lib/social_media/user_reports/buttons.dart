@@ -69,10 +69,8 @@ class ReportButton extends StatelessWidget {
     switch (reportContentType) {
       case ReportContentType.post:
         reportText = "Report Post";
-        break;
       case ReportContentType.message:
         reportText = "Report Message";
-        break;
       case ReportContentType.comment:
         reportText = "Report Comment";
     }

@@ -48,16 +48,13 @@ class _UserListWidget extends State<UserListWidget> {
       case ListType.followersList:
         await ConnectionsAPI.unfollowerUser(widget.user["user_id"]);
         widget.refreshPage();
-        break;
 
       case ListType.followingList:
         await ConnectionsAPI.unfollowUser(widget.user["user_id"]);
         widget.refreshPage();
-        break;
       case ListType.friendsList:
         await ConnectionsAPI.unfriendUser(widget.user["user_id"]);
         widget.refreshPage();
-        break;
     }
   }
 

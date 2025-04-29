@@ -106,16 +106,12 @@ class TextMorphingAnimationState extends State<TextMorphingAnimation> {
       switch (page) {
         case PageType.signup:
           top = 200;
-          break;
         case PageType.forgotPassword:
           top = 300; // Adjust this value as needed
-          break;
         case PageType.verificationCode:
           top = 400; // Adjust this value as needed
-          break;
         default:
           top = 200; // Adjust this value as needed
-          break;
       }
     });
   }

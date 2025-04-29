@@ -415,7 +415,6 @@ class _PrivateMessage extends State<PrivateMessage> {
                   })
                 });
           }
-          break;
         default:
           handleTypingCancel(data);
       }
@@ -452,7 +451,6 @@ class _PrivateMessage extends State<PrivateMessage> {
     switch (AppLocalizations.of(context)!.localeName) {
       case "pl":
         locale = const ChatL10nPl();
-        break;
       default:
         locale = const ChatL10nEn();
     }

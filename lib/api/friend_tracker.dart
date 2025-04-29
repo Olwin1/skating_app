@@ -12,7 +12,8 @@ class MessagesAPI {
   static final Uri _searchUrl = Uri.parse("${Config.uri}/location/search");
 
   // Function to perform a search with given terms
-  static Future<Map<String, dynamic>> search(final Map<String, String> terms) async {
+  static Future<Map<String, dynamic>> search(
+      final Map<String, String> terms) async {
     try {
       // Initialize an empty map to hold the processed search terms
       final Map<String, String> searchTerms = {};
@@ -29,10 +30,11 @@ class MessagesAPI {
       }
 
       // Make a GET request to the search API
-      final response = await http.get(_searchUrl, headers: {
+      final response = await http.post(_searchUrl, headers: {
         "Content-Type": "application/x-www-form-urlencoded", // Set content type
         "Authorization":
             "Bearer ${await storage.getToken()}", // Add authorization token
+      }, body: {
         "terms": jsonEncode(
             searchTerms) // Add the search terms as a JSON-encoded string
       });

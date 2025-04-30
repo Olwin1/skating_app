@@ -249,10 +249,10 @@ class _PhotosGridViewState extends State<PhotosGridView> {
   static const _pageSize = 20; // Number of items to load in a single page
 
   // PagingController manages the loading of pages as the user scrolls
-  final GenericPagingController<Medium> genericPagingController =
-      GenericPagingController(key: const Key("photosgrid"));
+  final GenericStateController<Medium> genericStateController =
+      GenericStateController(key: const Key("photosgrid"));
 
-  Future<List<Medium>?> getPage(final int pageKey) async {
+  Future<List<Medium>?> _getNextPage(final int pageKey, final int pageSize) async {
     if (_albums == null) {
       return null;
     }
@@ -263,15 +263,18 @@ class _PhotosGridViewState extends State<PhotosGridView> {
       take: _pageSize,
     );
     final newItems = page.items;
-    if (!mounted) {
-      return null;
-    }
     return newItems;
   }
 
   @override
   void initState() {
-    genericPagingController.initialize(getPage, null);
+    genericStateController.init(
+        this,
+        (final newState) =>
+            setState(() => genericStateController.pagingState = newState),
+        _getNextPage,
+        () => []);
+    ;
     super.initState();
   }
 
@@ -285,7 +288,8 @@ class _PhotosGridViewState extends State<PhotosGridView> {
           maxCrossAxisExtent: MediaQuery.of(context).size.width /
               4, // Maximum width of a grid item
         ),
-        pagingController: genericPagingController.pagingController,
+        state: genericStateController.pagingState,
+        fetchNextPage: genericStateController.getNextPage,
         builderDelegate: PagedChildBuilderDelegate<Medium>(
           itemBuilder: (final context, final item, final index) =>
               GestureDetector(
@@ -310,11 +314,4 @@ class _PhotosGridViewState extends State<PhotosGridView> {
                   )),
         ),
       );
-
-  @override
-  void dispose() {
-    // Disposes of the PagingController to free up resources
-    genericPagingController.pagingController.dispose();
-    super.dispose();
-  }
 }

@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 import "package:patinka/components/list_error.dart";
+import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/pair.dart";
 
 /// A generic paginated list view that supports dynamic item rendering.
@@ -24,7 +25,7 @@ class DefaultItemList extends StatelessWidget {
   /// to render list items. Optionally, a `firstPageProgressIndicatorBuilder`
   /// can be provided to customize the loading indicator.
   const DefaultItemList({
-    required this.pagingController,
+    required this.genericStateController,
     required this.itemBuilder,
     required this.noItemsFoundMessage,
     this.firstPageProgressIndicatorBuilder,
@@ -32,7 +33,7 @@ class DefaultItemList extends StatelessWidget {
   });
 
   /// Controller responsible for handling pagination logic.
-  final PagingController<int, Map<String, dynamic>> pagingController;
+  final GenericStateController<Map<String, dynamic>> genericStateController;
 
   /// Callback function used to build each item in the list.
   final Widget Function(BuildContext, Map<String, dynamic>, int) itemBuilder;
@@ -46,7 +47,8 @@ class DefaultItemList extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       PagedListView<int, Map<String, dynamic>>(
-        pagingController: pagingController,
+        state: genericStateController.pagingState,
+        fetchNextPage: genericStateController.getNextPage,
         builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
           // Builds each item in the list using the provided `itemBuilder`.
           itemBuilder: itemBuilder,

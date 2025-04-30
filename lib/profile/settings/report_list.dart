@@ -60,52 +60,42 @@ class ReportListView extends StatefulWidget {
 
 class _ReportListViewState extends State<ReportListView> {
   // The controller that manages pagination
-  final GenericPagingController<Map<String, dynamic>> genericPagingController =
-      GenericPagingController(key: const Key("connectionsList"));
+  final GenericStateController<Map<String, dynamic>> genericStateController =
+      GenericStateController(key: const Key("connectionsList"));
 
-  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
-    List<Map<String, dynamic>> page;
+  Future<List<Map<String, dynamic>>?> _getNextPage(final int pageKey, final int pageSize) async {
+    commonLogger.i("getting report list page");
     // Fetch the page of comments using the getComments() function
-    page = await ReportAPI.getReports(pageKey, widget.isSelf);
-
-    if (!mounted) {
-      return null;
-    }
-    return page;
+    return await ReportAPI.getReports(pageKey, widget.isSelf);
   }
 
   UserRole userRole = UserRole.regular;
   @override
   void initState() {
-    genericPagingController.initialize(getPage, null);
+    genericStateController.init(
+        this,
+        (final newState) =>
+            setState(() => genericStateController.pagingState = newState),
+        _getNextPage,
+        () => []);
+    ;
     super.initState();
   }
 
   @override
   Widget build(final BuildContext context) => Stack(children: [
         DefaultItemList(
-          pagingController: genericPagingController.pagingController,
+          genericStateController: genericStateController,
           itemBuilder: (final context, final item, final index) =>
               ReportListWidget(
             item: item,
-            refreshPage: genericPagingController.pagingController.refresh,
+            refreshPage: genericStateController.refresh,
             user: widget.user,
             isSelf: widget.isSelf,
           ),
           noItemsFoundMessage: Pair<String>("No Reports Found", ""),
         )
       ]);
-
-  @override
-  void dispose() {
-    try {
-      // Dispose the controller when the widget is disposed
-      genericPagingController.pagingController.dispose();
-    } catch (e) {
-      commonLogger.e("Error in dispose: $e");
-    }
-    super.dispose();
-  }
 }
 
 // UserListWidget class creates a stateful widget that displays a list of users

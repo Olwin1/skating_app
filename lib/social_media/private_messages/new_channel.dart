@@ -76,29 +76,31 @@ class NewChannelListView extends StatefulWidget {
 
 class _NewChannelListViewState extends State<NewChannelListView> {
   // The controller that manages pagination
-  final GenericPagingController<Map<String, dynamic>> genericPagingController =
-      GenericPagingController(key: const Key("connectionsList"));
+  final GenericStateController<Map<String, dynamic>> genericStateController =
+      GenericStateController(key: const Key("connectionsList"));
 
-  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
+  Future<List<Map<String, dynamic>>?> _getNextPage(
+      final int pageKey, final int pageSize) async {
     // Fetch a page of suggestions from the API
     final List<Map<String, dynamic>> page =
         await MessagesAPI.getSuggestions(pageKey);
-
-    if (!mounted) {
-      return null;
-    }
     return page;
   }
 
   @override
   void initState() {
-    genericPagingController.initialize(getPage, null);
+    genericStateController.init(
+        this,
+        (final newState) =>
+            setState(() => genericStateController.pagingState = newState),
+        _getNextPage,
+        () => []);
     super.initState();
   }
 
   @override
   Widget build(final BuildContext context) => DefaultItemList(
-        pagingController: genericPagingController.pagingController,
+        genericStateController: genericStateController,
         itemBuilder: (final context, final item, final index) =>
             SuggestionListWidget(
           user: item,
@@ -106,15 +108,4 @@ class _NewChannelListViewState extends State<NewChannelListView> {
         ),
         noItemsFoundMessage: Pair<String>("No Suggested Channels", ""),
       );
-
-  @override
-  void dispose() {
-    try {
-      // Dispose the controller when the widget is disposed
-      genericPagingController.pagingController.dispose();
-    } catch (e) {
-      commonLogger.e("Error in dispose: $e");
-    }
-    super.dispose();
-  }
 }

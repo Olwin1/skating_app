@@ -94,9 +94,19 @@ class UserPostsList extends StatefulWidget {
 }
 
 class _UserPostsListState extends State<UserPostsList> {
+    // Define method for getPage to run every time a new page needs to be fetched
+  Future<List<Map<String, dynamic>>> _getNextPage(
+      final int newKey, final int pageSize) async {
+
+    // Fetch the next page of posts from the user's account
+    final page = await SocialAPI.getUserPosts(widget.user?["user_id"], newKey);
+    widget.metadata(page);
+    return page;
+  }
+
   // Create a PagingController to manage pagination
-  final GenericPagingController<Map<String, dynamic>> genericPagingController =
-      GenericPagingController(key: const Key("userPostsList"));
+  final GenericStateController<Map<String, dynamic>> genericStateController =
+      GenericStateController(key: const Key("userPostsList"));
 
   Widget _createGridLoadingWidgets() {
     final Widget child = Shimmer.fromColors(
@@ -133,41 +143,34 @@ class _UserPostsListState extends State<UserPostsList> {
     );
   }
 
-  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
-    commonLogger.d("Fetching Page");
-
-    // Fetch the next page of posts from the user's account
-    final page = await SocialAPI.getUserPosts(widget.user?["user_id"], pageKey);
-    if (!mounted) {
-      return null;
-    }
-    widget.metadata(page);
-    return page;
-  }
-
-  List<Map<String, dynamic>> handleLastPage(
-      final List<Map<String, dynamic>> page) {
-    if ((genericPagingController.pagingController.itemList == null ||
-            genericPagingController.pagingController.itemList!.isEmpty) &&
-        page.isEmpty) {
-      return page;
-    } else {
-      final int rem = 4 -
-          ((genericPagingController.pagingController.itemList?.length ?? 0) +
-                  page.length) %
-              3;
-      final List<Map<String, dynamic>> spacers = [];
-      for (int i = 0; i < rem; i++) {
-        spacers.add({"last": true});
-      }
-      return [...page, ...spacers];
-    }
-  }
+  // List<Map<String, dynamic>> handleLastPage(
+  //     final List<Map<String, dynamic>> page) {
+  //   if ((genericStateController.pagingController.items == null ||
+  //           genericStateController.pagingController.items!.isEmpty) &&
+  //       page.isEmpty) {
+  //     return page;
+  //   } else {
+  //     final int rem = 4 -
+  //         ((genericStateController.pagingController.items?.length ?? 0) +
+  //                 page.length) %
+  //             3;
+  //     final List<Map<String, dynamic>> spacers = [];
+  //     for (int i = 0; i < rem; i++) {
+  //       spacers.add({"last": true});
+  //     }
+  //     return [...page, ...spacers];
+  //   }
+  // }
 
   @override
   void initState() {
     // Initialise the paging controller
-    genericPagingController.initialize(getPage, handleLastPage);
+    genericStateController.init(
+        this,
+        (final newState) =>
+            setState(() => genericStateController.pagingState = newState),
+        _getNextPage,
+        () => []);
     super.initState();
   }
 
@@ -176,7 +179,8 @@ class _UserPostsListState extends State<UserPostsList> {
       ? PagedGridView<int, Map<String, dynamic>>(
           shrinkWrap: true,
           physics: const ScrollPhysics(),
-          pagingController: genericPagingController.pagingController,
+          state: genericStateController.pagingState,
+          fetchNextPage: genericStateController.getNextPage,
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             // Specify the properties for the grid tiles
             childAspectRatio: 1,
@@ -199,20 +203,10 @@ class _UserPostsListState extends State<UserPostsList> {
                     : _createGridTileWidget(
                         item,
                         widget.imageViewerController,
-                        genericPagingController.pagingController.refresh,
+                        genericStateController.refresh,
                         widget.setCurrentImage),
           ),
         )
       : const SizedBox.shrink();
 
-  @override
-  void dispose() {
-    try {
-      // Dispose of the PagingController when the state object is disposed
-      genericPagingController.pagingController.dispose();
-    } catch (e) {
-      commonLogger.e("An error has occured: $e");
-    }
-    super.dispose();
-  }
 }

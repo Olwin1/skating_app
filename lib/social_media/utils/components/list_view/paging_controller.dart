@@ -1,123 +1,83 @@
 import "package:flutter/material.dart";
 import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 
-/// Default implementation of [PagingController]
-/// that handles the tracking of pagination within the scrollview
-///
-/// Usage:
-///
-/// 1. Create an instance of [GenericPagingController], passing in a [getPage] function
-// ignore: comment_references
-///    that fetches the data based on the [pageKey].
-/// 2. Call [initialize()] after the object is created to properly initialize the
-///    [pagingController].
-///
-/// Example:
-/// ```dart
-/// final GenericPagingController<Map<String, dynamic>> genericPagingController =
-///     GenericPagingController<Map<String, dynamic>>(
-///   getPage: getPage,
-///   key: const Key("connectionsList"),
-/// );
-///
-///   @override
-///   void initState() {
-///
-///     // Initialize paging controller
-///     genericPagingController.initialize(getPage, null);
-///
-///     super.initState();
-///    }
-/// ```
-class GenericPagingController<T> {
-  /// Creates an instance of [GenericPagingController].
-  ///
-  /// This constructor accepts a [key], a [getPage] function to fetch data,
-  /// and an optional [pageSize] that determines how many items should be
-  /// loaded per page (defaults to 20).
-  ///
-  // ignore: comment_references
-  /// The [getPage] function is used to fetch the data, where the [pageKey]
-  /// is passed to retrieve the corresponding page.
-  GenericPagingController({
+typedef StateUpdater<T> = void Function(PagingState<int, T> pagingState);
+typedef LastPageBuilder<T> = List<T> Function();
+
+class GenericStateController<T> {
+  GenericStateController({
     required this.key,
     this.pageSize = 20,
   });
 
   final Key key;
   final int pageSize;
+  late State _widget;
+  late StateUpdater<T> _updateState;
+  late Future<List<T>?> Function(int newKey, int pageSize) _builder;
+  late LastPageBuilder<T> _lastPageBuilder;
 
-  // ignore: comment_references
-  /// A function that fetches a page of data, taking the [pageKey] and returning
-  /// a list of of type [T]. It is expected to return a list of
-  /// data for a given page or `null` if the page fetch fails.
-  late Future<List<T>?> Function(int pageKey) getPage;
+  late PagingState<int, T> pagingState = PagingState<int, T>();
 
-  /// A function that will only execute when the last page of data is fetched it will take the page
-  /// and will then return it back at the end.  
-  late List<T>? Function(List<T> page)? handleLastPage;
-
-  /// The actual [PagingController] that handles the pagination logic.
-  late PagingController<int, T> pagingController;
-
-  /// Initializes the [pagingController] and adds the page request listener.
-  ///
-  /// This method should be called after the [GenericPagingController] instance
-  /// is created to properly set up the paging functionality.
-  Future<void> initialize(
-      final Future<List<T>?> Function(int pageKey) callback, final List<T>? Function(List<T> page)? handleLastPage) async {
-    getPage = callback;
-    pagingController = PagingController(firstPageKey: 0);
-    this.handleLastPage = handleLastPage;
-
-    // Add the page request listener here, after the instance is fully created
-    pagingController.addPageRequestListener(_fetchPage);
+  void init(
+      final State widget,
+      final StateUpdater<T> updateState,
+      final Future<List<T>?> Function(int newKey, int pageSize) builder,
+      final LastPageBuilder<T> lastPageBuilder) {
+    this._widget = widget;
+    this._updateState = updateState;
+    this._builder = builder;
+    this._lastPageBuilder = lastPageBuilder;
   }
 
-  /// Fetches the next page of data when requested by the [PagingController].
-  ///
-  /// This method is triggered by the [PagingController] when the user scrolls
-  /// to the bottom of the list and requests the next page of data. It uses the
-  /// [getPage] function to fetch the data and updates the [pagingController]
-  /// with the results.
-  ///
-  /// If the page is the last one, it appends the last page to the controller,
-  /// otherwise, it appends the next page with a new page key.
-  /// 
-  /// There is an optional handler for modifying the data on the last page this is defined upon initialisation
-  /// 
-  Future<void> _fetchPage(final int pageKey) async {
-    try {
-      // Fetch a page of suggestions from the API using the getPage function
-      final List<T>? page = await this.getPage(pageKey);
+  Future<List<T>?> getNextPage() async {
+    if (pagingState.isLoading | !_widget.mounted) {
+      return null;
+    }
 
-      if (page == null) {
-        return;
+    await Future.value();
+
+    _updateState(pagingState.copyWith(isLoading: true, error: null));
+
+    try {
+      final newKey = (pagingState.keys?.last ?? 0) + 1;
+      // Get new items
+      final newItems = await _builder(newKey, pageSize);
+
+      if (newItems == null) {
+        throw Exception("No items were found. ");
       }
 
-      // Determine if this is the last page
-      final isLastPage = page.length < pageSize;
+      // End of custom calls
+      final isLastPage = newItems.isEmpty;
 
       if (isLastPage) {
-
-        // If there is some alternative handler provided for the last page then execute it
-        List<T> lastPage = page;
-        if(handleLastPage != null) {
-          lastPage = handleLastPage!(page) ?? page;
-        }
-
-
-
-        // If this is the last page, append it and mark as the last
-        pagingController.appendLastPage(lastPage);
-      } else {
-        // If not the last page, append the page and prepare for the next request
-        final nextPageKey = pageKey + 1;
-        pagingController.appendPage(page, nextPageKey);
+        newItems.addAll(_lastPageBuilder());
       }
+
+      _updateState(pagingState.copyWith(
+        pages: [...?pagingState.pages, newItems],
+        keys: [...?pagingState.keys, newKey],
+        hasNextPage: !isLastPage,
+        isLoading: false,
+      ));
     } catch (error) {
-      // If there's an error fetching the page, set the error on the controller
-      pagingController.error = error;
+      _updateState(pagingState.copyWith(
+        error: error,
+        isLoading: false,
+      ));
     }
+    return null;
+  }
+
+  void refresh() {
+    if (!_widget.mounted) {
+      return;
+    }
+
+    pagingState = PagingState<int, T>(hasNextPage: true, isLoading: false);
+
+    _updateState(pagingState);
+    // getNextPage(); // Optionally trigger first fetch immediately
   }
 }

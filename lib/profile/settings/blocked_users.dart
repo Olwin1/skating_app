@@ -18,18 +18,23 @@ class BlockedUsersList extends StatefulWidget {
 
 class _BlockedUsersListState extends State<BlockedUsersList> {
   // The controller that manages pagination
-  final GenericPagingController<Map<String, dynamic>> genericPagingController =
-      GenericPagingController(key: const Key("connectionsList"));
+  final GenericStateController<Map<String, dynamic>> genericStateController =
+      GenericStateController(key: const Key("connectionsList"));
 
-  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
+  Future<List<Map<String, dynamic>>?> _getNextPage(final int pageKey, final int pageSize) async {
     // Fetch the page of comments using the getComments() function
-    commonLogger.d("friends selected");
+    commonLogger.d("get blocked users");
     return await SupportAPI.getBlockedUsers(pageKey);
   }
 
   @override
   void initState() {
-    genericPagingController.initialize(getPage, null);
+    genericStateController.init(
+        this,
+        (final newState) =>
+            setState(() => genericStateController.pagingState = newState),
+        _getNextPage,
+        () => []);
     super.initState();
   }
 
@@ -54,22 +59,10 @@ class _BlockedUsersListState extends State<BlockedUsersList> {
             style: TextStyle(color: swatch[701]),
           )),
       body: DefaultItemList(
-        pagingController: genericPagingController.pagingController,
+        genericStateController: genericStateController,
         itemBuilder: (final context, final item, final index) =>
             BlockedUserListWidget(
-                user: item,
-                refreshPage: genericPagingController.pagingController.refresh),
+                user: item, refreshPage: genericStateController.refresh),
         noItemsFoundMessage: Pair<String>("No Blocked Users", ""),
       ));
-
-  @override
-  void dispose() {
-    try {
-      // Dispose the controller when the widget is disposed
-      genericPagingController.pagingController.dispose();
-    } catch (e) {
-      commonLogger.e("Error in dispose: $e");
-    }
-    super.dispose();
-  }
 }

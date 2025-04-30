@@ -238,69 +238,65 @@ class PhotosGridView extends StatefulWidget {
 }
 
 class _PhotosGridViewState extends State<PhotosGridView> {
-  static const _pageSize = 20; // Number of items to load in a single page
-
   // Define method for getPage to run every time a new page needs to be fetched
-  Future<List<Medium>?> getPage(final int pageKey) async {
-    if (!mounted) {
-      return null;
-    }
-
-    if (_albums != null) {
-      // Loads the next page of images from the first album, skipping `pageKey` items and taking `_pageSize` items.
-      final page = await _albums![0].listMedia(
-        skip: pageKey,
-        take: _pageSize,
-      );
-      final newItems = page.items;
-
-      return newItems;
-    } else {
-      return null;
-    }
+  Future<List<Medium>?> _getNextPage(
+      final int newKey, final int pageSize) async {
+    final newItems = (await _albums![0].listMedia(
+      skip: newKey,
+      take: pageSize,
+    ))
+        .items;
+    return newItems;
   }
 
-  // Define getLastPage which will be called only after fetch page and only on the last time.  
-  List<Medium> getLastPage(final List<Medium> page) {
-    final Medium padderItem = Medium.fromJson(const {
-      "id": "0",
-      "filename": "a",
-      "title": "a",
-      "width": 1,
-      "height": 1,
-      "size": 1,
-      "orientation": 1,
-      "mimeType": "image/jpeg"
-    });
-    // appendLastPage is called if there are no more items to load
-    if ((genericPagingController.pagingController.itemList == null ||
-            genericPagingController.pagingController.itemList!.isEmpty) &&
-        page.isEmpty) {
-      return page;
-    } else {
-      // Add padding to bottom row of items.  
-      final int rem = 5 -
-          ((genericPagingController.pagingController.itemList?.length ?? 0) +
-                  page.length) %
-              4;
-      final List<Medium> spacers = [];
-      for (int i = 0; i < rem; i++) {
-        spacers.add(padderItem);
-      }
-      return [...page, ...spacers];
-    }
-  }
-
-  // GenericPagingController manages the loading of pages as the user scrolls
-  final GenericPagingController<Medium> genericPagingController =
-      GenericPagingController(key: const Key("newPost"));
+  // GenericStateController manages the loading of pages as the user scrolls
+  GenericStateController<Medium> genericStateController =
+      GenericStateController<Medium>(
+    key: const Key("photos-grid"),
+  );
 
   @override
   void initState() {
-    // addPageRequestListener is called whenever the user scrolls near the end of the list
-    genericPagingController.initialize(getPage, getLastPage);
+    genericStateController.init(
+        this,
+        (final newState) =>
+            setState(() => genericStateController.pagingState = newState),
+        _getNextPage,
+        () => []);
     super.initState();
   }
+
+// TODO fix this - not sure how to reimplement this
+  // // Define getLastPage which will be called only after fetch page and only on the last time.
+  // List<Medium> getLastPage(final List<Medium> page) {
+  //   final Medium padderItem = Medium.fromJson(const {
+  //     "id": "0",
+  //     "filename": "a",
+  //     "title": "a",
+  //     "width": 1,
+  //     "height": 1,
+  //     "size": 1,
+  //     "orientation": 1,
+  //     "mimeType": "image/jpeg"
+  //   });
+  //   // appendLastPage is called if there are no more items to load
+  //   if ((genericStateController.pagingController.items == null ||
+  //           genericStateController.pagingController.items!.isEmpty) &&
+  //       page.isEmpty) {
+  //     return page;
+  //   } else {
+  //     // Add padding to bottom row of items.
+  //     final int rem = 5 -
+  //         ((genericStateController.pagingController.items?.length ?? 0) +
+  //                 page.length) %
+  //             4;
+  //     final List<Medium> spacers = [];
+  //     for (int i = 0; i < rem; i++) {
+  //       spacers.add(padderItem);
+  //     }
+  //     return [...page, ...spacers];
+  //   }
+  // }
 
   @override
   Widget build(final BuildContext context) => PagedGridView<int, Medium>(
@@ -312,7 +308,8 @@ class _PhotosGridViewState extends State<PhotosGridView> {
           maxCrossAxisExtent: MediaQuery.of(context).size.width /
               4, // Maximum width of a grid item
         ),
-        pagingController: genericPagingController.pagingController,
+        state: genericStateController.pagingState,
+        fetchNextPage: genericStateController.getNextPage,
         builderDelegate: PagedChildBuilderDelegate<Medium>(
           itemBuilder: (final context, final item, final index) =>
               item.id == "0" &&
@@ -347,11 +344,4 @@ class _PhotosGridViewState extends State<PhotosGridView> {
                       )),
         ),
       );
-
-  @override
-  void dispose() {
-    // Disposes of the PagingController to free up resources
-    genericPagingController.pagingController.dispose();
-    super.dispose();
-  }
 }

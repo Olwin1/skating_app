@@ -39,8 +39,8 @@ class _Messages extends State<Messages> {
   Key commentsListKey = const Key("supportMessagesList");
   late TextEditingController commentController = TextEditingController();
   String userId = "0";
-  final GenericPagingController<Map<String, dynamic>> genericPagingController =
-      GenericPagingController(key: const Key("connectionsList"));
+  final GenericStateController<Map<String, dynamic>> genericStateController =
+      GenericStateController(key: const Key("connectionsList"));
 
   @override
   void initState() {
@@ -70,8 +70,7 @@ class _Messages extends State<Messages> {
           // Post a message when the send button is pressed
           if (commentController.text.isNotEmpty) {
             SupportAPI.postMessage(widget.feedbackId, commentController.text)
-                .then((final value) =>
-                    genericPagingController.pagingController.refresh());
+                .then((final value) => genericStateController.refresh());
 
             commentController.clear();
           }
@@ -84,7 +83,7 @@ class _Messages extends State<Messages> {
             key: commentsListKey,
             post: widget.feedbackId,
             focus: focus,
-            genericPagingController: genericPagingController,
+            genericStateController: genericStateController,
             reportType: widget.reportType),
       );
     } else {
@@ -94,7 +93,7 @@ class _Messages extends State<Messages> {
             key: commentsListKey,
             post: widget.feedbackId,
             focus: focus,
-            genericPagingController: genericPagingController,
+            genericStateController: genericStateController,
             reportType: widget.reportType),
         Positioned(
             right: 0,
@@ -133,14 +132,14 @@ class MessagesListView extends StatefulWidget {
   const MessagesListView({
     required this.focus,
     required this.post,
-    required this.genericPagingController,
+    required this.genericStateController,
     required this.reportType,
     required this.status,
     super.key,
   });
   final FocusNode focus;
   final String post;
-  final GenericPagingController<Map<String, dynamic>> genericPagingController;
+  final GenericStateController<Map<String, dynamic>> genericStateController;
   final SupportListType reportType;
   final Status status;
 
@@ -149,22 +148,28 @@ class MessagesListView extends StatefulWidget {
 }
 
 class _MessagesListViewState extends State<MessagesListView> {
-  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
+  Future<List<Map<String, dynamic>>?> _getNextPage(
+      final int pageKey, final int pageSize) async {
     // Fetch the page of messages using the getComments() function
     final page = [
       ...await SupportAPI.getMessages(widget.post, pageKey),
       ...newMessages
     ];
 
-    if (!mounted) {
-      return null;
-    }
+// Clear added messages
+    newMessages.clear();
     return page;
   }
 
   @override
   void initState() {
-    widget.genericPagingController.initialize(getPage, null);
+    widget.genericStateController.init(
+        this,
+        (final newState) => setState(
+            () => widget.genericStateController.pagingState = newState),
+        _getNextPage,
+        () => []);
+    ;
     super.initState();
   }
 
@@ -173,27 +178,16 @@ class _MessagesListViewState extends State<MessagesListView> {
     final double height = MediaQuery.of(context).size.height - 350;
     if (newMessages.isNotEmpty) {
       // If there are new messages, refresh the list view
-      widget.genericPagingController.pagingController.refresh();
+      widget.genericStateController.refresh();
     }
 
     // Build a paginated list view of messages using the PagedListView widget
     return DefaultItemList(
-      pagingController: widget.genericPagingController.pagingController,
+      genericStateController: widget.genericStateController,
       itemBuilder: (final context, final item, final index) =>
           buildCommentWidget(index, item, height),
       noItemsFoundMessage: Pair<String>("No Messages", ""),
     );
-  }
-
-  @override
-  void dispose() {
-    try {
-      // Dispose the controller when the widget is disposed
-      widget.genericPagingController.pagingController.dispose();
-    } catch (e) {
-      commonLogger.e("An error has occurred: $e");
-    }
-    super.dispose();
   }
 
   // Build the Message widget for the given index and item

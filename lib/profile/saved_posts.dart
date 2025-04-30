@@ -163,9 +163,16 @@ class SavedPostsList extends StatefulWidget {
 }
 
 class _SavedPostsListState extends State<SavedPostsList> {
+    // Define method for getPage to run every time a new page needs to be fetched
+  Future<List<Map<String, dynamic>>?> _getNextPage(
+      final int newKey, final int pageSize) async {
+    final newItems = await SocialAPI.getSavedPosts(newKey);
+    return newItems;
+  }
+
   // PagingController to manage pagination
-  final GenericPagingController<Map<String, dynamic>> genericPagingController =
-      GenericPagingController(key: const Key("savedposts"));
+  final GenericStateController<Map<String, dynamic>> genericStateController =
+      GenericStateController(key: const Key("savedposts"));
 
   // Function to create loading widgets for the grid
   Widget _createGridLoadingWidgets() {
@@ -190,21 +197,16 @@ class _SavedPostsListState extends State<SavedPostsList> {
     );
   }
 
-  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
-    // Fetch the next page of posts from the user's account
-    final page = await SocialAPI.getSavedPosts(pageKey);
-    return page;
-  }
-
   @override
   void initState() {
-    genericPagingController.initialize(getPage, null);
+    genericStateController.init(
+        this,
+        (final newState) =>
+            setState(() => genericStateController.pagingState = newState),
+        _getNextPage,
+        () => []);
+    ;
     super.initState();
-  }
-
-  // Function to refresh the page
-  void refreshPage() {
-    genericPagingController.pagingController.refresh();
   }
 
   @override
@@ -212,7 +214,8 @@ class _SavedPostsListState extends State<SavedPostsList> {
       PagedGridView<int, Map<String, dynamic>>(
         shrinkWrap: true,
         physics: const ScrollPhysics(),
-        pagingController: genericPagingController.pagingController,
+        state: genericStateController.pagingState,
+        fetchNextPage: genericStateController.getNextPage,
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           childAspectRatio: 1,
           mainAxisSpacing: 2,
@@ -231,18 +234,9 @@ class _SavedPostsListState extends State<SavedPostsList> {
                       height: 72,
                     )
                   : _createGridTileWidget(
-                      item["posts"], widget.imageViewerController, refreshPage),
+                      item["posts"],
+                      widget.imageViewerController,
+                      genericStateController.refresh),
         ),
       );
-
-  @override
-  void dispose() {
-    try {
-      // Dispose of the PagingController when the state object is disposed
-      genericPagingController.pagingController.dispose();
-    } catch (e) {
-      commonLogger.e("An error has occurred: $e");
-    }
-    super.dispose();
-  }
 }

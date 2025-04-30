@@ -37,8 +37,8 @@ class _Comments extends State<Comments> {
   Key commentsListKey = const Key("commentsList");
   late TextEditingController commentController = TextEditingController();
   String userId = "0";
-  final GenericPagingController<Map<String, dynamic>> genericPagingController =
-      GenericPagingController(key: const Key("connectionsList"));
+  final GenericStateController<Map<String, dynamic>> genericStateController =
+      GenericStateController(key: const Key("connectionsList"));
 
   @override
   void initState() {
@@ -92,9 +92,8 @@ class _Comments extends State<Comments> {
           sendButtonMethod: () {
             // Post a comment when the send button is pressed
             if (!isMuted && commentController.text.isNotEmpty) {
-              SocialAPI.postComment(widget.post, commentController.text).then(
-                  (final value) =>
-                      genericPagingController.pagingController.refresh());
+              SocialAPI.postComment(widget.post, commentController.text)
+                  .then((final value) => genericStateController.refresh());
 
               commentController.clear();
             }
@@ -108,7 +107,7 @@ class _Comments extends State<Comments> {
               key: commentsListKey,
               post: widget.post,
               focus: focus,
-              genericPagingController: genericPagingController),
+              genericStateController: genericStateController),
         ),
       ),
     );
@@ -151,33 +150,38 @@ class CommentsListView extends StatefulWidget {
   const CommentsListView(
       {required this.focus,
       required this.post,
-      required this.genericPagingController,
+      required this.genericStateController,
       super.key});
   final FocusNode focus;
   final String post;
-  final GenericPagingController<Map<String, dynamic>> genericPagingController;
+  final GenericStateController<Map<String, dynamic>> genericStateController;
 
   @override
   State<CommentsListView> createState() => _CommentsListViewState();
 }
 
 class _CommentsListViewState extends State<CommentsListView> {
-  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
+  Future<List<Map<String, dynamic>>?> _getNextPage(final int pageKey, final int pageSize) async {
     // Fetch the page of comments using the getComments() function
     final page = [
       ...await SocialAPI.getComments(widget.post, pageKey),
       ...newComments
     ];
 
-    if (!mounted) {
-      return null;
-    }
+    // Clear added comments
+    newComments.clear();
     return page;
   }
 
   @override
   void initState() {
-    widget.genericPagingController.initialize(getPage, null);
+    widget.genericStateController.init(
+        this,
+        (final newState) => setState(
+            () => widget.genericStateController.pagingState = newState),
+        _getNextPage,
+        () => []);
+    ;
     super.initState();
   }
 
@@ -185,12 +189,12 @@ class _CommentsListViewState extends State<CommentsListView> {
   Widget build(final BuildContext context) {
     if (newComments.isNotEmpty) {
       // If there are new comments, refresh the list view
-      widget.genericPagingController.pagingController.refresh();
+      widget.genericStateController.refresh();
     }
 
     // Build a paginated list view of comments using the PagedListView widget
     return DefaultItemList(
-      pagingController: widget.genericPagingController.pagingController,
+      genericStateController: widget.genericStateController,
       itemBuilder: (final context, final item, final index) =>
           buildCommentWidget(index, item),
       noItemsFoundMessage: Pair<String>("No Comments", ""),
@@ -212,8 +216,6 @@ class _CommentsListViewState extends State<CommentsListView> {
     try {
       // Call the show method stored previously
       bottomBarVisibilityProvider?.show();
-      // Dispose the controller when the widget is disposed
-      widget.genericPagingController.pagingController.dispose();
     } catch (e) {
       commonLogger.e("An error has occurred: $e");
     }

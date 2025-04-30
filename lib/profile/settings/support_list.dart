@@ -70,10 +70,11 @@ class SupportListView extends StatefulWidget {
 
 class _SupportListViewState extends State<SupportListView> {
   // The controller that manages pagination
-  final GenericPagingController<Map<String, dynamic>> genericPagingController =
-      GenericPagingController(key: const Key("connectionsList"));
+  final GenericStateController<Map<String, dynamic>> genericStateController =
+      GenericStateController(key: const Key("connectionsList"));
 
-  Future<List<Map<String, dynamic>>?> getPage(final int pageKey) async {
+  Future<List<Map<String, dynamic>>?> _getNextPage(
+      final int pageKey, final int pageSize) async {
     List<Map<String, dynamic>> page;
     // Fetch the page of comments using the getComments() function
     switch (widget.type) {
@@ -86,29 +87,31 @@ class _SupportListViewState extends State<SupportListView> {
       case SupportListType.support:
         page = await SupportAPI.getSupportRequests(pageKey);
     }
-
-    if (!mounted) {
-      return null;
-    }
     return page;
   }
 
   UserRole userRole = UserRole.regular;
   @override
   void initState() {
-    genericPagingController.initialize(getPage, null);
+    genericStateController.init(
+        this,
+        (final newState) =>
+            setState(() => genericStateController.pagingState = newState),
+        _getNextPage,
+        () => []);
+    ;
     super.initState();
   }
 
   @override
   Widget build(final BuildContext context) => Stack(children: [
         DefaultItemList(
-          pagingController: genericPagingController.pagingController,
+          genericStateController: genericStateController,
           itemBuilder: (final context, final item, final index) =>
               UserListWidget(
             item: item,
             listType: widget.type,
-            refreshPage: genericPagingController.pagingController.refresh,
+            refreshPage: genericStateController.refresh,
             user: widget.user,
           ),
           noItemsFoundMessage: Pair<String>("No Items", ""),
@@ -130,17 +133,6 @@ class _SupportListViewState extends State<SupportListView> {
               ),
             ))
       ]);
-
-  @override
-  void dispose() {
-    try {
-      // Dispose the controller when the widget is disposed
-      genericPagingController.pagingController.dispose();
-    } catch (e) {
-      commonLogger.e("Error in dispose: $e");
-    }
-    super.dispose();
-  }
 }
 
 // UserListWidget class creates a stateful widget that displays a list of users

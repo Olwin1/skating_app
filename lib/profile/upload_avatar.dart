@@ -274,12 +274,11 @@ class _PhotosGridViewState extends State<PhotosGridView> {
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
         () => []);
-    ;
     super.initState();
   }
 
   @override
-  Widget build(final BuildContext context) => PagedGridView<int, Medium>(
+   Widget build(final BuildContext context) => PagedGridView<int, dynamic>(
         // Uses the SliverGridDelegateWithMaxCrossAxisExtent to layout the grid
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           childAspectRatio: 1, // Ratio of width to height of grid items
@@ -290,7 +289,7 @@ class _PhotosGridViewState extends State<PhotosGridView> {
         ),
         state: genericStateController.pagingState,
         fetchNextPage: genericStateController.getNextPage,
-        builderDelegate: PagedChildBuilderDelegate<Medium>(
+        builderDelegate: PagedChildBuilderDelegate<dynamic>(
           itemBuilder: (final context, final item, final index) =>
               GestureDetector(
                   onTap: () => widget.update(
@@ -300,6 +299,7 @@ class _PhotosGridViewState extends State<PhotosGridView> {
                     borderRadius: BorderRadius.circular(5.0),
                     child: Container(
                       color: shimmer["base"],
+                      //child: const SizedBox.shrink(),
                       child: FadeInImage(
                         fit: BoxFit.cover,
                         placeholder: MemoryImage(kTransparentImage),

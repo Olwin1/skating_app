@@ -163,7 +163,7 @@ class _ReportMessagesListViewState extends State<ReportMessagesListView> {
         (final newState) => setState(
             () => widget.genericStateController.pagingState = newState),
         _getNextPage,
-        () => []);
+        (final _) => []);
     super.initState();
   }
 

@@ -98,7 +98,7 @@ class _SupportListViewState extends State<SupportListView> {
         (final newState) =>
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
-        () => []);
+        (final _) => []);
     super.initState();
   }
 

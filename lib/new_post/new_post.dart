@@ -262,41 +262,33 @@ class _PhotosGridViewState extends State<PhotosGridView> {
         (final newState) =>
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
-        () => []);
+        _getLastPage);
     super.initState();
   }
 
-// TODO fix this - not sure how to reimplement this
-  // // Define getLastPage which will be called only after fetch page and only on the last time.
-  // List<Medium> getLastPage(final List<Medium> page) {
-  //   final Medium padderItem = Medium.fromJson(const {
-  //     "id": "0",
-  //     "filename": "a",
-  //     "title": "a",
-  //     "width": 1,
-  //     "height": 1,
-  //     "size": 1,
-  //     "orientation": 1,
-  //     "mimeType": "image/jpeg"
-  //   });
-  //   // appendLastPage is called if there are no more items to load
-  //   if ((genericStateController.pagingController.items == null ||
-  //           genericStateController.pagingController.items!.isEmpty) &&
-  //       page.isEmpty) {
-  //     return page;
-  //   } else {
-  //     // Add padding to bottom row of items.
-  //     final int rem = 5 -
-  //         ((genericStateController.pagingController.items?.length ?? 0) +
-  //                 page.length) %
-  //             4;
-  //     final List<Medium> spacers = [];
-  //     for (int i = 0; i < rem; i++) {
-  //       spacers.add(padderItem);
-  //     }
-  //     return [...page, ...spacers];
-  //   }
-  // }
+  // Define _getLastPage which will be called only after fetch page and only on the last time.
+  List<Medium> _getLastPage(final List<Medium> pages) {
+    final Medium padderItem = Medium.fromJson(const {
+      "id": "0",
+      "filename": "a",
+      "title": "a",
+      "width": 1,
+      "height": 1,
+      "size": 1,
+      "orientation": 1,
+      "mimeType": "image/jpeg"
+    });
+      // Add padding to bottom row of items.
+      final int rem = 5 -
+          ((pages.length) +
+                  pages.length) %
+              4;
+      final List<Medium> spacers = [];
+      for (int i = 0; i < rem; i++) {
+        spacers.add(padderItem);
+      }
+      return spacers;
+  }
 
   @override
   Widget build(final BuildContext context) => PagedGridView<int, Medium>(

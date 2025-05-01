@@ -93,7 +93,7 @@ class _NewChannelListViewState extends State<NewChannelListView> {
         (final newState) =>
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
-        () => []);
+        (final _) => []);
     super.initState();
   }
 

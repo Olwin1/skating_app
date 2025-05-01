@@ -260,6 +260,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
     return page;
   }
 
+// TODO: Add a special handler
   // List<Map<String, dynamic>> handleLastPage(
   //     final List<Map<String, dynamic>> page) {
   //   if ((genericStateController.pagingController.items == null ||
@@ -282,7 +283,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
         (final newState) =>
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
-        () => []);
+        (final _) => []);
     if (getIt<WebSocketConnection>().socket.disconnected) {
       getIt<WebSocketConnection>().socket.connect();
     }

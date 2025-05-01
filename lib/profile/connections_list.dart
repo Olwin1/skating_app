@@ -49,7 +49,7 @@ class _ConnectionsListViewState extends State<ConnectionsListView> {
         (final newState) =>
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
-        () => []);
+        (final _) => []);
     super.initState();
   }
 

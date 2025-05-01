@@ -178,6 +178,7 @@ class PostsListViewState extends State<PostsListView> {
     return page;
   }
 
+// TODO: add a special handler
   // List<Object> handleLastPage(final List<Object> page) {
   //   if ((genericStateController.pagingController.items == null ||
   //           genericStateController.pagingController.items!.isEmpty) &&
@@ -214,7 +215,7 @@ class PostsListViewState extends State<PostsListView> {
         (final newState) =>
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
-        () => []);
+        (final _) => []);
 
     super.initState();
   }

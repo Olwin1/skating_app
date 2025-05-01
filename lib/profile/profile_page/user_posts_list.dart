@@ -142,24 +142,18 @@ class _UserPostsListState extends State<UserPostsList> {
     );
   }
 
-  // List<Map<String, dynamic>> handleLastPage(
-  //     final List<Map<String, dynamic>> page) {
-  //   if ((genericStateController.pagingController.items == null ||
-  //           genericStateController.pagingController.items!.isEmpty) &&
-  //       page.isEmpty) {
-  //     return page;
-  //   } else {
-  //     final int rem = 4 -
-  //         ((genericStateController.pagingController.items?.length ?? 0) +
-  //                 page.length) %
-  //             3;
-  //     final List<Map<String, dynamic>> spacers = [];
-  //     for (int i = 0; i < rem; i++) {
-  //       spacers.add({"last": true});
-  //     }
-  //     return [...page, ...spacers];
-  //   }
-  // }
+  List<Map<String, dynamic>> _handleLastPage(
+      final List<Map<String, dynamic>> pages) {
+
+      final int rem = 4 -
+          (pages.length) %
+              3;
+      final List<Map<String, dynamic>> spacers = [];
+      for (int i = 0; i < rem; i++) {
+        spacers.add({"last": true});
+      }
+      return spacers;
+  }
 
   @override
   void initState() {
@@ -169,7 +163,7 @@ class _UserPostsListState extends State<UserPostsList> {
         (final newState) =>
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
-        () => []);
+        _handleLastPage);
     super.initState();
   }
 

@@ -273,7 +273,7 @@ class _PhotosGridViewState extends State<PhotosGridView> {
         (final newState) =>
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
-        () => []);
+        (final _) => []);
     super.initState();
   }
 

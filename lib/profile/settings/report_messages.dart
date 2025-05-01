@@ -167,7 +167,7 @@ class _MessagesListViewState extends State<MessagesListView> {
         (final newState) => setState(
             () => widget.genericStateController.pagingState = newState),
         _getNextPage,
-        () => []);
+        (final _) => []);
     super.initState();
   }
 

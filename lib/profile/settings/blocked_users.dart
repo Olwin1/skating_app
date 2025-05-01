@@ -34,7 +34,7 @@ class _BlockedUsersListState extends State<BlockedUsersList> {
         (final newState) =>
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
-        () => []);
+        (final _) => []);
     super.initState();
   }
 

@@ -180,7 +180,7 @@ class _CommentsListViewState extends State<CommentsListView> {
         (final newState) => setState(
             () => widget.genericStateController.pagingState = newState),
         _getNextPage,
-        () => []);
+        (final _) => []);
     super.initState();
   }
 
@@ -207,7 +207,7 @@ class _CommentsListViewState extends State<CommentsListView> {
     super.didChangeDependencies();
     bottomBarVisibilityProvider = Provider.of<BottomBarVisibilityProvider>(
         context,
-        listen: false); // ✅ Safe lookup
+        listen: false);
   }
 
   @override

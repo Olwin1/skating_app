@@ -14,7 +14,7 @@ class GenericStateController<T> {
   late State _widget;
   late StateUpdater<T> _updateState;
   late Future<List<T>?> Function(int newKey, int pageSize) _builder;
-  late List<T> Function() _lastPageBuilder;
+  late List<T> Function(List<T> fetchedItems) _lastPageBuilder;
 
   late PagingState<int, T> pagingState = PagingState<int, T>();
 
@@ -22,7 +22,7 @@ class GenericStateController<T> {
       final State widget,
       final StateUpdater<T> updateState,
       final Future<List<T>?> Function(int newKey, int pageSize) builder,
-      final List<T> Function() lastPageBuilder) {
+      final List<T> Function(List<T> fetchedItems) lastPageBuilder) {
     this._widget = widget;
     this._updateState = updateState;
     this._builder = builder;
@@ -51,7 +51,10 @@ class GenericStateController<T> {
       final isLastPage = newItems.isEmpty;
 
       if (isLastPage) {
-        newItems.addAll(_lastPageBuilder());
+        if(pagingState.pages != null) {
+        final List<T> existing = pagingState.pages!.expand((final list) => list).toList();
+        newItems.addAll(_lastPageBuilder([...existing, ...newItems]));
+        }
       }
 
       _updateState(pagingState.copyWith(

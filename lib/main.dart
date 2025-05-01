@@ -56,7 +56,7 @@ Future<void> main() async {
       systemNavigationBarColor: Colors.transparent));
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   // Initialize the FlutterMapTileCaching package for caching map tiles
-  await initialiseCache();
+  //await initialiseCache();
   // Register a singleton instance of WebSocketConnection class with GetIt dependency injection
   GetIt.I.registerSingleton<WebSocketConnection>(WebSocketConnection());
 

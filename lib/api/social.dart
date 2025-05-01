@@ -41,7 +41,6 @@ class SocialAPI {
   static final Uri _userAvatarUrl = Uri.parse("${Config.uri}/user/avatar");
   static final Uri _savedPostsUrl = Uri.parse("${Config.uri}/post/saved");
 
-
 // Define a function to authenticate user credentials and return a token
   static Future<Map<String, dynamic>> postPost(
       final String description, final String image) async {
@@ -418,8 +417,10 @@ class SocialAPI {
     // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
 
     try {
-      final String? localData = await NetworkManager.instance
-          .getLocalData(name: "user-posts-$userId", type: CacheTypes.list);
+      final String? localData = page == 0
+          ? (await NetworkManager.instance
+              .getLocalData(name: "user-posts-$userId", type: CacheTypes.list))
+          : null;
 
       if (localData != null) {
         final List<Map<String, dynamic>> cachedPosts =
@@ -458,8 +459,10 @@ class SocialAPI {
 
     try {
       final String userId = user?["user_id"] ?? await storage.getId();
-      final String? localData = await NetworkManager.instance
-          .getLocalData(name: "user-following-$userId", type: CacheTypes.list);
+      final String? localData = page == 0
+          ? (await NetworkManager.instance.getLocalData(
+              name: "user-following-$userId", type: CacheTypes.list))
+          : null;
 
       if (localData != null) {
         final List<Map<String, dynamic>> cachedUsers =
@@ -542,8 +545,10 @@ class SocialAPI {
     // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
     final String userId = user?["user_id"] ?? await storage.getId();
 
-    final String? localData = page==0?(await NetworkManager.instance
-        .getLocalData(name: "user-friends-$userId", type: CacheTypes.list)):null;
+    final String? localData = page == 0
+        ? (await NetworkManager.instance
+            .getLocalData(name: "user-friends-$userId", type: CacheTypes.list))
+        : null;
 
     if (localData != null) {
       final List<Map<String, dynamic>> cachedUsers =
@@ -681,8 +686,10 @@ class SocialAPI {
   static Future<List<Map<String, dynamic>>> getSavedPosts(
       final int pageKey) async {
     if (pageKey == 0) {
-      final String? localData = await NetworkManager.instance
-          .getLocalData(name: "saved-posts", type: CacheTypes.list);
+      final String? localData = pageKey == 0
+          ? (await NetworkManager.instance
+              .getLocalData(name: "saved-posts", type: CacheTypes.list))
+          : null;
 
       if (localData != null) {
         final List<Map<String, dynamic>> cachedPosts =

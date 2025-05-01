@@ -16,9 +16,9 @@ import "package:patinka/api/token.dart";
 import "package:patinka/api/websocket.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/firebase/init_firebase.dart";
-import "package:patinka/friends_tracker/caching/map_cache.dart"
-    if (dart.library.io) "./friends_tracker/caching/map_cache_mobile.dart"
-    if (dart.library.html) "./friends_tracker/caching/map_cache_web.dart";
+// import "package:patinka/friends_tracker/caching/map_cache.dart"
+//     if (dart.library.io) "./friends_tracker/caching/map_cache_mobile.dart"
+//     if (dart.library.html) "./friends_tracker/caching/map_cache_web.dart";
 import "package:patinka/login/login.dart";
 import "package:patinka/misc/default_profile.dart";
 import "package:patinka/misc/navbar_provider.dart";
@@ -149,13 +149,6 @@ class _PunishmentEnforcer extends State<PunishmentEnforcer> {
           storage.setMuted(response["is_muted"], response["end_timestamp"]);
         }));
 
-    void getImage(final String filePath) {
-      Utils.getImage(filePath,
-          (final fileImage) => setState(() => backgroundImage = fileImage));
-    }
-
-    //Utils.loadImage(getImage, MediaQuery.of(NavigationService.currentNavigatorKey.currentContext!));
-
     super.initState();
   }
 
@@ -187,7 +180,7 @@ class _PunishmentEnforcer extends State<PunishmentEnforcer> {
                         fit: BoxFit.cover,
                         alignment: Alignment.center,
                         colorFilter: ColorFilter.mode(
-                            Colors.black.withOpacity(0.4), BlendMode.srcOver)),
+                            Colors.black.withValues(alpha: 0.4), BlendMode.srcOver)),
                   ),
                   padding: const EdgeInsets.all(16))),
           Center(
@@ -533,7 +526,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                       fit: BoxFit.cover,
                                       alignment: Alignment.center,
                                       colorFilter: ColorFilter.mode(
-                                          Colors.black.withOpacity(0.4),
+                                          Colors.black.withValues(alpha: 0.4),
                                           BlendMode.srcOver)),
                                 ),
                                 padding: const EdgeInsets.all(16))),

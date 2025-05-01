@@ -89,7 +89,7 @@ class _Settings extends State<Settings> {
           children: [
             // Background overlay with blur and color filter
             ColoredBox(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               child: BackdropFilter(
                 filter: ImageFilter.blur(
                   sigmaX: 1,

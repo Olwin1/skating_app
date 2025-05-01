@@ -181,7 +181,6 @@ class _CommentsListViewState extends State<CommentsListView> {
             () => widget.genericStateController.pagingState = newState),
         _getNextPage,
         () => []);
-    ;
     super.initState();
   }
 

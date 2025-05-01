@@ -205,7 +205,6 @@ class _SavedPostsListState extends State<SavedPostsList> {
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
         () => []);
-    ;
     super.initState();
   }
 

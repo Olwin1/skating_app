@@ -94,8 +94,6 @@ class _FriendIconButtonState extends State<FriendIconButton> {
           alignment: Alignment.centerLeft,
           colorFilter: ColorFilter.mode(swatch[901]!, BlendMode.srcIn),
         );
-      default:
-        return const Icon(Icons.abc);
     }
   }
 

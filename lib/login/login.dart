@@ -66,7 +66,7 @@ class _LoginPage extends State<LoginPage> {
                       fit: BoxFit.cover,
                       alignment: Alignment.bottomLeft,
                       colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.4),
+                        Colors.black.withValues(alpha: 0.4),
                         BlendMode.srcOver,
                       ),
                     ),

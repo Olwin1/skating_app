@@ -78,7 +78,6 @@ class _ReportListViewState extends State<ReportListView> {
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
         () => []);
-    ;
     super.initState();
   }
 

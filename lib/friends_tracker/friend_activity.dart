@@ -75,7 +75,7 @@ class _FriendActivityProfile extends State<FriendActivityProfile> {
       TextButton(
         onPressed: () => {
           commonLogger.d("Pressed user icon"),
-          widget.mapController.move(LatLng(0, 0), 17.0)
+          widget.mapController.move(const LatLng(0, 0), 17.0)
         }, // When the button is pressed, print a message
         child: userCache == null || avatar == null
             // If there is no cached user information or avatar image, use a default image

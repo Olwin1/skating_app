@@ -262,8 +262,8 @@ class _SupportListTypeOptionsState extends State<SupportListTypeOptions> {
         return "Bug Report";
       case null:
         return null;
-      default:
-        throw ArgumentError("Invalid value: $type");
+      // default:
+      //   throw ArgumentError("Invalid value: $type");
     }
   }
 

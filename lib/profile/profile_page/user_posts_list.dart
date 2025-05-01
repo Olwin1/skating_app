@@ -4,7 +4,6 @@ import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 import "package:patinka/api/config.dart";
 import "package:patinka/api/social.dart";
-import "package:patinka/common_logger.dart";
 import "package:patinka/components/list_error.dart";
 import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/pair.dart";

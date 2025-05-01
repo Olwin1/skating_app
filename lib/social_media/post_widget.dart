@@ -150,7 +150,7 @@ class _PostWidget extends State<PostWidget> {
                                       "assets/backgrounds/post_background.png"),
                                   fit: BoxFit.cover,
                                   colorFilter: ColorFilter.mode(
-                                      Colors.black.withOpacity(0.3),
+                                      Colors.black.withValues(alpha: 0.3),
                                       BlendMode.srcOver)),
                               borderRadius: const BorderRadius.only(
                                   topRight: Radius.circular(8),

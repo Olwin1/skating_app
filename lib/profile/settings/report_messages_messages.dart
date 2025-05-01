@@ -6,7 +6,6 @@ import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:patinka/api/config.dart";
 import "package:patinka/api/reports.dart";
 import "package:patinka/api/social.dart";
-import "package:patinka/common_logger.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
 import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
@@ -165,7 +164,6 @@ class _ReportMessagesListViewState extends State<ReportMessagesListView> {
             () => widget.genericStateController.pagingState = newState),
         _getNextPage,
         () => []);
-    ;
     super.initState();
   }
 

@@ -328,4 +328,10 @@ class _ChannelsListViewState extends State<ChannelsListView> {
                 currentUser: widget.currentUser,
                 refreshPage: genericStateController.refresh),
       );
+
+      @override
+  void dispose() {
+    subscriptionMessages.cancel();
+    super.dispose();
+  }
 }

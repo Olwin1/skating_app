@@ -159,7 +159,7 @@ class _EditProfile extends State<EditProfile> {
             body: Stack(fit: StackFit.expand, children: [
               ColoredBox(
                 color: Colors.black
-                    .withOpacity(0.5), // Adjust the opacity as needed
+                    .withValues(alpha: 0.5), // Adjust the opacity as needed
                 child: BackdropFilter(
                   filter: ImageFilter.blur(
                       sigmaX: 1,

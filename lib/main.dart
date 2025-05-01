@@ -154,7 +154,7 @@ class _PunishmentEnforcer extends State<PunishmentEnforcer> {
           (final fileImage) => setState(() => backgroundImage = fileImage));
     }
 
-    Utils.loadImage(getImage);
+    //Utils.loadImage(getImage, MediaQuery.of(NavigationService.currentNavigatorKey.currentContext!));
 
     super.initState();
   }
@@ -301,11 +301,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    void getImage(final String filePath) {
-      Utils.getImage(filePath,
-          (final fileImage) => setState(() => backgroundImage = fileImage));
-    }
-
     storage.getId().then((final value) => {
           value != null
               ? {
@@ -322,8 +317,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   avatar = null;
                 })
         });
-    Utils.loadImage(getImage);
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // Download the image if its not already downloaded
+    void getImage(final String filePath) {
+      Utils.getImage(filePath,
+          (final fileImage) => setState(() => backgroundImage = fileImage));
+    }
+
+    super.didChangeDependencies();
+    Utils.loadImage(getImage, MediaQuery.of(context));
   }
 
   List<TabItem<Widget>> tabItems() => [
@@ -438,96 +444,110 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         canPop: false,
         // Handle user swiping back inside application
         onPopInvokedWithResult: handlePop,
-        child: Consumer<NavigationService>(builder: (final context, final navigationService, final child) => Scaffold(
-            extendBody: true,
-            bottomNavigationBar: Consumer<BottomBarVisibilityProvider>(
-              builder: (final context, final bottomBarVisibilityProvider,
-                      final child) =>
-                  AnimatedBuilder(
-                animation: bottomBarVisibilityProvider.animationController,
-                builder: (final context, final child) {
-                  final translateY = Tween<double>(
-                    begin: bottomBarVisibilityProvider.isVisible ? 0.0 : 1.0,
-                    end: bottomBarVisibilityProvider.isVisible ? 1.0 : 0.0,
-                  )
-                      .animate(bottomBarVisibilityProvider.animationController)
-                      .value;
+        child: Consumer<NavigationService>(
+            builder: (final context, final navigationService, final child) =>
+                Scaffold(
+                    extendBody: true,
+                    bottomNavigationBar: Consumer<BottomBarVisibilityProvider>(
+                      builder: (final context,
+                              final bottomBarVisibilityProvider, final child) =>
+                          AnimatedBuilder(
+                        animation:
+                            bottomBarVisibilityProvider.animationController,
+                        builder: (final context, final child) {
+                          final translateY = Tween<double>(
+                            begin: bottomBarVisibilityProvider.isVisible
+                                ? 0.0
+                                : 1.0,
+                            end: bottomBarVisibilityProvider.isVisible
+                                ? 1.0
+                                : 0.0,
+                          )
+                              .animate(bottomBarVisibilityProvider
+                                  .animationController)
+                              .value;
 
-                  return Transform.translate(
-                    offset: Offset(
-                        0.0, translateY * 85.0), // Adjust the height as needed
-                    child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        child: !bottomBarVisibilityProvider.isVisible
-                            ? const Wrap() // Hide the widget when visible
-                            : Wrap(
-                                children: [
-                                  StyleProvider(
-                                    style: Style(),
-                                    child: ConvexAppBar(
-                                      //Define Navbar Object
-                                      items:
-                                          tabItems(), //Set navbar items to the tabitems
-                                      //initialActiveIndex: NavigationService.getCurrentIndex(), // Set initial selection to main page
-                                      initialActiveIndex:
-                                          0, // Set initial selection to main page
-                                      onTap: (final int i) => {
-                                        //When a navbar button is pressed set the current tab to the tabitem that was pressed
-                                        NavigationService
+                          return Transform.translate(
+                            offset: Offset(
+                                0.0,
+                                translateY *
+                                    85.0), // Adjust the height as needed
+                            child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                child: !bottomBarVisibilityProvider.isVisible
+                                    ? const Wrap() // Hide the widget when visible
+                                    : Wrap(
+                                        children: [
+                                          StyleProvider(
+                                            style: Style(),
+                                            child: ConvexAppBar(
+                                              //Define Navbar Object
+                                              items:
+                                                  tabItems(), //Set navbar items to the tabitems
+                                              //initialActiveIndex: NavigationService.getCurrentIndex(), // Set initial selection to main page
+                                              initialActiveIndex:
+                                                  0, // Set initial selection to main page
+                                              onTap: (final int i) => {
+                                                //When a navbar button is pressed set the current tab to the tabitem that was pressed
+                                                NavigationService
                                                     .setCurrentIndex(i),
-                                        commonLogger
-                                            .t("Setting the current page: $i")
-                                      }, // When a button is pressed... output to console
-                                      style: TabStyle
-                                          .fixedCircle, // Set the navbar style to have the circle stay at the centre
-                                      backgroundColor: const Color.fromARGB(
-                                          184, 32, 49, 33), //swatch[51],
-                                      activeColor:
-                                          const Color.fromARGB(51, 31, 175, 31),
-                                      shadowColor: Colors.green,
-                                      color: const Color.fromARGB(51, 0, 23, 0),
-                                      height: 55,
-                                    ),
-                                  ),
-                                ],
-                              )),
-                  );
-                },
-              ),
-                  ),
-            body: Stack(
-              children: [
-                SingleChildScrollView(
-                    clipBehavior: Clip.none,
-                    physics: const ClampingScrollPhysics(
-                        parent: NeverScrollableScrollPhysics()),
-                    child: Container(
-                        constraints: BoxConstraints(
-                            minHeight: MediaQuery.of(context).size.height,
-                            minWidth: MediaQuery.of(context).size.width),
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: backgroundImage,
-                              fit: BoxFit.cover,
-                              alignment: Alignment.center,
-                              colorFilter: ColorFilter.mode(
-                                  Colors.black.withOpacity(0.4),
-                                  BlendMode.srcOver)),
-                        ),
-                        padding: const EdgeInsets.all(16))),
-                // Create a navigator stack for each item
-                _buildOffstageNavigator(0),
-                _buildOffstageNavigator(1),
-                _buildOffstageNavigator(2),
-                _buildOffstageNavigator(3),
-                _buildOffstageNavigator(4),
-              ],
-            )
+                                                commonLogger.t(
+                                                    "Setting the current page: $i")
+                                              }, // When a button is pressed... output to console
+                                              style: TabStyle
+                                                  .fixedCircle, // Set the navbar style to have the circle stay at the centre
+                                              backgroundColor:
+                                                  const Color.fromARGB(184, 32,
+                                                      49, 33), //swatch[51],
+                                              activeColor: const Color.fromARGB(
+                                                  51, 31, 175, 31),
+                                              shadowColor: Colors.green,
+                                              color: const Color.fromARGB(
+                                                  51, 0, 23, 0),
+                                              height: 55,
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                          );
+                        },
+                      ),
+                    ),
+                    body: Stack(
+                      children: [
+                        SingleChildScrollView(
+                            clipBehavior: Clip.none,
+                            physics: const ClampingScrollPhysics(
+                                parent: NeverScrollableScrollPhysics()),
+                            child: Container(
+                                constraints: BoxConstraints(
+                                    minHeight:
+                                        MediaQuery.of(context).size.height,
+                                    minWidth:
+                                        MediaQuery.of(context).size.width),
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: backgroundImage,
+                                      fit: BoxFit.cover,
+                                      alignment: Alignment.center,
+                                      colorFilter: ColorFilter.mode(
+                                          Colors.black.withOpacity(0.4),
+                                          BlendMode.srcOver)),
+                                ),
+                                padding: const EdgeInsets.all(16))),
+                        // Create a navigator stack for each item
+                        _buildOffstageNavigator(0),
+                        _buildOffstageNavigator(1),
+                        _buildOffstageNavigator(2),
+                        _buildOffstageNavigator(3),
+                        _buildOffstageNavigator(4),
+                      ],
+                    )
 
-            // This trailing comma makes auto-formatting nicer for build methods.
-    )));
+                    // This trailing comma makes auto-formatting nicer for build methods.
+                    )));
   }
 
   Widget _buildOffstageNavigator(final int tabItemIndex) => Offstage(

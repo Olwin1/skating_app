@@ -161,12 +161,12 @@ class PostsListView extends StatefulWidget {
 
 class PostsListViewState extends State<PostsListView> {
   // PagingController manages the loading of pages as the user scrolls
-  final GenericStateController<Object> genericStateController =
+  final GenericStateController<Map<String, dynamic>> genericStateController =
       GenericStateController(key: const Key("homepage"));
   List<String> seenPosts = [];
   Map<String, dynamic>? user;
 
-  Future<List<Object>?> _getNextPage(final int pageKey, final int pageSize) async {
+  Future<List<Map<String, dynamic>>?> _getNextPage(final int pageKey, final int pageSize) async {
     commonLogger.t("Fetching page");
     final page = await SocialAPI.getPosts(pageKey);
 

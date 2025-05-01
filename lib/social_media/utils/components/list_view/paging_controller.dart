@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 
 typedef StateUpdater<T> = void Function(PagingState<int, T> pagingState);
-typedef LastPageBuilder<T> = List<T> Function();
 
 class GenericStateController<T> {
   GenericStateController({
@@ -15,7 +14,7 @@ class GenericStateController<T> {
   late State _widget;
   late StateUpdater<T> _updateState;
   late Future<List<T>?> Function(int newKey, int pageSize) _builder;
-  late LastPageBuilder<T> _lastPageBuilder;
+  late List<T> Function() _lastPageBuilder;
 
   late PagingState<int, T> pagingState = PagingState<int, T>();
 
@@ -23,7 +22,7 @@ class GenericStateController<T> {
       final State widget,
       final StateUpdater<T> updateState,
       final Future<List<T>?> Function(int newKey, int pageSize) builder,
-      final LastPageBuilder<T> lastPageBuilder) {
+      final List<T> Function() lastPageBuilder) {
     this._widget = widget;
     this._updateState = updateState;
     this._builder = builder;
@@ -40,7 +39,7 @@ class GenericStateController<T> {
     _updateState(pagingState.copyWith(isLoading: true, error: null));
 
     try {
-      final newKey = (pagingState.keys?.last ?? 0) + 1;
+      final newKey = (pagingState.keys?.last ?? -1) + 1;
       // Get new items
       final newItems = await _builder(newKey, pageSize);
 

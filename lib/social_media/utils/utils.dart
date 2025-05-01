@@ -23,7 +23,7 @@ class Utils {
     });
   }
 
-  static void loadImage(final Function getImage) {
+  static void loadImage(final Function getImage, final MediaQueryData mediaQuery) {
     // getImage callback to set state in main class and then in turn call getImage in Utils
     NetworkManager.instance
         .getLocalData(name: "current-background", type: CacheTypes.background)
@@ -32,8 +32,6 @@ class Utils {
         getImage(filePath);
       } else {
         if (NavigationService.currentNavigatorKey.currentContext!.mounted) {
-          final MediaQueryData mediaQuery = MediaQuery.of(
-              NavigationService.currentNavigatorKey.currentContext!);
           final physicalPixelWidth =
               mediaQuery.size.width * mediaQuery.devicePixelRatio;
           final physicalPixelHeight =

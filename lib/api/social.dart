@@ -542,8 +542,8 @@ class SocialAPI {
     // Specifying that the function returns a future object of a Map object with key-value pairs of type string-dynamic
     final String userId = user?["user_id"] ?? await storage.getId();
 
-    final String? localData = await NetworkManager.instance
-        .getLocalData(name: "user-friends-$userId", type: CacheTypes.list);
+    final String? localData = page==0?(await NetworkManager.instance
+        .getLocalData(name: "user-friends-$userId", type: CacheTypes.list)):null;
 
     if (localData != null) {
       final List<Map<String, dynamic>> cachedUsers =

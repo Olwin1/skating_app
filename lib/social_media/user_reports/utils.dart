@@ -15,6 +15,7 @@ class ButtonBuilders {
           width: double.maxFinite,
           // Row layout to place the icon and text horizontally
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Icon widget, colored based on the passed 'color' parameter
               Icon(
@@ -54,7 +55,7 @@ class ButtonBuilders {
             // Style for the text, using grey color and a smaller font size
             style: TextStyle(
               color: Colors.grey.shade400, // Grey color for text
-              fontSize: 16, // Font size set to 16
+              fontSize: 18, // Font size set to 16
             ),
           ),
         ),

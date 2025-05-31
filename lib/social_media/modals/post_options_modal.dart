@@ -15,6 +15,7 @@ class PostOptionsBottomSheet extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
         SaveButton(

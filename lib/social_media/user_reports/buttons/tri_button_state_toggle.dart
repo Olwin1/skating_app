@@ -108,7 +108,7 @@ abstract class TriButtonStateToggleState<T extends TriButtonStateToggle<T>>
   ) =>
       TextButton.icon(
         icon: Icon(icon, color: color),
-        label: Text(label, style: TextStyle(color: color, fontSize: 16)),
+        label: Text(label, style: TextStyle(color: color, fontSize: 18)),
         onPressed: () async {
           Navigator.pop(context); // Close current modal/dialog if open.
           await onPressed(); // Call the appropriate handler.

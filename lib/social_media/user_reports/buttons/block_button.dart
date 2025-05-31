@@ -51,5 +51,5 @@ class _BlockButtonState extends TriButtonStateToggleState<BlockButton> {
   @override
   Color get primaryColor => Colors.red.shade700;
   @override
-  Color get secondaryColor => Colors.grey.shade700;
+  Color get secondaryColor => Colors.grey.shade400;
 }

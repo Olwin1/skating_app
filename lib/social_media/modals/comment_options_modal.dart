@@ -11,11 +11,14 @@ class CommentOptionsBottomSheet extends StatelessWidget { // Replace with actual
   final dynamic comment;
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(final BuildContext context) => Padding(
+    // Add padding so it forces focus on the window by making it wider
+    padding: const EdgeInsets.symmetric(horizontal: 48), 
+    child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         ReportButton(reportContentType: ReportContentType.comment, contentId: comment["comment_id"], userId: comment["sender_id"], isBlocked: false,),
         BlockButton(userId: comment["sender_id"])
       ],
-    );
+    ));
 }

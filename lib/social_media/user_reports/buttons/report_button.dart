@@ -83,7 +83,7 @@ class _ReportButtonState extends TriButtonStateToggleState<ReportButton> {
   @override
   Color get primaryColor => Colors.red.shade700;
   @override
-  Color get secondaryColor => Colors.grey.shade700;
+  Color get secondaryColor => Colors.grey.shade400;
 }
 
 // class ReportButton extends StatelessWidget {

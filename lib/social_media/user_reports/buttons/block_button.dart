@@ -1,10 +1,7 @@
 import "package:flutter/material.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/api/support.dart";
-import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/user_reports/buttons/tri_button_state_toggle.dart";
-import "package:patinka/social_media/user_reports/utils.dart";
-import "package:provider/provider.dart";
 
 class BlockButton extends TriButtonStateToggle<BlockButton> {
   const BlockButton({required super.userId, super.key});

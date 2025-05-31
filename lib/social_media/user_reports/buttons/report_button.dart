@@ -1,8 +1,5 @@
 import "package:flutter/material.dart";
 import "package:patinka/api/auth.dart";
-import "package:patinka/api/config.dart";
-import "package:patinka/api/type_casts.dart";
-import "package:patinka/caching/manager.dart";
 import "package:patinka/social_media/report_content_type.dart";
 import "package:patinka/social_media/user_reports/buttons/tri_button_state_toggle.dart";
 
@@ -25,17 +22,12 @@ class ReportButton extends TriButtonStateToggle<ReportButton> {
 class _ReportButtonState extends TriButtonStateToggleState<ReportButton> {
   @override
   Future<void> initButtonState() async {
-    final String? userId = await AuthenticationAPI.getUserId();
-    if (userId != null) {
-
+    final String userId = await AuthenticationAPI.getUserId();
       if (userId == widget.userId) {
         setState(() => buttonState = ToggleButtonState.secondary);
       } else {
         setState(() => buttonState = ToggleButtonState.primary);
       }
-    } else {
-      setState(() => buttonState = ToggleButtonState.hidden);
-    }
   }
 
   @override

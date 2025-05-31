@@ -1,55 +1,135 @@
 import "package:flutter/material.dart";
-import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/api/auth.dart";
+import "package:patinka/api/config.dart";
+import "package:patinka/api/type_casts.dart";
+import "package:patinka/caching/manager.dart";
 import "package:patinka/social_media/report_content_type.dart";
-import "package:patinka/social_media/user_reports/report_reason.dart";
-import "package:patinka/social_media/user_reports/report_user.dart";
-import "package:patinka/social_media/user_reports/utils.dart";
-import "package:provider/provider.dart";
+import "package:patinka/social_media/user_reports/buttons/tri_button_state_toggle.dart";
 
-class ReportButton extends StatelessWidget {
+class ReportButton extends TriButtonStateToggle<ReportButton> {
   const ReportButton(
-      {required this.reportContentType,
+      {required super.userId,
+      required this.reportContentType,
       required this.contentId,
-      required this.reportedUserId,
       required this.isBlocked,
       super.key});
+
   final ReportContentType reportContentType;
   final String contentId;
-  final String reportedUserId;
   final bool isBlocked;
 
   @override
-  Widget build(final BuildContext context) {
-    String reportText;
-    switch (reportContentType) {
-      case ReportContentType.post:
-        reportText = "Report Post";
-      case ReportContentType.message:
-        reportText = "Report Message";
-      case ReportContentType.comment:
-        reportText = "Report Comment";
-    }
-
-    return ButtonBuilders.createTextButton(
-      Icons.report,
-      reportText,
-      Colors.red.shade700,
-      () {
-        Navigator.pop(context);
-        WidgetsBinding.instance.addPostFrameCallback((final _) {
-          Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-              .hide();
-        });
-        ModalBottomSheet.show(
-            context: context,
-            builder: (final context) => ReportReasonBottomSheet(
-                  reportContentType: reportContentType,
-                  contentId: contentId,
-                  reportedUserId: reportedUserId,
-                  isBlocked: isBlocked,
-                ),
-            startSize: 0.65);
-      },
-    );
-  }
+  TriButtonStateToggleState<ReportButton> createState() => _ReportButtonState();
 }
+
+class _ReportButtonState extends TriButtonStateToggleState<ReportButton> {
+  @override
+  Future<void> initButtonState() async {
+    final String? userId = await AuthenticationAPI.getUserId();
+    if (userId != null) {
+
+      if (userId == widget.userId) {
+        setState(() => buttonState = ToggleButtonState.secondary);
+      } else {
+        setState(() => buttonState = ToggleButtonState.primary);
+      }
+    } else {
+      setState(() => buttonState = ToggleButtonState.hidden);
+    }
+  }
+
+  @override
+  Future<void> onPrimaryPressed() async {
+    // Report!!!!
+    
+    //await SupportAPI.postReportMessage(widget.contentId);
+  }
+
+  @override
+  Future<void> onSecondaryPressed() async {
+    // Delete whatever it is
+    //await SupportAPI.del(widget.contentId);
+  }
+
+  @override
+  IconData get primaryIcon => Icons.block;
+  @override
+  IconData get secondaryIcon => Icons.block;
+
+  @override
+  String get primaryLabel {
+    switch (widget.reportContentType) {
+      case ReportContentType.post:
+        return "Report Post";
+      case ReportContentType.message:
+        return "Report Message";
+      case ReportContentType.comment:
+        return "Report Comment";
+    }
+  }
+
+  @override
+  String get secondaryLabel {
+    switch (widget.reportContentType) {
+      case ReportContentType.post:
+        return "Delete Post";
+      case ReportContentType.message:
+        return "Delete Message";
+      case ReportContentType.comment:
+        return "Delete Comment";
+    }
+  }
+
+  @override
+  Color get primaryColor => Colors.red.shade700;
+  @override
+  Color get secondaryColor => Colors.grey.shade700;
+}
+
+// class ReportButton extends StatelessWidget {
+//   const ReportButton(
+//       {required this.reportContentType,
+//       required this.contentId,
+//       required this.reportedUserId,
+//       required this.isBlocked,
+//       super.key});
+//   final ReportContentType reportContentType;
+//   final String contentId;
+//   final String reportedUserId;
+//   final bool isBlocked;
+
+//   @override
+//   Widget build(final BuildContext context) {
+//     String reportText;
+//     switch (reportContentType) {
+//       case ReportContentType.post:
+//         reportText = "Report Post";
+//       case ReportContentType.message:
+//         reportText = "Report Message";
+//       case ReportContentType.comment:
+//         reportText = "Report Comment";
+//     }
+
+//     return ButtonBuilders.createTextButton(
+//       Icons.report,
+//       reportText,
+//       Colors.red.shade700,
+//       () {
+//         Navigator.pop(context);
+//         WidgetsBinding.instance.addPostFrameCallback((final _) {
+//           Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+//               .hide();
+//         });
+//         ModalBottomSheet.show(
+//             context: context,
+//             builder: (final context) => ReportReasonBottomSheet(
+//                   reportContentType: reportContentType,
+//                   contentId: contentId,
+//                   reportedUserId: reportedUserId,
+//                   isBlocked: isBlocked,
+//                 ),
+//             startSize: 0.65);
+//       },
+//     );
+//   }
+// }

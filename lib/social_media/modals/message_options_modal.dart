@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
 import "package:flutter_chat_types/flutter_chat_types.dart";
 import "package:patinka/social_media/report_content_type.dart";
-import "package:patinka/social_media/user_reports/buttons.dart";
+import "package:patinka/social_media/user_reports/buttons/block_button.dart";
+import "package:patinka/social_media/user_reports/buttons/save_button.dart";
+import "package:patinka/social_media/user_reports/buttons/report_button.dart";
 
 class MessageOptionsBottomSheet extends StatelessWidget { // Replace with actual comment model type
 
@@ -17,11 +19,11 @@ class MessageOptionsBottomSheet extends StatelessWidget { // Replace with actual
         ReportButton(
             reportContentType: ReportContentType.message,
             contentId: message.id,
-            reportedUserId: message.author.id,
+            userId: message.author.id,
             //TODO: Add check for is blocked
             isBlocked: false),
 
-        BlockButton(blockUserId: message.author.id)
+        BlockButton(userId: message.author.id)
       ],
     );
 }

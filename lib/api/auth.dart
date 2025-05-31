@@ -28,6 +28,8 @@ class AuthenticationAPI {
             name: "user-email-verified",
             type: CacheTypes.verified,
             data: y["verified"]);
+        NetworkManager.instance.saveData(
+            name: "user-id", type: CacheTypes.misc, data: y["user_id"]);
         return y["token"];
       } else {
         // If the response is not successful, throw an exception with the reason phrase
@@ -80,4 +82,48 @@ class AuthenticationAPI {
       throw Exception("Error during punishment verification: $e");
     }
   }
+
+
+// Method to only be used to update the cache of the user's own id
+    static Future<String> _fetchUserId() async {
+    final url = Uri.parse("${Config.uri}/user/id");
+
+    try {
+      final response = await http.get(
+        url,
+        headers: await Config.getDefaultHeadersAuth,
+      );
+
+      if (response.statusCode == 200) {
+        return handleResponse(response, Resp.stringResponse)["user_id"];
+      } else {
+        throw Exception(
+            "Error during id fetch: ${response.reasonPhrase}");
+      }
+    } catch (e) {
+      throw Exception("Error during id fetch: $e");
+    }
+  }
+  /// Simple method to get the logged in userid
+  /// This only gets the cached id and should not be relied on.
+  /// Only use this for GUI changes and such.
+  /// Only send to server if it does its own checks
+  static Future<String> getUserId() async {
+    // Attempt to load user id from cache
+    final String? userIdCache = await NetworkManager.instance.getLocalData(
+            name: "user-id", type: CacheTypes.misc);
+
+            // If it cannot be found in cache then ask for it from the server
+            if(userIdCache == null) {
+              final String fetchedUserId = await _fetchUserId();
+              // Save the data to the cache for future reference
+               NetworkManager.instance.saveData(
+            name: "user-id", type: CacheTypes.misc, data: fetchedUserId);
+            // Return the id back to the caller
+            return fetchedUserId;
+
+            }
+            // Return the id back to the caller while removing unused quotations
+            return userIdCache.replaceAll('"', "");
+            }
 }

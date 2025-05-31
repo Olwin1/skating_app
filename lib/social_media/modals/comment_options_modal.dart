@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:patinka/social_media/report_content_type.dart";
-import "package:patinka/social_media/user_reports/buttons.dart";
+import "package:patinka/social_media/user_reports/buttons/block_button.dart";
+import "package:patinka/social_media/user_reports/buttons/report_button.dart";
 
 class CommentOptionsBottomSheet extends StatelessWidget { // Replace with actual comment model type
 
@@ -13,8 +14,8 @@ class CommentOptionsBottomSheet extends StatelessWidget { // Replace with actual
   Widget build(final BuildContext context) => Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ReportButton(reportContentType: ReportContentType.comment, contentId: comment["comment_id"], reportedUserId: comment["sender_id"], isBlocked: false,),
-        BlockButton(blockUserId: comment["sender_id"])
+        ReportButton(reportContentType: ReportContentType.comment, contentId: comment["comment_id"], userId: comment["sender_id"], isBlocked: false,),
+        BlockButton(userId: comment["sender_id"])
       ],
     );
 }

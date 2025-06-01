@@ -18,7 +18,7 @@ import "package:patinka/common_logger.dart";
 import "package:patinka/misc/default_profile.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/modals/message_options_modal.dart";
-import "package:patinka/social_media/private_messages/session_notification.dart";
+import "package:patinka/misc/notifications/session_notification.dart";
 import "package:patinka/social_media/user_reports/report_user.dart";
 import "package:patinka/social_media/utils/current_channel.dart";
 import "package:patinka/swatch.dart";

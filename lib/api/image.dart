@@ -2,6 +2,7 @@
 import "dart:io";
 import "dart:typed_data";
 
+import "package:flutter/material.dart";
 import "package:flutter_image_compress/flutter_image_compress.dart";
 import "package:http/http.dart" as http;
 import "package:http/http.dart";
@@ -12,6 +13,9 @@ import "package:path_provider/path_provider.dart";
 import "package:patinka/api/config.dart";
 import "package:patinka/caching/manager.dart";
 import "package:patinka/common_logger.dart";
+import "package:patinka/misc/notifications/error_notification.dart"
+    as error_notification;
+import "package:patinka/services/navigation_service.dart";
 
 // Exporting functions from the messages.dart file
 export "package:patinka/api/image.dart";
@@ -65,7 +69,14 @@ Future<StreamedResponse?> uploadFile(final Uint8List image) async {
 
       return response;
     } else {
-      // TODO Add a proper error handler
+      // Notification handler for failure
+      final GlobalKey<NavigatorState> navigatorState =
+          NavigationService.currentNavigatorKey;
+      if (navigatorState.currentContext != null) {
+        // If a build context could be found then show a failure message to the user
+        error_notification.showNotification(
+            navigatorState.currentContext!, "Image Failed To Upload");
+      }
       // Otherwise, print an error message to the console
       commonLogger.e("Response: Non 200 - $response");
 

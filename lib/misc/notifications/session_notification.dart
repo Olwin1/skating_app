@@ -4,12 +4,13 @@ import "package:flutter/material.dart";
 import "package:in_app_notification/in_app_notification.dart";
 import "package:patinka/api/messages.dart";
 import "package:patinka/api/social.dart";
+import "package:patinka/misc/notifications/animated_line.dart";
 import "package:patinka/social_media/post_widget.dart";
 import "package:patinka/social_media/private_messages/private_message.dart";
 import "package:patinka/social_media/utils/current_channel.dart";
 import "package:patinka/swatch.dart";
 
-int dur = 3;
+const int dur = 3;
 Map<String, dynamic>? user;
 Map<String, dynamic>? channel;
 void handleTap(
@@ -40,9 +41,9 @@ void handleTap(
 
 void showNotification(final BuildContext context,
     final Map<String, dynamic> data, final String currentUser) {
-      if(CurrentMessageChannel.instance.getTopStack == data["channel"]) {
-        return;
-      }
+  if (CurrentMessageChannel.instance.getTopStack == data["channel"]) {
+    return;
+  }
   InAppNotification.show(
       onTap: () =>
           handleTap(context, user, channel, currentUser, data["channel"]),
@@ -53,9 +54,10 @@ void showNotification(final BuildContext context,
         content: data["content"],
         channelId: data["channel"],
         currentUser: currentUser,
+        duration: dur
       ),
       context: context,
-      duration: Duration(seconds: dur));
+      duration: const Duration(seconds: dur));
 }
 
 class NotificationBody extends StatelessWidget {
@@ -64,6 +66,7 @@ class NotificationBody extends StatelessWidget {
       required this.content,
       required this.channelId,
       required this.currentUser,
+      required this.duration,
       super.key,
       this.count = 0,
       this.minHeight = 0.0});
@@ -73,6 +76,7 @@ class NotificationBody extends StatelessWidget {
   final String content;
   final String channelId;
   final String currentUser;
+  final int duration;
 
   void init() {
     // Get the current user's identifier and set the state
@@ -133,59 +137,8 @@ class NotificationBody extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              const AnimatedLine()
+              AnimatedLine(duration: duration)
               //Container(color: Colors.green, width: double.maxFinite, height: 3)
             ])));
   }
-}
-
-class AnimatedLine extends StatefulWidget {
-  const AnimatedLine({super.key});
-
-  @override
-  AnimatedLineState createState() => AnimatedLineState();
-}
-
-class AnimatedLineState extends State<AnimatedLine>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: Duration(seconds: dur + 1),
-      vsync: this,
-    );
-
-    _animation = Tween<double>(begin: 1.0, end: 0.0).animate(_controller)
-      ..addListener(() {
-        setState(() {});
-      });
-
-    // Start the animation
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(final BuildContext context) => SizedBox(
-        width: double.maxFinite,
-        height: 2, // Height of the line
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: FractionallySizedBox(
-            widthFactor: _animation.value,
-            child: Container(
-              color: swatch[601],
-            ),
-          ),
-        ),
-      );
 }

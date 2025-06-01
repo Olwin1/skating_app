@@ -12,7 +12,7 @@ import "package:patinka/common_logger.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/private_messages/list_widget.dart";
 import "package:patinka/social_media/private_messages/new_channel.dart";
-import "package:patinka/social_media/private_messages/session_notification.dart";
+import "package:patinka/misc/notifications/session_notification.dart";
 import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
 import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/current_channel.dart";

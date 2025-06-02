@@ -165,6 +165,13 @@ class _PrivateMessage extends State<PrivateMessage> {
     });
   }
 
+// Update the Last Message text in the channel scroll view
+  void _updateLastMessageOnChannelList(final String? content) {
+    if (widget.updateChannelMessage != null && content != null) {
+      widget.updateChannelMessage!(content);
+    }
+  }
+
   void _resetTypingTimer() {
     _typingTimer?.cancel();
     _typingTimer = Timer(typingDelay, _onTypingStopped);
@@ -267,14 +274,8 @@ class _PrivateMessage extends State<PrivateMessage> {
             })
           : null;
 
-      //TODO Convert to a widget and function when next available
-
-      // Update last message sent on channel menu
-      if (widget.updateChannelMessage != null) {
-        // ignore: prefer_null_aware_method_calls
-        widget.updateChannelMessage!(data["content"]);
-      }
-      // -------------------
+// Update the Last Message text in the channel scroll view
+      _updateLastMessageOnChannelList(data["content"]);
 
       getIt<WebSocketConnection>().emitSeenMessage(
           data["channel"], data["messageNumber"], data["messageId"]);
@@ -624,14 +625,10 @@ class _PrivateMessage extends State<PrivateMessage> {
           })
         : null;
 
-    //TODO Convert to a widget and function when next available
-
-    // Update last message sent on channel menu
-    if (widget.updateChannelMessage != null && message is types.TextMessage) {
-      // ignore: prefer_null_aware_method_calls
-      widget.updateChannelMessage!(message.text);
+// Update the last message text on the channel list
+    if (message is types.TextMessage) {
+      _updateLastMessageOnChannelList(message.text);
     }
-    // ----------------------------
   }
 
   // Function to handle send button press

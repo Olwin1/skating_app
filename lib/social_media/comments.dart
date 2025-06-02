@@ -13,6 +13,8 @@ import "package:patinka/social_media/utils/components/list_view/paging_controlle
 import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";
+import "package:patinka/misc/notifications/error_notification.dart"
+    as error_notification;
 
 // Initialize an empty list to store new comments
 List<Map<String, dynamic>> newComments = [];
@@ -96,8 +98,13 @@ class _Comments extends State<Comments> {
                   .then((final value) => genericStateController.refresh());
 
               commentController.clear();
+            } else {
+              // If the user is muted display a notification to say so
+              error_notification.showNotification(
+                  context, "You're Muted. Try again later.");
+              // Clear message so it feels the same as normal
+              commentController.clear();
             }
-            // TODO: Add handler to tell user they are muted
           },
           backgroundColor: swatch[50],
           textColor: swatch[801],
@@ -161,7 +168,8 @@ class CommentsListView extends StatefulWidget {
 }
 
 class _CommentsListViewState extends State<CommentsListView> {
-  Future<List<Map<String, dynamic>>?> _getNextPage(final int pageKey, final int pageSize) async {
+  Future<List<Map<String, dynamic>>?> _getNextPage(
+      final int pageKey, final int pageSize) async {
     // Fetch the page of comments using the getComments() function
     final page = [
       ...await SocialAPI.getComments(widget.post, pageKey),
@@ -205,9 +213,8 @@ class _CommentsListViewState extends State<CommentsListView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    bottomBarVisibilityProvider = Provider.of<BottomBarVisibilityProvider>(
-        context,
-        listen: false);
+    bottomBarVisibilityProvider =
+        Provider.of<BottomBarVisibilityProvider>(context, listen: false);
   }
 
   @override

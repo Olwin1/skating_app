@@ -166,7 +166,8 @@ class PostsListViewState extends State<PostsListView> {
   List<String> seenPosts = [];
   Map<String, dynamic>? user;
 
-  Future<List<Map<String, dynamic>>?> _getNextPage(final int pageKey, final int pageSize) async {
+  Future<List<Map<String, dynamic>>?> _getNextPage(
+      final int pageKey, final int pageSize) async {
     commonLogger.t("Fetching page");
     final page = await SocialAPI.getPosts(pageKey);
 
@@ -178,19 +179,13 @@ class PostsListViewState extends State<PostsListView> {
     return page;
   }
 
-// TODO: add a special handler
-  // List<Object> handleLastPage(final List<Object> page) {
-  //   if ((genericStateController.pagingController.items == null ||
-  //           genericStateController.pagingController.items!.isEmpty) &&
-  //       page.isEmpty) {
-  //     return page;
-  //   } else {
-  //     return [
-  //       ...page,
-  //       {"last": true}
-  //     ];
-  //   }
-  // }
+  // Method to mark the last page in the list so padding can be added later
+  List<Map<String, dynamic>> _getLastPage(final List<Map<String, dynamic>> _) {
+    commonLogger.t("Loading last page");
+    return [
+      {"last": true}
+    ];
+  }
 
   @override
   void initState() {
@@ -215,7 +210,7 @@ class PostsListViewState extends State<PostsListView> {
         (final newState) =>
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
-        (final _) => []);
+        _getLastPage);
 
     super.initState();
   }

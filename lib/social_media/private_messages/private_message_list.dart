@@ -260,20 +260,13 @@ class _ChannelsListViewState extends State<ChannelsListView> {
     return page;
   }
 
-// TODO: Add a special handler
-  // List<Map<String, dynamic>> handleLastPage(
-  //     final List<Map<String, dynamic>> page) {
-  //   if ((genericStateController.pagingController.items == null ||
-  //           genericStateController.pagingController.items!.isEmpty) &&
-  //       page.isEmpty) {
-  //     return page;
-  //   } else {
-  //     return [
-  //       ...page,
-  //       {"last": true}
-  //     ];
-  //   }
-  // }
+  // Method to mark the last page in the list so padding can be added later
+  List<Map<String, dynamic>> _getLastPage(final List<Map<String, dynamic>> _) {
+    commonLogger.t("Loading last page");
+    return [
+      {"last": true}
+    ];
+  }
 
   @override
   void initState() {
@@ -283,7 +276,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
         (final newState) =>
             setState(() => genericStateController.pagingState = newState),
         _getNextPage,
-        (final _) => []);
+        _getLastPage);
     if (getIt<WebSocketConnection>().socket.disconnected) {
       getIt<WebSocketConnection>().socket.connect();
     }
@@ -330,7 +323,7 @@ class _ChannelsListViewState extends State<ChannelsListView> {
                 refreshPage: genericStateController.refresh),
       );
 
-      @override
+  @override
   void dispose() {
     subscriptionMessages.cancel();
     super.dispose();

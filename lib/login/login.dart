@@ -37,23 +37,29 @@ class _LoginPage extends State<LoginPage> {
     commonLogger.d(currentPage.toString());
 
     if (backgroundProgress == BackgroundProgress.notDownloading) {
-      final MediaQueryData mediaQuery = MediaQuery.of(context);
+      final mediaQuery = MediaQuery.of(context);
       final physicalPixelWidth =
           mediaQuery.size.width * mediaQuery.devicePixelRatio;
       final physicalPixelHeight =
           mediaQuery.size.height * mediaQuery.devicePixelRatio;
       downloadBackgroundImage(physicalPixelWidth, physicalPixelHeight)
-          .then((final value) => {
-                if (value) {backgroundProgress = BackgroundProgress.downloaded}
-              });
-      if (backgroundProgress == BackgroundProgress.notDownloading) {
-        backgroundProgress = BackgroundProgress.downloading;
-      }
+          .then((final value) {
+        if (value) {
+          setState(() {
+            backgroundProgress = BackgroundProgress.downloaded;
+          });
+        }
+      });
+      backgroundProgress = BackgroundProgress.downloading;
     }
+
     return Scaffold(
-        body: Stack(children: [
-      SingleChildScrollView(
-          child: SizedBox(
+      resizeToAvoidBottomInset: true,
+      body: Stack(
+        children: [
+          // BACKGROUND
+          SingleChildScrollView(
+            child: SizedBox(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: ImageFiltered(
@@ -66,34 +72,53 @@ class _LoginPage extends State<LoginPage> {
                       fit: BoxFit.cover,
                       alignment: Alignment.bottomLeft,
                       colorFilter: ColorFilter.mode(
-                        Colors.black.withValues(alpha: 0.4),
+                        Colors.black.withOpacity(0.4),
                         BlendMode.srcOver,
                       ),
                     ),
                   ),
                   padding: const EdgeInsets.all(16),
                 ),
-              ))),
-      Stack(
-        children: <Widget>[
-          Positioned(
-            top: 200,
-            left: 0,
-            child: TextMorphingAnimation(
-              page: currentPage,
+              ),
             ),
           ),
-          const Positioned(top: 290, right: 0, bottom: 0, child: LayerOne()),
-          const Positioned(top: 318, right: 0, bottom: 28, child: LayerTwo()),
-          LayerThree(
-            loggedIn: widget.loggedIn,
-            setLoggedIn: widget.setLoggedIn,
-            callback: switchPage,
-            page: currentPage,
+
+          // FOREGROUND LAYERS
+          // Wrap in a scroll view so when keyboard is pulled up it will not cover content
+          SingleChildScrollView(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: IntrinsicHeight(
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 200,
+                      left: 0,
+                      child: TextMorphingAnimation(page: currentPage),
+                    ),
+                    const Positioned(
+                        top: 290, right: 0, bottom: 0, child: LayerOne()),
+                    const Positioned(
+                        top: 318, right: 0, bottom: 28, child: LayerTwo()),
+                    LayerThree(
+                      loggedIn: widget.loggedIn,
+                      setLoggedIn: widget.setLoggedIn,
+                      callback: switchPage,
+                      page: currentPage,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
-      )
-    ]));
+      ),
+    );
   }
 }
 
@@ -132,27 +157,29 @@ class TextMorphingAnimationState extends State<TextMorphingAnimation> {
 
   @override
   Widget build(final BuildContext context) => SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: AnimatedSwitcher(
-              transitionBuilder: (final Widget child, final Animation<double> animation) => FadeTransition(opacity: animation, child: child),
-              duration: const Duration(seconds: 1),
-              child: Text(
-                getTextForPage(widget.page),
-                key: ValueKey<PageType>(widget.page),
-                style: TextStyle(
-                  fontSize: 40.0,
-                  fontWeight: FontWeight.w900,
-                  foreground: Paint()
-                    ..color = titleColour
-                    ..maskFilter = const MaskFilter.blur(
-                      BlurStyle.solid,
-                      10.0,
-                    ),
-                ),
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: AnimatedSwitcher(
+            transitionBuilder:
+                (final Widget child, final Animation<double> animation) =>
+                    FadeTransition(opacity: animation, child: child),
+            duration: const Duration(seconds: 1),
+            child: Text(
+              getTextForPage(widget.page),
+              key: ValueKey<PageType>(widget.page),
+              style: TextStyle(
+                fontSize: 40.0,
+                fontWeight: FontWeight.w900,
+                foreground: Paint()
+                  ..color = titleColour
+                  ..maskFilter = const MaskFilter.blur(
+                    BlurStyle.solid,
+                    10.0,
+                  ),
               ),
-            )));
+            ),
+          )));
 
   String getTextForPage(final PageType page) {
     switch (page) {

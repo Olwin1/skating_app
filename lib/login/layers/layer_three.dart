@@ -6,14 +6,15 @@ import "package:patinka/login/layers/components/verify.dart";
 import "package:patinka/login/page_type.dart";
 
 class LayerThree extends StatelessWidget {
-  const LayerThree(
-      {required this.callback,
-      required this.page,
-      required this.loggedIn,
-      super.key,
-      this.setLoggedIn});
-  final Function
-      callback; // A function to be called when the image has been edited and confirmed.
+  const LayerThree({
+    required this.callback,
+    required this.page,
+    required this.loggedIn,
+    super.key,
+    this.setLoggedIn,
+  });
+
+  final Function callback;
   final PageType page;
   final bool loggedIn;
   final dynamic setLoggedIn;
@@ -26,49 +27,44 @@ class LayerThree extends StatelessWidget {
       setLoggedIn: setLoggedIn,
     );
     double top = 320;
+
     switch (page) {
       case PageType.signup:
-        activeComponent = SignupComponent(
-          callback: callback,
-        );
+        activeComponent = SignupComponent(callback: callback);
         top = 270;
+        break;
       case PageType.forgotPassword:
-        activeComponent = ForgotComponent(
-          callback: callback,
-        );
+        activeComponent = ForgotComponent(callback: callback);
         top = 290;
+        break;
       case PageType.verificationCode:
-        activeComponent = VerifyComponent(
-          callback: callback,
-        );
+        activeComponent = VerifyComponent(callback: callback);
+        top = 300;
+        break;
       default:
         break;
     }
 
-    return Stack(
-      children: [
-        Positioned(
-          top: top,
-          right: 0,
-          bottom: 48,
-          child: AnimatedSwitcher(
-            transitionBuilder:
-                (final Widget child, final Animation<double> animation) =>
-                    SlideTransition(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(height: top),
+          AnimatedSwitcher(
+            duration: const Duration(seconds: 1),
+            transitionBuilder: (final Widget child, final Animation<double> animation) =>
+                SlideTransition(
               position: Tween<Offset>(
-                begin: const Offset(1.0, 0.0), // Slide from the right
+                begin: const Offset(1.0, 0.0),
                 end: const Offset(0.0, 0.05),
               ).animate(animation),
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
-              ),
+              child: FadeTransition(opacity: animation, child: child),
             ),
-            duration: const Duration(seconds: 1),
             child: activeComponent,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

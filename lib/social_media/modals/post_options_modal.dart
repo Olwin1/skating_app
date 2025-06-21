@@ -25,7 +25,7 @@ class PostOptionsBottomSheet extends StatelessWidget {
             reportContentType: ReportContentType.post,
             contentId: post["post_id"],
             userId: post["author_id"],
-            isBlocked: false,
+            isBlocked: null,
             ),
       ],
     );

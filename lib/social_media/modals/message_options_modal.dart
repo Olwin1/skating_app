@@ -23,7 +23,7 @@ class MessageOptionsBottomSheet extends StatelessWidget { // Replace with actual
             contentId: message.id,
             userId: message.author.id,
             //TODO: Add check for is blocked
-            isBlocked: false),
+            isBlocked: null),
 
         BlockButton(userId: message.author.id)
       ],

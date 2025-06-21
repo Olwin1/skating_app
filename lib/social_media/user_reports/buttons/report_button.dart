@@ -1,7 +1,11 @@
 import "package:flutter/material.dart";
 import "package:patinka/api/auth.dart";
+import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/report_content_type.dart";
 import "package:patinka/social_media/user_reports/buttons/tri_button_state_toggle.dart";
+import "package:patinka/social_media/user_reports/report_reason.dart";
+import "package:patinka/social_media/user_reports/report_user.dart";
+import "package:provider/provider.dart";
 
 class ReportButton extends TriButtonStateToggle<ReportButton> {
   const ReportButton(
@@ -13,7 +17,7 @@ class ReportButton extends TriButtonStateToggle<ReportButton> {
 
   final ReportContentType reportContentType;
   final String contentId;
-  final bool isBlocked;
+  final bool? isBlocked;
 
   @override
   TriButtonStateToggleState<ReportButton> createState() => _ReportButtonState();
@@ -23,17 +27,35 @@ class _ReportButtonState extends TriButtonStateToggleState<ReportButton> {
   @override
   Future<void> initButtonState() async {
     final String userId = await AuthenticationAPI.getUserId();
-      if (userId == widget.userId) {
-        setState(() => buttonState = ToggleButtonState.secondary);
-      } else {
-        setState(() => buttonState = ToggleButtonState.primary);
-      }
+    if (userId == widget.userId) {
+      setState(() => buttonState = ToggleButtonState.secondary);
+    } else {
+      setState(() => buttonState = ToggleButtonState.primary);
+    }
   }
 
   @override
   Future<void> onPrimaryPressed() async {
     // Report!!!!
-    
+    if (!mounted) {
+      return;
+    }
+    bool isBlocked = false;
+    if (widget.isBlocked != null) {
+      isBlocked = widget.isBlocked!;
+    }
+
+    ModalBottomSheet.show(
+        context: context,
+        builder: (final context) => ReportReasonBottomSheet(
+              reportContentType: widget.reportContentType,
+              contentId: widget.contentId,
+              reportedUserId: widget.userId,
+              isBlocked: isBlocked,
+            ));
+            // TODO ensure the navbar stays hidden
+                Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+                .hide(); // Show The Navbar
     //await SupportAPI.postReportMessage(widget.contentId);
   }
 

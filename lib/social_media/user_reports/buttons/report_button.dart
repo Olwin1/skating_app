@@ -55,7 +55,7 @@ class _ReportButtonState extends TriButtonStateToggleState<ReportButton> {
             ));
             // TODO ensure the navbar stays hidden
                 Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-                .hide(); // Show The Navbar
+                .hide(); // Hide The Navbar
     //await SupportAPI.postReportMessage(widget.contentId);
   }
 

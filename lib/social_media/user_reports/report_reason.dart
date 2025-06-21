@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:patinka/api/reports.dart";
 import "package:patinka/api/support.dart";
 import "package:patinka/common_logger.dart";
+import "package:patinka/services/navigation_service.dart";
 import "package:patinka/social_media/report_content_type.dart";
 import "package:patinka/social_media/user_reports/report_user.dart";
 import "package:patinka/social_media/user_reports/utils.dart";
@@ -108,11 +109,9 @@ class ReportReasonButton extends StatelessWidget {
         Navigator.pop(context); // Close the reason sheet after selecting
         final bool result = await handleReportCreation(
             reason, reportContentType, contentId, reportedUserId);
-        if (!context.mounted) {
-          return;
-        }
+        
         ModalBottomSheet.show(
-          context: context,
+          context: NavigationService.currentNavigatorKey.currentContext!,
           builder: (final context) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [

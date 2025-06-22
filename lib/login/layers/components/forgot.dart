@@ -16,42 +16,44 @@ class ForgotComponent extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => SizedBox(
-        height: 484,
-        width: MediaQuery.of(context).size.width,
-        child: Stack(
-          children: <Widget>[
-            InputSection(
+      height: 484,
+      width: MediaQuery.of(context).size.width,
+      child: Stack(
+        children: <Widget>[
+          InputSection(
+            left: 59,
+            top: 169,
+            label: "Email",
+            hint: "Enter your email",
+            controller: TextEditingController(),
+            // Submit if keyboard enter is pressed
+            callbackFunction: handleForgot,
+          ),
+          PageButton(
+            left: 87,
+            top: 296,
+            label: "Sign In",
+            callback: () => callback(PageType.login),
+          ),
+          PageButton(
+            right: 60,
+            top: 296,
+            label: "Signup",
+            callback: () => callback(PageType.signup),
+          ),
+          MainButton(
+            top: 365,
+            label: "Reset Password",
+            callback: handleForgot,
+          ),
+          Positioned(
+              top: 432,
               left: 59,
-              top: 169,
-              label: "Email",
-              hint: "Enter your email",
-              controller: TextEditingController(),
-            ),
-            PageButton(
-              left: 87,
-              top: 296,
-              label: "Sign In",
-              callback: () => callback(PageType.login),
-            ),
-            PageButton(
-              right: 60,
-              top: 296,
-              label: "Signup",
-              callback: () => callback(PageType.signup),
-            ),
-            MainButton(
-              top: 365,
-              label: "Reset Password",
-              callback: handleForgot,
-            ),
-            Positioned(
-                top: 432,
-                left: 59,
-                child: Container(
-                  height: 0.5,
-                  width: 310,
-                  color: inputBorder,
-                )),
-          ],
-        ));
+              child: Container(
+                height: 0.5,
+                width: 310,
+                color: inputBorder,
+              )),
+        ],
+      ));
 }

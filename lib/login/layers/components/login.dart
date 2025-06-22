@@ -27,6 +27,7 @@ class LoginComponent extends StatefulWidget {
 class _LoginComponent extends State<LoginComponent> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  FocusNode focusNodePassword = FocusNode();
   bool errorText = false;
   void loadHome() {
     widget.setLoggedIn(true);
@@ -55,6 +56,11 @@ class _LoginComponent extends State<LoginComponent> {
     }
   }
 
+// When submitting username focus onto password
+  void handleUsernameInputSubmit() {
+    focusNodePassword.requestFocus();
+  }
+
   @override
   Widget build(final BuildContext context) => SizedBox(
       height: 584,
@@ -66,7 +72,9 @@ class _LoginComponent extends State<LoginComponent> {
             top: 99,
             label: "Username",
             hint: "Enter your username",
+            // Move focus onto next text input
             controller: usernameController,
+            callbackFunction: handleUsernameInputSubmit,
           ),
           InputSection(
             left: 59,
@@ -75,6 +83,9 @@ class _LoginComponent extends State<LoginComponent> {
             hint: "Enter your password",
             controller: passwordController,
             hidden: true,
+            // Submit if keyboard enter is pressed
+            focusNode: focusNodePassword,
+            callbackFunction: handleSignin,
           ),
           errorText
               ? const Positioned(
@@ -100,6 +111,7 @@ class _LoginComponent extends State<LoginComponent> {
           MainButton(
             top: 365,
             label: "Sign In",
+            // Submit if keyboard enter is pressed
             callback: handleSignin,
           ),
           Positioned(

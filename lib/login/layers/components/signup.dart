@@ -20,6 +20,8 @@ class _SignupComponent extends State<SignupComponent> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final FocusNode focusNodeUsername = FocusNode();
+  final FocusNode focusNodePassword = FocusNode();
   bool errorText = false;
 
   void handleSignup() async {
@@ -51,6 +53,8 @@ class _SignupComponent extends State<SignupComponent> {
             label: "Email",
             hint: "Enter your email",
             controller: emailController,
+            // Move focus onto next text input
+            callbackFunction: focusNodeUsername.requestFocus,
           ),
           InputSection(
             left: 59,
@@ -58,14 +62,21 @@ class _SignupComponent extends State<SignupComponent> {
             label: "Username",
             hint: "Enter your username",
             controller: usernameController,
+            // Move focus onto next text input
+            callbackFunction: focusNodePassword.requestFocus,
+            focusNode: focusNodeUsername,
           ),
           InputSection(
-              left: 59,
-              top: 299,
-              label: "Password",
-              hint: "Enter your password",
-              controller: passwordController,
-              hidden: true),
+            left: 59,
+            top: 299,
+            label: "Password",
+            hint: "Enter your password",
+            controller: passwordController,
+            hidden: true,
+            // Submit if keyboard enter is pressed
+            callbackFunction: handleSignup,
+            focusNode: focusNodePassword,
+          ),
           errorText
               ? const Positioned(
                   top: 380,
@@ -78,7 +89,7 @@ class _SignupComponent extends State<SignupComponent> {
           PageButton(
             left: 87,
             top: 396,
-            label: "Sign In",
+            label: "Sign Up",
             callback: () => widget.callback(PageType.login),
           ),
           PageButton(

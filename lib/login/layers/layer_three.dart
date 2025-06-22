@@ -32,15 +32,12 @@ class LayerThree extends StatelessWidget {
       case PageType.signup:
         activeComponent = SignupComponent(callback: callback);
         top = 270;
-        break;
       case PageType.forgotPassword:
         activeComponent = ForgotComponent(callback: callback);
         top = 290;
-        break;
       case PageType.verificationCode:
         activeComponent = VerifyComponent(callback: callback);
         top = 300;
-        break;
       default:
         break;
     }

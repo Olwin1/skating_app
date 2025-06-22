@@ -7,14 +7,14 @@ import "package:patinka/api/config/config.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/misc/notifications/error_notification.dart"
+    as error_notification;
 import "package:patinka/social_media/comment.dart";
 import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
 import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";
-import "package:patinka/misc/notifications/error_notification.dart"
-    as error_notification;
 
 // Initialize an empty list to store new comments
 List<Map<String, dynamic>> newComments = [];

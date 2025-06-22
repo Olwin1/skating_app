@@ -4,9 +4,7 @@ import "package:cropperx/cropperx.dart";
 import "package:flutter/material.dart";
 
 class EditPost extends StatefulWidget {
-  final Function callback;
-  final bool selected;
-  final String selectedImage; // You may not need this on web.
+  // You may not need this on web.
 
   const EditPost({
     required this.callback,
@@ -14,6 +12,9 @@ class EditPost extends StatefulWidget {
     required this.selectedImage,
     super.key,
   });
+  final Function callback;
+  final bool selected;
+  final String selectedImage;
 
   @override
   State<EditPost> createState() => _EditPostWeb();

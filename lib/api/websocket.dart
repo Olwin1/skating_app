@@ -47,8 +47,7 @@ class WebSocketConnection {
           io.OptionBuilder()
               .setTransports(["websocket"]) // sets the transport method
               .disableAutoConnect() // Don't connect until told to
-              .setExtraHeaders(
-                  {"token": await storage.getToken()}) // sets extra headers
+              .setAuth({"token": await storage.getToken()}) // Set auth
               .build());
       // Adds a listener for the 'connect' event
       socket.onConnect((final _) {

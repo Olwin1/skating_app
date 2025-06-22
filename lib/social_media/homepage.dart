@@ -226,64 +226,47 @@ class PostsListViewState extends State<PostsListView> {
   }
 
   @override
-  Widget build(final BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-    double size = height >= width ? width : height;
-    if (size > 1080) {
-      size = 1080;
-    }
-
-    return Stack(
-      children: [
-        RefreshIndicator(
-          edgeOffset: 94,
-          onRefresh: refreshPage,
-          child: PagedListView<int, Object>(
-            clipBehavior: Clip.none,
-            cacheExtent: 1024,
-            state: genericStateController.pagingState,
-            fetchNextPage: genericStateController.getNextPage,
-            scrollController: widget.scrollController,
-            builderDelegate: PagedChildBuilderDelegate<Object>(
-              firstPageProgressIndicatorBuilder: (final context) =>
-                  _loadSkeleton(),
-              noItemsFoundIndicatorBuilder: (final context) => ListError(
-                  message: Pair<String>(
-                      AppLocalizations.of(context)!.noPostsFound,
-                      AppLocalizations.of(context)!.makeFriends)),
-              itemBuilder: (final context, final dynamic item, final index) =>
-                  item["last"] == true
-                      ? const SizedBox(
-                          height: 72,
-                        )
-                      : index == 0
-                          ? Padding(
-                              padding: const EdgeInsets.only(top: 106),
-                              child: SizedBox(
-                                width: size,
-                                height: size,
+  Widget build(final BuildContext context) => Stack(
+        children: [
+          RefreshIndicator(
+            edgeOffset: 94,
+            onRefresh: refreshPage,
+            child: PagedListView<int, Object>(
+              clipBehavior: Clip.none,
+              cacheExtent: 1024,
+              state: genericStateController.pagingState,
+              fetchNextPage: genericStateController.getNextPage,
+              scrollController: widget.scrollController,
+              builderDelegate: PagedChildBuilderDelegate<Object>(
+                firstPageProgressIndicatorBuilder: (final context) =>
+                    _loadSkeleton(),
+                noItemsFoundIndicatorBuilder: (final context) => ListError(
+                    message: Pair<String>(
+                        AppLocalizations.of(context)!.noPostsFound,
+                        AppLocalizations.of(context)!.makeFriends)),
+                itemBuilder: (final context, final dynamic item, final index) =>
+                    item["last"] == true
+                        ? const SizedBox(
+                            height: 72,
+                          )
+                        : index == 0
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 106),
                                 child: PostWidget(
                                   post: item,
                                   index: index,
                                   user: user,
                                 ),
-                              ),
-                            )
-                          : SizedBox(
-                              width: size,
-                              height: size,
-                              child: PostWidget(
+                              )
+                            : PostWidget(
                                 post: item,
                                 index: index,
                                 user: user,
                               ),
-                            ),
+              ),
+              padding: const EdgeInsets.all(8),
             ),
-            padding: const EdgeInsets.all(8),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 }

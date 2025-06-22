@@ -1,7 +1,7 @@
 import "dart:ui";
 
 import "package:flutter/material.dart";
-import "package:patinka/api/image.dart";
+import "package:patinka/api/image/image.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/login/config.dart";
 import "package:patinka/login/layers/layer_one.dart";

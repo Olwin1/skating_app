@@ -1,12 +1,11 @@
-import "dart:io";
-
 import "package:firebase_messaging/firebase_messaging.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/api/fcm_token.dart";
 import "package:patinka/api/messages.dart";
 import "package:patinka/api/social.dart";
@@ -14,6 +13,8 @@ import "package:patinka/caching/manager.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/components/list_error.dart";
 import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/misc/supported_platforms/platform_stub.dart"
+    if (dart.library.io) "package:patinka/misc/supported_platforms/platform_io.dart";
 import "package:patinka/social_media/post_widget.dart";
 import "package:patinka/social_media/private_messages/private_message_list.dart";
 import "package:patinka/social_media/search_bar.dart";
@@ -199,7 +200,8 @@ class PostsListViewState extends State<PostsListView> {
     });
 
     // Get FCM Token (excluding Windows and Linux)
-    if (!(Platform.isWindows || Platform.isLinux)) {
+    // TODO add web support
+    if (isMobilePlatform) {
       FirebaseMessaging.instance.getToken().then(
           (final fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);
     }

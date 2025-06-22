@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_overlay/flutter_overlay.dart";
 import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/components/list_error.dart";

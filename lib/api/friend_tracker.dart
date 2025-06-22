@@ -2,7 +2,7 @@
 import "dart:convert"; // For JSON encoding and decoding
 
 import "package:http/http.dart" as http; // HTTP client for making requests
-import "package:patinka/api/config.dart"; // Configuration file for the application
+import "package:patinka/api/config/config.dart"; // Configuration file for the application
 import "package:patinka/api/response_handler.dart"; // Custom response handler
 import "package:patinka/common_logger.dart"; // Custom logger for logging
 

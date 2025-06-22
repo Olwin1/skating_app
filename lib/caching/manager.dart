@@ -1,13 +1,14 @@
 import "dart:convert";
 
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 
 import "package:patinka/caching/ifile_manager.dart";
-import "package:patinka/caching/local_file.dart";
+import "package:patinka/caching/local_file/local_file_stub.dart"
+    if (dart.library.io) "package:patinka/caching/local_file/local_file_io.dart";
+
 import "package:patinka/caching/models/base_model.dart";
 
 class NetworkManager {
-
   NetworkManager._init() {
     fileManager = LocalFile();
   }
@@ -70,10 +71,11 @@ class NetworkManager {
 
   Future<bool> deleteUserLocalData({required final String targetUser}) async {
     try {
-      if(fileManager != null) {
+      if (fileManager != null) {
         await deleteLocalData(name: targetUser, type: CacheTypes.user);
         await deleteLocalData(name: "channels", type: CacheTypes.list);
-        await deleteLocalData(name: "user-posts-$targetUser", type: CacheTypes.list);
+        await deleteLocalData(
+            name: "user-posts-$targetUser", type: CacheTypes.list);
         return true;
       }
     } catch (e) {

@@ -1,8 +1,7 @@
-import "dart:io" show Platform;
-import "dart:ui";
-
-import "package:flutter/foundation.dart";
-
+import "package:flutter/foundation.dart" show kDebugMode;
+import "package:flutter/material.dart";
+import "package:patinka/api/config/platform_config_stub.dart"
+    if (dart.library.io) "package:patinka/api/config/platform_config_io.dart";
 import "package:patinka/api/token.dart";
 
 SecureStorage storage = SecureStorage();
@@ -10,20 +9,16 @@ SecureStorage storage = SecureStorage();
 enum CacheTypes { user, post, messages, list, misc, verified, background }
 
 class Config {
-  // static String uri =
-  //     Platform.isAndroid ? 'http://10.0.2.2:4000' : 'http://localhost:4000';
-  static String uri = kDebugMode
-      ? Platform.isAndroid
-          ? "http://10.0.2.2:4000"
-          : "http://localhost:4000"
-      : "https://sabreguild.com:4000";
+  static String uri = kDebugMode ? getBaseUri() : "https://sabreguild.com:4000";
+
   static Map<String, String>? defaultHeaders = {
     "Content-Type": "application/x-www-form-urlencoded"
   };
+
   static Future<Map<String, String>?> get getDefaultHeadersAuth async => {
-        // Set the request headers
         "Content-Type": "application/x-www-form-urlencoded",
         "Authorization": "Bearer ${await storage.getToken()}",
       };
+
   static Color appbarColour = const Color(0x66000000);
 }

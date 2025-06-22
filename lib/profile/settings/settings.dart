@@ -5,7 +5,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_phoenix/flutter_phoenix.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/api/token.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/profile/settings/blocked_users.dart";

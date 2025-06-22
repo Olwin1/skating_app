@@ -1,7 +1,7 @@
 import "package:firebase_core/firebase_core.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/material.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/api/fcm_token.dart";
 import "package:patinka/api/messages.dart";
 import "package:patinka/api/social.dart";

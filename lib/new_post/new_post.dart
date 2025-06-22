@@ -1,12 +1,11 @@
-import "dart:io";
-
 import "package:device_info_plus/device_info_plus.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/common_logger.dart";
-import "package:patinka/new_post/edit_post.dart";
+import "package:patinka/misc/supported_platforms/platform_stub.dart";
+import "package:patinka/new_post/edit_post/edit_post_mobile.dart";
 import "package:patinka/new_post/send_post.dart";
 import "package:patinka/services/navigation_service.dart";
 import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
@@ -110,15 +109,15 @@ class _NewPostPage extends State<NewPostPage> {
     // Check if the device is iOS and both the storage and photos permissions have been granted,
     // or if the device is Android and the storage permission has been granted.
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (isMobilePlatform) {
       final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      if (Platform.isIOS &&
+      if (!isAndroidPlatform &&
               await Permission.storage.request().isGranted &&
               await Permission.photos.request().isGranted ||
-          Platform.isAndroid &&
+          isAndroidPlatform &&
               androidInfo.version.sdkInt < 33 &&
               await Permission.storage.request().isGranted ||
-          Platform.isAndroid &&
+          isAndroidPlatform &&
               androidInfo.version.sdkInt >= 33 &&
               await Permission.photos.request().isGranted) {
         await Permission.videos.request();
@@ -278,16 +277,13 @@ class _PhotosGridViewState extends State<PhotosGridView> {
       "orientation": 1,
       "mimeType": "image/jpeg"
     });
-      // Add padding to bottom row of items.
-      final int rem = 5 -
-          ((pages.length) +
-                  pages.length) %
-              4;
-      final List<Medium> spacers = [];
-      for (int i = 0; i < rem; i++) {
-        spacers.add(padderItem);
-      }
-      return spacers;
+    // Add padding to bottom row of items.
+    final int rem = 5 - ((pages.length) + pages.length) % 4;
+    final List<Medium> spacers = [];
+    for (int i = 0; i < rem; i++) {
+      spacers.add(padderItem);
+    }
+    return spacers;
   }
 
   @override

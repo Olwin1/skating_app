@@ -2,7 +2,7 @@
 
 import "dart:async";
 
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/common_logger.dart";
 import "package:socket_io_client/socket_io_client.dart" as io;
 

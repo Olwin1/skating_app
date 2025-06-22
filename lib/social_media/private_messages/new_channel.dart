@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/api/messages.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/private_messages/suggestion_widget.dart";

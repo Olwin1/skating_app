@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/api/connections.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/profile/edit_profile.dart";

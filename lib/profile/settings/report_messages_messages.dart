@@ -3,7 +3,7 @@ import "package:comment_box/comment/comment.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/api/reports.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/misc/navbar_provider.dart";

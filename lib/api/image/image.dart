@@ -1,5 +1,4 @@
 // Importing the required dependencies
-import "dart:io";
 import "dart:typed_data";
 
 import "package:flutter/material.dart";
@@ -8,17 +7,16 @@ import "package:http/http.dart" as http;
 import "package:http/http.dart";
 import "package:http_parser/http_parser.dart";
 import "package:mime/mime.dart";
-import "package:path/path.dart" as path;
-import "package:path_provider/path_provider.dart";
-import "package:patinka/api/config.dart";
-import "package:patinka/caching/manager.dart";
+import "package:patinka/api/config/config.dart";
+import "package:patinka/api/image/image_manager_stub.dart"
+    if (dart.library.io) "package:patinka/api/image/image_manager_io.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/misc/notifications/error_notification.dart"
     as error_notification;
 import "package:patinka/services/navigation_service.dart";
 
 // Exporting functions from the messages.dart file
-export "package:patinka/api/image.dart";
+export "package:patinka/api/image/image.dart";
 
 Future<Uint8List> compressImage(final Uint8List image) async {
   final result = await FlutterImageCompress.compressWithList(
@@ -91,38 +89,17 @@ Future<StreamedResponse?> uploadFile(final Uint8List image) async {
 
 Future<bool> downloadBackgroundImage(
     final double physicalPixelWidth, final double physicalPixelHeight) async {
-  //try {
-  final String url = "${Config.uri}/image/background/graffiti.png";
-  final String e = url.split("/").last;
-  final Directory applicationDocumentsDirectory =
-      await getApplicationDocumentsDirectory();
-  final String filePath = "/backgrounds/$e";
-  final File file = File(
-      path.join(applicationDocumentsDirectory.path, path.basename(filePath)));
+  try {
+    final String url = "${Config.uri}/image/background/graffiti.png";
 
-  // Check if the file already exists
-  if (await file.exists()) {
-    NetworkManager.instance.saveData(
-        name: "current-background",
-        data: filePath,
-        type: CacheTypes.background);
-    commonLogger.i("File already exists. Skipping download.");
-    // If the file already exists, you might want to return true to indicate success.
-    return true;
+    final response = await http.get(Uri.parse(url), headers: {
+      "width": physicalPixelWidth.toString(),
+      "height": physicalPixelHeight.toString()
+    });
+
+    return await saveBackgroundFile(response.bodyBytes, url);
+  } catch (e) {
+    commonLogger.e("Error downloading background image: $e");
+    return false;
   }
-
-  final response = await http.get(Uri.parse(url), headers: {
-    "width": physicalPixelWidth.toString(),
-    "height": physicalPixelHeight.toString()
-  });
-
-  await file.writeAsBytes(response.bodyBytes);
-  NetworkManager.instance.saveData(
-      name: "current-background", data: filePath, type: CacheTypes.background);
-  return true;
-  //} catch (e) {
-  // If an error occurs during the file download process, print an error message to the console
-  //commonLogger.e("An Error Occurred during file download: $e");
-  //return false;
-  //}
 }

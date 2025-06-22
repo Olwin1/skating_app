@@ -6,7 +6,7 @@ import "package:flutter/services.dart";
 import "package:flutter_phoenix/flutter_phoenix.dart";
 import "package:http/http.dart";
 import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
-import "package:patinka/api/image.dart";
+import "package:patinka/api/image/image.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/new_post/avatar_interact.dart";

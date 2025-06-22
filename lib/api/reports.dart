@@ -1,6 +1,6 @@
 // Import necessary libraries and modules
 import "package:http/http.dart" as http;
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/api/response_handler.dart";
 import "package:patinka/social_media/report_content_type.dart";
 

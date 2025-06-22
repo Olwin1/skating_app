@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/profile/connections_list.dart";
 import "package:patinka/profile/list_type.dart";
 import "package:patinka/swatch.dart";

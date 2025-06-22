@@ -1,6 +1,6 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/misc/default_profile.dart";
 import "package:patinka/swatch.dart";
 import "package:shimmer/shimmer.dart";

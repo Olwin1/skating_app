@@ -3,27 +3,18 @@ import "dart:io";
 import "package:flutter/material.dart";
 import "package:path/path.dart" as path;
 import "package:path_provider/path_provider.dart";
-import "package:patinka/api/config.dart";
-import "package:patinka/api/image.dart";
+import "package:patinka/api/config/config.dart";
+import "package:patinka/api/image/image.dart";
 import "package:patinka/caching/manager.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/services/navigation_service.dart";
 
-class Utils {
-  static void getImage(final String filePath, final Function callback) {
-    getApplicationDocumentsDirectory()
-        .then((final applicationDocumentsDirectory) {
-      final File file = File(path
-          .join(applicationDocumentsDirectory.path, path.basename(filePath))
-          .replaceAll('"',
-              "")); // Replace all " because it breaks it for some weird reason
-      commonLogger.d(file.existsSync());
-      final FileImage fileImage = FileImage(file);
-      callback(fileImage);
-    });
-  }
+class BaseUtils {
+  static void getImage(
+      final String filePath, final Function(ImageProvider) callback) {}
 
-  static void loadImage(final Function getImage, final MediaQueryData mediaQuery) {
+  static void loadImage(
+      final Function getImage, final MediaQueryData mediaQuery) {
     // getImage callback to set state in main class and then in turn call getImage in Utils
     NetworkManager.instance
         .getLocalData(name: "current-background", type: CacheTypes.background)

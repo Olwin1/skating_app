@@ -4,7 +4,7 @@ import "package:flutter/scheduler.dart";
 import "package:flutter/services.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_overlay/flutter_overlay.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/profile/profile_page/options_menu.dart";

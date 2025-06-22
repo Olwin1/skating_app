@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:patinka/api/auth.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/login/config.dart";

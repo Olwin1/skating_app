@@ -10,7 +10,7 @@ import "package:flutter_phoenix/flutter_phoenix.dart";
 import "package:get_it/get_it.dart";
 import "package:in_app_notification/in_app_notification.dart";
 import "package:patinka/api/auth.dart";
-import "package:patinka/api/config.dart";
+import "package:patinka/api/config/config.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/api/token.dart";
 import "package:patinka/api/websocket.dart";
@@ -23,10 +23,12 @@ import "package:patinka/login/login.dart";
 import "package:patinka/misc/default_profile.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/services/navigation_service.dart";
-import "package:patinka/social_media/utils/utils.dart";
+import "package:patinka/social_media/utils/utils/utils.dart";
 import "package:patinka/swatch.dart";
 import "package:patinka/tab_navigator.dart";
-import "package:patinka/window_manager/window_manager.dart";
+import "package:patinka/window_manager/window_manager_stub.dart"
+    if (dart.library.io) "package:patinka/window_manager/window_manager_desktop.dart";
+
 import "package:provider/provider.dart";
 import "package:shimmer/shimmer.dart";
 
@@ -180,7 +182,8 @@ class _PunishmentEnforcer extends State<PunishmentEnforcer> {
                         fit: BoxFit.cover,
                         alignment: Alignment.center,
                         colorFilter: ColorFilter.mode(
-                            Colors.black.withValues(alpha: 0.4), BlendMode.srcOver)),
+                            Colors.black.withValues(alpha: 0.4),
+                            BlendMode.srcOver)),
                   ),
                   padding: const EdgeInsets.all(16))),
           Center(

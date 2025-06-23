@@ -308,28 +308,22 @@ class _Settings extends State<Settings> {
                             }),
 
                         // Navigation tile for support staff to see reports
-                        //TODO: ADD HANDLER IF DOES NOT EXIST SO DISABLED BUTTON IS NOT VISIBLE TO NEW USERS
-                        widget.user!["user_role"] == "moderator" ||
-                                widget.user!["user_role"] == "administrator"
-                            ? SettingsTile.navigation(
-                                leading: const Icon(Icons.policy),
-                                title: Text(AppLocalizations.of(context)!
-                                    .reviewReports),
-                                onPressed: (final context) {
-                                  Navigator.of(context).push(
-                                      // Send to signal info page
-                                      MaterialPageRoute(
-                                          builder: (final context) =>
-                                              ReportList(
-                                                user: widget.user,
-                                                isSelf: false,
-                                              )));
-                                })
-                            : SettingsTile.navigation(
-                                leading: const Icon(Icons.construction),
-                                title: const Text("WIP"),
-                                enabled: false,
-                              ),
+                        // If the user is not a moderator or an admin then just don't display this section
+                        if (widget.user!["user_role"] == "moderator" ||
+                            widget.user!["user_role"] == "administrator")
+                          SettingsTile.navigation(
+                              leading: const Icon(Icons.policy),
+                              title: Text(
+                                  AppLocalizations.of(context)!.reviewReports),
+                              onPressed: (final context) {
+                                Navigator.of(context).push(
+                                    // Send to signal info page
+                                    MaterialPageRoute(
+                                        builder: (final context) => ReportList(
+                                              user: widget.user,
+                                              isSelf: false,
+                                            )));
+                              }),
                         SettingsTile.navigation(
                             leading: const Icon(Icons.policy),
                             title:

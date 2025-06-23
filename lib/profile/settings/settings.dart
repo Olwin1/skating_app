@@ -125,13 +125,15 @@ class _Settings extends State<Settings> {
                         // Navigation tile for email settings
                         SettingsTile.navigation(
                           leading: const Icon(Icons.next_plan_outlined),
-                          title: const Text("Planned Features"),
+                          title: Text(
+                              AppLocalizations.of(context)!.plannedFeatures),
                           onPressed: (final e) =>
                               {overlaySettings.features(context)},
                         ),
                         SettingsTile.navigation(
                           leading: const Icon(Icons.egg_alt_rounded),
-                          title: const Text("Suggest a Feature"),
+                          title: Text(
+                              AppLocalizations.of(context)!.suggestFeature),
                           onPressed: (final context) {
                             Navigator.of(context).push(
                                 // Send to signal info page
@@ -158,12 +160,14 @@ class _Settings extends State<Settings> {
                         ),
                         SettingsTile.navigation(
                           leading: const Icon(Icons.block),
-                          title: const Text("Blocked Users"),
+                          title:
+                              Text(AppLocalizations.of(context)!.blockedUsers),
                           onPressed: (final context) {
                             Navigator.of(context).push(
                                 // Send to blocked user list page
                                 MaterialPageRoute(
-                                    builder: (final context) => const BlockedUsersList()));
+                                    builder: (final context) =>
+                                        const BlockedUsersList()));
                           },
                           enabled: true,
                         ),
@@ -192,7 +196,8 @@ class _Settings extends State<Settings> {
                           onPressed: (final e) => {
                             // Remove stored tokens and restart app
                             storage.logout().then((final value) => {
-                                  if (context.mounted) {Phoenix.rebirth(context)}
+                                  if (context.mounted)
+                                    {Phoenix.rebirth(context)}
                                 })
                           },
                         ),
@@ -218,7 +223,8 @@ class _Settings extends State<Settings> {
                           onToggle: (final value) {},
                           initialValue: true,
                           leading: const Icon(Icons.mail_lock),
-                          title: const Text("Email Notifications"),
+                          title: Text(
+                              AppLocalizations.of(context)!.emailNotifications),
                           enabled: false,
                         ),
                       ],
@@ -259,7 +265,8 @@ class _Settings extends State<Settings> {
                         SettingsTile.navigation(
                           leading: const Icon(Icons.theater_comedy),
                           title: Text(AppLocalizations.of(context)!.theme),
-                          value: const Text("Default"),
+                          value:
+                              Text(AppLocalizations.of(context)!.systemDefault),
                           onPressed: (final e) =>
                               overlaySettings.theme(context),
                           enabled: false,
@@ -306,7 +313,8 @@ class _Settings extends State<Settings> {
                                 widget.user!["user_role"] == "administrator"
                             ? SettingsTile.navigation(
                                 leading: const Icon(Icons.policy),
-                                title: const Text("Review Reports"),
+                                title: Text(AppLocalizations.of(context)!
+                                    .reviewReports),
                                 onPressed: (final context) {
                                   Navigator.of(context).push(
                                       // Send to signal info page
@@ -324,7 +332,8 @@ class _Settings extends State<Settings> {
                               ),
                         SettingsTile.navigation(
                             leading: const Icon(Icons.policy),
-                            title: const Text("My Reports"),
+                            title:
+                                Text(AppLocalizations.of(context)!.myReports),
                             onPressed: (final context) {
                               Navigator.of(context).push(
                                   // Send to signal info page
@@ -338,7 +347,7 @@ class _Settings extends State<Settings> {
                         // Navigation tile for reporting a bug
                         SettingsTile.navigation(
                           leading: const Icon(Icons.bug_report),
-                          title: const Text("Report a bug"),
+                          title: Text(AppLocalizations.of(context)!.reportBug),
                           onPressed: (final context) {
                             Navigator.of(context).push(
                                 // Send to signal info page

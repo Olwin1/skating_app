@@ -2,6 +2,7 @@ import "dart:typed_data";
 
 import "package:cropperx/cropperx.dart";
 import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class EditPost extends StatefulWidget {
   // You may not need this on web.
@@ -79,7 +80,7 @@ class _EditPostWeb extends State<EditPost> {
               onScaleUpdate: (final _) {},
               onScaleEnd: (final _) {},
             )
-          : const Center(child: Text("No image selected.")),
+          : Center(child: Text(AppLocalizations.of(context)!.noImageSelected)),
     );
   }
 }

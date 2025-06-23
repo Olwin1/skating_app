@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class EditPost extends StatelessWidget {
   const EditPost({
@@ -14,5 +15,5 @@ class EditPost extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      const Center(child: Text("Platform not supported."));
+      Center(child: Text(AppLocalizations.of(context)!.platformNotSupported));
 }

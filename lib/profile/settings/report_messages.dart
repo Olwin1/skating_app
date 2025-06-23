@@ -102,16 +102,17 @@ class _Messages extends State<Messages> {
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 height: 100,
                 color: const Color(0xcc000000),
-                child: const Center(
+                child: Center(
                     child: Column(children: [
                   Text(
-                    "This Report Has Been Marked As Closed.",
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.reportMarkedAsClosed,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
                   ),
-                  Text("Reports marked as closed cannot be modified.")
+                  Text(AppLocalizations.of(context)!
+                      .closedReportsCannotBeModified)
                 ]))))
       ]);
     }

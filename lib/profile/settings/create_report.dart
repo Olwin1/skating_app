@@ -2,6 +2,7 @@
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:patinka/api/config/config.dart";
 import "package:patinka/api/support.dart";
 import "package:patinka/common_logger.dart";
@@ -12,7 +13,8 @@ import "package:provider/provider.dart";
 
 class SupportReportCreator extends StatefulWidget {
   // Create SupportReportCreator Class
-  const SupportReportCreator({final Key? key, this.defaultType}) : super(key: key);
+  const SupportReportCreator({final Key? key, this.defaultType})
+      : super(key: key);
   final SupportListType? defaultType;
   @override
   State<SupportReportCreator> createState() =>
@@ -288,56 +290,59 @@ class _SupportListTypeOptionsState extends State<SupportListTypeOptions> {
 
   @override
   Widget build(final BuildContext context) => DropdownButton<String>(
-      hint: const Text("Select A Report Type"),
-      iconEnabledColor: swatch[200],
-      // Set the value of the dropdown to `dropdownValueA` if `widget.id` is 1,
-      // otherwise set it to `dropdownValueB`
-      value: sdropdownValue(dropdownValue),
+        hint: Text(AppLocalizations.of(context)!.selectReportType),
+        iconEnabledColor: swatch[200],
+        // Set the value of the dropdown to `dropdownValueA` if `widget.id` is 1,
+        // otherwise set it to `dropdownValueB`
+        value: sdropdownValue(dropdownValue),
 
-      // Icon to display at the right of the dropdown button
-      icon: const Icon(Icons.arrow_downward),
+        // Icon to display at the right of the dropdown button
+        icon: const Icon(Icons.arrow_downward),
 
-      // Elevation of the dropdown when it's open
-      elevation: 16,
+        // Elevation of the dropdown when it's open
+        elevation: 16,
 
-      // Style for the text inside the dropdown button
-      style: TextStyle(color: swatch[701]),
+        // Style for the text inside the dropdown button
+        style: TextStyle(color: swatch[701]),
 
-      padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
 
-      // Style for the line under the dropdown button
-      underline: Container(
-        height: 2,
-        color: swatch[200],
-      ),
-      dropdownColor: swatch[900],
-      // Callback function called when an item is selected
-      onChanged: (final String? value) {
-        SupportListType val = SupportListType.bug;
-        switch (value) {
-          case "Feature Request":
-            val = SupportListType.suggestion;
-          case "Support Request":
-            val = SupportListType.support;
-        }
-        mounted
-            ? setState(() {
-                // Update the selected value in the corresponding `dropdownValue`
-                // depending on the value of `widget.id`
-                dropdownValue = val;
-              })
-            : null;
-        widget.callback(rdropdownValue(value ?? "Bug Report"));
-      },
+        // Style for the line under the dropdown button
+        underline: Container(
+          height: 2,
+          color: swatch[200],
+        ),
+        dropdownColor: swatch[900],
+        // Callback function called when an item is selected
+        onChanged: (final String? value) {
+          SupportListType val = SupportListType.bug;
+          switch (value) {
+            case "Feature Request":
+              val = SupportListType.suggestion;
+            case "Support Request":
+              val = SupportListType.support;
+          }
+          mounted
+              ? setState(() {
+                  // Update the selected value in the corresponding `dropdownValue`
+                  // depending on the value of `widget.id`
+                  dropdownValue = val;
+                })
+              : null;
+          widget.callback(rdropdownValue(value ?? "Bug Report"));
+        },
 
-      // Items to show in the dropdown
-      items: [
-        sdropdownValue(SupportListType.bug)!,
-        sdropdownValue(SupportListType.suggestion)!,
-        sdropdownValue(SupportListType.support)!
-      ].map<DropdownMenuItem<String>>((final String value) => DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        )).toList(),
-    );
+        // Items to show in the dropdown
+        items: [
+          sdropdownValue(SupportListType.bug)!,
+          sdropdownValue(SupportListType.suggestion)!,
+          sdropdownValue(SupportListType.support)!
+        ]
+            .map<DropdownMenuItem<String>>(
+                (final String value) => DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    ))
+            .toList(),
+      );
 }

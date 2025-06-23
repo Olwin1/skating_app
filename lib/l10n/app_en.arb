@@ -413,5 +413,98 @@
   "systemDefault": "System Default",
   "@systemDefault": {
     "description": "Will be displayed as a theme in theme selector"
+  },
+
+
+
+
+
+
+  "platformNotSupported": "Platform Not Supported",
+  "@platformNotSupported": {
+    "description": "Shown when a feature is unavailable on the user's current platform."
+  },
+  "noImageSelected": "No image selected.",
+  "@noImageSelected": {
+    "description": "Displayed on the edit post screen when no image has been chosen."
+  },
+  "selectReportType": "Select A Report Type",
+  "@selectReportType": {
+    "description": "Used as the hint text in a dropdown menu on the Create Report screen."
+  },
+
+  "subject": "Subject:",
+  "@subject": {
+    "description": "Label used in reports to indicate the subject field."
+  },
+  "status": "Status:",
+  "@status": {
+    "description": "Label used in reports to indicate the status field."
+  },
+  "by": "By:",
+  "@by": {
+    "description": "Label used in reports to indicate the author's name."
+  },
+
+  "reportMarkedAsClosed": "This Report Has Been Marked As Closed.",
+  "@reportMarkedAsClosed": {
+    "description": "Displayed in the report message section when a report is closed."
+  },
+  "closedReportsCannotBeModified": "Reports marked as closed cannot be modified.",
+  "@closedReportsCannotBeModified": {
+    "description": "Displayed when the user attempts to modify a closed report."
+  },
+
+  "submit": "Submit",
+  "@submit": {
+    "description": "Button label used to submit forms, reports, or feedback."
+  },
+
+  "plannedFeatures": "Planned Features",
+  "@plannedFeatures": {
+    "description": "Button label on the Settings screen that opens a list of upcoming features."
+  },
+  "suggestFeature": "Suggest a Feature",
+  "@suggestFeature": {
+    "description": "Button label on the Settings screen that allows users to submit feature suggestions."
+  },
+
+  "blockedUsers": "Blocked Users",
+  "@blockedUsers": {
+    "description": "Button label on the Settings screen to view a list of users the current user has blocked."
+  },
+  "emailNotifications": "Email Notifications",
+  "@emailNotifications": {
+    "description": "Title for the toggle switch that enables or disables email notifications in the Settings screen."
+  },
+
+  "reviewReports": "Review Reports",
+  "@reviewReports": {
+    "description": "Button label in the Settings screen for moderators to access submitted reports for review."
+  },
+
+  "myReports": "My Reports",
+  "@myReports": {
+    "description": "Button label in the Settings screen that navigates users to their submitted reports."
+  },
+
+  "reportBug": "Report a bug",
+  "@reportBug": {
+    "description": "Button label in the Settings screen for reporting application bugs."
+  },
+
+  "unassigned": "Unassigned",
+  "@unassigned": {
+    "description": "Status label used in the support ticket list to indicate that a ticket is not assigned to any moderator."
+  },
+
+  "assignedTo": "Assigned To:",
+  "@assignedTo": {
+    "description": "Label used in support tickets to show the name of the assigned moderator."
+  },
+  "createdBy": "Created By:",
+  "@createdBy": {
+    "description": "Label used in support tickets to show the name of the user who created the ticket."
   }
+
 }

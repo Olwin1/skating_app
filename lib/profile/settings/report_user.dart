@@ -1,6 +1,7 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:patinka/api/config/config.dart";
 import "package:patinka/api/reports.dart";
 import "package:patinka/common_logger.dart";
@@ -241,7 +242,7 @@ class _UserReportPage extends State<UserReportPage> {
                         softWrap: false,
                       ),
                       Row(children: [
-                        const Text("Status:"),
+                        Text(AppLocalizations.of(context)!.status),
                         loadStatusIcon(statusColour),
                       ]),
                     ]),
@@ -254,14 +255,16 @@ class _UserReportPage extends State<UserReportPage> {
                     height: 400,
                     child: ReportMessages(
                       report: widget.report["report_id"],
-                      user: user, isSelf: widget.isSelf,
+                      user: user,
+                      isSelf: widget.isSelf,
                     ))
                 : reportedContentPreview
-            : SizedBox(height: 400, child: ReportMessages(
-                report: widget.report["report_id"],
-                user: user,
-                isSelf: widget.isSelf
-              )),
+            : SizedBox(
+                height: 400,
+                child: ReportMessages(
+                    report: widget.report["report_id"],
+                    user: user,
+                    isSelf: widget.isSelf)),
         !widget.isSelf
             ? Container(
                 color: Colors.blueGrey,
@@ -329,11 +332,11 @@ class _UserReportPage extends State<UserReportPage> {
                                   "An Error Occured During Status Modification: $e");
                             }
                           },
-                          child: const Text("Submit")),
+                          child: Text(AppLocalizations.of(context)!.submit)),
                       TextButton(
                         onPressed: () =>
                             setState(() => showComments = !showComments),
-                        child: const Text("Switch"),
+                        child: const Text("Switch"), // l10n
                       ),
                     ]),
               )

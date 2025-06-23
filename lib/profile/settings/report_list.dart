@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:patinka/api/config/config.dart";
 import "package:patinka/api/reports.dart";
 import "package:patinka/common_logger.dart";
@@ -63,7 +64,8 @@ class _ReportListViewState extends State<ReportListView> {
   final GenericStateController<Map<String, dynamic>> genericStateController =
       GenericStateController(key: const Key("connectionsList"));
 
-  Future<List<Map<String, dynamic>>?> _getNextPage(final int pageKey, final int pageSize) async {
+  Future<List<Map<String, dynamic>>?> _getNextPage(
+      final int pageKey, final int pageSize) async {
     commonLogger.i("getting report list page");
     // Fetch the page of comments using the getComments() function
     return await ReportAPI.getReports(pageKey, widget.isSelf);
@@ -193,7 +195,7 @@ class _ReportListWidget extends State<ReportListWidget> {
                       const SizedBox(
                         width: 50,
                       ),
-                      const Text("Subject:"),
+                      Text(AppLocalizations.of(context)!.subject),
                       Container(
                           margin: const EdgeInsets.only(left: 8),
                           height: 28,
@@ -207,7 +209,7 @@ class _ReportListWidget extends State<ReportListWidget> {
                       softWrap: false,
                     ),
                     Row(children: [
-                      const Text("Status:"),
+                      Text(AppLocalizations.of(context)!.status),
                       Container(
                           margin: const EdgeInsets.all(8),
                           padding: const EdgeInsets.all(8),
@@ -226,7 +228,7 @@ class _ReportListWidget extends State<ReportListWidget> {
                       const SizedBox(
                         width: 45,
                       ),
-                      const Text("By:"),
+                      Text(AppLocalizations.of(context)!.by),
                       Container(
                           margin: const EdgeInsets.only(left: 8),
                           height: 28,

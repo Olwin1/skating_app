@@ -45,6 +45,7 @@ class _ReportButtonState extends TriButtonStateToggleState<ReportButton> {
       isBlocked = widget.isBlocked!;
     }
 
+// Show an option of the available reasons for a report
     ModalBottomSheet.show(
         context: context,
         builder: (final context) => ReportReasonBottomSheet(
@@ -53,10 +54,6 @@ class _ReportButtonState extends TriButtonStateToggleState<ReportButton> {
               reportedUserId: widget.userId,
               isBlocked: isBlocked,
             ));
-            // TODO ensure the navbar stays hidden
-                Provider.of<BottomBarVisibilityProvider>(context, listen: false)
-                .hide(); // Hide The Navbar
-    //await SupportAPI.postReportMessage(widget.contentId);
   }
 
   @override

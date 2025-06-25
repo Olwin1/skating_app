@@ -2,12 +2,14 @@ import "package:flutter/material.dart";
 import "package:patinka/api/reports.dart";
 import "package:patinka/api/support.dart";
 import "package:patinka/common_logger.dart";
+import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/services/navigation_service.dart";
 import "package:patinka/social_media/report_content_type.dart";
 import "package:patinka/social_media/user_reports/report_user.dart";
 import "package:patinka/social_media/user_reports/utils.dart";
+import "package:provider/provider.dart";
 
-class ReportReasonBottomSheet extends StatelessWidget {
+class ReportReasonBottomSheet extends StatefulWidget {
   const ReportReasonBottomSheet(
       {required this.reportContentType,
       required this.contentId,
@@ -20,6 +22,19 @@ class ReportReasonBottomSheet extends StatelessWidget {
   final bool isBlocked;
 
   @override
+  State<ReportReasonBottomSheet> createState() =>
+      _ReportReasonBottomSheetState();
+}
+
+class _ReportReasonBottomSheetState extends State<ReportReasonBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<BottomBarVisibilityProvider>(context, listen: false)
+        .hide(); // Hide The Navbar
+  }
+
+  @override
   Widget build(final BuildContext context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -29,46 +44,46 @@ class ReportReasonBottomSheet extends StatelessWidget {
           ),
           ReportReasonButton(
               reason: "Spam or Scam",
-              reportContentType: reportContentType,
-              contentId: contentId,
-              reportedUserId: reportedUserId,
-              isBlocked: isBlocked),
+              reportContentType: widget.reportContentType,
+              contentId: widget.contentId,
+              reportedUserId: widget.reportedUserId,
+              isBlocked: widget.isBlocked),
           ReportReasonButton(
               reason: "Inappropriate Content",
-              reportContentType: reportContentType,
-              contentId: contentId,
-              reportedUserId: reportedUserId,
-              isBlocked: isBlocked),
+              reportContentType: widget.reportContentType,
+              contentId: widget.contentId,
+              reportedUserId: widget.reportedUserId,
+              isBlocked: widget.isBlocked),
           ReportReasonButton(
               reason: "False information",
-              reportContentType: reportContentType,
-              contentId: contentId,
-              reportedUserId: reportedUserId,
-              isBlocked: isBlocked),
+              reportContentType: widget.reportContentType,
+              contentId: widget.contentId,
+              reportedUserId: widget.reportedUserId,
+              isBlocked: widget.isBlocked),
           ReportReasonButton(
               reason: "Harassment or Bullying",
-              reportContentType: reportContentType,
-              contentId: contentId,
-              reportedUserId: reportedUserId,
-              isBlocked: isBlocked),
+              reportContentType: widget.reportContentType,
+              contentId: widget.contentId,
+              reportedUserId: widget.reportedUserId,
+              isBlocked: widget.isBlocked),
           ReportReasonButton(
               reason: "Impersonation",
-              reportContentType: reportContentType,
-              contentId: contentId,
-              reportedUserId: reportedUserId,
-              isBlocked: isBlocked),
+              reportContentType: widget.reportContentType,
+              contentId: widget.contentId,
+              reportedUserId: widget.reportedUserId,
+              isBlocked: widget.isBlocked),
           ReportReasonButton(
               reason: "Threats",
-              reportContentType: reportContentType,
-              contentId: contentId,
-              reportedUserId: reportedUserId,
-              isBlocked: isBlocked),
+              reportContentType: widget.reportContentType,
+              contentId: widget.contentId,
+              reportedUserId: widget.reportedUserId,
+              isBlocked: widget.isBlocked),
           ReportReasonButton(
               reason: "I'm not sure",
-              reportContentType: reportContentType,
-              contentId: contentId,
-              reportedUserId: reportedUserId,
-              isBlocked: isBlocked),
+              reportContentType: widget.reportContentType,
+              contentId: widget.contentId,
+              reportedUserId: widget.reportedUserId,
+              isBlocked: widget.isBlocked),
         ],
       );
 }
@@ -108,7 +123,7 @@ class ReportReasonButton extends StatelessWidget {
         Navigator.pop(context); // Close the reason sheet after selecting
         final bool result = await handleReportCreation(
             reason, reportContentType, contentId, reportedUserId);
-        
+
         ModalBottomSheet.show(
           context: NavigationService.currentNavigatorKey.currentContext!,
           builder: (final context) => Column(

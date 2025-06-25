@@ -1,11 +1,9 @@
 import "package:flutter/material.dart";
 import "package:patinka/api/auth.dart";
-import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/report_content_type.dart";
 import "package:patinka/social_media/user_reports/buttons/tri_button_state_toggle.dart";
 import "package:patinka/social_media/user_reports/report_reason.dart";
 import "package:patinka/social_media/user_reports/report_user.dart";
-import "package:provider/provider.dart";
 
 class ReportButton extends TriButtonStateToggle<ReportButton> {
   const ReportButton(

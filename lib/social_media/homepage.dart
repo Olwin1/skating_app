@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
           left: 45,
           child: Text(
             "This is an Alpha much is non-functional",
-            style: TextStyle(color: Colors.amber),
+            style: TextStyle(color: Color.fromARGB(162, 255, 193, 7)),
           ))
     ]);
   }
@@ -199,7 +199,7 @@ class PostsListViewState extends State<PostsListView> {
     });
 
     // Get FCM Token (excluding Windows and Linux)
-    // TODO add web support
+    // TODO add web support for notifications
     if (isMobilePlatform) {
       FirebaseMessaging.instance.getToken().then(
           (final fcmToken) => fcmToken != null ? updateToken(fcmToken) : null);

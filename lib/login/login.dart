@@ -44,7 +44,7 @@ class _LoginPage extends State<LoginPage> {
           mediaQuery.size.height * mediaQuery.devicePixelRatio;
       downloadBackgroundImage(physicalPixelWidth, physicalPixelHeight)
           .then((final value) {
-        if (value) {
+        if (value && mounted) {
           setState(() {
             backgroundProgress = BackgroundProgress.downloaded;
           });

@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:app_links/app_links.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:convex_bottom_bar/convex_bottom_bar.dart";
 import "package:flutter/material.dart";
@@ -22,6 +23,7 @@ import "package:patinka/l10n/app_localizations.dart";
 import "package:patinka/login/login.dart";
 import "package:patinka/misc/default_profile.dart";
 import "package:patinka/misc/navbar_provider.dart";
+import "package:patinka/profile/profile_page/profile_page.dart";
 import "package:patinka/services/navigation_service.dart";
 import "package:patinka/social_media/utils/utils/utils.dart";
 import "package:patinka/swatch.dart";
@@ -44,10 +46,52 @@ Future<void> main() async {
   // Ensure that the Flutter widgets are initialized
   WidgetsFlutterBinding.ensureInitialized();
 
+// Initialise the app links package to allow for url based routing
+  final AppLinks _appLinks = AppLinks();
+
   await initialiseFirebase();
 
   await initialiseWindowManager();
   //FirebaseMessaging.instance.deleteToken();
+
+  /// Waits until the navigator is available, then navigates to the Profile page.
+  Future<void> waitAndNavigate(final Uri uri) async {
+    // Wait for the navigator to be attached before attempting navigation
+    while (NavigationService.currentNavigatorKey.currentState == null) {
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+
+    // Safely push the Profile page using the navigator key
+    NavigationService.currentNavigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (context) => Profile(userId: uri.pathSegments[1]),
+      ),
+    );
+  }
+
+  /// Handles incoming deep links such as https://yourdomain.com/user/:id
+  void handleLink(final Uri uri) {
+    final segments = uri.pathSegments;
+
+    // Check if the path starts with "user"
+    if (segments.isNotEmpty && segments.first == "user") {
+      // Case: /user (no ID) → navigate to tab index 4 and pop to root
+      if (segments.length < 2) {
+        NavigationService.setCurrentIndex(4); // Example: profile or users tab
+        NavigationService.currentNavigatorKey.currentState!
+            .popUntil((final route) => route.isFirst);
+      } else {
+        // Case: /user/:id → delay navigation until after the current frame
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          waitAndNavigate(uri);
+        });
+      }
+    }
+  }
+
+// Start listening for app links (including initial cold-start link)
+  final StreamSubscription appLinks =
+      _appLinks.uriLinkStream.listen(handleLink);
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor:

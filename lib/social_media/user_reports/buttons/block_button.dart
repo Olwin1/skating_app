@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/api/support.dart";
+import "package:patinka/services/navigation_service.dart";
 import "package:patinka/social_media/user_reports/buttons/tri_button_state_toggle.dart";
 
 class BlockButton extends TriButtonStateToggle<BlockButton> {
@@ -25,13 +26,24 @@ class _BlockButtonState extends TriButtonStateToggleState<BlockButton> {
     }
   }
 
+void _popToMain() {
+            final navigatorState =
+              NavigationService.currentNavigatorKey.currentState;
+
+          if (navigatorState != null) {
+            navigatorState.popUntil((final route) => route.isFirst);
+          }
+}
+
   @override
   Future<void> onPrimaryPressed() async {
+    _popToMain();
     await SupportAPI.postBlockUser(widget.userId);
   }
 
   @override
   Future<void> onSecondaryPressed() async {
+    _popToMain();
     await SupportAPI.postUnblockUser(widget.userId);
   }
 

@@ -18,7 +18,6 @@ class CommentOptionsBottomSheet extends StatelessWidget { // Replace with actual
       mainAxisSize: MainAxisSize.min,
       children: [
         ReportButton(reportContentType: ReportContentType.comment, contentId: comment["comment_id"], userId: comment["sender_id"], isBlocked: null,),
-        // TODO pop page on block
         BlockButton(userId: comment["sender_id"])
       ],
     ));

@@ -22,7 +22,6 @@ class MessageOptionsBottomSheet extends StatelessWidget { // Replace with actual
             reportContentType: ReportContentType.message,
             contentId: message.id,
             userId: message.author.id,
-            //TODO: Add check for is blocked
             isBlocked: null),
 
         BlockButton(userId: message.author.id)

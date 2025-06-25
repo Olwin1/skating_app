@@ -6,7 +6,6 @@ import "package:patinka/services/navigation_service.dart";
 import "package:patinka/social_media/report_content_type.dart";
 import "package:patinka/social_media/user_reports/report_user.dart";
 import "package:patinka/social_media/user_reports/utils.dart";
-// TODO unused class
 
 class ReportReasonBottomSheet extends StatelessWidget {
   const ReportReasonBottomSheet(

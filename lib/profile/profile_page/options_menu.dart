@@ -108,6 +108,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
           }
           if (item == DropdownPage.blockUser || item == DropdownPage.unblockUser) {
             if (widget.user != null) {
+              // Return to homepage and set to default route
               Navigator.popUntil(context, (final route) => route.isFirst);
               
               if(item == DropdownPage.blockUser) {
@@ -115,11 +116,6 @@ class _OptionsMenuState extends State<OptionsMenu> {
               } else {
                 SupportAPI.postUnblockUser(widget.user!["user_id"]);
               }
-              
-              //TODO: Fix channel cache not updating to reflect new last message
-
-              //TODO: Handle Caching of user etc...
-              // Return to homepage and set to default route
             }
           }
         },

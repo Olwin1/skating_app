@@ -104,12 +104,6 @@ class _PostWidget extends State<PostWidget> {
                       children: [
                         // Container for overlay on post image
                         Container(
-                          margin: const EdgeInsets.only(top: 320),
-                          height: 60,
-                          width: width,
-                          color: const Color(0xcc000000),
-                        ),
-                        Container(
                           color: Colors.transparent,
                           padding: EdgeInsets.zero,
                           child: Row(

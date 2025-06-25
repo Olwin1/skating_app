@@ -1,6 +1,7 @@
 // Import necessary packages and files
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:patinka/l10n/app_localizations.dart";
+
 import "package:patinka/social_media/search_results.dart";
 import "package:patinka/swatch.dart"; // File containing color definitions
 

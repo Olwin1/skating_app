@@ -1,10 +1,10 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 import "package:patinka/api/config/config.dart";
 import "package:patinka/api/social.dart";
 import "package:patinka/components/list_error.dart";
+import "package:patinka/l10n/app_localizations.dart";
 import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";

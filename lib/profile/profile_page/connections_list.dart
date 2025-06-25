@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:patinka/api/messages.dart";
+import "package:patinka/l10n/app_localizations.dart";
 import "package:patinka/profile/friends_list.dart";
 import "package:patinka/profile/lists.dart";
 import "package:patinka/swatch.dart";

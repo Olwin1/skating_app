@@ -1,8 +1,8 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:patinka/api/config/config.dart";
 import "package:patinka/api/connections.dart";
+import "package:patinka/l10n/app_localizations.dart";
 import "package:patinka/misc/default_profile.dart";
 import "package:patinka/profile/list_type.dart";
 import "package:patinka/profile/profile_page/profile_page.dart";

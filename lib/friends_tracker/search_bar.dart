@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_map/flutter_map.dart";
 import "package:latlong2/latlong.dart";
 import "package:patinka/api/friend_tracker.dart";
 import "package:patinka/common_logger.dart";
+import "package:patinka/l10n/app_localizations.dart";
 
 class CustomSearchBar extends StatefulWidget {
   const CustomSearchBar(

@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:geolocator/geolocator.dart";
 import "package:intl/intl.dart";
 import "package:patinka/api/config/config.dart";
@@ -11,6 +10,7 @@ import "package:patinka/fitness_tracker/save_session.dart";
 import "package:patinka/fitness_tracker/signal_strength_info.dart";
 import "package:patinka/fitness_tracker/speedometer.dart";
 import "package:patinka/fitness_tracker/timer.dart";
+import "package:patinka/l10n/app_localizations.dart";
 import "package:patinka/services/navigation_service.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";

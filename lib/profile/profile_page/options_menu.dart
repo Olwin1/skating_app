@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:patinka/api/support.dart";
 import "package:patinka/common_logger.dart";
+import "package:patinka/l10n/app_localizations.dart";
 import "package:patinka/profile/edit_profile.dart";
 import "package:patinka/profile/profile_page/profile_page.dart";
 import "package:patinka/profile/saved_posts.dart";

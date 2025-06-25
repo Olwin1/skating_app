@@ -4,12 +4,12 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:geolocator/geolocator.dart";
 import "package:kdgaugeview/kdgaugeview.dart";
 import "package:patinka/api/config/config.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/fitness_tracker/check_permission.dart";
+import "package:patinka/l10n/app_localizations.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";

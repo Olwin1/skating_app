@@ -2,17 +2,16 @@
 import "package:comment_box/comment/comment.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:patinka/api/config/config.dart";
 import "package:patinka/api/reports.dart";
 import "package:patinka/api/social.dart";
+import "package:patinka/l10n/app_localizations.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/social_media/utils/components/list_view/default_item_list.dart";
 import "package:patinka/social_media/utils/components/list_view/paging_controller.dart";
 import "package:patinka/social_media/utils/pair.dart";
 import "package:patinka/swatch.dart";
 import "package:provider/provider.dart";
-
 import "package:timeago/timeago.dart" as timeago;
 
 // Initialize an empty list to store new comments

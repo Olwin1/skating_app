@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:patinka/l10n/app_localizations.dart";
+
 
 class EditPost extends StatelessWidget {
   const EditPost({

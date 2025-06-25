@@ -1,7 +1,6 @@
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:infinite_scroll_pagination/infinite_scroll_pagination.dart";
 import "package:patinka/api/config/config.dart";
@@ -11,6 +10,7 @@ import "package:patinka/api/social.dart";
 import "package:patinka/caching/manager.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/components/list_error.dart";
+import "package:patinka/l10n/app_localizations.dart";
 import "package:patinka/misc/navbar_provider.dart";
 import "package:patinka/misc/supported_platforms/platform_stub.dart"
     if (dart.library.io) "package:patinka/misc/supported_platforms/platform_io.dart";

@@ -4,7 +4,6 @@ import "package:cached_network_image/cached_network_image.dart";
 import "package:convex_bottom_bar/convex_bottom_bar.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_phoenix/flutter_phoenix.dart";
 //import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import "package:get_it/get_it.dart";
@@ -16,6 +15,7 @@ import "package:patinka/api/token.dart";
 import "package:patinka/api/websocket.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/firebase/init_firebase.dart";
+import "package:patinka/l10n/app_localizations.dart";
 // import "package:patinka/friends_tracker/caching/map_cache.dart"
 //     if (dart.library.io) "./friends_tracker/caching/map_cache_mobile.dart"
 //     if (dart.library.html) "./friends_tracker/caching/map_cache_web.dart";
@@ -28,7 +28,6 @@ import "package:patinka/swatch.dart";
 import "package:patinka/tab_navigator.dart";
 import "package:patinka/window_manager/window_manager_stub.dart"
     if (dart.library.io) "package:patinka/window_manager/window_manager_desktop.dart";
-
 import "package:provider/provider.dart";
 import "package:shimmer/shimmer.dart";
 
@@ -158,6 +157,7 @@ class _PunishmentEnforcer extends State<PunishmentEnforcer> {
   @override
   Widget build(final BuildContext context) {
     if (punishmentData == null) {
+      // TODO implement custom splash screen
       return const SizedBox(child: Text("loading"));
     }
     commonLogger.i("Running the punishment enforcer");

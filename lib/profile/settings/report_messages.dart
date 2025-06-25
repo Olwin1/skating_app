@@ -1,9 +1,9 @@
 // Import necessary packages and files
 import "package:comment_box/comment/comment.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:patinka/api/config/config.dart";
 import "package:patinka/api/support.dart";
+import "package:patinka/l10n/app_localizations.dart";
 import "package:patinka/profile/settings/list_type.dart";
 import "package:patinka/profile/settings/report_message.dart";
 import "package:patinka/services/role.dart";

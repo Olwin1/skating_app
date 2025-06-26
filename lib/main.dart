@@ -64,7 +64,7 @@ Future<void> main() async {
     // Safely push the Profile page using the navigator key
     NavigationService.currentNavigatorKey.currentState?.push(
       MaterialPageRoute(
-        builder: (context) => Profile(userId: uri.pathSegments[1]),
+        builder: (final context) => Profile(userId: uri.pathSegments[1]),
       ),
     );
   }
@@ -90,8 +90,7 @@ Future<void> main() async {
   }
 
 // Start listening for app links (including initial cold-start link)
-  final StreamSubscription appLinks =
-      _appLinks.uriLinkStream.listen(handleLink);
+  _appLinks.uriLinkStream.listen(handleLink);
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor:
@@ -202,7 +201,10 @@ class _PunishmentEnforcer extends State<PunishmentEnforcer> {
   Widget build(final BuildContext context) {
     if (punishmentData == null) {
       // TODO implement custom splash screen
-      return const SizedBox(child: Text("loading"));
+      return const ColoredBox(
+      color: Colors.black,
+      child: SizedBox.expand(), // takes the full screen
+    );
     }
     commonLogger.i("Running the punishment enforcer");
     if (punishmentData!["is_banned"]) {

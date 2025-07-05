@@ -24,16 +24,18 @@
             <!-- <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/notification_channel_id" /> -->
+
+
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-
+            </intent-filter>
+                        <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
                 <!-- ensure that app can be opened from web -->
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <!-- Add optional android:host to distinguish your app
           from others in case of conflicting scheme name -->
                 <data android:scheme="https"

@@ -9,7 +9,7 @@ SecureStorage storage = SecureStorage();
 enum CacheTypes { user, post, messages, list, misc, verified, background }
 
 class Config {
-  static String uri = kDebugMode ? getBaseUri() : "https://sabreguild.com:4000";
+  static String uri = kDebugMode ? getBaseUri() : "https://patinka.xyz:4000";
 
   static Map<String, String>? defaultHeaders = {
     "Content-Type": "application/x-www-form-urlencoded"

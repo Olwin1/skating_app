@@ -3,6 +3,7 @@ import "package:flutter/services.dart";
 import "package:http/http.dart";
 import "package:patinka/api/config/config.dart";
 import "package:patinka/api/image/image.dart";
+import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/l10n/app_localizations.dart";
 import "package:patinka/misc/navbar_provider.dart";
@@ -79,28 +80,40 @@ class _SendPost extends State<SendPost> {
 
         // Call the "sendImage" function and wait for it to complete
         sendImage().then((final value) {
-          // Ensure all pops are completed before changing navigator
-          final navigatorState =
-              NavigationService.currentNavigatorKey.currentState;
+          if (value != null) {
+            // Send post data to server
+            SocialAPI.postPost(descriptionController.text, value)
+                .then((final response) {
+              // Ensure all pops are completed before changing navigator
+              final navigatorState =
+                  NavigationService.currentNavigatorKey.currentState;
 
-          if (navigatorState != null) {
-            navigatorState.popUntil((final route) => route.isFirst);
+              if (navigatorState != null) {
+                navigatorState.popUntil((final route) => route.isFirst);
+              }
+
+              // Delay to ensure the previous pops are completed
+              Future.delayed(Duration.zero, () {
+                commonLogger.d("Showing Navbar");
+
+                // Switch to the desired navigator index
+                NavigationService.setCurrentIndex(0);
+                // Send back to main page
+                NavigationService.currentNavigatorKey.currentState!
+                    .popUntil((final route) => route.isFirst);
+
+                Future.delayed(const Duration(milliseconds: 250), () {
+                  // Show the Bottom Navigation Bar after a short delay
+                  Provider.of<BottomBarVisibilityProvider>(
+                          NavigationService.navigatorKey(
+                                  NavigationService.getCurrentIndex.toString())!
+                              .currentContext!,
+                          listen: false)
+                      .show();
+                });
+              });
+            });
           }
-
-          // Delay to ensure the previous pops are completed
-          Future.delayed(Duration.zero, () {
-            commonLogger.d("Showing Navbar");
-
-            // Switch to the desired navigator index
-            NavigationService.setCurrentIndex(0);
-            // Send back to main page
-            NavigationService.currentNavigatorKey.currentState!.popUntil((final route) => route.isFirst);
-
-Future.delayed(const Duration(milliseconds: 250), () {
-                        // Show the Bottom Navigation Bar after a short delay
-            Provider.of<BottomBarVisibilityProvider>(NavigationService.navigatorKey(NavigationService.getCurrentIndex.toString())!.currentContext!, listen: false)
-                .show();});
-          });
         });
       } catch (e) {
         commonLogger.e("Error creating post: $e");

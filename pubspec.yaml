@@ -81,6 +81,7 @@ dependencies:
   path_provider: ^2.1.0
   permission_handler: ^12.0.0+1
   photo_gallery: any  
+  pro_image_editor: 9.13.0
   provider: ^6.0.5
   sensors_plus: ^6.1.0
   settings_ui: ^2.0.2

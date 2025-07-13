@@ -7,7 +7,6 @@ import "package:patinka/common_logger.dart";
 import "package:patinka/swatch.dart";
 
 class FriendIconButton extends StatefulWidget {
-
   // StatefulWidget that defines an options menu
   const FriendIconButton({required this.user, super.key, this.friend});
   final Map<String, dynamic>? user;
@@ -36,23 +35,25 @@ class _FriendIconButtonState extends State<FriendIconButton> {
                   loading = false
                 });
       } else if (friend != FriendState.no && friend != FriendState.self) {
-        ConnectionsAPI.unfriendUser(widget.user!["user_id"]).then((final value) => {
-              // Logs the response from `followUser`
-              commonLogger.t("Unfriend success $value"),
-              // If follow request is successful, update `type` to "requested"
-              mounted ? setState(() => friend = FriendState.no) : null,
-              loading = false
-            });
+        ConnectionsAPI.unfriendUser(widget.user!["user_id"])
+            .then((final value) => {
+                  // Logs the response from `followUser`
+                  commonLogger.t("Unfriend success $value"),
+                  // If follow request is successful, update `type` to "requested"
+                  mounted ? setState(() => friend = FriendState.no) : null,
+                  loading = false
+                });
       } else if (friend != FriendState.self) {
-        ConnectionsAPI.friendUser(widget.user!["user_id"]).then((final value) => {
-              // Logs the response from `followUser`
-              commonLogger.t("Friend success $value"),
-              // If follow request is successful, update `type` to "requested"
-              mounted
-                  ? setState(() => friend = FriendState.requestedOutgoing)
-                  : null,
-              loading = false
-            });
+        ConnectionsAPI.friendUser(widget.user!["user_id"])
+            .then((final value) => {
+                  // Logs the response from `followUser`
+                  commonLogger.t("Friend success $value"),
+                  // If follow request is successful, update `type` to "requested"
+                  mounted
+                      ? setState(() => friend = FriendState.requestedOutgoing)
+                      : null,
+                  loading = false
+                });
       }
     }
   }
@@ -111,15 +112,21 @@ class _FriendIconButtonState extends State<FriendIconButton> {
               });
             } else {
               FriendState val = FriendState.no;
-              if (!widget.user?["user_friends"]["friends"]) {
-                if (widget.user?["user_friends"]["requestedOutgoing"] != null) {
-                  val = FriendState.requestedOutgoing;
-                } else if (widget.user?["user_friends"]["requestedIncoming"] !=
-                    null) {
-                  val = FriendState.requestedIncoming;
+              if (widget.user?["user_friends"] != null) {
+                if (!widget.user?["user_friends"]["friends"]) {
+                  if (widget.user?["user_friends"]["requestedOutgoing"] !=
+                      null) {
+                    val = FriendState.requestedOutgoing;
+                  } else if (widget.user?["user_friends"]
+                          ["requestedIncoming"] !=
+                      null) {
+                    val = FriendState.requestedIncoming;
+                  }
+                } else {
+                  val = FriendState.yes;
                 }
               } else {
-                val = FriendState.yes;
+                val = FriendState.self;
               }
               setState(() => friend = val);
             }
@@ -137,7 +144,6 @@ class _FriendIconButtonState extends State<FriendIconButton> {
             decoration: const BoxDecoration(
                 color: Color.fromARGB(125, 0, 0, 0),
                 borderRadius: BorderRadius.all(Radius.circular(8))),
-            child: TextButton(
-                onPressed: _handlePressed, child: getIcon()));
+            child: TextButton(onPressed: _handlePressed, child: getIcon()));
   }
 }

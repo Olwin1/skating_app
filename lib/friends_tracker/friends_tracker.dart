@@ -52,15 +52,17 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
   List<Map<String, dynamic>> newSessions = [];
   late MapController controller; // Controller for the map
   List<Marker> friends = []; // List of markers representing friends' locations
-  late AlignOnUpdate _followOnLocationUpdate; // Used to update the location of the user being followed
+  late AlignOnUpdate
+      _followOnLocationUpdate; // Used to update the location of the user being followed
   late StreamController<LocationMarkerPosition>
       _followCurrentLocationStreamController; // Stream for updating the location of the user being followed
   @override
   void initState() {
     controller = MapController();
-    _followOnLocationUpdate = AlignOnUpdate
-        .never; // Set the initial value for the follow update
-    _followCurrentLocationStreamController = StreamController<LocationMarkerPosition>(); // Create the stream for updating the follow location
+    _followOnLocationUpdate =
+        AlignOnUpdate.never; // Set the initial value for the follow update
+    _followCurrentLocationStreamController = StreamController<
+        LocationMarkerPosition>(); // Create the stream for updating the follow location
     final List<Marker> newFriends =
         []; // Temporary list for storing the markers of the friends' locations
     Map<String, dynamic> userCache; // Cache for storing user information
@@ -135,19 +137,21 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                       //     InteractiveFlag.pinchZoom | InteractiveFlag.drag,
                       initialCenter: const LatLng(
                           51.509364, -0.128928), // Define Starting Position
-                      cameraConstraint: CameraConstraint.contain(bounds: LatLngBounds(
-                        // Prevent viewing off map
-                        const LatLng(-90, -180.0),
-                        const LatLng(90.0, 180.0),
-                      ),),
+                      cameraConstraint: CameraConstraint.contain(
+                        bounds: LatLngBounds(
+                          // Prevent viewing off map
+                          const LatLng(-90, -180.0),
+                          const LatLng(90.0, 180.0),
+                        ),
+                      ),
                       initialZoom: 15, // Set zoom factor
                       minZoom: 3.0,
                       maxZoom: 19),
-                    // Default Attribution
-                    // AttributionWidget.defaultWidget(
-                    //   source: 'OpenStreetMap',
-                    //   onSourceTapped: null,
-                    // ),
+                  // Default Attribution
+                  // AttributionWidget.defaultWidget(
+                  //   source: 'OpenStreetMap',
+                  //   onSourceTapped: null,
+                  // ),
                   children: [
                     TileLayer(
                       panBuffer: 1,
@@ -161,49 +165,20 @@ class _FriendsTrackerPage extends State<FriendsTrackerPage> {
                       userAgentPackageName:
                           "com.skatingapp.map", // Package Name
                     ),
-                    // MarkerClusterLayerWidget(
-                    //   // Define the options for the MarkerClusterLayer.
-                    //   options: MarkerClusterLayerOptions(
-                    //     // The maximum radius of a cluster.
-                    //     maxClusterRadius: 45,
-                    //     // The size of the marker icon for each cluster.
-                    //     size: const Size(40, 40),
-                    //     // The position of the anchor point for each marker icon.
-                    //     anchor: AnchorPos.align(AnchorAlign.center),
-                    //     // Options for fitting the map to the bounds of the markers.
-                    //     fitBoundsOptions: const FitBoundsOptions(
-                    //       // The padding to apply around the bounds of the markers.
-                    //       padding: EdgeInsets.all(50),
-                    //       // The maximum zoom level to use when fitting the map bounds.
-                    //       maxZoom: 15,
-                    //     ),
-                    //     // The list of markers to cluster.
-                    //     markers: friends,
-                    //     // The builder function for creating the marker icon for each cluster.
-                    //     builder: (final context, final markers) => DecoratedBox(
-                    //       decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(20),
-                    //           color: Colors.blue),
-                    //       child: Center(
-                    //         child: Text(
-                    //           markers.length.toString(),
-                    //           style: const TextStyle(color: Colors.white),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    MobileLayerTransformer(child: 
-                    CurrentLocationLayer(
-                      positionStream:
-                          _followCurrentLocationStreamController.stream,
-                      alignPositionOnUpdate: _followOnLocationUpdate,
-                    ),),
-                                        SafeArea(
+                    MarkerLayer(
+                      markers: friends,
+                    ),
+                    MobileLayerTransformer(
+                      child: CurrentLocationLayer(
+                        positionStream:
+                            _followCurrentLocationStreamController.stream,
+                        alignPositionOnUpdate: _followOnLocationUpdate,
+                      ),
+                    ),
+                    SafeArea(
                         child: CustomSearchBar(
                             mapController: controller,
                             focusChangeCallback: focusChangeCallback)),
-
                     AnimatedSwitcher(
                         duration: const Duration(
                             milliseconds:

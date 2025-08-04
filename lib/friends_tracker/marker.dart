@@ -4,7 +4,7 @@ import "package:patinka/api/config/config.dart";
 import "package:patinka/misc/default_profile.dart";
 import "package:patinka/swatch.dart";
 import "package:shimmer/shimmer.dart";
-
+//TODO improve marker design
 class CustomMarker extends StatefulWidget {
   // Create FriendActivity widget
   const CustomMarker(
@@ -82,7 +82,7 @@ class _CustomMarker extends State<CustomMarker> {
       );
     }
     // If there are no images in sessionData, show the user's avatar as a larger circular image, if available
-    return widget.userData["avatar_id"] != null
+    return (widget.userData["avatar_id"] != null && widget.userData["avatar_id"] != "default")
         ? CachedNetworkImage(
             imageUrl: '${Config.uri}/image/${widget.userData["avatar_id"]}',
             imageBuilder: (final context, final imageProvider) => Container(
@@ -104,13 +104,13 @@ class _CustomMarker extends State<CustomMarker> {
             errorWidget: (final context, final url, final error) => const Icon(Icons.error),
           )
         // If the user doesn't have an avatar, show a default placeholder image
-        : Shimmer.fromColors(
+        : widget.userData["avatar_id"] != "default"?Shimmer.fromColors(
             baseColor: shimmer["base"]!,
             highlightColor: shimmer["highlight"]!,
             child: CircleAvatar(
               // Create a circular avatar icon
               radius: 32, // Set radius to 36
               backgroundColor: swatch[900],
-            ));
+            )): const DefaultProfile(radius: 16);
   }
 }

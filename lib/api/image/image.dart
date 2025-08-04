@@ -1,5 +1,7 @@
 // Importing the required dependencies
+import "dart:async";
 import "dart:typed_data";
+import "dart:ui" as ui;
 
 import "package:flutter/material.dart";
 import "package:flutter_image_compress/flutter_image_compress.dart";
@@ -14,6 +16,7 @@ import "package:patinka/common_logger.dart";
 import "package:patinka/misc/notifications/error_notification.dart"
     as error_notification;
 import "package:patinka/services/navigation_service.dart";
+import "package:patinka/social_media/utils/utils/image_decoder.dart";
 
 // Exporting functions from the messages.dart file
 export "package:patinka/api/image/image.dart";
@@ -35,6 +38,24 @@ Future<Uint8List> compressImage(final Uint8List image) async {
 // The server endpoint for the upload is obtained from a Config object.
 Future<StreamedResponse?> uploadFile(final Uint8List image) async {
   try {
+// Decode the image (from Uint8List, file, etc.) into a ui.Image object
+    final ui.Image tempImage = await ImageDecoder.decodeImage(image);
+
+// Check if the image is not square (height != width)
+    if (tempImage.height != tempImage.width) {
+      // Show an error notification to the user in the current navigation context
+      error_notification.showNotification(
+        NavigationService.currentNavigatorKey.currentContext!,
+        "Image failed to upload. Must be square.",
+      );
+
+      // Pop the current route (e.g., close modal, go back)
+      NavigationService.currentNavigatorKey.currentState?.pop();
+
+      // Throw an exception to stop further execution
+      throw Exception("Image is not square");
+    }
+
     final Uint8List uploadImage = await compressImage(image);
 
     // Parse the server endpoint URL from Config object

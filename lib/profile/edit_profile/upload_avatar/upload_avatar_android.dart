@@ -229,7 +229,7 @@ class _ChangeAvatarPage extends State<ChangeAvatarPage> {
                               SizedBox(
                                   height: MediaQuery.of(context).size.height -
                                       MediaQuery.of(context).size.width -
-                                      150,
+                                      160,
                                   child: PhotosGridView(
                                     update: _update,
                                   ))),

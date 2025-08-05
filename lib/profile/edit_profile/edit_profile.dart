@@ -10,7 +10,7 @@ import "package:patinka/api/social.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/l10n/app_localizations.dart";
 import "package:patinka/misc/default_profile.dart";
-import "package:patinka/profile/upload_avatar.dart";
+import "package:patinka/profile/edit_profile/upload_avatar/upload_avatar.dart";
 import "package:patinka/swatch.dart";
 import "package:shimmer/shimmer.dart";
 

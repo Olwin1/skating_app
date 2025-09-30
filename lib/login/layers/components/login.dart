@@ -39,13 +39,20 @@ class _LoginComponent extends State<LoginComponent> {
       // Call the login function with the username and password provided
       final res = await AuthenticationAPI.login(
           usernameController.text, passwordController.text);
-      // If login is successful, save the user's token to local storage
-      await storage.setToken(res);
-      SocialAPI.getUser("0")
-          .then((final value) => storage.setId(value["user_id"]));
-      // Load the home screen
-      loadHome();
-      commonLogger.d("Result: $res");
+
+// If the user is already verified
+      if (res.isVerified) {
+        // If login is successful and they are verified, save the user's token to local storage
+        await storage.setToken(res.token);
+        SocialAPI.getUser("0")
+            .then((final value) => storage.setId(value["user_id"]));
+        // Load the home screen
+        loadHome();
+        commonLogger.d("Result: $res");
+      } else {
+        // Otherwise change to verify page to get them to complete verification
+        widget.callback(PageType.verificationCode);
+      }
     } catch (e) {
       mounted
           ? setState(() {

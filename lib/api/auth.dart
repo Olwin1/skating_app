@@ -8,7 +8,7 @@ import "package:patinka/caching/manager.dart";
 
 class AuthenticationAPI {
 // Define a function to authenticate user credentials and return a token
-  static Future<String> login(
+  static Future<({String token, bool isVerified})> login(
       final String username, final String password) async {
     // Define the URL endpoint for login
     final url = Uri.parse("${Config.uri}/user/login");
@@ -27,10 +27,14 @@ class AuthenticationAPI {
         NetworkManager.instance.saveData(
             name: "user-email-verified",
             type: CacheTypes.verified,
-            data: y["verified"]);
+            data: y["is_verified"]);
         NetworkManager.instance.saveData(
             name: "user-id", type: CacheTypes.misc, data: y["user_id"]);
-        return y["token"];
+        final String token = y["token"];
+        final bool isVerified = y["is_verified"];
+// TODO handle unverified users with accounts - show verify code page
+// TODO also handle expired tokens & regeneration
+        return (token: token, isVerified: isVerified);
       } else {
         // If the response is not successful, throw an exception with the reason phrase
         throw Exception("Login Unsuccessful: ${response.reasonPhrase}");
@@ -56,7 +60,8 @@ class AuthenticationAPI {
 
     // If the response is successful, return the response body
     if (response.statusCode == 201) {
-      return response.body;
+      final String userId = jsonDecode(response.body)["userId"];
+      return userId;
     } else {
       // If the response is not successful, throw an exception with the reason phrase
       throw Exception("Signup Unsuccessful: ${response.reasonPhrase}");
@@ -83,9 +88,8 @@ class AuthenticationAPI {
     }
   }
 
-
 // Method to only be used to update the cache of the user's own id
-    static Future<String> _fetchUserId() async {
+  static Future<String> _fetchUserId() async {
     final url = Uri.parse("${Config.uri}/user/id");
 
     try {
@@ -97,33 +101,66 @@ class AuthenticationAPI {
       if (response.statusCode == 200) {
         return handleResponse(response, Resp.stringResponse)["user_id"];
       } else {
-        throw Exception(
-            "Error during id fetch: ${response.reasonPhrase}");
+        throw Exception("Error during id fetch: ${response.reasonPhrase}");
       }
     } catch (e) {
       throw Exception("Error during id fetch: $e");
     }
   }
+
   /// Simple method to get the logged in userid
   /// This only gets the cached id and should not be relied on.
   /// Only use this for GUI changes and such.
   /// Only send to server if it does its own checks
   static Future<String> getUserId() async {
     // Attempt to load user id from cache
-    final String? userIdCache = await NetworkManager.instance.getLocalData(
-            name: "user-id", type: CacheTypes.misc);
+    final String? userIdCache = await NetworkManager.instance
+        .getLocalData(name: "user-id", type: CacheTypes.misc);
 
-            // If it cannot be found in cache then ask for it from the server
-            if(userIdCache == null) {
-              final String fetchedUserId = await _fetchUserId();
-              // Save the data to the cache for future reference
-               NetworkManager.instance.saveData(
-            name: "user-id", type: CacheTypes.misc, data: fetchedUserId);
-            // Return the id back to the caller
-            return fetchedUserId;
+    // If it cannot be found in cache then ask for it from the server
+    if (userIdCache == null) {
+      final String fetchedUserId = await _fetchUserId();
+      // Save the data to the cache for future reference
+      NetworkManager.instance.saveData(
+          name: "user-id", type: CacheTypes.misc, data: fetchedUserId);
+      // Return the id back to the caller
+      return fetchedUserId;
+    }
+    // Return the id back to the caller while removing unused quotations
+    return userIdCache.replaceAll('"', "");
+  }
 
-            }
-            // Return the id back to the caller while removing unused quotations
-            return userIdCache.replaceAll('"', "");
-            }
+  /// Method to send an email verification request to the server
+  /// When a user provides an email verification code they recieved through email
+  /// This method is called to mark them as verified on the server
+  static Future<bool> verifyEmail(
+      final String verificationCode, final String? userId) async {
+    // Define the URL endpoint for email verification
+    final url = Uri.parse("${Config.uri}/user/verify_email");
+
+    try {
+      if (userId == null) {
+        throw "User could not be found to verify email.";
+      }
+      // Make a POST request to the email verification endpoint with the user's credentials
+      final response = await http.post(
+        url,
+        headers: Config.defaultHeaders,
+        // Pass verification code provided to server
+        body: {"code": verificationCode, "user_id": userId},
+      );
+
+      // If the response is successful, extract the token from the response body and return it
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        // If the response is not successful, throw an exception with the reason phrase
+        throw Exception(
+            "Email Verification Unsuccessful: ${response.reasonPhrase}");
+      }
+    } catch (e) {
+      // If there is an error during email verification, throw an exception with the error message
+      throw Exception("Error during email verification: $e");
+    }
+  }
 }

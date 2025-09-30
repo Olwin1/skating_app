@@ -28,9 +28,12 @@ class _SignupComponent extends State<SignupComponent> {
     // When the user taps the sign-in button, try to log them in
     try {
       // Call the login function with the username and password provided
-      await AuthenticationAPI.signup(usernameController.text,
-          passwordController.text, emailController.text);
-      widget.callback(PageType.login);
+      final String userId = await AuthenticationAPI.signup(
+          usernameController.text,
+          passwordController.text,
+          emailController.text);
+      // Pass the new user id to the verification code page so it is known which user is being verified
+      widget.callback(PageType.verificationCode, userId);
     } catch (e) {
       mounted
           ? setState(() {

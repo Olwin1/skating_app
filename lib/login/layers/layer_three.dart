@@ -10,6 +10,7 @@ class LayerThree extends StatelessWidget {
     required this.callback,
     required this.page,
     required this.loggedIn,
+    required this.userId,
     super.key,
     this.setLoggedIn,
   });
@@ -18,6 +19,7 @@ class LayerThree extends StatelessWidget {
   final PageType page;
   final bool loggedIn;
   final dynamic setLoggedIn;
+  final String? userId;
 
   @override
   Widget build(final BuildContext context) {
@@ -36,7 +38,8 @@ class LayerThree extends StatelessWidget {
         activeComponent = ForgotComponent(callback: callback);
         top = 290;
       case PageType.verificationCode:
-        activeComponent = VerifyComponent(callback: callback);
+        // Take a user id parameter to match the code to the correct user (as they will not yet be officially logged in)
+        activeComponent = VerifyComponent(callback: callback, userId: userId);
         top = 300;
       default:
         break;
@@ -50,8 +53,9 @@ class LayerThree extends StatelessWidget {
           SizedBox(height: top),
           AnimatedSwitcher(
             duration: const Duration(seconds: 1),
-            transitionBuilder: (final Widget child, final Animation<double> animation) =>
-                SlideTransition(
+            transitionBuilder:
+                (final Widget child, final Animation<double> animation) =>
+                    SlideTransition(
               position: Tween<Offset>(
                 begin: const Offset(1.0, 0.0),
                 end: const Offset(0.0, 0.05),

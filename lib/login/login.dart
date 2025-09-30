@@ -21,14 +21,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> {
+  String? userId;
   PageType previousPage = PageType.login;
   PageType currentPage = PageType.login;
   List<String> texts = ["Login"];
   BackgroundProgress backgroundProgress = BackgroundProgress.notDownloading;
 
-  void switchPage(final PageType page) {
+  void switchPage(final PageType page, [final String? newUserId]) {
     setState(() {
       currentPage = page;
+      userId = newUserId;
     });
   }
 
@@ -106,11 +108,11 @@ class _LoginPage extends State<LoginPage> {
                     const Positioned(
                         top: 318, right: 0, bottom: 28, child: LayerTwo()),
                     LayerThree(
-                      loggedIn: widget.loggedIn,
-                      setLoggedIn: widget.setLoggedIn,
-                      callback: switchPage,
-                      page: currentPage,
-                    ),
+                        loggedIn: widget.loggedIn,
+                        setLoggedIn: widget.setLoggedIn,
+                        callback: switchPage,
+                        page: currentPage,
+                        userId: userId),
                   ],
                 ),
               ),

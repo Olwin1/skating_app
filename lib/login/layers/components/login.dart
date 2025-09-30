@@ -37,6 +37,7 @@ class _LoginComponent extends State<LoginComponent> {
     // When the user taps the sign-in button, try to log them in
     try {
       // Call the login function with the username and password provided
+
       final res = await AuthenticationAPI.login(
           usernameController.text, passwordController.text);
 

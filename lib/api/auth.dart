@@ -35,6 +35,9 @@ class AuthenticationAPI {
 // TODO handle unverified users with accounts - show verify code page
 // TODO also handle expired tokens & regeneration
         return (token: token, isVerified: isVerified);
+      } else if (response.statusCode == 403) {
+        // If the user is not verified then return a null token back
+        return (token: "", isVerified: false);
       } else {
         // If the response is not successful, throw an exception with the reason phrase
         throw Exception("Login Unsuccessful: ${response.reasonPhrase}");

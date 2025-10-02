@@ -8,7 +8,7 @@ import "package:patinka/caching/manager.dart";
 
 class AuthenticationAPI {
 // Define a function to authenticate user credentials and return a token
-  static Future<({String token, bool isVerified})> login(
+  static Future<({String token, bool isVerified, String? userId})> login(
       final String username, final String password) async {
     // Define the URL endpoint for login
     final url = Uri.parse("${Config.uri}/user/login");
@@ -32,12 +32,18 @@ class AuthenticationAPI {
             name: "user-id", type: CacheTypes.misc, data: y["user_id"]);
         final String token = y["token"];
         final bool isVerified = y["is_verified"];
-// TODO handle unverified users with accounts - show verify code page
-// TODO also handle expired tokens & regeneration
-        return (token: token, isVerified: isVerified);
+        return (token: token, isVerified: isVerified, userId: null);
       } else if (response.statusCode == 403) {
+        // Get the found user id to redirect to email verification page
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
         // If the user is not verified then return a null token back
-        return (token: "", isVerified: false);
+        return (
+          token: "",
+          isVerified: false,
+          userId: responseBody.keys.contains("user_id")
+              ? responseBody["user_id"] as String
+              : null
+        );
       } else {
         // If the response is not successful, throw an exception with the reason phrase
         throw Exception("Login Unsuccessful: ${response.reasonPhrase}");
@@ -152,10 +158,21 @@ class AuthenticationAPI {
         // Pass verification code provided to server
         body: {"code": verificationCode, "user_id": userId},
       );
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
 
       // If the response is successful, extract the token from the response body and return it
       if (response.statusCode == 200) {
         return true;
+      } else if (response.statusCode == 400 &&
+          responseBody.containsKey("success") &&
+          responseBody.containsKey("verified")) {
+        if (responseBody["success"] == false &&
+            responseBody["verified"] == false) {
+          return false;
+        } else {
+          throw Exception(
+              "Email Verification Unsuccessful: ${response.reasonPhrase}");
+        }
       } else {
         // If the response is not successful, throw an exception with the reason phrase
         throw Exception(
@@ -164,6 +181,32 @@ class AuthenticationAPI {
     } catch (e) {
       // If there is an error during email verification, throw an exception with the error message
       throw Exception("Error during email verification: $e");
+    }
+  }
+
+  static Future<bool> resendEmail(final String? userId) async {
+    // Define the URL endpoint for resending email
+    final url = Uri.parse("${Config.uri}/user/resend_email");
+
+    try {
+      if (userId == null) {
+        throw "User could not be found to resend email.";
+      }
+      // Make a POST request to the email resending endpoint with the user's credentials
+      final response = await http
+          .post(url, headers: Config.defaultHeaders, body: {"user_id": userId});
+
+      // If the response is successful, extract the token from the response body and return it
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        // If the response is not successful, throw an exception with the reason phrase
+        throw Exception(
+            "Email Resending Unsuccessful: ${response.reasonPhrase}");
+      }
+    } catch (e) {
+      // If there is an error during email resend, throw an exception with the error message
+      throw Exception("Error during email resend: $e");
     }
   }
 }

@@ -2,11 +2,11 @@ import "package:flutter/material.dart";
 import "package:patinka/api/auth.dart";
 import "package:patinka/common_logger.dart";
 import "package:patinka/login/config.dart";
+import "package:patinka/login/layers/components/components/resend.dart";
 import "package:patinka/login/layers/components/mainbutton.dart";
 import "package:patinka/login/layers/components/section.dart";
 import "package:patinka/login/page_type.dart";
 import "package:patinka/misc/notifications/notification_types.dart";
-import "package:patinka/services/navigation_service.dart";
 
 /// A widget that provides a verification input and button for confirming
 /// the user's email verification code.
@@ -27,7 +27,8 @@ class VerifyComponent extends StatefulWidget {
   ///
   /// The [callback] is triggered after verification to switch to the login page
   /// or handle navigation logic.
-  VerifyComponent({required this.callback, required this.userId, super.key});
+  const VerifyComponent(
+      {required this.callback, required this.userId, super.key});
 
   /// Callback function to change the current page (e.g., to login after verification).
   final Function callback;
@@ -55,27 +56,25 @@ class _VerifyComponentState extends State<VerifyComponent> {
     commonLogger.d("Sending verify request to server");
 
     // Call the authentication API to verify the email code
-    final bool verificationResult =
-        await AuthenticationAPI.verifyEmail(verificationCodeController.text, widget.userId);
+    final bool verificationResult = await AuthenticationAPI.verifyEmail(
+        verificationCodeController.text, widget.userId);
 
     if (verificationResult && mounted) {
       // Success notification
       PopupNotificationManager.showSuccessNotification(
-        
         context,
         "Email Successfully Verified.",
       );
-
 
       // Navigate to the login page after successful verification
       widget.callback(PageType.login);
     } else {
       // Failure notification
-      if(mounted) {
-      PopupNotificationManager.showErrorNotification(
-        context,
-        "Invalid Verification Code.",
-      );
+      if (mounted) {
+        PopupNotificationManager.showErrorNotification(
+          context,
+          "Invalid or Expired Verification Code.",
+        );
       }
     }
   }
@@ -103,6 +102,8 @@ class _VerifyComponentState extends State<VerifyComponent> {
               label: "Verify",
               callback: handleVerify,
             ),
+            Positioned(
+                top: 316, child: CountdownButton(userId: widget.userId!)),
 
             /// Divider line under the verification section
             Positioned(

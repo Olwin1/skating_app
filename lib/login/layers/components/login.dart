@@ -52,7 +52,7 @@ class _LoginComponent extends State<LoginComponent> {
         commonLogger.d("Result: $res");
       } else {
         // Otherwise change to verify page to get them to complete verification
-        widget.callback(PageType.verificationCode);
+        widget.callback(PageType.verificationCode, res.userId);
       }
     } catch (e) {
       mounted
